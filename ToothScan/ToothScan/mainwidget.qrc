@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/MainWidget">
+        <file>Resources/images/Calibrate.png</file>
+        <file>Resources/images/OrderManager.png</file>
+        <file>Resources/images/Setting.png</file>
+        <file>Resources/images/BottomView.png</file>
+        <file>Resources/images/LeftView.png</file>
+        <file>Resources/images/RightView.png</file>
+        <file>Resources/images/TopView.png</file>
+    </qresource>
+</RCC>
