@@ -53,8 +53,8 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\visual studio 2015\Projects\a_property_release\QT.props" />
-    <Import Project="..\..\..\visual studio 2015\Projects\a_property_release\OPENCV_RELEASE.props" />
+    <Import Project="D:\visual studio 2015\Projects\a_property_release\QT.props" />
+    <Import Project="D:\visual studio 2015\Projects\a_property_release\OPENCV_RELEASE.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
