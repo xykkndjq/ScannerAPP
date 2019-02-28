@@ -61,16 +61,16 @@ void GLWidget::setClearColor(const QColor &color)
 void GLWidget::initVariable()
 {
 	//cameraWindow
-	cameraWindow = new QDockWidget(QStringLiteral("相机显示"));
+	cameraWindow = new QDockWidget(QStringLiteral("相机显示"),this);
 	//buttontoolButtons
-	leftWatchButton = new QToolButton();
-	rightWatchButton = new QToolButton();
-	topWatchButton = new QToolButton();
-	bottomWatchButton = new QToolButton();
-	frontWatchButton = new QToolButton();
-	backWatchButton = new QToolButton();
+	leftWatchButton = new QToolButton(this);
+	rightWatchButton = new QToolButton(this);
+	topWatchButton = new QToolButton(this);
+	bottomWatchButton = new QToolButton(this);
+	frontWatchButton = new QToolButton(this);
+	backWatchButton = new QToolButton(this);
 
-	spinCameraBox = new QSpinBox();
+	spinCameraBox = new QSpinBox(this);
 	sliderCamera = new QSlider(Qt::Horizontal);
 	spinCameraBox->setRange(0, 130);
 	sliderCamera->setRange(0, 130);
@@ -85,20 +85,20 @@ void GLWidget::constructIHM()
 	cameraWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);//设置可停靠区域为主窗口左边和右边
 	QTextEdit *textEdit = new QTextEdit("DockWindow First");
 	
-	QWidget *bottomCameraWidget = new QWidget();
+	QWidget *bottomCameraWidget = new QWidget(this);
 	QHBoxLayout *bottomCameraHLayout = new QHBoxLayout(bottomCameraWidget);
 	bottomCameraHLayout->addWidget(spinCameraBox);
 	bottomCameraHLayout->addWidget(sliderCamera);
 	bottomCameraHLayout->setContentsMargins(0, 0, 0, 0);
 
-	QWidget *cameraWidget = new QWidget();
+	QWidget *cameraWidget = new QWidget(this);
 	QVBoxLayout *cameraVLayout = new QVBoxLayout(cameraWidget);
 	cameraVLayout->addWidget(textEdit);
 	cameraVLayout->addWidget(bottomCameraWidget);
 	cameraVLayout->setContentsMargins(0, 0, 0, 0);
 
 	cameraWindow->setWidget(cameraWidget);
-	QWidget *totalCameraWidget = new QWidget();
+	QWidget *totalCameraWidget = new QWidget(this);
 	totalCameraWidget->setFixedSize(400, 400);
 	QHBoxLayout *totalCameraHLayout = new QHBoxLayout(totalCameraWidget);
 	totalCameraHLayout->addWidget(cameraWindow);
@@ -133,7 +133,7 @@ void GLWidget::constructIHM()
 	bottomWatchButton->setStyleSheet("border-style:flat");
 	//connect(leftWatchButton, &QPushButton::clicked, this, &GLWidget::handleButtonPress);
 
-	QWidget *bottomButtonWidget = new QWidget();
+	QWidget *bottomButtonWidget = new QWidget(this);
 	bottomButtonWidget->setFixedSize(300,100);
 	QHBoxLayout *bottomButtonHLayout = new QHBoxLayout(bottomButtonWidget);
 	
@@ -141,7 +141,7 @@ void GLWidget::constructIHM()
 	bottomButtonHLayout->addWidget(rightWatchButton);
 	bottomButtonHLayout->addWidget(topWatchButton);
 	bottomButtonHLayout->addWidget(bottomWatchButton);
-	QWidget *bottomWidget = new QWidget();
+	QWidget *bottomWidget = new QWidget(this);
 	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
 	bottomHLayout->addStretch();
 	bottomHLayout->addWidget(bottomButtonWidget);

@@ -7,5 +7,18 @@
         <file>Resources/images/LeftView.png</file>
         <file>Resources/images/RightView.png</file>
         <file>Resources/images/TopView.png</file>
+        <file>Resources/images/lowerjaw_no.png</file>
+        <file>Resources/images/upperjaw_no.png</file>
+        <file>Resources/images/lowerjaw_yes.png</file>
+        <file>Resources/images/upperjaw_yes.png</file>
+        <file>Resources/images/Moulage1_no.png</file>
+        <file>Resources/images/Moulage1_yes.png</file>
+        <file>Resources/images/Moulage2_no.png</file>
+        <file>Resources/images/Moulage2_yes.png</file>
+        <file>Resources/images/Moulage3_no.png</file>
+        <file>Resources/images/Moulage3_yes.png</file>
+        <file>Resources/images/facing.png</file>
+        <file>Resources/images/inlay.png</file>
+        <file>Resources/images/loseTooth.png</file>
     </qresource>
 </RCC>
