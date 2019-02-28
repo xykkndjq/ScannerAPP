@@ -31,7 +31,7 @@ public:
 	void constructIHM();
 	void setConnections();
 
-	void judgeToothList(int id, QList<QLabel*> &toothQLabelList);
+	void judgeToothList(int id, QList<QPushButton*> &toothButtonList);
 private:
 	Ui::TabMainGUI ui;
 	QGridLayout *totalGLayOut;
@@ -66,15 +66,17 @@ private:
 	bool lowerJawButtonFlag = false;
 	//分模
 	//splitleft
+	bool splitMoulageFlag = true;
+
 	int chooseID = -1;
-	QLabel *tooth11;
-	QLabel *tooth12;
-	QLabel *tooth13;
-	QLabel *tooth14;
-	QLabel *tooth15;
-	QLabel *tooth16;
-	QLabel *tooth17;
-	QLabel *tooth18;
+	QPushButton *tooth11;
+	QPushButton *tooth12;
+	QPushButton *tooth13;
+	QPushButton *tooth14;
+	QPushButton *tooth15;
+	QPushButton *tooth16;
+	QPushButton *tooth17;
+	QPushButton *tooth18;
 
 	bool tooth11Flag = false;
 	bool tooth12Flag = false;
@@ -85,14 +87,14 @@ private:
 	bool tooth17Flag = false;
 	bool tooth18Flag = false;
 
-	QLabel *tooth21;
-	QLabel *tooth22;
-	QLabel *tooth23;
-	QLabel *tooth24;
-	QLabel *tooth25;
-	QLabel *tooth26;
-	QLabel *tooth27;
-	QLabel *tooth28;
+	QPushButton *tooth21;
+	QPushButton *tooth22;
+	QPushButton *tooth23;
+	QPushButton *tooth24;
+	QPushButton *tooth25;
+	QPushButton *tooth26;
+	QPushButton *tooth27;
+	QPushButton *tooth28;
 
 	bool tooth21Flag = false;
 	bool tooth22Flag = false;
@@ -103,14 +105,14 @@ private:
 	bool tooth27Flag = false;
 	bool tooth28Flag = false;
 
-	QLabel *tooth31;
-	QLabel *tooth32;
-	QLabel *tooth33;
-	QLabel *tooth34;
-	QLabel *tooth35;
-	QLabel *tooth36;
-	QLabel *tooth37;
-	QLabel *tooth38;
+	QPushButton *tooth31;
+	QPushButton *tooth32;
+	QPushButton *tooth33;
+	QPushButton *tooth34;
+	QPushButton *tooth35;
+	QPushButton *tooth36;
+	QPushButton *tooth37;
+	QPushButton *tooth38;
 
 	bool tooth31Flag = false;
 	bool tooth32Flag = false;
@@ -121,14 +123,14 @@ private:
 	bool tooth37Flag = false;
 	bool tooth38Flag = false;
 
-	QLabel *tooth41;
-	QLabel *tooth42;
-	QLabel *tooth43;
-	QLabel *tooth44;
-	QLabel *tooth45;
-	QLabel *tooth46;
-	QLabel *tooth47;
-	QLabel *tooth48;
+	QPushButton *tooth41;
+	QPushButton *tooth42;
+	QPushButton *tooth43;
+	QPushButton *tooth44;
+	QPushButton *tooth45;
+	QPushButton *tooth46;
+	QPushButton *tooth47;
+	QPushButton *tooth48;
 
 	bool tooth41Flag = false;
 	bool tooth42Flag = false;
@@ -152,14 +154,14 @@ private:
 	QRadioButton *implantButton;//种植体
 	QRadioButton *jawToothButton;//对颌牙
 
-	QList<QLabel*> totalCrownList;
-	QList<QLabel*> toothCrownList;
-	QList<QLabel*> lossToothList;
-	QList<QLabel*> inlayList;
-	QList<QLabel*> facingList;
-	QList<QLabel*> waxTypeList;
-	QList<QLabel*> implantList;
-	QList<QLabel*> jawToothList;
+	QList<QPushButton*> totalCrownList;
+	QList<QPushButton*> toothCrownList;
+	QList<QPushButton*> lossToothList;
+	QList<QPushButton*> inlayList;
+	QList<QPushButton*> facingList;
+	QList<QPushButton*> waxTypeList;
+	QList<QPushButton*> implantList;
+	QList<QPushButton*> jawToothList;
 
 	//印模
 	bool doMoulageFlag = true;

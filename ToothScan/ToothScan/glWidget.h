@@ -4,10 +4,6 @@
 #include <QWidget>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
-#include <QToolButton>
-#include <QDockWidget>
-#include <QSpinBox>
-#include <QSlider>
 #include "io.h"
 #include <QOpenGLBuffer>
 #include <iostream>
@@ -20,7 +16,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	Q_OBJECT
 public:
-	GLWidget(const QColor &background);
+	GLWidget(QWidget *widget = 0);
 	~GLWidget();
 	void initVariable();
 	void constructIHM();
@@ -41,19 +37,7 @@ protected:
 	//void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-	QColor glbackground;
-
-	QToolButton *leftWatchButton;
-	QToolButton *rightWatchButton;
-	QToolButton *topWatchButton;
-	QToolButton *bottomWatchButton;
-	QToolButton *frontWatchButton;
-	QToolButton *backWatchButton;
-	//相机显示窗口
-	QDockWidget *cameraWindow;
-	QSpinBox *spinCameraBox;
-	QSlider *sliderCamera;
-
+	//QColor glbackground;
 	/*--------------------------------------------------*/
 	void makeObject();
 

@@ -20,5 +20,23 @@
         <file>Resources/images/facing.png</file>
         <file>Resources/images/inlay.png</file>
         <file>Resources/images/loseTooth.png</file>
+        <file>Resources/images/tooth111.png</file>
+        <file>Resources/images/tooth110.png</file>
+        <file>Resources/images/tooth112.png</file>
+        <file>Resources/images/tooth113.png</file>
+        <file>Resources/images/tooth114.png</file>
+        <file>Resources/images/tooth115.png</file>
+        <file>Resources/images/tooth116.png</file>
+        <file>Resources/images/tooth117.png</file>
+        <file>Resources/images/tooth118.png</file>
+        <file>Resources/images/tooth120.png</file>
+        <file>Resources/images/tooth121.png</file>
+        <file>Resources/images/tooth122.png</file>
+        <file>Resources/images/tooth123.png</file>
+        <file>Resources/images/tooth124.png</file>
+        <file>Resources/images/tooth125.png</file>
+        <file>Resources/images/tooth126.png</file>
+        <file>Resources/images/tooth127.png</file>
+        <file>Resources/images/tooth128.png</file>
     </qresource>
 </RCC>

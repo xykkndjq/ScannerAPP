@@ -76,7 +76,44 @@ void TabMainGUI::setConnections()
 	connect(MoulageButton2, SIGNAL(clicked()), this, SLOT(MoulagePress2()));
 	connect(MoulageButton3, SIGNAL(clicked()), this, SLOT(MoulagePress3()));
 	//分模
-	connect(toothRadioButtonGroup,SIGNAL(buttonClicked(int)), this,SLOT(ToothGroupClicked(int )));
+	connect(toothRadioButtonGroup,SIGNAL(buttonClicked(int)), this,SLOT(ToothGroupClicked(int)));
+
+	connect(tooth11, SIGNAL(clicked()), this, SLOT(Tooth11Press()));
+	connect(tooth12, SIGNAL(clicked()), this, SLOT(Tooth12Press()));
+	connect(tooth13, SIGNAL(clicked()), this, SLOT(Tooth13Press()));
+	connect(tooth14, SIGNAL(clicked()), this, SLOT(Tooth14Press()));
+	connect(tooth15, SIGNAL(clicked()), this, SLOT(Tooth15Press()));
+	connect(tooth16, SIGNAL(clicked()), this, SLOT(Tooth16Press()));
+	connect(tooth17, SIGNAL(clicked()), this, SLOT(Tooth17Press()));
+	connect(tooth18, SIGNAL(clicked()), this, SLOT(Tooth18Press()));
+
+	connect(tooth21, SIGNAL(clicked()), this, SLOT(Tooth21Press()));
+	connect(tooth22, SIGNAL(clicked()), this, SLOT(Tooth22Press()));
+	connect(tooth23, SIGNAL(clicked()), this, SLOT(Tooth23Press()));
+	connect(tooth24, SIGNAL(clicked()), this, SLOT(Tooth24Press()));
+	connect(tooth25, SIGNAL(clicked()), this, SLOT(Tooth25Press()));
+	connect(tooth26, SIGNAL(clicked()), this, SLOT(Tooth26Press()));
+	connect(tooth27, SIGNAL(clicked()), this, SLOT(Tooth27Press()));
+	connect(tooth28, SIGNAL(clicked()), this, SLOT(Tooth28Press()));
+
+	connect(tooth31, SIGNAL(clicked()), this, SLOT(Tooth31Press()));
+	connect(tooth32, SIGNAL(clicked()), this, SLOT(Tooth32Press()));
+	connect(tooth33, SIGNAL(clicked()), this, SLOT(Tooth33Press()));
+	connect(tooth34, SIGNAL(clicked()), this, SLOT(Tooth34Press()));
+	connect(tooth35, SIGNAL(clicked()), this, SLOT(Tooth35Press()));
+	connect(tooth36, SIGNAL(clicked()), this, SLOT(Tooth36Press()));
+	connect(tooth37, SIGNAL(clicked()), this, SLOT(Tooth37Press()));
+	connect(tooth38, SIGNAL(clicked()), this, SLOT(Tooth38Press()));
+
+	connect(tooth41, SIGNAL(clicked()), this, SLOT(Tooth41Press()));
+	connect(tooth42, SIGNAL(clicked()), this, SLOT(Tooth42Press()));
+	connect(tooth43, SIGNAL(clicked()), this, SLOT(Tooth43Press()));
+	connect(tooth44, SIGNAL(clicked()), this, SLOT(Tooth44Press()));
+	connect(tooth45, SIGNAL(clicked()), this, SLOT(Tooth45Press()));
+	connect(tooth46, SIGNAL(clicked()), this, SLOT(Tooth46Press()));
+	connect(tooth47, SIGNAL(clicked()), this, SLOT(Tooth47Press()));
+	connect(tooth48, SIGNAL(clicked()), this, SLOT(Tooth48Press()));
+
 }
 
 void TabMainGUI::initVariable()
@@ -128,168 +165,136 @@ void TabMainGUI::initVariable()
 		"QPushButton:hover{background-image: url(:/MainWidget/Resources/images/Moulage3_yes.png);}");
 	//分模
 	//splitleft
-	tooth11 = new QLabel("11", this);
+	tooth11 = new QPushButton("11", this);
 	tooth11->setFixedSize(33,33);
 	tooth11->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth11->setAlignment(Qt::AlignCenter);
 	tooth11->setContentsMargins(0, 0, 0, 0);
-	tooth12 = new QLabel("12", this);
+	tooth12 = new QPushButton("12", this);
 	tooth12->setFixedSize(33, 33);
 	tooth12->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth12->setAlignment(Qt::AlignCenter);
 	tooth12->setContentsMargins(0, 0, 0, 0);
-	tooth13 = new QLabel("13", this);
+	tooth13 = new QPushButton("13", this);
 	tooth13->setFixedSize(33, 33);
 	tooth13->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth13->setAlignment(Qt::AlignCenter);
 	tooth13->setContentsMargins(0, 0, 0, 0);
-	tooth14 = new QLabel("14", this);
+	tooth14 = new QPushButton("14", this);
 	tooth14->setFixedSize(33, 33);
 	tooth14->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth14->setAlignment(Qt::AlignCenter);
 	tooth14->setContentsMargins(0, 0, 0, 0);
-	tooth15 = new QLabel("15", this);
+	tooth15 = new QPushButton("15", this);
 	tooth15->setFixedSize(33, 33);
 	tooth15->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth15->setAlignment(Qt::AlignCenter);
 	tooth14->setContentsMargins(0, 0, 0, 0);
-	tooth16 = new QLabel("16", this);
+	tooth16 = new QPushButton("16", this);
 	tooth16->setFixedSize(33, 33);
 	tooth16->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth16->setAlignment(Qt::AlignCenter);
 	tooth16->setContentsMargins(0, 0, 0, 0);
-	tooth17 = new QLabel("17", this);
+	tooth17 = new QPushButton("17", this);
 	tooth17->setFixedSize(33, 33);
 	tooth17->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth17->setAlignment(Qt::AlignCenter);
 	tooth17->setContentsMargins(0, 0, 0, 0);
-	tooth18 = new QLabel("18", this);
+	tooth18 = new QPushButton("18", this);
 	tooth18->setFixedSize(33, 33);
 	tooth18->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth18->setAlignment(Qt::AlignCenter);
 	tooth18->setContentsMargins(0, 0, 0, 0);
 
-	tooth21 = new QLabel("21", this);
+	tooth21 = new QPushButton("21", this);
 	tooth21->setFixedSize(33, 33);
 	tooth21->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth21->setAlignment(Qt::AlignCenter);
 	tooth21->setContentsMargins(0, 0, 0, 0);
-	tooth22 = new QLabel("22", this);
+	tooth22 = new QPushButton("22", this);
 	tooth22->setFixedSize(33, 33);
 	tooth22->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth22->setAlignment(Qt::AlignCenter);
 	tooth22->setContentsMargins(0, 0, 0, 0);
-	tooth23 = new QLabel("23", this);
+	tooth23 = new QPushButton("23", this);
 	tooth23->setFixedSize(33, 33);
 	tooth23->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth23->setAlignment(Qt::AlignCenter);
 	tooth23->setContentsMargins(0, 0, 0, 0);
-	tooth24 = new QLabel("24", this);
+	tooth24 = new QPushButton("24", this);
 	tooth24->setFixedSize(33, 33);
 	tooth24->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth24->setAlignment(Qt::AlignCenter);
 	tooth24->setContentsMargins(0, 0, 0, 0);
-	tooth25 = new QLabel("25", this);
+	tooth25 = new QPushButton("25", this);
 	tooth25->setFixedSize(33, 33);
 	tooth25->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth25->setAlignment(Qt::AlignCenter);
 	tooth25->setContentsMargins(0, 0, 0, 0);
-	tooth26 = new QLabel("26", this);
+	tooth26 = new QPushButton("26", this);
 	tooth26->setFixedSize(33, 33);
 	tooth26->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth26->setAlignment(Qt::AlignCenter);
 	tooth26->setContentsMargins(0, 0, 0, 0);
-	tooth27 = new QLabel("27", this);
+	tooth27 = new QPushButton("27", this);
 	tooth27->setFixedSize(33, 33);
 	tooth27->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth27->setAlignment(Qt::AlignCenter);
 	tooth27->setContentsMargins(0, 0, 0, 0);
-	tooth28 = new QLabel("28", this);
+	tooth28 = new QPushButton("28", this);
 	tooth28->setFixedSize(33, 33);
 	tooth28->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth28->setAlignment(Qt::AlignCenter);
 	tooth28->setContentsMargins(0, 0, 0, 0);
 
-	tooth31 = new QLabel("31", this);
+	tooth31 = new QPushButton("31", this);
 	tooth31->setFixedSize(33, 33);
 	tooth31->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth31->setAlignment(Qt::AlignCenter);
 	tooth31->setContentsMargins(0, 0, 0, 0);
-	tooth32 = new QLabel("32", this);
+	tooth32 = new QPushButton("32", this);
 	tooth32->setFixedSize(33, 33);
 	tooth32->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth32->setAlignment(Qt::AlignCenter);
 	tooth32->setContentsMargins(0, 0, 0, 0);
-	tooth33 = new QLabel("33", this);
+	tooth33 = new QPushButton("33", this);
 	tooth33->setFixedSize(33, 33);
 	tooth33->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth33->setAlignment(Qt::AlignCenter);
 	tooth33->setContentsMargins(0, 0, 0, 0);
-	tooth34 = new QLabel("34", this);
+	tooth34 = new QPushButton("34", this);
 	tooth34->setFixedSize(33, 33);
 	tooth34->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth34->setAlignment(Qt::AlignCenter);
 	tooth34->setContentsMargins(0, 0, 0, 0);
-	tooth35 = new QLabel("35", this);
+	tooth35 = new QPushButton("35", this);
 	tooth35->setFixedSize(33, 33);
 	tooth35->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth35->setAlignment(Qt::AlignCenter);
 	tooth35->setContentsMargins(0, 0, 0, 0);
-	tooth36 = new QLabel("36", this);
+	tooth36 = new QPushButton("36", this);
 	tooth36->setFixedSize(33, 33);
 	tooth36->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth36->setAlignment(Qt::AlignCenter);
 	tooth36->setContentsMargins(0, 0, 0, 0);
-	tooth37 = new QLabel("37", this);
+	tooth37 = new QPushButton("37", this);
 	tooth37->setFixedSize(33, 33);
 	tooth37->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth37->setAlignment(Qt::AlignCenter);
 	tooth37->setContentsMargins(0, 0, 0, 0);
-	tooth38 = new QLabel("38", this);
+	tooth38 = new QPushButton("38", this);
 	tooth38->setFixedSize(33, 33);
 	tooth38->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth38->setAlignment(Qt::AlignCenter);
 	tooth38->setContentsMargins(0, 0, 0, 0);
 
-	tooth41 = new QLabel("41", this);
+	tooth41 = new QPushButton("41", this);
 	tooth41->setFixedSize(33, 33);
 	tooth41->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth41->setAlignment(Qt::AlignCenter);
 	tooth41->setContentsMargins(0, 0, 0, 0);
-	tooth42 = new QLabel("42", this);
+	tooth42 = new QPushButton("42", this);
 	tooth42->setFixedSize(33, 33);
 	tooth42->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth42->setAlignment(Qt::AlignCenter);
 	tooth42->setContentsMargins(0, 0, 0, 0);
-	tooth43 = new QLabel("43", this);
+	tooth43 = new QPushButton("43", this);
 	tooth43->setFixedSize(33, 33);
 	tooth43->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth43->setAlignment(Qt::AlignCenter);
 	tooth43->setContentsMargins(0, 0, 0, 0);
-	tooth44 = new QLabel("44", this);
+	tooth44 = new QPushButton("44", this);
 	tooth44->setFixedSize(33, 33);
 	tooth44->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth44->setAlignment(Qt::AlignCenter);
 	tooth44->setContentsMargins(0, 0, 0, 0);
-	tooth45 = new QLabel("45", this);
+	tooth45 = new QPushButton("45", this);
 	tooth45->setFixedSize(33, 33);
 	tooth45->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth45->setAlignment(Qt::AlignCenter);
 	tooth45->setContentsMargins(0, 0, 0, 0);
-	tooth46 = new QLabel("46", this);
+	tooth46 = new QPushButton("46", this);
 	tooth46->setFixedSize(33, 33);
 	tooth46->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth46->setAlignment(Qt::AlignCenter);
 	tooth46->setContentsMargins(0, 0, 0, 0);
-	tooth47 = new QLabel("47", this);
+	tooth47 = new QPushButton("47", this);
 	tooth47->setFixedSize(33, 33);
 	tooth47->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth47->setAlignment(Qt::AlignCenter);
 	tooth47->setContentsMargins(0, 0, 0, 0);
-	tooth48 = new QLabel("48", this);
+	tooth48 = new QPushButton("48", this);
 	tooth48->setFixedSize(33, 33);
 	tooth48->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-	tooth48->setAlignment(Qt::AlignCenter);
 	tooth48->setContentsMargins(0, 0, 0, 0);
 
 	clearAllButton = new QPushButton(QStringLiteral("清除所有"), this);
@@ -802,48 +807,48 @@ void TabMainGUI::MoulagePress3()
 	}
 }
 
-void TabMainGUI::judgeToothList(int id, QList<QLabel*> &toothQLabelList)
+void TabMainGUI::judgeToothList(int id, QList<QPushButton*> &toothButtonList)
 {
 	switch (id)
 	{
 		case 1:
 		{
-			toothQLabelList = totalCrownList;
+			toothButtonList = totalCrownList;
 			break;
 		}
 		case 2:
 		{
-			toothQLabelList = toothCrownList;
+			toothButtonList = toothCrownList;
 			break;
 		}
 		case 3:
 		{
-			toothQLabelList = lossToothList;
+			toothButtonList = lossToothList;
 			break;
 		}
 		case 4:
 		{
-			toothQLabelList = inlayList;
+			toothButtonList = inlayList;
 			break;
 		}
 		case 5:
 		{
-			toothQLabelList = facingList;
+			toothButtonList = facingList;
 			break;
 		}
 		case 6:
 		{
-			toothQLabelList = waxTypeList;
+			toothButtonList = waxTypeList;
 			break;
 		}
 		case 7:
 		{
-			toothQLabelList = implantList;
+			toothButtonList = implantList;
 			break;
 		}
 		case 8:
 		{
-			toothQLabelList = jawToothList;
+			toothButtonList = jawToothList;
 			break;
 		}
 	}
@@ -858,10 +863,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (totalCrownList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, totalCrownList)
+				foreach(QPushButton *chooseButton, totalCrownList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "1.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "1.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -870,10 +875,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (toothCrownList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, toothCrownList)
+				foreach(QPushButton *chooseButton, toothCrownList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "2.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "2.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -882,10 +887,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (lossToothList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, lossToothList)
+				foreach(QPushButton *chooseButton, lossToothList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "3.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "3.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -894,10 +899,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (inlayList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, inlayList)
+				foreach(QPushButton *chooseButton, inlayList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "4.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "4.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -906,10 +911,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (facingList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, facingList)
+				foreach(QPushButton *chooseButton, facingList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "5.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "5.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -918,10 +923,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (waxTypeList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, waxTypeList)
+				foreach(QPushButton *chooseButton, waxTypeList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "6.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "6.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -930,10 +935,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (implantList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, implantList)
+				foreach(QPushButton *chooseButton, implantList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "7.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "7.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -942,10 +947,10 @@ void TabMainGUI::ToothGroupClicked(int id)
 		{
 			if (jawToothList.size() != 0)
 			{
-				foreach(QLabel *chooseLabel, jawToothList)
+				foreach(QPushButton *chooseButton, jawToothList)
 				{
-					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseLabel->objectName() + "8.png);}";
-					chooseLabel->setStyleSheet(path);
+					QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "8.png);}";
+					chooseButton->setStyleSheet(path);
 				}
 			}
 			break;
@@ -956,643 +961,739 @@ void TabMainGUI::ToothGroupClicked(int id)
 /*----------------1--------------------*/
 void TabMainGUI::Tooth11Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth11Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth11" + QString::number(chooseID, 10) + ".png);}";
-		tooth11->setStyleSheet(path);
-		toothQLabelList.append(tooth11);
-		tooth11Flag = true;
-	}
-	else if (tooth11Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth110.png);}";
-		tooth11->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth11);
-		tooth11Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth11Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth11" + QString::number(chooseID, 10) + ".png);}";
+			tooth11->setStyleSheet(path);
+			toothPushButtonList.append(tooth11);
+			tooth11Flag = true;
+		}
+		else if (tooth11Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth110.png);}";
+			tooth11->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth11);
+			tooth11Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth12Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth12Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth12" + QString::number(chooseID, 10) + ".png);}";
-		tooth12->setStyleSheet(path);
-		toothQLabelList.append(tooth12);
-		tooth12Flag = true;
-	}
-	else if (tooth12Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth120.png);}";
-		tooth12->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth12);
-		tooth12Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth12Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth12" + QString::number(chooseID, 10) + ".png);}";
+			tooth12->setStyleSheet(path);
+			toothPushButtonList.append(tooth12);
+			tooth12Flag = true;
+		}
+		else if (tooth12Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth120.png);}";
+			tooth12->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth12);
+			tooth12Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth13Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth13Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth13" + QString::number(chooseID, 10) + ".png);}";
-		tooth13->setStyleSheet(path);
-		toothQLabelList.append(tooth13);
-		tooth13Flag = true;
-	}
-	else if (tooth13Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth130.png);}";
-		tooth13->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth13);
-		tooth13Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth13Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth13" + QString::number(chooseID, 10) + ".png);}";
+			tooth13->setStyleSheet(path);
+			toothPushButtonList.append(tooth13);
+			tooth13Flag = true;
+		}
+		else if (tooth13Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth130.png);}";
+			tooth13->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth13);
+			tooth13Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth14Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth14Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth14" + QString::number(chooseID, 10) + ".png);}";
-		tooth14->setStyleSheet(path);
-		toothQLabelList.append(tooth14);
-		tooth14Flag = true;
-	}
-	else if (tooth14Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth140.png);}";
-		tooth14->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth14);
-		tooth14Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth14Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth14" + QString::number(chooseID, 10) + ".png);}";
+			tooth14->setStyleSheet(path);
+			toothPushButtonList.append(tooth14);
+			tooth14Flag = true;
+		}
+		else if (tooth14Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth140.png);}";
+			tooth14->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth14);
+			tooth14Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth15Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth15Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth15" + QString::number(chooseID, 10) + ".png);}";
-		tooth15->setStyleSheet(path);
-		toothQLabelList.append(tooth15);
-		tooth15Flag = true;
-	}
-	else if (tooth15Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth150.png);}";
-		tooth15->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth15);
-		tooth15Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth15Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth15" + QString::number(chooseID, 10) + ".png);}";
+			tooth15->setStyleSheet(path);
+			toothPushButtonList.append(tooth15);
+			tooth15Flag = true;
+		}
+		else if (tooth15Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth150.png);}";
+			tooth15->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth15);
+			tooth15Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth16Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth16Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth16" + QString::number(chooseID, 10) + ".png);}";
-		tooth16->setStyleSheet(path);
-		toothQLabelList.append(tooth16);
-		tooth16Flag = true;
-	}
-	else if (tooth16Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth160.png);}";
-		tooth16->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth16);
-		tooth16Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth16Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth16" + QString::number(chooseID, 10) + ".png);}";
+			tooth16->setStyleSheet(path);
+			toothPushButtonList.append(tooth16);
+			tooth16Flag = true;
+		}
+		else if (tooth16Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth160.png);}";
+			tooth16->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth16);
+			tooth16Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth17Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth17Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth17" + QString::number(chooseID, 10) + ".png);}";
-		tooth17->setStyleSheet(path);
-		toothQLabelList.append(tooth17);
-		tooth17Flag = true;
-	}
-	else if (tooth17Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth170.png);}";
-		tooth17->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth17);
-		tooth17Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth17Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth17" + QString::number(chooseID, 10) + ".png);}";
+			tooth17->setStyleSheet(path);
+			toothPushButtonList.append(tooth17);
+			tooth17Flag = true;
+		}
+		else if (tooth17Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth170.png);}";
+			tooth17->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth17);
+			tooth17Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth18Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth18Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth18" + QString::number(chooseID, 10) + ".png);}";
-		tooth18->setStyleSheet(path);
-		toothQLabelList.append(tooth18);
-		tooth18Flag = true;
-	}
-	else if (tooth18Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth180.png);}";
-		tooth18->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth18);
-		tooth18Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth18Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth18" + QString::number(chooseID, 10) + ".png);}";
+			tooth18->setStyleSheet(path);
+			toothPushButtonList.append(tooth18);
+			tooth18Flag = true;
+		}
+		else if (tooth18Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth180.png);}";
+			tooth18->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth18);
+			tooth18Flag = false;
+		}
 	}
 }
 
 /*----------------2--------------------*/
 void TabMainGUI::Tooth21Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth21Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth21" + QString::number(chooseID, 10) + ".png);}";
-		tooth21->setStyleSheet(path);
-		toothQLabelList.append(tooth21);
-		tooth21Flag = true;
-	}
-	else if (tooth21Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth210.png);}";
-		tooth21->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth21);
-		tooth21Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth21Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth21" + QString::number(chooseID, 10) + ".png);}";
+			tooth21->setStyleSheet(path);
+			toothPushButtonList.append(tooth21);
+			tooth21Flag = true;
+		}
+		else if (tooth21Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth210.png);}";
+			tooth21->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth21);
+			tooth21Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth22Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth22Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth22" + QString::number(chooseID, 10) + ".png);}";
-		tooth22->setStyleSheet(path);
-		toothQLabelList.append(tooth22);
-		tooth22Flag = true;
-	}
-	else if (tooth22Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth220.png);}";
-		tooth22->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth22);
-		tooth22Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth22Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth22" + QString::number(chooseID, 10) + ".png);}";
+			tooth22->setStyleSheet(path);
+			toothPushButtonList.append(tooth22);
+			tooth22Flag = true;
+		}
+		else if (tooth22Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth220.png);}";
+			tooth22->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth22);
+			tooth22Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth23Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth23Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth23" + QString::number(chooseID, 10) + ".png);}";
-		tooth23->setStyleSheet(path);
-		toothQLabelList.append(tooth23);
-		tooth23Flag = true;
-	}
-	else if (tooth23Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth230.png);}";
-		tooth23->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth23);
-		tooth23Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth23Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth23" + QString::number(chooseID, 10) + ".png);}";
+			tooth23->setStyleSheet(path);
+			toothPushButtonList.append(tooth23);
+			tooth23Flag = true;
+		}
+		else if (tooth23Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth230.png);}";
+			tooth23->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth23);
+			tooth23Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth24Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth24Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth24" + QString::number(chooseID, 10) + ".png);}";
-		tooth24->setStyleSheet(path);
-		toothQLabelList.append(tooth24);
-		tooth24Flag = true;
-	}
-	else if (tooth24Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth240.png);}";
-		tooth24->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth24);
-		tooth24Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth24Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth24" + QString::number(chooseID, 10) + ".png);}";
+			tooth24->setStyleSheet(path);
+			toothPushButtonList.append(tooth24);
+			tooth24Flag = true;
+		}
+		else if (tooth24Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth240.png);}";
+			tooth24->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth24);
+			tooth24Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth25Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth25Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth25" + QString::number(chooseID, 10) + ".png);}";
-		tooth25->setStyleSheet(path);
-		toothQLabelList.append(tooth25);
-		tooth25Flag = true;
-	}
-	else if (tooth25Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth250.png);}";
-		tooth25->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth25);
-		tooth25Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth25Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth25" + QString::number(chooseID, 10) + ".png);}";
+			tooth25->setStyleSheet(path);
+			toothPushButtonList.append(tooth25);
+			tooth25Flag = true;
+		}
+		else if (tooth25Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth250.png);}";
+			tooth25->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth25);
+			tooth25Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth26Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth26Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth26" + QString::number(chooseID, 10) + ".png);}";
-		tooth26->setStyleSheet(path);
-		toothQLabelList.append(tooth26);
-		tooth26Flag = true;
-	}
-	else if (tooth26Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth260.png);}";
-		tooth26->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth26);
-		tooth26Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth26Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth26" + QString::number(chooseID, 10) + ".png);}";
+			tooth26->setStyleSheet(path);
+			toothPushButtonList.append(tooth26);
+			tooth26Flag = true;
+		}
+		else if (tooth26Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth260.png);}";
+			tooth26->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth26);
+			tooth26Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth27Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth27Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth27" + QString::number(chooseID, 10) + ".png);}";
-		tooth27->setStyleSheet(path);
-		toothQLabelList.append(tooth27);
-		tooth27Flag = true;
-	}
-	else if (tooth27Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth270.png);}";
-		tooth27->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth27);
-		tooth27Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth27Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth27" + QString::number(chooseID, 10) + ".png);}";
+			tooth27->setStyleSheet(path);
+			toothPushButtonList.append(tooth27);
+			tooth27Flag = true;
+		}
+		else if (tooth27Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth270.png);}";
+			tooth27->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth27);
+			tooth27Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth28Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth28Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth28" + QString::number(chooseID, 10) + ".png);}";
-		tooth28->setStyleSheet(path);
-		toothQLabelList.append(tooth28);
-		tooth28Flag = true;
-	}
-	else if (tooth28Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth280.png);}";
-		tooth28->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth28);
-		tooth28Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth28Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth28" + QString::number(chooseID, 10) + ".png);}";
+			tooth28->setStyleSheet(path);
+			toothPushButtonList.append(tooth28);
+			tooth28Flag = true;
+		}
+		else if (tooth28Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth280.png);}";
+			tooth28->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth28);
+			tooth28Flag = false;
+		}
 	}
 }
 
 /*----------------3--------------------*/
 void TabMainGUI::Tooth31Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth31Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth31" + QString::number(chooseID, 10) + ".png);}";
-		tooth31->setStyleSheet(path);
-		toothQLabelList.append(tooth31);
-		tooth31Flag = true;
-	}
-	else if (tooth31Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth310.png);}";
-		tooth31->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth31);
-		tooth31Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth31Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth31" + QString::number(chooseID, 10) + ".png);}";
+			tooth31->setStyleSheet(path);
+			toothPushButtonList.append(tooth31);
+			tooth31Flag = true;
+		}
+		else if (tooth31Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth310.png);}";
+			tooth31->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth31);
+			tooth31Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth32Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth32Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth32" + QString::number(chooseID, 10) + ".png);}";
-		tooth32->setStyleSheet(path);
-		toothQLabelList.append(tooth32);
-		tooth32Flag = true;
-	}
-	else if (tooth32Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth320.png);}";
-		tooth32->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth32);
-		tooth32Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth32Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth32" + QString::number(chooseID, 10) + ".png);}";
+			tooth32->setStyleSheet(path);
+			toothPushButtonList.append(tooth32);
+			tooth32Flag = true;
+		}
+		else if (tooth32Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth320.png);}";
+			tooth32->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth32);
+			tooth32Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth33Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth33Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth33" + QString::number(chooseID, 10) + ".png);}";
-		tooth33->setStyleSheet(path);
-		toothQLabelList.append(tooth33);
-		tooth33Flag = true;
-	}
-	else if (tooth33Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth330.png);}";
-		tooth33->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth33);
-		tooth33Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth33Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth33" + QString::number(chooseID, 10) + ".png);}";
+			tooth33->setStyleSheet(path);
+			toothPushButtonList.append(tooth33);
+			tooth33Flag = true;
+		}
+		else if (tooth33Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth330.png);}";
+			tooth33->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth33);
+			tooth33Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth34Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth34Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth34" + QString::number(chooseID, 10) + ".png);}";
-		tooth34->setStyleSheet(path);
-		toothQLabelList.append(tooth34);
-		tooth34Flag = true;
-	}
-	else if (tooth34Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth340.png);}";
-		tooth34->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth34);
-		tooth34Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth34Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth34" + QString::number(chooseID, 10) + ".png);}";
+			tooth34->setStyleSheet(path);
+			toothPushButtonList.append(tooth34);
+			tooth34Flag = true;
+		}
+		else if (tooth34Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth340.png);}";
+			tooth34->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth34);
+			tooth34Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth35Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth35Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth35" + QString::number(chooseID, 10) + ".png);}";
-		tooth35->setStyleSheet(path);
-		toothQLabelList.append(tooth35);
-		tooth35Flag = true;
-	}
-	else if (tooth35Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth350.png);}";
-		tooth35->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth35);
-		tooth35Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth35Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth35" + QString::number(chooseID, 10) + ".png);}";
+			tooth35->setStyleSheet(path);
+			toothPushButtonList.append(tooth35);
+			tooth35Flag = true;
+		}
+		else if (tooth35Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth350.png);}";
+			tooth35->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth35);
+			tooth35Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth36Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth36Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth36" + QString::number(chooseID, 10) + ".png);}";
-		tooth36->setStyleSheet(path);
-		toothQLabelList.append(tooth36);
-		tooth36Flag = true;
-	}
-	else if (tooth36Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth360.png);}";
-		tooth36->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth36);
-		tooth36Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth36Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth36" + QString::number(chooseID, 10) + ".png);}";
+			tooth36->setStyleSheet(path);
+			toothPushButtonList.append(tooth36);
+			tooth36Flag = true;
+		}
+		else if (tooth36Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth360.png);}";
+			tooth36->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth36);
+			tooth36Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth37Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth37Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth37" + QString::number(chooseID, 10) + ".png);}";
-		tooth37->setStyleSheet(path);
-		toothQLabelList.append(tooth37);
-		tooth37Flag = true;
-	}
-	else if (tooth37Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth370.png);}";
-		tooth37->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth37);
-		tooth37Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth37Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth37" + QString::number(chooseID, 10) + ".png);}";
+			tooth37->setStyleSheet(path);
+			toothPushButtonList.append(tooth37);
+			tooth37Flag = true;
+		}
+		else if (tooth37Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth370.png);}";
+			tooth37->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth37);
+			tooth37Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth38Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth38Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth38" + QString::number(chooseID, 10) + ".png);}";
-		tooth38->setStyleSheet(path);
-		toothQLabelList.append(tooth38);
-		tooth38Flag = true;
-	}
-	else if (tooth38Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth380.png);}";
-		tooth38->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth38);
-		tooth38Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth38Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth38" + QString::number(chooseID, 10) + ".png);}";
+			tooth38->setStyleSheet(path);
+			toothPushButtonList.append(tooth38);
+			tooth38Flag = true;
+		}
+		else if (tooth38Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth380.png);}";
+			tooth38->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth38);
+			tooth38Flag = false;
+		}
 	}
 }
 
 /*----------------4--------------------*/
 void TabMainGUI::Tooth41Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth41Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth41" + QString::number(chooseID, 10) + ".png);}";
-		tooth41->setStyleSheet(path);
-		toothQLabelList.append(tooth41);
-		tooth41Flag = true;
-	}
-	else if (tooth41Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth410.png);}";
-		tooth41->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth41);
-		tooth41Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth41Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth41" + QString::number(chooseID, 10) + ".png);}";
+			tooth41->setStyleSheet(path);
+			toothPushButtonList.append(tooth41);
+			tooth41Flag = true;
+		}
+		else if (tooth41Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth410.png);}";
+			tooth41->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth41);
+			tooth41Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth42Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth42Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth42" + QString::number(chooseID, 10) + ".png);}";
-		tooth42->setStyleSheet(path);
-		toothQLabelList.append(tooth42);
-		tooth42Flag = true;
-	}
-	else if (tooth42Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth420.png);}";
-		tooth42->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth42);
-		tooth42Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth42Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth42" + QString::number(chooseID, 10) + ".png);}";
+			tooth42->setStyleSheet(path);
+			toothPushButtonList.append(tooth42);
+			tooth42Flag = true;
+		}
+		else if (tooth42Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth420.png);}";
+			tooth42->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth42);
+			tooth42Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth43Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth43Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth43" + QString::number(chooseID, 10) + ".png);}";
-		tooth43->setStyleSheet(path);
-		toothQLabelList.append(tooth43);
-		tooth43Flag = true;
-	}
-	else if (tooth43Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth430.png);}";
-		tooth43->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth43);
-		tooth43Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth43Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth43" + QString::number(chooseID, 10) + ".png);}";
+			tooth43->setStyleSheet(path);
+			toothPushButtonList.append(tooth43);
+			tooth43Flag = true;
+		}
+		else if (tooth43Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth430.png);}";
+			tooth43->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth43);
+			tooth43Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth44Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth44Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth44" + QString::number(chooseID, 10) + ".png);}";
-		tooth44->setStyleSheet(path);
-		toothQLabelList.append(tooth44);
-		tooth44Flag = true;
-	}
-	else if (tooth44Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth440.png);}";
-		tooth44->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth44);
-		tooth44Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth44Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth44" + QString::number(chooseID, 10) + ".png);}";
+			tooth44->setStyleSheet(path);
+			toothPushButtonList.append(tooth44);
+			tooth44Flag = true;
+		}
+		else if (tooth44Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth440.png);}";
+			tooth44->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth44);
+			tooth44Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth45Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth45Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth45" + QString::number(chooseID, 10) + ".png);}";
-		tooth45->setStyleSheet(path);
-		toothQLabelList.append(tooth45);
-		tooth45Flag = true;
-	}
-	else if (tooth45Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth450.png);}";
-		tooth45->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth45);
-		tooth45Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth45Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth45" + QString::number(chooseID, 10) + ".png);}";
+			tooth45->setStyleSheet(path);
+			toothPushButtonList.append(tooth45);
+			tooth45Flag = true;
+		}
+		else if (tooth45Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth450.png);}";
+			tooth45->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth45);
+			tooth45Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth46Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth46Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth46" + QString::number(chooseID, 10) + ".png);}";
-		tooth46->setStyleSheet(path);
-		toothQLabelList.append(tooth46);
-		tooth46Flag = true;
-	}
-	else if (tooth46Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth460.png);}";
-		tooth46->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth46);
-		tooth46Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth46Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth46" + QString::number(chooseID, 10) + ".png);}";
+			tooth46->setStyleSheet(path);
+			toothPushButtonList.append(tooth46);
+			tooth46Flag = true;
+		}
+		else if (tooth46Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth460.png);}";
+			tooth46->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth46);
+			tooth46Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth47Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth47Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth47" + QString::number(chooseID, 10) + ".png);}";
-		tooth47->setStyleSheet(path);
-		toothQLabelList.append(tooth47);
-		tooth47Flag = true;
-	}
-	else if (tooth47Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth470.png);}";
-		tooth47->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth47);
-		tooth47Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth47Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth47" + QString::number(chooseID, 10) + ".png);}";
+			tooth47->setStyleSheet(path);
+			toothPushButtonList.append(tooth47);
+			tooth47Flag = true;
+		}
+		else if (tooth47Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth470.png);}";
+			tooth47->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth47);
+			tooth47Flag = false;
+		}
 	}
 }
 
 void TabMainGUI::Tooth48Press()
 {
-	QList<QLabel *> toothQLabelList;
-	judgeToothList(chooseID, toothQLabelList);
-	if (tooth48Flag == false)
+	if (chooseID != -1)
 	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth48" + QString::number(chooseID, 10) + ".png);}";
-		tooth48->setStyleSheet(path);
-		toothQLabelList.append(tooth48);
-		tooth48Flag = true;
-	}
-	else if (tooth48Flag == true)
-	{
-		QString path = "QLabel{background-image: url(:/MainWidget/Resources/images/tooth480.png);}";
-		tooth48->setStyleSheet(path);
-		toothQLabelList.removeOne(tooth48);
-		tooth48Flag = false;
+		QList<QPushButton *> toothPushButtonList;
+		judgeToothList(chooseID, toothPushButtonList);
+		if (tooth48Flag == false)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth48" + QString::number(chooseID, 10) + ".png);}";
+			tooth48->setStyleSheet(path);
+			toothPushButtonList.append(tooth48);
+			tooth48Flag = true;
+		}
+		else if (tooth48Flag == true)
+		{
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth480.png);}";
+			tooth48->setStyleSheet(path);
+			toothPushButtonList.removeOne(tooth48);
+			tooth48Flag = false;
+		}
 	}
 }

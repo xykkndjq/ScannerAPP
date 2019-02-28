@@ -26,9 +26,9 @@ MainWidget::~MainWidget()
 //!
 void MainWidget::initVariable() 
 {
-	glwidget = new GLWidget(qRgb(128, 128, 128));
-	glwidget->showMaximized();
-	leftTabPage = new TabMainGUI();
-	leftTabPage->showMaximized();
+	scanMainPage = new ScanMainGUI();
+	scanMainPage->showMaximized();
+	tabMainPage = new TabMainGUI();
+	tabMainPage->showMaximized();
 }
 

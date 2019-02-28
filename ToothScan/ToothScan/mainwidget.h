@@ -3,7 +3,6 @@
 
 #include <QtWidgets/QWidget>
 #include "ui_mainwidget.h"
-#include "glWidget.h"
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QtWidgets/QMenuBar>
@@ -12,6 +11,7 @@
 #include <QtWidgets/QToolBar>
 
 #include "TabMainGUI.h"
+#include "ScanMainGUI.h"
 
 class MainWidget : public QWidget
 {
@@ -29,8 +29,8 @@ private:
 	Ui::MainWidgetClass ui;
 	QVBoxLayout *totalVlayout;
 	
-	GLWidget *glwidget;
-	TabMainGUI *leftTabPage;
+	TabMainGUI *tabMainPage;
+	ScanMainGUI *scanMainPage;
 };
 
 #endif // MAINWIDGET_H
