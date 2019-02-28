@@ -68,6 +68,12 @@
     <ClCompile Include="TabMainGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ScanMainGUI.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ScanMainGUI.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="ScanMainGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,6 +97,12 @@
     <CustomBuild Include="TabMainGUI.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="ScanMainGUI.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ScanMainGUI.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_mainwidget.h">
@@ -102,13 +114,8 @@
     <ClInclude Include="io.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScanMainGUI.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ScanMainGUI.ui">
-      <Filter>Form Files</Filter>
-    </None>
   </ItemGroup>
 </Project>
