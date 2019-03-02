@@ -77,6 +77,9 @@
     <ClCompile Include="TabMainGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="basetype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -116,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="basetype.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

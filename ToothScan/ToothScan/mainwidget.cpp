@@ -26,8 +26,8 @@ MainWidget::~MainWidget()
 //!
 void MainWidget::initVariable() 
 {
-	scanMainPage = new ScanMainGUI();
-	scanMainPage->showMaximized();
+	//scanMainPage = new ScanMainGUI();
+	//scanMainPage->showMaximized();
 	tabMainPage = new TabMainGUI();
 	tabMainPage->showMaximized();
 }

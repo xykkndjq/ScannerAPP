@@ -32,8 +32,12 @@ public:
 	void setConnections();
 
 	void judgeToothList(int id, QList<QPushButton*> &toothButtonList);
+	void setSplitToothFalse();
+	void judgeFinalSplitModelFlag(QList<int> &chooseToothNum);
+
 private:
 	Ui::TabMainGUI ui;
+	
 	QGridLayout *totalGLayOut;
 	QTabWidget *totalTabWidget;
 
@@ -59,92 +63,23 @@ private:
 	QTextEdit *additionTextEdit;
 	QLabel *additionLabel;
 	//未分模
-	bool unMoulageFlag = true;
+	bool unMoulageFlag = false;
 	QPushButton *upperJawButton;
 	bool upperJawButtonFlag = false;
 	QPushButton *lowerJawButton;
 	bool lowerJawButtonFlag = false;
 	//分模
 	//splitleft
-	bool splitMoulageFlag = true;
+	//bool splitModelFlag = false;
 
 	int chooseID = -1;
-	QPushButton *tooth11;
-	QPushButton *tooth12;
-	QPushButton *tooth13;
-	QPushButton *tooth14;
-	QPushButton *tooth15;
-	QPushButton *tooth16;
-	QPushButton *tooth17;
-	QPushButton *tooth18;
-
-	bool tooth11Flag = false;
-	bool tooth12Flag = false;
-	bool tooth13Flag = false;
-	bool tooth14Flag = false;
-	bool tooth15Flag = false;
-	bool tooth16Flag = false;
-	bool tooth17Flag = false;
-	bool tooth18Flag = false;
-
-	QPushButton *tooth21;
-	QPushButton *tooth22;
-	QPushButton *tooth23;
-	QPushButton *tooth24;
-	QPushButton *tooth25;
-	QPushButton *tooth26;
-	QPushButton *tooth27;
-	QPushButton *tooth28;
-
-	bool tooth21Flag = false;
-	bool tooth22Flag = false;
-	bool tooth23Flag = false;
-	bool tooth24Flag = false;
-	bool tooth25Flag = false;
-	bool tooth26Flag = false;
-	bool tooth27Flag = false;
-	bool tooth28Flag = false;
-
-	QPushButton *tooth31;
-	QPushButton *tooth32;
-	QPushButton *tooth33;
-	QPushButton *tooth34;
-	QPushButton *tooth35;
-	QPushButton *tooth36;
-	QPushButton *tooth37;
-	QPushButton *tooth38;
-
-	bool tooth31Flag = false;
-	bool tooth32Flag = false;
-	bool tooth33Flag = false;
-	bool tooth34Flag = false;
-	bool tooth35Flag = false;
-	bool tooth36Flag = false;
-	bool tooth37Flag = false;
-	bool tooth38Flag = false;
-
-	QPushButton *tooth41;
-	QPushButton *tooth42;
-	QPushButton *tooth43;
-	QPushButton *tooth44;
-	QPushButton *tooth45;
-	QPushButton *tooth46;
-	QPushButton *tooth47;
-	QPushButton *tooth48;
-
-	bool tooth41Flag = false;
-	bool tooth42Flag = false;
-	bool tooth43Flag = false;
-	bool tooth44Flag = false;
-	bool tooth45Flag = false;
-	bool tooth46Flag = false;
-	bool tooth47Flag = false;
-	bool tooth48Flag = false;
-
+	QList<QPushButton *> toothList;
+	QList<bool> toothFlagList;
+	QList<int> toothID;
 	QPushButton *clearAllButton;
 	//splitright
 	QButtonGroup *toothRadioButtonGroup;
-
+	
 	QRadioButton *totalCrownButton;//全冠
 	QRadioButton *toothCrownButton;//牙冠
 	QRadioButton *lossToothButton;//缺失牙
@@ -164,7 +99,7 @@ private:
 	QList<QPushButton*> jawToothList;
 
 	//印模
-	bool doMoulageFlag = true;
+	bool doMoulageFlag = false;
 	QPushButton *MoulageButton1;
 	bool MoulageFlag1 = false;
 	QPushButton *MoulageButton2;
@@ -230,4 +165,6 @@ public slots:
 	void Tooth46Press();
 	void Tooth47Press();
 	void Tooth48Press();
+
+	void clearAllButtonPress();
 };

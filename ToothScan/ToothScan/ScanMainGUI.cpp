@@ -38,7 +38,7 @@ void ScanMainGUI::constructIHM()
 {
 	//glWidget->showMaximized();
 	glWidget->setGeometry(0,0,1920,1080);
-
+	glWidget->setWindowSize(QSize(1920, 1080));
 	//glWidget->showFullScreen();
 	//相机设置
 	//cameraWindow->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable); // 设置停靠窗口特性，可移动,可关闭
