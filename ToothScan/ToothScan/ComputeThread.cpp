@@ -552,82 +552,82 @@ void ComputeThread::delaunayAlgorithm(const cv::Mat &point_cloud, const cv::Mat 
 
 void ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex, int scan_index, vector<double> points_2)
 {
-	//cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
-	//if (chooseJawIndex == 1)
-	//{
-	//	clock_t time1, time2;
-	//	time1 = clock();
-	//	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, upper_mModel[scan_index], 0.02, points_2);
-	//	
-	//	cv::Mat cloudrot = scanner_rt[scan_index];
-	//	pointcloudrotation(upper_mModel[scan_index].P, cloudrot);
-	//	pointcloudrotation(points_2, cloudrot);
-	//	if (upper_points_cloud_globle2.size())
-	//	{
-	//		//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-	//		if (!pointcloudICP(upper_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
-	//		{
-	//			//return;
-	//		}
-	//	}
-	//	cloudrot = rt_icp;
-	//	pointcloudrotation(upper_mModel[scan_index].P, cloudrot);
-	//	pointcloudrotation(points_2, cloudrot);
-	//	upper_points_cloud_globle2.push_back(points_2);
-	//	time2 = clock();
-	//	cout << "The time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	//	/*upper_vertexIndicies.push_back(faces);
-	//	upper_points_cloud_globle.push_back(points_);
-	//	upper_rgb_image.push_back(points_color);
-	//	upper_global_normals.push_back(normal);
+	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
+	if (chooseJawIndex == 1)
+	{
+		clock_t time1, time2;
+		time1 = clock();
+		rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, upper_mModel[scan_index], 0.02, points_2);
+		
+		cv::Mat cloudrot = scanner_rt[scan_index];
+		pointcloudrotation(upper_mModel[scan_index].P, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		if (upper_points_cloud_globle2.size())
+		{
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(upper_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			{
+				//return;
+			}
+		}
+		cloudrot = rt_icp;
+		pointcloudrotation(upper_mModel[scan_index].P, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		upper_points_cloud_globle2.push_back(points_2);
+		time2 = clock();
+		cout << "The time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+		/*upper_vertexIndicies.push_back(faces);
+		upper_points_cloud_globle.push_back(points_);
+		upper_rgb_image.push_back(points_color);
+		upper_global_normals.push_back(normal);
 
-	//	upper_points_cloud_globle2.push_back(points_2);
-	//	upper_points_cloud_end2.insert(upper_points_cloud_end2.end(), points_2.begin(), points_2.end());
+		upper_points_cloud_globle2.push_back(points_2);
+		upper_points_cloud_end2.insert(upper_points_cloud_end2.end(), points_2.begin(), points_2.end());
 
-	//	mModel.P.resize(upper_points_cloud_globle[scan_index].size() / 3);
-	//	mModel.N.resize(upper_global_normals[scan_index].size() / 3);
-	//	mModel.F.resize(upper_vertexIndicies[scan_index].size() / 3);
-	//	mModel.C.resize(upper_rgb_image[scan_index].size() / 3);
+		mModel.P.resize(upper_points_cloud_globle[scan_index].size() / 3);
+		mModel.N.resize(upper_global_normals[scan_index].size() / 3);
+		mModel.F.resize(upper_vertexIndicies[scan_index].size() / 3);
+		mModel.C.resize(upper_rgb_image[scan_index].size() / 3);
 
-	//	memcpy(mModel.P.data(), upper_points_cloud_globle[scan_index].data(), points_.size() * sizeof(double));
-	//	memcpy(mModel.N.data(), upper_global_normals[scan_index].data(), normal.size() * sizeof(float));
-	//	memcpy(mModel.F.data(), upper_vertexIndicies[scan_index].data(), faces.size() * sizeof(uint32_t));
-	//	memcpy(mModel.C.data(), upper_rgb_image[scan_index].data(), points_color.size() * sizeof(unsigned char));*/
-	//}
-	//else if (chooseJawIndex == 2)
-	//{
-	//	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, lower_mModel[scan_index], 0.02, points_2);
-	//	if (lower_points_cloud_globle2.size())
-	//	{
-	//		//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-	//		if (!pointcloudICP(lower_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
-	//		{
-	//			//return;
-	//		}
-	//	}
-	//	cv::Mat cloudrot = rt_icp * scanner_rt[scan_index];
-	//	pointcloudrotation(lower_mModel[scan_index].P, cloudrot);
-	//	pointcloudrotation(points_2, cloudrot);
-	//	lower_points_cloud_globle2.push_back(points_2);
+		memcpy(mModel.P.data(), upper_points_cloud_globle[scan_index].data(), points_.size() * sizeof(double));
+		memcpy(mModel.N.data(), upper_global_normals[scan_index].data(), normal.size() * sizeof(float));
+		memcpy(mModel.F.data(), upper_vertexIndicies[scan_index].data(), faces.size() * sizeof(uint32_t));
+		memcpy(mModel.C.data(), upper_rgb_image[scan_index].data(), points_color.size() * sizeof(unsigned char));*/
+	}
+	else if (chooseJawIndex == 2)
+	{
+		rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, lower_mModel[scan_index], 0.02, points_2);
+		if (lower_points_cloud_globle2.size())
+		{
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(lower_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			{
+				//return;
+			}
+		}
+		cv::Mat cloudrot = rt_icp * scanner_rt[scan_index];
+		pointcloudrotation(lower_mModel[scan_index].P, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		lower_points_cloud_globle2.push_back(points_2);
 
-	//	
-	//}
-	//else if (chooseJawIndex == 3)
-	//{
-	//	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, all_mModel[scan_index], 0.02, points_2);
-	//	if (all_points_cloud_globle2.size())
-	//	{
-	//		//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-	//		if (!pointcloudICP(all_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
-	//		{
-	//			//return;
-	//		}
-	//	}
-	//	cv::Mat cloudrot = rt_icp * scanner_rt[scan_index];
-	//	pointcloudrotation(all_mModel[scan_index].P, cloudrot);
-	//	pointcloudrotation(points_2, cloudrot);
-	//	all_points_cloud_globle2.push_back(points_2);
-	//}
+		
+	}
+	else if (chooseJawIndex == 3)
+	{
+		rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 2, all_mModel[scan_index], 0.02, points_2);
+		if (all_points_cloud_globle2.size())
+		{
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(all_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			{
+				//return;
+			}
+		}
+		cv::Mat cloudrot = rt_icp * scanner_rt[scan_index];
+		pointcloudrotation(all_mModel[scan_index].P, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		all_points_cloud_globle2.push_back(points_2);
+	}
 }
 
 void ComputeThread::controlComputeScan(int chooseJawIndex)
@@ -692,7 +692,6 @@ void ComputeThread::controlComputeScan(int chooseJawIndex)
 		{
 			continue;
 		}*/
-		
 		chooseJawAndIcp(matched_pixel_image, image_rgb,chooseJawIndex, scan_index, points_2);
 
 		bufferBias++;
@@ -746,7 +745,7 @@ void ComputeThread::Motor2Rot(const float yaw, const float pitch, cv::Mat &Rot)
 
 void ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex, vector<double> points_2)
 {
-	cv::Mat rt_curr;
+	/*cv::Mat rt_curr;
 	Motor2Rot(c_addscan_x,c_addscan_y,rt_curr);
 
 	pointcloudrotation(points_, rt_curr);
@@ -836,74 +835,74 @@ void ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		memcpy(mModel.N.data(), all_global_normals[index].data(), normal.size() * sizeof(float));
 		memcpy(mModel.F.data(), all_vertexIndicies[index].data(), faces.size() * sizeof(uint32_t));
 		memcpy(mModel.C.data(), all_rgb_image[index].data(), points_color.size() * sizeof(unsigned char));
-	}
+	}*/
 }
 
 void ComputeThread::compensationComputeScan(int chooseJawIndex)
 {
-	if (oldJawIndex == 0)
-	{
-		oldJawIndex = chooseJawIndex;
-	}
-	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	int imageSize = IMG_ROW * IMG_COL;
-	vector<double> dis_;
-	unsigned char* im_l = 0;
-	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	//if (oldJawIndex == 0)
+	//{
+	//	oldJawIndex = chooseJawIndex;
+	//}
+	//cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	//cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	//int imageSize = IMG_ROW * IMG_COL;
+	//vector<double> dis_;
+	//unsigned char* im_l = 0;
+	//unsigned char* im_r = 0;
+	//im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	//im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
-	vector<cv::Mat> image_rgb;
-	cv::Mat imageMat;
-	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
-	image_rgb.resize(3, imageMat);
+	//vector<cv::Mat> image_rgb;
+	//cv::Mat imageMat;
+	//imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
+	//image_rgb.resize(3, imageMat);
 
-	usedSpace.acquire();
-	scan::Unwarp *unwarp = new scan::Unwarp();
-	int image_bias = 0;
-	for (int j = 0; j < 15; j++)
-	{
-		memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
+	//usedSpace.acquire();
+	//scan::Unwarp *unwarp = new scan::Unwarp();
+	//int image_bias = 0;
+	//for (int j = 0; j < 15; j++)
+	//{
+	//	memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
+	//	image_bias++;
 
-		memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
-	}
-	if (image_bias > 29)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			memcpy(image_rgb[i].data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
-		}
-	}
+	//	memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
+	//	image_bias++;
+	//}
+	//if (image_bias > 29)
+	//{
+	//	for (int i = 0; i < 3; i++)
+	//	{
+	//		memcpy(image_rgb[i].data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
+	//		image_bias++;
+	//	}
+	//}
 
-	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
+	//unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
 
-	/*vector<double> points_;
-	vector<float> normal;
-	vector<unsigned char> points_color;*/
-	vector<double> points_2;
-	/*vector<unsigned char> points_color2;
-	vector<uint32_t> faces;*/
+	///*vector<double> points_;
+	//vector<float> normal;
+	//vector<unsigned char> points_color;*/
+	//vector<double> points_2;
+	///*vector<unsigned char> points_color2;
+	//vector<uint32_t> faces;*/
 
-	chooseCompenJawAndIcp(chooseJawIndex, points_, points_2, normal, faces, points_color);
-	if (oldJawIndex != 0)
-	{
-		if (oldJawIndex == chooseJawIndex)
-		{
-			emit showModeltoGlSingel(0);
-		}
-		else if (oldJawIndex != chooseJawIndex)
-		{
-			emit showModeltoGlSingel(1);
-		}
-	}
-	freeSpace.release();
-	cout << "补扫一个角度图片计算完成" << endl;
-	
-	emit computeFinish();
+	//chooseCompenJawAndIcp(chooseJawIndex, points_, points_2, normal, faces, points_color);
+	//if (oldJawIndex != 0)
+	//{
+	//	if (oldJawIndex == chooseJawIndex)
+	//	{
+	//		emit showModeltoGlSingel(0);
+	//	}
+	//	else if (oldJawIndex != chooseJawIndex)
+	//	{
+	//		emit showModeltoGlSingel(1);
+	//	}
+	//}
+	//freeSpace.release();
+	//cout << "补扫一个角度图片计算完成" << endl;
+	//
+	//emit computeFinish();
 }
 
 void ComputeThread::delaunayAlgorithm(const cv::Mat &point_cloud, vector<cv::Mat> &image_rgb, const float color_red_parameter, const float color_green_parameter, const float color_blue_parameter, const float max_edge_length, orth::MeshModel &mm, const float sample_rate, vector<double>& points2)

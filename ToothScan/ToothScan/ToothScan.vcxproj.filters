@@ -98,9 +98,6 @@
     <ClCompile Include="VTK_render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="basetype.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_glWidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -129,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CmdLineParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="basetype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
