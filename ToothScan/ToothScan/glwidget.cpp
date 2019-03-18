@@ -661,6 +661,71 @@ void GLWidget::makeObject()
 	this->update();
 }
 
+void GLWidget::overView()
+{
+
+}
+
+void GLWidget::upwardView()
+{
+
+}
+
+void GLWidget::leftView()
+{
+
+}
+
+void GLWidget::rightView()
+{
+
+}
+
+void GLWidget::mainView()
+{
+
+}
+
+void GLWidget::backView()
+{
+
+}
+
+void GLWidget::enlargeView()
+{
+
+}
+
+void GLWidget::shrinkView()
+{
+
+}
+
+void GLWidget::selectRegion()
+{
+
+}
+
+void GLWidget::delSelected()
+{
+
+}
+
+void GLWidget::back()
+{
+
+}
+
+void GLWidget::next()
+{
+
+}
+
+void GLWidget::GetMotorRot(int &x, int &y)
+{
+
+}
+
 void GLWidget::TeethSegmentRun(const std::string label_file_path)
 {
 	//
