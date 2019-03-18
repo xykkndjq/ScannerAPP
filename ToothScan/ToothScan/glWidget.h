@@ -147,32 +147,6 @@ private:
 	void createGeometry();
 	void quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4);
 	void extrude(qreal x1, qreal y1, qreal x2, qreal y2);
-	//1 ¸©ÊÓ
-	void overView();
-	//2 ÑöÊÓ
-	void upwardView();
-	//3 ×óÊÓ
-	void leftView();
-	//4 ÓÒÊÓ
-	void rightView();
-	//5 Ö÷ÊÓÍ¼
-	void mainView();
-	//6 ºóÊÓÍ¼
-	void backView();
-	//7 ·Å´ó
-	void enlargeView();
-	//8 ËõÐ¡
-	void shrinkView();
-	//9 ¿òÑ¡
-	void selectRegion();
-	//10 É¾³ý¿òÑ¡
-	void delSelected();
-	//11 ³·Ïú
-	void back();
-	//12 È¡Ïû³·Ïú
-	void next();
-	//13 »ñÈ¡x y ½Ç¶È
-	void GetMotorRot(int &x, int &y);
 };
 
 #endif
