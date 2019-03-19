@@ -168,31 +168,6 @@ void ComputeThread::pointcloudrotation(orth::PointCloudD &pointCloud, orth::Poin
 	pointNormal2.swap(pointNormal);
 }
 
-//void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel)
-//{
-//	orth::PointCloudD pointCloud2;
-//	orth::PointCloudD pointNormal2;
-//	for (int point_index = 0; point_index < pointCloud.size(); point_index++)
-//	{
-//		orth::Point3d p;
-//		orth::Point3d n;
-//		double x = pointCloud[point_index].x, y = pointCloud[point_index].y, z = pointCloud[point_index].z;
-//		double nx = pointCloud[point_index].x, ny = pointCloud[point_index].y, nz = pointCloud[point_index].z;
-//		p.x = RT.at<double>(0, 0)*x + RT.at<double>(0, 1)*y + RT.at<double>(0, 2)*z + RT.at<double>(0, 3);
-//		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
-//		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
-//
-//		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
-//		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
-//		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
-//
-//		pointCloud2.push_back(p);
-//		pointNormal2.push_back(n);
-//	}
-//	pointCloud2.swap(pointCloud);
-//	pointNormal2.swap(pointNormal);
-//}
-
 double ComputeThread::MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2)
 {
 
@@ -898,6 +873,32 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	emit computeFinish();
 }
 
+//void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel)
+//{
+//	orth::PointCloudD pointCloud2;
+//	orth::PointCloudD pointNormal2;
+//	for (int point_index = 0; point_index < pointCloud.size(); point_index++)
+//	{
+//		orth::Point3d p;
+//		orth::Point3d n;
+//		double x = pointCloud[point_index].x, y = pointCloud[point_index].y, z = pointCloud[point_index].z;
+//		double nx = pointCloud[point_index].x, ny = pointCloud[point_index].y, nz = pointCloud[point_index].z;
+//		p.x = RT.at<double>(0, 0)*x + RT.at<double>(0, 1)*y + RT.at<double>(0, 2)*z + RT.at<double>(0, 3);
+//		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
+//		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
+//
+//		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
+//		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
+//		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
+//
+//		pointCloud2.push_back(p);
+//		pointNormal2.push_back(n);
+//		totalMeshModel
+//	}
+//	pointCloud2.swap(pointCloud);
+//	pointNormal2.swap(pointNormal);
+//}
+//
 //void ComputeThread::GPAMeshing(int chooseJawIndex)
 //{
 //	GPA gpa;
