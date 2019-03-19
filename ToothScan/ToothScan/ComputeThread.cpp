@@ -893,7 +893,8 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 //
 //		pointCloud2.push_back(p);
 //		pointNormal2.push_back(n);
-//		totalMeshModel
+//		totalMeshModel.P.push_back(p);
+//		totalMeshModel.F.push_back(n);
 //	}
 //	pointCloud2.swap(pointCloud);
 //	pointNormal2.swap(pointNormal);
@@ -913,14 +914,30 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 //			pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
 //		}
 //		recon::PoissonRec pr;
-//		pr()
+//		pr.Execute(totalMeshModel);
 //	}
 //	else if (chooseJawIndex == 2)
 //	{
-//
+//		vector<cv::Mat> rt_matrixs(lower_points_cloud_globle2.size());
+//		gpa.GpaRegistrationGPU(lower_points_cloud_globle2, points_target, rt_matrixs, 80);
+//		orth::MeshModel totalMeshModel;
+//		for (int data_index = 0; data_index < lower_points_cloud_globle2.size(); data_index++)
+//		{
+//			pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
+//		}
+//		recon::PoissonRec pr;
+//		pr.Execute(totalMeshModel);
 //	}
 //	else if (chooseJawIndex == 3)
 //	{
-//
+//		vector<cv::Mat> rt_matrixs(all_points_cloud_globle2.size());
+//		gpa.GpaRegistrationGPU(all_points_cloud_globle2, points_target, rt_matrixs, 80);
+//		orth::MeshModel totalMeshModel;
+//		for (int data_index = 0; data_index < all_points_cloud_globle2.size(); data_index++)
+//		{
+//			pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
+//		}
+//		recon::PoissonRec pr;
+//		pr.Execute(totalMeshModel);
 //	}
 //}

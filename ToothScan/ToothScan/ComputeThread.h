@@ -69,8 +69,6 @@ public:
 	void InitParameters();
 	void setFlage(bool flag = true);  //设置标志位，何时关闭子线程
 
-	int totalMeshModelNum = 0;
-
 public:
 	inline double  ToRad(const double &a) { return M_PI*a / 180.0; }
 	void delaunayAlgorithm(const cv::Mat &point_cloud, const cv::Mat &normal_cloud, vector<cv::Mat> &image_rgb, float color_red_parameter, float color_green_parameter, float color_blue_parameter, vector<double>& points,vector<float>& normal, vector<double>& points2,  vector<unsigned char>& points_color, vector<uint32_t> & faces);
