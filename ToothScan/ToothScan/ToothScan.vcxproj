@@ -53,17 +53,17 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\..\a_property_release\QT_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\BOOST_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\CAMERA_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\CUDA_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\EIGEN.props" />
-    <Import Project="..\..\..\..\..\a_property_release\FLANN_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\QHULL_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\VTK_RELEASE.props" />
-    <Import Project="..\..\..\..\..\a_property_release\PCL_RELEASE.props" />
-    <Import Project="OPENCV_RELEASE.props" />
+    <Import Project="..\..\a_property_release\BOOST_RELEASE.props" />
+    <Import Project="..\..\a_property_release\CAMERA_RELEASE.props" />
+    <Import Project="..\..\a_property_release\CUDA_RELEASE.props" />
+    <Import Project="..\..\a_property_release\EIGEN.props" />
+    <Import Project="..\..\a_property_release\FLANN_RELEASE.props" />
+    <Import Project="..\..\a_property_release\OPENCV_RELEASE.props" />
     <Import Project="..\..\a_property_release\OPENNI2_RELEASE.props" />
+    <Import Project="..\..\a_property_release\PCL_RELEASE.props" />
+    <Import Project="..\..\a_property_release\QHULL_RELEASE.props" />
+    <Import Project="..\..\a_property_release\QT_RELEASE.props" />
+    <Import Project="..\..\a_property_release\VTK_RELEASE.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
