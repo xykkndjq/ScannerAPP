@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\Program Files\qhull341\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files\qhull341\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\qhull-master\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\qhull-master\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

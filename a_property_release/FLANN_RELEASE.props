@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\Program Files\Flann341\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files\Flann341\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\flann-master\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\flann-master\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

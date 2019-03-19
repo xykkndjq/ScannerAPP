@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>D:\opencv3_1811\opencv3_1811\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\opencv3_1811\opencv3_1811\x64\vc14\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>opencv_aruco341.lib;opencv_bgsegm341.lib;opencv_bioinspired341.lib;opencv_calib3d341.lib;opencv_ccalib341.lib;opencv_core341.lib;opencv_cudaarithm341.lib;opencv_cudabgsegm341.lib;opencv_cudacodec341.lib;opencv_cudafeatures2d341.lib;opencv_cudafilters341.lib;opencv_cudaimgproc341.lib;opencv_cudalegacy341.lib;opencv_cudaobjdetect341.lib;opencv_cudaoptflow341.lib;opencv_cudastereo341.lib;opencv_cudawarping341.lib;opencv_cudev341.lib;opencv_datasets341.lib;opencv_dnn341.lib;opencv_dnn_objdetect341.lib;opencv_dpm341.lib;opencv_face341.lib;opencv_features2d341.lib;opencv_flann341.lib;opencv_fuzzy341.lib;opencv_hfs341.lib;opencv_highgui341.lib;opencv_imgcodecs341.lib;opencv_imgproc341.lib;opencv_img_hash341.lib;opencv_line_descriptor341.lib;opencv_ml341.lib;opencv_objdetect341.lib;opencv_optflow341.lib;opencv_phase_unwrapping341.lib;opencv_photo341.lib;opencv_plot341.lib;opencv_reg341.lib;opencv_rgbd341.lib;opencv_saliency341.lib;opencv_sfm341.lib;opencv_shape341.lib;opencv_stereo341.lib;opencv_stitching341.lib;opencv_structured_light341.lib;opencv_superres341.lib;opencv_surface_matching341.lib;opencv_text341.lib;opencv_tracking341.lib;opencv_video341.lib;opencv_videoio341.lib;opencv_videostab341.lib;opencv_viz341.lib;opencv_xfeatures2d341.lib;opencv_ximgproc341.lib;opencv_xobjdetect341.lib;opencv_xphoto341.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

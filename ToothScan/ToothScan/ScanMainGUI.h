@@ -86,7 +86,7 @@ private slots:
 	void ToothCalibrateSlot();
 	void GlobalCalibrateSlot();
 
-	void updateMeshModel(int refreshIndex, int scanIndex);
+	void updateMeshModel(int refreshIndex);
 	void doScanDialogSlot(QJsonObject scanObj);
 
 	//ษจร่

@@ -13,7 +13,8 @@
 #include "octree.hpp"
 #include "ConTrolThread.h"
 #include "3DScan_cuda.h"
-#include "io.h"
+//#include "GPA.h"
+//#include "PoissonRecon.h"
 
 #define SCAN_ROTATE_POS_CNT2 10    //定义扫描过程的位置数 11
 #define IMG_ROW 1024
@@ -29,10 +30,13 @@ public:
 	int oldJawIndex = 0;
 	vector<orth::MeshModel> all_mModel;//全颌
 	vector<vector<double>> all_points_cloud_globle2;
+	vector<double> all_points_cloud_end2;
 	vector<orth::MeshModel> upper_mModel;//上颌
 	vector<vector<double>> upper_points_cloud_globle2;
+	vector<double> upper_points_cloud_end2;
 	vector<orth::MeshModel> lower_mModel;//下颌
 	vector<vector<double>> lower_points_cloud_globle2;
+	vector<double> lower_points_cloud_end2;
 	
 	/*vector<vector<double>> all_points_cloud_globle;
 	vector<vector<double>> all_points_cloud_globle2;
@@ -70,19 +74,19 @@ public:
 	void delaunayAlgorithm(const cv::Mat &point_cloud, const cv::Mat &normal_cloud, vector<cv::Mat> &image_rgb, float color_red_parameter, float color_green_parameter, float color_blue_parameter, vector<double>& points,vector<float>& normal, vector<double>& points2,  vector<unsigned char>& points_color, vector<uint32_t> & faces);
 	bool isTriangle(const cv::Vec6f &triangle, const cv::Mat &point_cloud);
 	float DistanceCalculate(float x1, float y1, float z1, float x2, float y2, float z2);
-	void pointcloudrotation(orth::PointCloudD &pointcloud, cv::Mat &RT);
+	void pointcloudrotation(orth::PointCloudD &pointcloud, orth::PointNormal &PointNormal, cv::Mat &RT);
+	//void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel);
 	void pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT);
 	double MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2);
 	bool pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt);
 	void NormalCalculate(vector<double> &pointcloud, vector<float> &pointnormal, cv::Mat &rt);
 	void Motor2Rot(const float yaw, const float pitch, cv::Mat &Rot);
-	void chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb,int chooseJawIndex, int scan_index, vector<double> points_2);
-	void chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex, vector<double> points_2);
-
-	void delaunayAlgorithm(const cv::Mat &point_cloud, vector<cv::Mat> &image_rgb, const float color_red_parameter, const float color_green_parameter, const float color_blue_parameter, const float max_edge_length, orth::MeshModel &mm, const float sample_rate, vector<double>& points2);
+	void chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb,int chooseJawIndex);
+	void chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex);
+	//void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 
 signals:
-	void showModeltoGlSingel(int refreshIndex, int scanIndex);
+	void showModeltoGlSingel(int refreshIndex);
 	void computeFinish();
 public slots:
 	void controlComputeScan(int chooseJawIndex);

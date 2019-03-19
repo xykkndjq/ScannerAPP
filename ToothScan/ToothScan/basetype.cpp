@@ -7,16 +7,16 @@ namespace orth
 
 	MeshModel::MeshModel()
 	{
-		original_rt = (double*)malloc(16*sizeof(double));
-		current_rt = (double*)malloc(16 * sizeof(double));;
+		//original_rt = (double*)malloc(16*sizeof(double));
+		//current_rt = (double*)malloc(16 * sizeof(double));;
 	}
 
 	MeshModel::~MeshModel()
 	{
-		free(original_rt);
-		original_rt = NULL;
-		free(current_rt);
-		current_rt = NULL;
+		//free(original_rt);
+		//original_rt = NULL;
+		//free(current_rt);
+		//current_rt = NULL;
 	}
 
 	bool MeshModel::HaveData()

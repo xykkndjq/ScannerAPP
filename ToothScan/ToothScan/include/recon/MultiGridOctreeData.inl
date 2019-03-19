@@ -1,3 +1,6 @@
+#ifndef MULTI_GRID_OCTREE_DATA_INL
+#define MULTI_GRID_OCTREE_DATA_INL
+
 /*
 Copyright (c) 2006, Michael Kazhdan and Matthew Bolitho
 All rights reserved.
@@ -1689,7 +1692,7 @@ Pointer( Real ) Octree< Real >::SolveSystem( PointInfo& pointInfo , Pointer( Rea
 	std::vector< Real > metSolution( _sNodes.nodeCount[ _sNodes.maxDepth-1 ] , 0 );
 	for( int d=_minDepth ; d<_sNodes.maxDepth ; d++ )
 	{
-		DumpOutput( "Depth[%d/%d]: %d\n" , _boundaryType==0 ? d-1 : d , _boundaryType==0 ? _sNodes.maxDepth-2 : _sNodes.maxDepth-1 , _sNodes.nodeCount[d+1]-_sNodes.nodeCount[d] );
+		//DumpOutput( "Depth[%d/%d]: %d\n" , _boundaryType==0 ? d-1 : d , _boundaryType==0 ? _sNodes.maxDepth-2 : _sNodes.maxDepth-1 , _sNodes.nodeCount[d+1]-_sNodes.nodeCount[d] );
 		if( d==_minDepth )
 			_SolveSystemCG( pointInfo , d , integrator , _sNodes , solution , constraints , GetPointer( metSolution ) , _sNodes.nodeCount[_minDepth+1]-_sNodes.nodeCount[_minDepth] , true , showResidual, NULL , NULL , NULL );
 		else
@@ -1879,7 +1882,7 @@ int Octree< Real >::_SolveSystemGS( PointInfo& pointInfo , int depth , const typ
 	}
 
 	MemoryUsage();
-	if( !forceSilent ) DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
+	//if( !forceSilent ) DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
 	maxMemoryUsage = std::max< double >( maxMemoryUsage , _maxMemoryUsage );
 
 	return iters;
@@ -1976,7 +1979,7 @@ int Octree< Real >::_SolveSystemCG( PointInfo& pointInfo , int depth , const typ
 	}
 
 	MemoryUsage();
-	DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
+	//DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
 	maxMemoryUsage = std::max< double >( maxMemoryUsage , _maxMemoryUsage );
 	return iter;
 }
@@ -2643,3 +2646,5 @@ long long VertexData::EdgeIndex( const TreeOctNode* node , int eIndex , int maxD
 	};
 	return (long long)(idx[0]) | (long long)(idx[1])<<VERTEX_COORDINATE_SHIFT | (long long)(idx[2])<<(2*VERTEX_COORDINATE_SHIFT);
 }
+
+#endif // MULTI_GRID_OCTREE_DATA_INCLUDED

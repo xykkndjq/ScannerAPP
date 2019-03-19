@@ -46,6 +46,7 @@ struct SpotLight {
 varying highp vec3 FragPos;
 varying highp vec3 Normal;
 varying highp float mflag;
+varying highp float sflag;
 
 uniform highp vec3 viewPos;
 uniform highp DirLight dirLight;
@@ -53,6 +54,7 @@ uniform highp PointLight pointLights[NR_POINT_LIGHTS];
 uniform highp SpotLight spotLight;
 uniform Material material1;
 uniform Material material2;
+uniform Material material3;
 
 uniform mediump vec3 lightColor;
 uniform mediump vec3 objectColor;
@@ -85,7 +87,10 @@ void main()
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
 	Material material;
-	if(mflag==1)
+	if(sflag==0)
+	material = material3;
+	else
+	if(mflag==0)
 		{material = material1;}
 	else
 		{material = material2;}
@@ -106,7 +111,10 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	Material material;
-	if(mflag==1)
+	if(sflag==0)
+	material = material3;
+	else
+	if(mflag==0)
 		{material = material1;}
 	else
 		{material = material2;}
@@ -128,7 +136,10 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	Material material;
-	if(mflag==1)
+	if(sflag==0)
+	material = material3;
+	else
+	if(mflag==0)
 		{material = material1;}
 	else
 		{material = material2;}

@@ -35,6 +35,7 @@ DAMAGE.
 #include <sys/time.h>
 #endif // WIN32
 
+
 inline double Time( void )
 {
 #ifdef WIN32

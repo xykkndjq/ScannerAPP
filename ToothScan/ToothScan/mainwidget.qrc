@@ -3,10 +3,6 @@
         <file>Resources/images/Calibrate.png</file>
         <file>Resources/images/OrderManager.png</file>
         <file>Resources/images/Setting.png</file>
-        <file>Resources/images/BottomView.png</file>
-        <file>Resources/images/LeftView.png</file>
-        <file>Resources/images/RightView.png</file>
-        <file>Resources/images/TopView.png</file>
         <file>Resources/images/lowerjaw_no.png</file>
         <file>Resources/images/upperjaw_no.png</file>
         <file>Resources/images/lowerjaw_yes.png</file>
@@ -327,5 +323,11 @@
         <file>Resources/images/alljaw.png</file>
         <file>Resources/images/lowerjaw.png</file>
         <file>Resources/images/upperjaw.png</file>
+        <file>Resources/images/BottomView.png</file>
+        <file>Resources/images/LeftView.png</file>
+        <file>Resources/images/RightView.png</file>
+        <file>Resources/images/TopView.png</file>
+        <file>Resources/images/FrontView.png</file>
+        <file>Resources/images/BackView.png</file>
     </qresource>
 </RCC>

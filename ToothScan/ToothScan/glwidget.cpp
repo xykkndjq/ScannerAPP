@@ -516,8 +516,6 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-
-
     int dx = event->x() - lastPos.x();
     int dy = event->y() - lastPos.y();
 	//cout << dx << " ----- " << dy << endl;

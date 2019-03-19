@@ -109,16 +109,30 @@ void ScanMainGUI::constructIHM()
 	bottomWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/BottomView.png"));
 	bottomWatchButton->setIconSize(QSize(bottomWatchButton->width(), bottomWatchButton->height()));
 	bottomWatchButton->setStyleSheet("border-style:flat");
+
+	frontWatchButton->setFixedSize(40, 40);
+	frontWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/FrontView.png"));
+	frontWatchButton->setIconSize(QSize(topWatchButton->width(), topWatchButton->height()));
+	frontWatchButton->setStyleSheet("border-style:flat");
+
+	backWatchButton->setFixedSize(40, 40);
+	backWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/BackView.png"));
+	backWatchButton->setIconSize(QSize(bottomWatchButton->width(), bottomWatchButton->height()));
+	backWatchButton->setStyleSheet("border-style:flat");
 	
 	QWidget *bottomWidget = new QWidget(this);
 	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
 	QWidget *bottomButtonWidget = new QWidget(bottomWidget);
 	bottomButtonWidget->setFixedSize(300, 100);
 	QHBoxLayout *bottomButtonHLayout = new QHBoxLayout(bottomButtonWidget);
-	bottomButtonHLayout->addWidget(leftWatchButton);
-	bottomButtonHLayout->addWidget(rightWatchButton);
+
 	bottomButtonHLayout->addWidget(topWatchButton);
 	bottomButtonHLayout->addWidget(bottomWatchButton);
+	bottomButtonHLayout->addWidget(frontWatchButton);
+	bottomButtonHLayout->addWidget(backWatchButton);
+	bottomButtonHLayout->addWidget(leftWatchButton);
+	bottomButtonHLayout->addWidget(rightWatchButton);
+	
 	
 	bottomHLayout->addStretch();
 	bottomHLayout->addWidget(bottomButtonWidget);
@@ -151,7 +165,7 @@ void ScanMainGUI::setConnections()
 	connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(controlNormalScan()));
 	connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(controlComputeScan(int)));
 
-	connect(ControlComputeThread, SIGNAL(showModeltoGlSingel(int, int)),this, SLOT(updateMeshModel(int, int)));
+	connect(ControlComputeThread, SIGNAL(showModeltoGlSingel(int)),this, SLOT(updateMeshModel(int)));
 	//Calibrate标定子页面
 	connect(tabMainPage->calibratePushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
 	connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
@@ -189,33 +203,28 @@ void ScanMainGUI::CalculatePointCloud()
 	emit startControlNormalScan(chooseJawIndex);
 }
 
-void ScanMainGUI::updateMeshModel(int refreshIndex, int scanIndex)
+void ScanMainGUI::updateMeshModel(int refreshIndex)
 {
 	if (refreshIndex == 1)
 	{
 		glWidget->vertData.clear();
 		glWidget->totalFaceNum = 0;
 	}
-	//cout << "glwidget" << endl;
-	cout << endl;
+	
 	if (chooseJawIndex == 1)
 	{
-		glWidget->mm = ControlComputeThread->upper_mModel[scanIndex];
-		cout << "C:" << ControlComputeThread->upper_mModel[scanIndex].F[1].x << ";" << ControlComputeThread->upper_mModel[scanIndex].F[1].y << ";" << ControlComputeThread->upper_mModel[scanIndex].F[1].z << endl;
-		cout << "C:" << ControlComputeThread->upper_mModel[scanIndex].F[2].x << ";" << ControlComputeThread->upper_mModel[scanIndex].F[2].y << ";" << ControlComputeThread->upper_mModel[scanIndex].F[2].z << endl;
-		cout << "C:" << ControlComputeThread->upper_mModel[scanIndex].F[3].x << ";" << ControlComputeThread->upper_mModel[scanIndex].F[3].y << ";" << ControlComputeThread->upper_mModel[scanIndex].F[3].z << endl;
-
-		cout << "V:" << glWidget->mm.F[1].x << ";" << glWidget->mm.F[1].y << ";" << glWidget->mm.F[1].z << endl;
-		cout << "V:" << glWidget->mm.F[2].x << ";" << glWidget->mm.F[2].y << ";" << glWidget->mm.F[2].z << endl;
-		cout << "V:" << glWidget->mm.F[3].x << ";" << glWidget->mm.F[3].y << ";" << glWidget->mm.F[3].z << endl;
+		int scan_index = ControlComputeThread->upper_mModel.size() - 1;
+		glWidget->mm = ControlComputeThread->upper_mModel[scan_index];
 	}
 	else if (chooseJawIndex == 2)
 	{
-		glWidget->mm = ControlComputeThread->lower_mModel[ControlComputeThread->lower_mModel.size() - 1];
+		int scan_index = ControlComputeThread->lower_mModel.size() - 1;
+		glWidget->mm = ControlComputeThread->lower_mModel[scan_index];
 	}
 	else if (chooseJawIndex == 3)
 	{
-		glWidget->mm = ControlComputeThread->all_mModel[ControlComputeThread->all_mModel.size() - 1];
+		int scan_index = ControlComputeThread->all_mModel.size() - 1;
+		glWidget->mm = ControlComputeThread->all_mModel[scan_index];
 	}
 
 	glWidget->makeObject();

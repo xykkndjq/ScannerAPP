@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\Program Files\Spinnaker\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files\Spinnaker\lib64\vs2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Program Files\Point Grey Research\Spinnaker\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Program Files\Point Grey Research\Spinnaker\lib64\vs2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

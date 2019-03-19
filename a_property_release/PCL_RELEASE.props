@@ -3,12 +3,12 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\Program Files\PCL341\include\pcl-1.8;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Program Files\PCL341\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\pcl-master\include\pcl-1.8;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\pcl-master\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>pcl_apps_release.lib;pcl_common_release.lib;pcl_features_release.lib;pcl_filters_release.lib;pcl_gpu_containers_release.lib;pcl_gpu_features_release.lib;pcl_gpu_octree_release.lib;pcl_gpu_segmentation_release.lib;pcl_gpu_utils_release.lib;pcl_io_ply_release.lib;pcl_io_release.lib;pcl_kdtree_release.lib;pcl_keypoints_release.lib;pcl_ml_release.lib;pcl_octree_release.lib;pcl_outofcore_release.lib;pcl_people_release.lib;pcl_recognition_release.lib;pcl_registration_release.lib;pcl_sample_consensus_release.lib;pcl_search_release.lib;pcl_segmentation_release.lib;pcl_stereo_release.lib;pcl_surface_release.lib;pcl_tracking_release.lib;pcl_visualization_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pcl_gpu_features_release.lib;pcl_gpu_octree_release.lib;pcl_apps_release.lib;pcl_common_release.lib;pcl_cuda_features_release.lib;pcl_cuda_sample_consensus_release.lib;pcl_cuda_segmentation_release.lib;pcl_features_release.lib;pcl_filters_release.lib;pcl_gpu_containers_release.lib;pcl_gpu_segmentation_release.lib;pcl_gpu_utils_release.lib;pcl_io_ply_release.lib;pcl_io_release.lib;pcl_kdtree_release.lib;pcl_keypoints_release.lib;pcl_ml_release.lib;pcl_octree_release.lib;pcl_outofcore_release.lib;pcl_people_release.lib;pcl_recognition_release.lib;pcl_registration_release.lib;pcl_sample_consensus_release.lib;pcl_search_release.lib;pcl_segmentation_release.lib;pcl_stereo_release.lib;pcl_surface_release.lib;pcl_tracking_release.lib;pcl_visualization_release.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
