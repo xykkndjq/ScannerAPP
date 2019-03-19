@@ -5,7 +5,6 @@
   <PropertyGroup>
     <IncludePath>D:\opencv3_1811\opencv3_1811\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\opencv3_1811\opencv3_1811\x64\vc14\lib;$(LibraryPath)</LibraryPath>
-    <_PropertySheetDisplayName>OPENCV_DEBUG</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
