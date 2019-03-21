@@ -93,6 +93,21 @@ private slots:
 	void judgeForwardStep();
 	void JawScan();
 	void compensationScan();
+
+	public slots:
+	void fontviewBtnClicked();
+	void pushBtnClicked();
+	void rightViewBtnClicked();
+	void leftViewBtnClicked();
+	void backViewBtnClicked();
+	void jawViewBtnClicked();
+	void narrowViewBtnClicked();
+	void enlargeViewBtnClicked();
+	void modelMoveStateSetBtnClicked();
+	void delSelectedBtnClicked();
+	void confirmSelectedBtnClicked();
+	
+	
 };
 
 #endif

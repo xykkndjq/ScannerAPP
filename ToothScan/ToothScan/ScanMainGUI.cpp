@@ -3,10 +3,24 @@
 ScanMainGUI::ScanMainGUI(QWidget *parent)
 	: QWidget(parent)
 {
-	ui.setupUi(this);
+	
 	this->initVariable();
 	this->constructIHM();
-	this->setConnections();
+	//this->setConnections();
+	ui.setupUi(this);
+	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(pushBtnClicked()));
+	connect(ui.frontviewBtn, SIGNAL(clicked()), this, SLOT(fontviewBtnClicked()));
+	connect(ui.rightViewBtn, SIGNAL(clicked()), this, SLOT(rightViewBtnClicked()));
+	connect(ui.leftViewBtn, SIGNAL(clicked()), this, SLOT(leftViewBtnClicked()));
+	connect(ui.backViewBtn, SIGNAL(clicked()), this, SLOT(backViewBtnClicked()));
+	connect(ui.jawViewBtn, SIGNAL(clicked()), this, SLOT(jawViewBtnClicked()));
+	connect(ui.narrowViewBtn, SIGNAL(clicked()), this, SLOT(narrowViewBtnClicked()));
+	connect(ui.enlargeViewBtn, SIGNAL(clicked()), this, SLOT(enlargeViewBtnClicked()));
+	connect(ui.modelMoveStateSetBtn, SIGNAL(clicked()), this, SLOT(modelMoveStateSetBtnClicked()));
+	connect(ui.delSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
+	connect(ui.confirmSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
+	
+	
 }
 
 ScanMainGUI::~ScanMainGUI()
@@ -28,46 +42,45 @@ ScanMainGUI::~ScanMainGUI()
 void ScanMainGUI::initVariable()
 {
 	glWidget = new GLWidget(this);
-	
-	tabMainPage = new TabMainGUI();
-	tabMainPage->showMaximized();
+	//tabMainPage = new TabMainGUI();
+	//tabMainPage->showMaximized();
 
-	scanTipWidget = new ScanTipWidget(this);
+	//scanTipWidget = new ScanTipWidget(this);
 
 	//初始化线程
-	ControlScanThread = new ControlThread;
-	ControlComputeThread = new ComputeThread;
+	//ControlScanThread = new ControlThread;
+	//ControlComputeThread = new ComputeThread;
 
-	cv::Mat model_matrix = cv::Mat::eye(4, 4, CV_64FC1);
-	cv::Mat view_matrix = rt_r/*.inv()*/;
-	glWidget->SetMatrix(model_matrix, view_matrix);
-
-	//创建子线程对象
-	controlScanQThread = new QThread(this);
-	controlComputeQThread = new QThread(this);
-	//把子线程（对象）添加到自定义的线程类（对象）中
-	ControlScanThread->moveToThread(controlScanQThread);
-	ControlComputeThread->moveToThread(controlComputeQThread);
-
-	//cameraWindow
-	cameraWindow = new QDockWidget(QStringLiteral("相机显示"), this);
-	cameraImageLabel = new QLabel(cameraWindow);
-	cameraImageLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/alljaw.png"));
-	cameraImageLabel->setScaledContents(true);
-
-	autoTunePushButton = new QPushButton(QStringLiteral("自动调节"),cameraWindow);
-	spinCameraBox = new QSpinBox(cameraWindow);
-	sliderCamera = new QSlider(Qt::Horizontal, cameraWindow);
-	spinCameraBox->setRange(0, 130);
-	sliderCamera->setRange(0, 130);
-
-	//buttontoolButtons
-	leftWatchButton = new QToolButton();
-	rightWatchButton = new QToolButton();
-	topWatchButton = new QToolButton();
-	bottomWatchButton = new QToolButton();
-	frontWatchButton = new QToolButton();
-	backWatchButton = new QToolButton();
+// 	cv::Mat model_matrix = cv::Mat::eye(4, 4, CV_64FC1);
+// 	cv::Mat view_matrix = rt_r/*.inv()*/;
+// 	glWidget->SetMatrix(model_matrix, view_matrix);
+// 
+// 	//创建子线程对象
+// 	controlScanQThread = new QThread(this);
+// 	controlComputeQThread = new QThread(this);
+// 	//把子线程（对象）添加到自定义的线程类（对象）中
+// 	ControlScanThread->moveToThread(controlScanQThread);
+// 	ControlComputeThread->moveToThread(controlComputeQThread);
+// 
+// 	//cameraWindow
+// 	cameraWindow = new QDockWidget(QStringLiteral("相机显示"), this);
+// 	cameraImageLabel = new QLabel(cameraWindow);
+// 	cameraImageLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/alljaw.png"));
+// 	cameraImageLabel->setScaledContents(true);
+// 
+// 	autoTunePushButton = new QPushButton(QStringLiteral("自动调节"),cameraWindow);
+// 	spinCameraBox = new QSpinBox(cameraWindow);
+// 	sliderCamera = new QSlider(Qt::Horizontal, cameraWindow);
+// 	spinCameraBox->setRange(0, 130);
+// 	sliderCamera->setRange(0, 130);
+// 
+// 	//buttontoolButtons
+// 	leftWatchButton = new QToolButton();
+// 	rightWatchButton = new QToolButton();
+// 	topWatchButton = new QToolButton();
+// 	bottomWatchButton = new QToolButton();
+// 	frontWatchButton = new QToolButton();
+// 	backWatchButton = new QToolButton();
 }
 
 void ScanMainGUI::constructIHM()
@@ -76,7 +89,7 @@ void ScanMainGUI::constructIHM()
 	glWidget->setGeometry(0,0,1920,1080);
 	glWidget->setWindowSize(QSize(1920, 1080));
 	glWidget->showFullScreen();
-	
+	return;
 	//相机设置
 	cameraWindow->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable); // 设置停靠窗口特性，可移动,可关闭
 	cameraWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);//设置可停靠区域为主窗口左边和右边
@@ -389,4 +402,66 @@ void ScanMainGUI::compensationScan()
 		}
 		emit compensationSignal(chooseJawIndex);
 	}
+}
+
+
+void ScanMainGUI::fontviewBtnClicked()
+{
+	//glWidget->frontView();
+	glWidget->mainView();
+}
+
+void ScanMainGUI::pushBtnClicked()
+{
+	cout << "pushBtnClicked" << endl;
+// 	QColor clearColor(Qt::GlobalColor::white);
+// 	glWidget->setClearColor(clearColor);
+	glWidget->upwardView();
+}
+
+void ScanMainGUI::rightViewBtnClicked()
+{
+	glWidget->rightView();
+}
+
+void ScanMainGUI::leftViewBtnClicked()
+{
+	glWidget->leftView();
+}
+
+void ScanMainGUI::backViewBtnClicked()
+{
+	glWidget->backView();
+}
+
+void ScanMainGUI::jawViewBtnClicked()
+{
+	//glWidget->jawView();
+	glWidget->overView();
+}
+
+void ScanMainGUI::narrowViewBtnClicked()
+{
+	glWidget->shrinkView();
+}
+
+void ScanMainGUI::enlargeViewBtnClicked()
+{
+	glWidget->enlargeView();
+}
+
+void ScanMainGUI::modelMoveStateSetBtnClicked()
+{
+	//glWidget->setModelMoveState(ui.modelMoveStateSetBtn->isChecked());
+	glWidget->selectRegion(ui.modelMoveStateSetBtn->isChecked());
+}
+
+void ScanMainGUI::delSelectedBtnClicked()
+{
+	glWidget->delSelected();
+}
+
+void ScanMainGUI::confirmSelectedBtnClicked()
+{
+	glWidget->confirmSelRegion();
 }
