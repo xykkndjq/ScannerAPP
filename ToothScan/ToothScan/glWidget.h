@@ -114,8 +114,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 	void wheelEvent(QWheelEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-	void keyPressEvent(QKeyEvent *event) override;
-	void keyReleaseEvent(QKeyEvent *event) override;
+	//void keyPressEvent(QKeyEvent *event) override;
+	//void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     
@@ -175,7 +175,8 @@ public:
 	void shrinkView();
 	//9 框选 true 开始框选 false 取消框选
 	void selectRegion(bool bSelected);
-	void setSelectRegion(bool bSelected);
+	void setSelectRegionValue(bool bSelected);
+	bool getSelectReginValue();
 	//10 删除框选
 	void delSelected();
 	//11 确定选择
@@ -194,7 +195,7 @@ public:
 	void remakeObject();
 
 	void ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, cv::Mat &model_matrix, cv::Mat &view_matrix, cv::Mat &projection_matrix, orth::MeshModel &mm);
-	void delSelPoints(orth::MeshModel &mm);
+	void delSelPoints();
 
 private:
 	bool m_bSelectRegion;
