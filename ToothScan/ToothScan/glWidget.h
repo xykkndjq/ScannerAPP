@@ -60,6 +60,8 @@
 #include <iostream>
 #include <orthio.h>
 #include <QDebug>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 #include "./include/3DScan.h"
 
 using std::cout;
@@ -68,6 +70,7 @@ using std::endl;
 #define PROGRAM_VERTEX_ATTRIBUTE 0
 #define PROGRAM_NORMAL_ATTRIBUTE 1
 #define PROGRAM_MATERIAL_ATTRIBUTE 2
+#define PROGRAM_STATE_ATTRIBUTE 3
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram);
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
@@ -87,6 +90,7 @@ public:
     void setClearColor(const QColor &color);
 	void setWindowSize(QSize &size);
 	void SetMatrix(cv::Mat &m, cv::Mat &v);
+	//13 获取x y 角度
 	void GetMotorRot(float &xrot, float &yrot);
 	void makeObject();
 
@@ -110,6 +114,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 	void wheelEvent(QWheelEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+	void keyPressEvent(QKeyEvent *event) override;
+	void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     
@@ -134,7 +140,7 @@ private:
 	cv::Mat view_Mat;
 
 	scan::RasterScan rs;
-	cv::Mat model1, view1, project1;
+	
 
 	//QOpenGLTexture *textures;
     QOpenGLShaderProgram *program;
@@ -147,6 +153,56 @@ private:
 	void createGeometry();
 	void quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4);
 	void extrude(qreal x1, qreal y1, qreal x2, qreal y2);
+
+public:
+	//数据重置
+	void reSetValue();
+	//1 俯视
+	void overView();
+	//2 仰视
+	void upwardView();
+	//3 左视
+	void leftView();
+	//4 右视
+	void rightView();
+	//5 主视图
+	void mainView();
+	//6 后视图
+	void backView();
+	//	7 放大
+	void enlargeView();
+	//8 缩小
+	void shrinkView();
+	//9 框选 true 开始框选 false 取消框选
+	void selectRegion(bool bSelected);
+	void setSelectRegion(bool bSelected);
+	//10 删除框选
+	void delSelected();
+	//11 确定选择
+	void confirmSelRegion();
+
+	void drawRect(int x, int y, int x1, int y1);
+
+	void ChangeSelectedColorEx(QPoint drawRectClickPosition, QPoint drawRectEndPosition);
+
+	void ChangeModelSelectedColor(QPoint drawRectClickPosition, QPoint drawRectEndPosition);
+
+	QVector3D screen2world(int x, int y);
+
+	QVector3D world2Screen(QVector3D worldPos);
+
+	void remakeObject();
+
+	void ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, cv::Mat &model_matrix, cv::Mat &view_matrix, cv::Mat &projection_matrix, orth::MeshModel &mm);
+	void delSelPoints(orth::MeshModel &mm);
+
+private:
+	bool m_bSelectRegion;
+	bool m_bSelectAddRegion;
+	QPoint m_drawRectClickPosition;
+	QPoint m_drawRectEndPosition;
+	QMatrix4x4 m_projection, m_view, m_model;
+	orth::PointLabel m_Selected;
 };
 
 #endif
