@@ -146,6 +146,16 @@ private:
     QOpenGLShaderProgram *program;
     QOpenGLBuffer vbo;
 
+	//bkgroundmodel
+	QOpenGLShaderProgram *m_bkGroundProgram;
+	QMatrix4x4 m_bgGroundModel;
+	QVector3D m_bgGroundModelPos;
+	QOpenGLBuffer m_bkgroundvbo;
+	bool m_bkGroundShow;
+	void makeGroundObject();
+	QVector4D m_bkGroundColor;
+	//bkgroundmodel
+
 
 	QVector<QVector3D> m_vertices;
 	QVector<QVector3D> m_normals;
@@ -196,6 +206,15 @@ public:
 
 	void ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, cv::Mat &model_matrix, cv::Mat &view_matrix, cv::Mat &projection_matrix, orth::MeshModel &mm);
 	void delSelPoints();
+	void setbkGroundShowValue(bool bShow);
+	bool getbkGroundShowValue();
+	//上下移动
+	void bgGroundmoveDown();
+	void bgGroundmoveUp();
+	void showBkGround(bool bShow);
+	void cutModelUnderBg();
+	void setBgColor(QVector4D color);
+	//上下移动
 
 private:
 	bool m_bSelectRegion;
