@@ -52,6 +52,8 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QMouseEvent>
+#include "TeethModel.h"
+
 
 void ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, cv::Mat &model_matrix, cv::Mat &view_matrix, cv::Mat &projection_matrix, orth::MeshModel &mm)
 {
@@ -88,7 +90,7 @@ void ChosePoints(const float point1_x, const float point1_y, const float point2_
 	projection_matrix = projection_matrix.t();
 
 	cv::Mat final_matrix = projection_matrix*view_matrix*model_matrix;
-	
+
 	int selected_points = 0;
 	for (int point_index = 0; point_index < mm.P.size(); point_index++)
 	{
@@ -109,20 +111,20 @@ void ChosePoints(const float point1_x, const float point1_y, const float point2_
 
 		int u = 1000 + x_*1000.0;
 		int v = 1000 + y_*1000.0;
-		if (u>0&&u<1999&&v>0&&v<1999)
+		if (u > 0 && u < 1999 && v>0 && v < 1999)
 		{
 			depthimage.at<float>(v, u) = z_;
 		}
 		//cout << u << "; " << v << "; " << z_ << endl;
 		//if (x_>min_x&&x_<max_x&&y_>min_y&&y_<max_y)
-		if (x_>0&&z_>0&&y_<0)
+		if (x_ > 0 && z_ > 0 && y_ < 0)
 		{
-			Selected[point_index] = 1;	
+			Selected[point_index] = 1;
 			continue;
 		}
 
 	}
-	
+
 	orth::PointCloudD points;
 	orth::Faces faces;
 	orth::PointNormal normals;
@@ -148,7 +150,7 @@ void ChosePoints(const float point1_x, const float point1_y, const float point2_
 
 	for (int face_index = 0; face_index < mm.F.size(); face_index++)
 	{
-		if (Selected[mm.F[face_index].x]|| Selected[mm.F[face_index].y]|| Selected[mm.F[face_index].z])
+		if (Selected[mm.F[face_index].x] || Selected[mm.F[face_index].y] || Selected[mm.F[face_index].z])
 		{
 			continue;
 		}
@@ -189,8 +191,8 @@ GLWidget::GLWidget(QWidget *parent)
 	m_bkGroundProgram(0),
 	m_bgGroundModelPos(0, 0, 0),
 	m_bkGroundShow(false),
-	m_bkGroundColor(0.65f,0.79f,1.0f,0.7f),
-      program(0)
+	m_bkGroundColor(0.65f, 0.79f, 1.0f, 0.7f),
+	program(0)
 {
 	SCR_WIDTH = this->frameGeometry().width();
 	SCR_HEIGHT = this->frameGeometry().height();
@@ -205,22 +207,23 @@ GLWidget::GLWidget(QWidget *parent)
 
 GLWidget::~GLWidget()
 {
-    makeCurrent();
-    vbo.destroy();
-    delete program;
-	m_bkgroundvbo.destroy();
-	delete m_bkGroundProgram;
-    doneCurrent();
+	makeCurrent();
+	//vbo.destroy();
+	//delete program;
+// 	m_bkgroundvbo.destroy();
+// 	delete m_bkGroundProgram;
+	m_ModelsVt.clear();
+	doneCurrent();
 }
 
 QSize GLWidget::minimumSizeHint() const
 {
-    return QSize(500, 500);
+	return QSize(500, 500);
 }
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(1000, 1000);
+	return QSize(1000, 1000);
 }
 
 void GLWidget::setWindowSize(QSize &size)
@@ -234,10 +237,10 @@ void GLWidget::setWindowSize(QSize &size)
 void GLWidget::rotateBy(int xAngle, int yAngle, int zAngle)
 {
 	xRot += xAngle * 4;
-    yRot += yAngle * 4;
-    zRot += zAngle;
+	yRot += yAngle * 4;
+	zRot += zAngle;
 	//std::cout << xRot <<" -- " << yRot<< std::endl;
-    update();
+	update();
 }
 
 void GLWidget::translateBy(int xAngle, int yAngle, int zAngle)
@@ -245,14 +248,21 @@ void GLWidget::translateBy(int xAngle, int yAngle, int zAngle)
 	xTrans += /*xAngle; */(xAngle / 1920.0)*((1.37*150.0*300.0) / 150.0);
 	yTrans += /*yAngle; */(yAngle / 1080.0)*((-1.37*150.0*300.0) / 150.0);
 	zTrans += zAngle;
+	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+	for (; iter != m_ModelsVt.end(); iter++) {
+		pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+		if (pModel) {
+			pModel->setScreenPos(xTrans,yTrans);
+		}
+	}
 	//std::cout << xTrans <<" -- " << yTrans << std::endl;
 	update();
 }
 
 void GLWidget::setClearColor(const QColor &color)
 {
-    clearColor = color;
-    update();
+	clearColor = color;
+	update();
 }
 
 //const char* GLWidget::ReadShader(const char* Path)
@@ -302,271 +312,321 @@ QByteArray GLWidget::ReadShader(const QString &Path)
 
 void GLWidget::initializeGL()
 {
-    initializeOpenGLFunctions();
+	initializeOpenGLFunctions();
 	//createGeometry();
-	makeObject();
 	
+
+
 	//vertices_in.clear();
-    glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
 
-    QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-    vshader->compileSourceCode(ReadShader("./gl2.vs"));
+	QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
+	vshader->compileSourceCode(ReadShader("./gl2.vs"));
 
-    QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-    fshader->compileSourceCode(ReadShader("./gl2.fs"));
+	QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
+	fshader->compileSourceCode(ReadShader("./gl2.fs"));
 
-    program = new QOpenGLShaderProgram;
-    program->addShader(vshader);
-    program->addShader(fshader);
-    program->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
-    program->bindAttributeLocation("aNormal", PROGRAM_NORMAL_ATTRIBUTE);
-	program->bindAttributeLocation("aMateriala", PROGRAM_MATERIAL_ATTRIBUTE);
-	program->bindAttributeLocation("aState", PROGRAM_STATE_ATTRIBUTE);
-    program->link();
-    program->bind();
+	program = make_shared<QOpenGLShaderProgram>();
+	program->addShader(vshader);
+	program->addShader(fshader);
+	makeObject();
+	//program = new QOpenGLShaderProgram;
+	//program->addShader(vshader);
+	//program->addShader(fshader);
+// 	program->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
+// 	program->bindAttributeLocation("aNormal", PROGRAM_NORMAL_ATTRIBUTE);
+// 	program->bindAttributeLocation("aMateriala", PROGRAM_MATERIAL_ATTRIBUTE);
+// 	program->bindAttributeLocation("aState", PROGRAM_STATE_ATTRIBUTE);
+// 	program->link();
+	//program->bind();
+
+	
 
 	cout << "initialize done !" << endl;
 
 
+	
+	//m_bkGroundProgram = new QOpenGLShaderProgram;
+// 	m_bkGroundProgram = make_shared<QOpenGLShaderProgram>();
+// 	QOpenGLShader *bgvshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
+// 	bgvshader->compileSourceCode(ReadShader("./bgGround.vs"));
+// 
+// 	QOpenGLShader *bgfshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
+// 	bgfshader->compileSourceCode(ReadShader("./bgGround.fs"));
+// 	m_bkGroundProgram->addShader(bgvshader);
+// 	m_bkGroundProgram->addShader(bgfshader);
 	makeGroundObject();
-	m_bkGroundProgram = new QOpenGLShaderProgram;
-	QOpenGLShader *bgvshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-	bgvshader->compileSourceCode(ReadShader("./bgGround.vs"));
+// 	m_bkGroundProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
+// 	m_bkGroundProgram->link();
 
-	QOpenGLShader *bgfshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-	bgfshader->compileSourceCode(ReadShader("./bgGround.fs"));
-	m_bkGroundProgram->addShader(bgvshader);
-	m_bkGroundProgram->addShader(bgfshader);
-	m_bkGroundProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
-	m_bkGroundProgram->link();
+	makeAxisObject();
+// 	m_AxisNodeProgram = new QOpenGLShaderProgram;
+// 	QOpenGLShader *axisVsShader = new QOpenGLShader(QOpenGLShader::Vertex, this);
+// 	axisVsShader->compileSourceCode(ReadShader("./AxisNode.vs"));
+// 
+// 	QOpenGLShader *axisFsShader = new QOpenGLShader(QOpenGLShader::Fragment, this);
+// 	axisFsShader->compileSourceCode(ReadShader("./AxisNode.fs"));
+// 	m_AxisNodeProgram->addShader(axisVsShader);
+// 	m_AxisNodeProgram->addShader(axisFsShader);
+//  	m_AxisNodeProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
+//  	m_AxisNodeProgram->bindAttributeLocation("aNormal", PROGRAM_NORMAL_ATTRIBUTE);
+// 	m_AxisNodeProgram->link();
 
 }
 
 void GLWidget::paintGL()
 {
 
-    glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
+	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
 	//cout << clearColor.redF() << " ;" << clearColor.greenF() << " ;" << clearColor.blueF() << " ;" << endl;
 	//glClearColor()
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if(totalFaceNum>0){
-		program->bind();
-		vbo.bind();
-		//QMatrix4x4 m;
-		//m.ortho(-5.0f, +5.0f, +5.0f, -5.0f, -5.0f, 35.0f);
-		//m.translate(0.0f, 0.0f, -10.0f);
-		//m.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-		//m.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-		//m.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
-
-		//QMatrix4x4 projection, view, model;
-		m_projection.setToIdentity();
-		m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
-		program->setUniformValue("projection", m_projection);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	drawGradient();
 	
-		//cout << projection.data()[0] << ", " << projection.data()[4] << ", " << projection.data()[8] << ", " << projection.data()[12] <<  endl;
-		//cout << projection.data()[1] << ", " << projection.data()[5] << ", " << projection.data()[9] << ", " << projection.data()[13] << endl;
-		//cout << projection.data()[2] << ", " << projection.data()[6] << ", " << projection.data()[10] << ", " << projection.data()[14] << endl;
-		//cout << projection.data()[3] << ", " << projection.data()[7] << ", " << projection.data()[11] << ", " << projection.data()[15] << endl;
-		//cout << " ---------------------------------------------------- " << endl;
-		//cout << endl;
+	m_projection.setToIdentity();
+	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
 
-		m_view.setToIdentity();
-		m_view.translate(0.0f, 0.0f, -230.0f);
-		m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-		m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-		m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
-		program->setUniformValue("view", m_view);
-		program->setUniformValue("viewPos", m_view.column(3));
-		//cout << view.data()[0] << ", " << view.data()[4] << ", " << view.data()[8] << ", " << view.data()[12] << endl;
-		//cout << view.data()[1] << ", " << view.data()[5] << ", " << view.data()[9] << ", " << view.data()[13] << endl;
-		//cout << view.data()[2] << ", " << view.data()[6] << ", " << view.data()[10] << ", " << view.data()[14] << endl;
-		//cout << view.data()[3] << ", " << view.data()[7] << ", " << view.data()[11] << ", " << view.data()[15] << endl;
-		//cout << endl;
+	m_view.setToIdentity();
+	m_view.translate(0.0f, 0.0f, -230.0f);
+	m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+	m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+	m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
 
-		m_model.setToIdentity();
-		//model.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-		//model.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-		//model.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
-		//model.translate(xRot*0.01, yRot*0.01, zRot*0.01);
-		program->setUniformValue("model", m_model);
-		program->setUniformValue("inv_model", m_model.inverted());
-		program->setUniformValue("screenPos", QVector3D(xTrans, yTrans, 0));
-
-		//memcpy(model1.data, model.data(), 16 * sizeof(float));
-		//memcpy(view1.data, view.data(), 16 * sizeof(float));
-		//memcpy(project1.data, projection.data(), 16 * sizeof(float));
-		//point_end = model*point_;
-		//cout << point_end.x() << ", " << point_end.y() << ", " << point_end.z() << ", " << point_end.w() << endl;
-		//point_end = view*point_end;
-		//cout << point_end.x() << ", " << point_end.y() << ", " << point_end.z() << ", " << point_end.w() << endl;
-		//point_end = projection*point_end;
-		//cout << point_end.x() / point_end.w() << ", " << point_end.y() / point_end.w() << ", " << point_end.z() / point_end.w() << ", " << point_end.w() / point_end.w() << endl;
-		//cout << "----------------------------------------------" << endl;
-
-		//cout << model.data()[0] << ", " << model.data()[4] << ", " << model.data()[8] << ", " << model.data()[12] << endl;
-		//cout << model.data()[1] << ", " << model.data()[5] << ", " << model.data()[9] << ", " << model.data()[13] << endl;
-		//cout << model.data()[2] << ", " << model.data()[6] << ", " << model.data()[10] << ", " << model.data()[14] << endl;
-		//cout << model.data()[3] << ", " << model.data()[7] << ", " << model.data()[11] << ", " << model.data()[15] << endl;
-		//cout << endl;
-		//vector<float> a(4,0);
-		//cout << a[0] << ", " << a[1] << ", " << a[2] << ", " << a[3] << endl;
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	for (int j = 0; j < 4; j++)
-		//	{
-		//		a[j] += model.data()[j + 4 * i] * fv[i];
-		//	}
-		//}
-		//cout << a[0] << ", " << a[1] << ", " << a[2] << ", " << a[3] << endl;
-		//cout << "-----------------------------" << endl;
-		//vector<float> a1(4, 0);
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	a1[0] += view.column(i).x()*a[i];
-		//	a1[1] += view.column(i).y()*a[i];
-		//	a1[2] += view.column(i).z()*a[i];
-		//	a1[3] += view.column(i).w()*a[i];
-		//	
-		//}
-		//cout << a1[0] << ", " << a1[1] << ", " << a1[2] << ", " << a1[3] << endl;cout << "-----------------------------" << endl;
-		//vector<float> a2(4, 0);
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	a2[0] += projection.column(i).x() *a1[i];
-		//	a2[1] += projection.column(i).y() *a1[i];
-		//	a2[2] += projection.column(i).z() *a1[i];
-		//	a2[3] += projection.column(i).w() *a1[i];
-		//	
-		//}
-		//cout << a2[0] << ", " << a2[1] << ", " << a2[2] << ", " << a2[3] << endl;cout << "-----------------------------" << endl;
-		program->setUniformValue("lightPos", QVector3D(0, 0, 0));
-		//cout << view.column(3).toVector3D()[0] <<", " << view.column(3).toVector3D()[1] << ", " << view.column(3).toVector3D()[2]<< endl;
-		program->setUniformValue("lightColor", QVector3D(1.0f, 1.0f, 1.0f));
-		program->setUniformValue("objectColor", QVector3D(1.2f, 0.7f, 0.71f));
-		program->setUniformValue("selectColor", QVector3D(1.0f, 0.0f, 0.0f));
-		//program->setUniformValue("gingivaColor", QVector3D(1.3f, 1.3f, 1.3f));
-		//program->setUniformValue("teethColor", QVector3D(1.3f, 1.3f, 1.3f));
-	
-		program->setUniformValue("material1.ambient", 0.05f,0.0f,0.0f);
-		program->setUniformValue("material1.diffuse", 0.5f,0.4f,0.4f);
-		program->setUniformValue("material1.specular", 0.8f,0.04f,0.04f);
-		program->setUniformValue("material1.shininess", 0.978125f);
-
-		program->setUniformValue("material2.ambient", 0.95f,0.95f,0.95f);
-		program->setUniformValue("material2.diffuse", 0.6f,	0.6f,0.6f);
-		program->setUniformValue("material2.specular", 1.2f, 1.2f, 1.2f);
-		program->setUniformValue("material2.shininess", 32.0f);
-
-		program->setUniformValue("material3.ambient", 0.0f, 0.5f, 0.0f);
-		program->setUniformValue("material3.diffuse", 0.5f, 0.4f, 0.4f);
-		program->setUniformValue("material3.specular", 0.8f, 0.04f, 0.04f);
-		program->setUniformValue("material3.shininess", 0.978125f);
-
-		// directional light
-		program->setUniformValue("dirLight.direction", 0.0f, 0.0f, 1.0f);
-		program->setUniformValue("dirLight.ambient", 0.45f, 0.45f, 0.45f);
-		program->setUniformValue("dirLight.diffuse", 0.6f, 0.6f, 0.6f);
-		program->setUniformValue("dirLight.specular", 0.7f, 0.7f, 0.7f);
-		// point light 1
-		program->setUniformValue("pointLights[0].position", 0.7f, 0.2f, 2.0f);
-		program->setUniformValue("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-		program->setUniformValue("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-		program->setUniformValue("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("pointLights[0].constant", 1.0f);
-		program->setUniformValue("pointLights[0].linear", 0.09f);
-		program->setUniformValue("pointLights[0].quadratic", 0.032f);
-		// point light 2
-		program->setUniformValue("pointLights[1].position", 2.3f, -3.3f, -4.0f);
-		program->setUniformValue("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-		program->setUniformValue("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-		program->setUniformValue("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("pointLights[1].constant", 1.0f);
-		program->setUniformValue("pointLights[1].linear", 0.09f);
-		program->setUniformValue("pointLights[1].quadratic", 0.032f);
-		// point light 3
-		program->setUniformValue("pointLights[2].position", -4.0f, 2.0f, -12.0f);
-		program->setUniformValue("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-		program->setUniformValue("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-		program->setUniformValue("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("pointLights[2].constant", 1.0f);
-		program->setUniformValue("pointLights[2].linear", 0.09f);
-		program->setUniformValue("pointLights[2].quadratic", 0.032f);
-		// point light 4
-		program->setUniformValue("pointLights[3].position", 0.0f, 0.0f, -3.0f);
-		program->setUniformValue("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-		program->setUniformValue("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-		program->setUniformValue("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("pointLights[3].constant", 1.0f);
-		program->setUniformValue("pointLights[3].linear", 0.09f);
-		program->setUniformValue("pointLights[3].quadratic", 0.032f);
-		// spotLight
-		program->setUniformValue("spotLight.position", 0.0f, 0.0f, 0.0f);
-		program->setUniformValue("spotLight.direction", 0.0f, 0.0f, 1.0f);
-		program->setUniformValue("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-		program->setUniformValue("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("spotLight.specular", 1.0f, 1.0f, 1.0f);
-		program->setUniformValue("spotLight.constant", 1.0f);;
-		program->setUniformValue("spotLight.linear", 0.09f);
-		program->setUniformValue("spotLight.quadratic", 0.032f);
-		program->setUniformValue("spotLight.cutOff", float(cos(0.2094)));
-		program->setUniformValue("spotLight.outerCutOff", float(cos(0.2618)));
-
-
-		//this->update();
-
-		program->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
-		program->enableAttributeArray(PROGRAM_NORMAL_ATTRIBUTE);
-		program->enableAttributeArray(PROGRAM_MATERIAL_ATTRIBUTE);
-		program->enableAttributeArray(PROGRAM_STATE_ATTRIBUTE);
-		program->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 8 * sizeof(GLfloat));
-		program->setAttributeBuffer(PROGRAM_NORMAL_ATTRIBUTE, GL_FLOAT, 4 * sizeof(GLfloat), 3, 8 * sizeof(GLfloat));
-		program->setAttributeBuffer(PROGRAM_MATERIAL_ATTRIBUTE, GL_FLOAT, 3 * sizeof(GLfloat), 1, 8 * sizeof(GLfloat));
-		program->setAttributeBuffer(PROGRAM_STATE_ATTRIBUTE, GL_FLOAT, 7 * sizeof(GLfloat), 1, 8 * sizeof(GLfloat));
-
-		if (getSelectReginValue()) {
-			ChangeSelectedColorEx(m_drawRectClickPosition, m_drawRectEndPosition);
-		}
-		else {
-			program->setUniformValue("selectedAreaBegin", 0.0f, 0.0f);
-			program->setUniformValue("selectedAreaEnd", 0.0f, 0.0f);
-		}
-		glDrawArrays(GL_TRIANGLES, 0, totalFaceNum * 3);
-	}
-
-	if (getbkGroundShowValue()) {
-		glDepthMask(GL_FALSE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+	for (; iter != m_ModelsVt.end(); iter++) {
 		glUseProgram(0);
-		m_bkGroundProgram->bind();
-		m_bkgroundvbo.bind();
-		m_bkGroundProgram->setUniformValue("projection", m_projection);
-		m_bkGroundProgram->setUniformValue("view", m_view);
-		m_bgGroundModel.setToIdentity();
-// 		m_bgGroundModel.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-// 		m_bgGroundModel.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-// 		m_bgGroundModel.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
-		m_bgGroundModel.translate(m_bgGroundModelPos);
-		m_bkGroundProgram->setUniformValue("model", m_bgGroundModel);
-		m_bkGroundProgram->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
-		m_bkGroundProgram->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 3 * sizeof(GLfloat));
-		m_bkGroundProgram->setUniformValue("ourColor", m_bkGroundColor);
-		glDrawArrays(GL_QUADS, 0, 4);
-		glDisable(GL_BLEND);
-		glDepthMask(true);
+		(*iter)->OnPaint(m_projection,m_view,this);
 	}
 
-	if (getSelectReginValue()) {		
+	iter = m_ToolsModelsVt.begin();
+	for (; iter != m_ToolsModelsVt.end(); iter++) {
+		glUseProgram(0);
+		(*iter)->OnPaint(m_projection, m_view,this);
+	}
+
+	//drawAXIS();
+// 	if (totalFaceNum > 0) {
+// 		program->bind();
+// 		vbo.bind();
+// 		//QMatrix4x4 m;
+// 		//m.ortho(-5.0f, +5.0f, +5.0f, -5.0f, -5.0f, 35.0f);
+// 		//m.translate(0.0f, 0.0f, -10.0f);
+// 		//m.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// 		//m.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// 		//m.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+// 
+// 		//QMatrix4x4 projection, view, model;
+// 		m_projection.setToIdentity();
+// 		m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
+// 		program->setUniformValue("projection", m_projection);
+// 
+// 		//cout << projection.data()[0] << ", " << projection.data()[4] << ", " << projection.data()[8] << ", " << projection.data()[12] <<  endl;
+// 		//cout << projection.data()[1] << ", " << projection.data()[5] << ", " << projection.data()[9] << ", " << projection.data()[13] << endl;
+// 		//cout << projection.data()[2] << ", " << projection.data()[6] << ", " << projection.data()[10] << ", " << projection.data()[14] << endl;
+// 		//cout << projection.data()[3] << ", " << projection.data()[7] << ", " << projection.data()[11] << ", " << projection.data()[15] << endl;
+// 		//cout << " ---------------------------------------------------- " << endl;
+// 		//cout << endl;
+// 
+// 		m_view.setToIdentity();
+// 		//m_view.translate(0.0f, 0.0f, -230.0f);
+// 		m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// 		m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// 		m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+// 		program->setUniformValue("view", m_view);
+// 		program->setUniformValue("viewPos", m_view.column(3));
+// 		//cout << view.data()[0] << ", " << view.data()[4] << ", " << view.data()[8] << ", " << view.data()[12] << endl;
+// 		//cout << view.data()[1] << ", " << view.data()[5] << ", " << view.data()[9] << ", " << view.data()[13] << endl;
+// 		//cout << view.data()[2] << ", " << view.data()[6] << ", " << view.data()[10] << ", " << view.data()[14] << endl;
+// 		//cout << view.data()[3] << ", " << view.data()[7] << ", " << view.data()[11] << ", " << view.data()[15] << endl;
+// 		//cout << endl;
+// 
+// 		m_model.setToIdentity();
+// // 		m_model.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// // 		m_model.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// // 		m_model.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+// 		//model.translate(xRot*0.01, yRot*0.01, zRot*0.01);
+// 		program->setUniformValue("model", m_model);
+// 		program->setUniformValue("inv_model", m_model.inverted());
+// 		program->setUniformValue("screenPos", QVector3D(xTrans, yTrans, 0));
+// 
+// 		//memcpy(model1.data, model.data(), 16 * sizeof(float));
+// 		//memcpy(view1.data, view.data(), 16 * sizeof(float));
+// 		//memcpy(project1.data, projection.data(), 16 * sizeof(float));
+// 		//point_end = model*point_;
+// 		//cout << point_end.x() << ", " << point_end.y() << ", " << point_end.z() << ", " << point_end.w() << endl;
+// 		//point_end = view*point_end;
+// 		//cout << point_end.x() << ", " << point_end.y() << ", " << point_end.z() << ", " << point_end.w() << endl;
+// 		//point_end = projection*point_end;
+// 		//cout << point_end.x() / point_end.w() << ", " << point_end.y() / point_end.w() << ", " << point_end.z() / point_end.w() << ", " << point_end.w() / point_end.w() << endl;
+// 		//cout << "----------------------------------------------" << endl;
+// 
+// 		//cout << model.data()[0] << ", " << model.data()[4] << ", " << model.data()[8] << ", " << model.data()[12] << endl;
+// 		//cout << model.data()[1] << ", " << model.data()[5] << ", " << model.data()[9] << ", " << model.data()[13] << endl;
+// 		//cout << model.data()[2] << ", " << model.data()[6] << ", " << model.data()[10] << ", " << model.data()[14] << endl;
+// 		//cout << model.data()[3] << ", " << model.data()[7] << ", " << model.data()[11] << ", " << model.data()[15] << endl;
+// 		//cout << endl;
+// 		//vector<float> a(4,0);
+// 		//cout << a[0] << ", " << a[1] << ", " << a[2] << ", " << a[3] << endl;
+// 		//for (int i = 0; i < 4; i++)
+// 		//{
+// 		//	for (int j = 0; j < 4; j++)
+// 		//	{
+// 		//		a[j] += model.data()[j + 4 * i] * fv[i];
+// 		//	}
+// 		//}
+// 		//cout << a[0] << ", " << a[1] << ", " << a[2] << ", " << a[3] << endl;
+// 		//cout << "-----------------------------" << endl;
+// 		//vector<float> a1(4, 0);
+// 		//for (int i = 0; i < 4; i++)
+// 		//{
+// 		//	a1[0] += view.column(i).x()*a[i];
+// 		//	a1[1] += view.column(i).y()*a[i];
+// 		//	a1[2] += view.column(i).z()*a[i];
+// 		//	a1[3] += view.column(i).w()*a[i];
+// 		//	
+// 		//}
+// 		//cout << a1[0] << ", " << a1[1] << ", " << a1[2] << ", " << a1[3] << endl;cout << "-----------------------------" << endl;
+// 		//vector<float> a2(4, 0);
+// 		//for (int i = 0; i < 4; i++)
+// 		//{
+// 		//	a2[0] += projection.column(i).x() *a1[i];
+// 		//	a2[1] += projection.column(i).y() *a1[i];
+// 		//	a2[2] += projection.column(i).z() *a1[i];
+// 		//	a2[3] += projection.column(i).w() *a1[i];
+// 		//	
+// 		//}
+// 		//cout << a2[0] << ", " << a2[1] << ", " << a2[2] << ", " << a2[3] << endl;cout << "-----------------------------" << endl;
+// 		program->setUniformValue("lightPos", QVector3D(0, 0, 0));
+// 		//cout << view.column(3).toVector3D()[0] <<", " << view.column(3).toVector3D()[1] << ", " << view.column(3).toVector3D()[2]<< endl;
+// 		program->setUniformValue("lightColor", QVector3D(1.0f, 1.0f, 1.0f));
+// 		program->setUniformValue("objectColor", QVector3D(1.2f, 0.7f, 0.71f));
+// 		program->setUniformValue("selectColor", QVector3D(1.0f, 0.0f, 0.0f));
+// 		//program->setUniformValue("gingivaColor", QVector3D(1.3f, 1.3f, 1.3f));
+// 		//program->setUniformValue("teethColor", QVector3D(1.3f, 1.3f, 1.3f));
+// 
+// 		program->setUniformValue("material1.ambient", 0.05f, 0.0f, 0.0f);
+// 		program->setUniformValue("material1.diffuse", 0.5f, 0.4f, 0.4f);
+// 		program->setUniformValue("material1.specular", 0.8f, 0.04f, 0.04f);
+// 		program->setUniformValue("material1.shininess", 0.978125f);
+// 
+// 		program->setUniformValue("material2.ambient", 0.95f, 0.95f, 0.95f);
+// 		program->setUniformValue("material2.diffuse", 0.6f, 0.6f, 0.6f);
+// 		program->setUniformValue("material2.specular", 1.2f, 1.2f, 1.2f);
+// 		program->setUniformValue("material2.shininess", 32.0f);
+// 
+// 		program->setUniformValue("material3.ambient", 0.0f, 0.5f, 0.0f);
+// 		program->setUniformValue("material3.diffuse", 0.5f, 0.4f, 0.4f);
+// 		program->setUniformValue("material3.specular", 0.8f, 0.04f, 0.04f);
+// 		program->setUniformValue("material3.shininess", 0.978125f);
+// 
+// 		// directional light
+// 		program->setUniformValue("dirLight.direction", 0.0f, 0.0f, 1.0f);
+// 		program->setUniformValue("dirLight.ambient", 0.45f, 0.45f, 0.45f);
+// 		program->setUniformValue("dirLight.diffuse", 0.6f, 0.6f, 0.6f);
+// 		program->setUniformValue("dirLight.specular", 0.7f, 0.7f, 0.7f);
+// 		// point light 1
+// 		program->setUniformValue("pointLights[0].position", 0.7f, 0.2f, 2.0f);
+// 		program->setUniformValue("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+// 		program->setUniformValue("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+// 		program->setUniformValue("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("pointLights[0].constant", 1.0f);
+// 		program->setUniformValue("pointLights[0].linear", 0.09f);
+// 		program->setUniformValue("pointLights[0].quadratic", 0.032f);
+// 		// point light 2
+// 		program->setUniformValue("pointLights[1].position", 2.3f, -3.3f, -4.0f);
+// 		program->setUniformValue("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+// 		program->setUniformValue("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+// 		program->setUniformValue("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("pointLights[1].constant", 1.0f);
+// 		program->setUniformValue("pointLights[1].linear", 0.09f);
+// 		program->setUniformValue("pointLights[1].quadratic", 0.032f);
+// 		// point light 3
+// 		program->setUniformValue("pointLights[2].position", -4.0f, 2.0f, -12.0f);
+// 		program->setUniformValue("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+// 		program->setUniformValue("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+// 		program->setUniformValue("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("pointLights[2].constant", 1.0f);
+// 		program->setUniformValue("pointLights[2].linear", 0.09f);
+// 		program->setUniformValue("pointLights[2].quadratic", 0.032f);
+// 		// point light 4
+// 		program->setUniformValue("pointLights[3].position", 0.0f, 0.0f, -3.0f);
+// 		program->setUniformValue("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+// 		program->setUniformValue("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+// 		program->setUniformValue("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("pointLights[3].constant", 1.0f);
+// 		program->setUniformValue("pointLights[3].linear", 0.09f);
+// 		program->setUniformValue("pointLights[3].quadratic", 0.032f);
+// 		// spotLight
+// 		program->setUniformValue("spotLight.position", 0.0f, 0.0f, 0.0f);
+// 		program->setUniformValue("spotLight.direction", 0.0f, 0.0f, 1.0f);
+// 		program->setUniformValue("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+// 		program->setUniformValue("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("spotLight.specular", 1.0f, 1.0f, 1.0f);
+// 		program->setUniformValue("spotLight.constant", 1.0f);;
+// 		program->setUniformValue("spotLight.linear", 0.09f);
+// 		program->setUniformValue("spotLight.quadratic", 0.032f);
+// 		program->setUniformValue("spotLight.cutOff", float(cos(0.2094)));
+// 		program->setUniformValue("spotLight.outerCutOff", float(cos(0.2618)));
+// 
+// 
+// 		//this->update();
+// 
+// 		program->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
+// 		program->enableAttributeArray(PROGRAM_NORMAL_ATTRIBUTE);
+// 		program->enableAttributeArray(PROGRAM_MATERIAL_ATTRIBUTE);
+// 		program->enableAttributeArray(PROGRAM_STATE_ATTRIBUTE);
+// 		program->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 8 * sizeof(GLfloat));
+// 		program->setAttributeBuffer(PROGRAM_NORMAL_ATTRIBUTE, GL_FLOAT, 4 * sizeof(GLfloat), 3, 8 * sizeof(GLfloat));
+// 		program->setAttributeBuffer(PROGRAM_MATERIAL_ATTRIBUTE, GL_FLOAT, 3 * sizeof(GLfloat), 1, 8 * sizeof(GLfloat));
+// 		program->setAttributeBuffer(PROGRAM_STATE_ATTRIBUTE, GL_FLOAT, 7 * sizeof(GLfloat), 1, 8 * sizeof(GLfloat));
+// 
+// 		if (getSelectReginValue()) {
+// 			ChangeSelectedColorEx(m_drawRectClickPosition, m_drawRectEndPosition);
+// 		}
+// 		else {
+// 			program->setUniformValue("selectedAreaBegin", 0.0f, 0.0f);
+// 			program->setUniformValue("selectedAreaEnd", 0.0f, 0.0f);
+// 		}
+// 		glDrawArrays(GL_TRIANGLES, 0, totalFaceNum * 3);
+// 	}
+
+// 	if (getbkGroundShowValue()) {
+// glUseProgram(0);
+// m_bkGroundProgram->bind();
+// m_bkgroundvbo->bind();
+// 
+//  		glDepthMask(GL_FALSE);
+//  		glEnable(GL_BLEND);
+//  		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//  		
+// 
+//  		m_bkGroundProgram->setUniformValue("projection", m_projection);
+//  		m_bkGroundProgram->setUniformValue("view", m_view);
+//  		m_bgGroundModel.setToIdentity();
+//  // 		m_bgGroundModel.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+//  // 		m_bgGroundModel.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+//  // 		m_bgGroundModel.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+//  		//m_bgGroundModel.translate(m_bgGroundModelPos);
+//  		m_bkGroundProgram->setUniformValue("model", m_bgGroundModel);
+//  		m_bkGroundProgram->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
+//  		m_bkGroundProgram->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 3 * sizeof(GLfloat));
+//  		m_bkGroundProgram->setUniformValue("ourColor", m_bkGroundColor);
+//  		glDrawArrays(GL_QUADS, 0, 4);
+//  		glDisable(GL_BLEND);
+//  		glDepthMask(true);
+// 	}
+
+	if (getSelectReginValue()) {
 		drawRect(m_drawRectClickPosition.x(), m_drawRectClickPosition.y(), m_drawRectEndPosition.x(), m_drawRectEndPosition.y());
 	}
+	//DrawAxisObject();
 }
 
 void GLWidget::resizeGL(int width, int height)
 {
-    int side = qMin(width, height);
-    glViewport((width - side) / 2, (height - side) / 2, side, side);
+	int side = qMin(width, height);
+	glViewport((width - side) / 2, (height - side) / 2, side, side);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -576,7 +636,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 			m_drawRectClickPosition = QPoint(event->x(), SCR_HEIGHT - event->y());
 		}
 	}
-    else
+	else
 		lastPos = event->pos();
 }
 
@@ -585,9 +645,17 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 	if (getSelectReginValue()) {
 		if (event->buttons()&Qt::LeftButton) {
 			m_drawRectEndPosition = QPoint(event->x(), SCR_HEIGHT - event->y());
+			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+			for (; iter != m_ModelsVt.end(); iter++) {
+				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+				if (pModel) {
+					pModel->setRectSelectRegion(m_drawRectClickPosition, m_drawRectEndPosition);
+				}
+			}
 			update();
 		}
-	}else {
+	}
+	else {
 		int dx = event->x() - lastPos.x();
 		int dy = event->y() - lastPos.y();
 		//cout << dx << " ----- " << dy << endl;
@@ -606,7 +674,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 		if (event->buttons() & Qt::LeftButton) {
 			rotateBy(dy, dx, 0);
-		} else if (event->buttons() & Qt::RightButton) {
+		}
+		else if (event->buttons() & Qt::RightButton) {
 			translateBy(dx, dy, 0);
 		}
 		lastPos = event->pos();
@@ -615,7 +684,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::wheelEvent(QWheelEvent *event)
 {
-	if (event->delta()>0)
+	if (event->delta() > 0)
 	{
 		FOV += 1.0f;
 	}
@@ -626,18 +695,28 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 	this->repaint();
 }
 
-void GLWidget::mouseReleaseEvent(QMouseEvent *  event )
+void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 {
 	cout << "release done !" << endl;
 	//vertices_in.clear();
 	//ChosePoints(0, 0, 500, 500, 1920, 1080, model1, view1, project1, mm);
 	//makeObject();
 
-    emit clicked();
+	emit clicked();
 	if (getSelectReginValue()) {
-		ChangeModelSelectedColor(m_drawRectClickPosition,m_drawRectEndPosition);
-		ChosePoints(m_drawRectClickPosition.x(), m_drawRectClickPosition.y(), m_drawRectEndPosition.x(), m_drawRectEndPosition.y(),
-			SCR_WIDTH,SCR_HEIGHT,cv::Mat(4,4, CV_32F,m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()),mm);
+		vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+		for (; iter != m_ModelsVt.end(); iter++) {
+			pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+			if (pModel) {
+				pModel->ChangeModelSelectedColor(m_drawRectClickPosition, m_drawRectEndPosition,this);
+				pModel->ChosePoints(m_drawRectClickPosition.x(), m_drawRectClickPosition.y(), m_drawRectEndPosition.x(), m_drawRectEndPosition.y(),
+					SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), this);
+				pModel->setRectSelectRegion(QPoint(0,0), QPoint(0, 0));
+			}
+		}
+		//ChangeModelSelectedColor(m_drawRectClickPosition, m_drawRectEndPosition);
+		//ChosePoints(m_drawRectClickPosition.x(), m_drawRectClickPosition.y(), m_drawRectEndPosition.x(), m_drawRectEndPosition.y(),\
+			SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), this);
 	}
 }
 
@@ -668,7 +747,7 @@ void GLWidget::makeObject()
 
 	if (mm.N.size()!=0)
 	{
-		
+
 		for (int i = 0; i < mm.F.size(); i++)
 		{
 			normal_in.push_back(mm.N[mm.F[i].x].x);
@@ -687,39 +766,38 @@ void GLWidget::makeObject()
 
 	//vertData.clear();
 	//if (vertices_in.size()>0)
-	{
-		for (int i = 0; i < mm.F.size(); i++)
-		{
-			//float x, y, z;
-			vertData.append(mm.P[mm.F[i].x].x);
-			vertData.append(mm.P[mm.F[i].x].y);
-			vertData.append(mm.P[mm.F[i].x].z);
-			vertData.append((float)mm.L[mm.F[i].x]);
-			vertData.append(mm.N[mm.F[i].x].x);
-			vertData.append(mm.N[mm.F[i].x].y);
-			vertData.append(mm.N[mm.F[i].x].z);
-			vertData.append(0.0);
-
-			vertData.append(mm.P[mm.F[i].y].x);
-			vertData.append(mm.P[mm.F[i].y].y);
-			vertData.append(mm.P[mm.F[i].y].z);
-			vertData.append((float)mm.L[mm.F[i].y]);
-			vertData.append(mm.N[mm.F[i].y].x);
-			vertData.append(mm.N[mm.F[i].y].y);
-			vertData.append(mm.N[mm.F[i].y].z);
-			vertData.append(0.0);
-			vertData.append(mm.P[mm.F[i].z].x);
-			vertData.append(mm.P[mm.F[i].z].y);
-			vertData.append(mm.P[mm.F[i].z].z);
-			vertData.append((float)mm.L[mm.F[i].z]);
-			vertData.append(mm.N[mm.F[i].z].x);
-			vertData.append(mm.N[mm.F[i].z].y);
-			vertData.append(mm.N[mm.F[i].z].z);
-			vertData.append(0.0);
-			
-		}
-		totalFaceNum += mm.F.size();
-	}
+// 	{
+// 		for (int i = 0; i < mm.F.size(); i++)
+// 		{
+// 			//float x, y, z;
+// 			vertData.append(mm.P[mm.F[i].x].x);
+// 			vertData.append(mm.P[mm.F[i].x].y);
+// 			vertData.append(mm.P[mm.F[i].x].z);
+// 			vertData.append((float)mm.L[mm.F[i].x]);
+// 			vertData.append(mm.N[mm.F[i].x].x);
+// 			vertData.append(mm.N[mm.F[i].x].y);
+// 			vertData.append(mm.N[mm.F[i].x].z);
+// 			vertData.append(0.0);
+// 			vertData.append(mm.P[mm.F[i].y].x);
+// 			vertData.append(mm.P[mm.F[i].y].y);
+// 			vertData.append(mm.P[mm.F[i].y].z);
+// 			vertData.append((float)mm.L[mm.F[i].y]);
+// 			vertData.append(mm.N[mm.F[i].y].x);
+// 			vertData.append(mm.N[mm.F[i].y].y);
+// 			vertData.append(mm.N[mm.F[i].y].z);
+// 			vertData.append(0.0);
+// 			vertData.append(mm.P[mm.F[i].z].x);
+// 			vertData.append(mm.P[mm.F[i].z].y);
+// 			vertData.append(mm.P[mm.F[i].z].z);
+// 			vertData.append((float)mm.L[mm.F[i].z]);
+// 			vertData.append(mm.N[mm.F[i].z].x);
+// 			vertData.append(mm.N[mm.F[i].z].y);
+// 			vertData.append(mm.N[mm.F[i].z].z);
+// 			vertData.append(0.0);
+// 
+// 		}
+// 		totalFaceNum += mm.F.size();
+// 	}
 	//if (m_vertices.size()>0)
 	//{
 	//	for (int i = 0; i < m_vertices.size(); i++)
@@ -732,10 +810,15 @@ void GLWidget::makeObject()
 	//		vertData.append(m_normals[i].z());
 	//	}	
 	//}
+	pQOpenGLBuffer vbo;
+	vbo = make_shared<QOpenGLBuffer>();
+// 	vbo->create();
+// 	vbo->bind();
+// 	vbo->allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
 
-    vbo.create();
-    vbo.bind();
-    vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
+	pCTeethModel l_TeethModel = make_shared<CTeethModel>(program, vbo,mm);
+	l_TeethModel->makeObject();
+	m_ModelsVt.push_back(l_TeethModel);
 	this->update();
 }
 
@@ -778,7 +861,7 @@ void GLWidget::reSetValue()
 void GLWidget::overView()
 {
 	reSetValue();
-	xRot = -90*16;
+	xRot = -90 * 16;
 	update();
 }
 
@@ -792,7 +875,7 @@ void GLWidget::upwardView()
 void GLWidget::leftView()
 {
 	reSetValue();
-	yRot = -90*16;
+	yRot = -90 * 16;
 	update();
 }
 
@@ -828,8 +911,8 @@ void GLWidget::shrinkView()
 
 void GLWidget::selectRegion(bool bSelected)
 {
-	m_drawRectClickPosition = QPoint(0,0);
-	m_drawRectEndPosition = QPoint(0,0);
+	m_drawRectClickPosition = QPoint(0, 0);
+	m_drawRectEndPosition = QPoint(0, 0);
 	setSelectRegionValue(bSelected);
 	update();
 }
@@ -846,8 +929,15 @@ bool GLWidget::getSelectReginValue()
 
 void GLWidget::delSelected()
 {
-	delSelPoints();
-	remakeObject();
+	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+	for (; iter != m_ModelsVt.end(); iter++) {
+		pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+		if (pModel) {
+			pModel->delSelPoints();
+		}
+	}
+// 	delSelPoints();
+// 	remakeObject();
 	update();
 }
 
@@ -923,7 +1013,7 @@ void GLWidget::ChangeSelectedColorEx(QPoint drawRectClickPosition, QPoint drawRe
 
 void GLWidget::ChangeModelSelectedColor(QPoint drawRectClickPosition, QPoint drawRectEndPosition)
 {
-	for (int i = 0; i < vertData.size()/8; i++) {
+	for (int i = 0; i < vertData.size() / 8; i++) {
 		float x, y, z;
 		x = vertData[8 * i + 0] / 1.0;
 		y = vertData[8 * i + 1] / 1.0;
@@ -932,7 +1022,7 @@ void GLWidget::ChangeModelSelectedColor(QPoint drawRectClickPosition, QPoint dra
 		worldPos = world2Screen(worldPos);
 		QRect tmprect(QPoint(drawRectClickPosition.x(), drawRectClickPosition.y()), QPoint(drawRectEndPosition.x(), drawRectEndPosition.y()));
 		if (tmprect.contains(worldPos.x(), worldPos.y())) {
-			vertData[8*i+7] = (1.0f);
+			vertData[8 * i + 7] = (1.0f);
 
 			//cout << "ChangeSelectedColor contains x" << worldPos.x() << "contains y" << worldPos.y()<<endl;
 		}
@@ -941,10 +1031,10 @@ void GLWidget::ChangeModelSelectedColor(QPoint drawRectClickPosition, QPoint dra
 			vertData[8 * i + 7] = (0.0f);
 		}
 	}
-	vbo.create();
-	vbo.bind();
-	vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
-	this->update();
+// 	vbo->create();
+// 	vbo->bind();
+// 	vbo->allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
+// 	this->update();
 }
 
 QVector3D GLWidget::screen2world(int x, int y)
@@ -999,11 +1089,11 @@ void GLWidget::remakeObject()
 		}
 		totalFaceNum = mm.F.size();
 	}
-	if (totalFaceNum > 0) {
-		vbo.create();
-		vbo.bind();
-		vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
-	}
+// 	if (totalFaceNum > 0) {
+// 		vbo->create();
+// 		vbo->bind();
+// 		vbo->allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
+// 	}
 
 	this->update();
 }
@@ -1018,10 +1108,10 @@ void GLWidget::ChosePoints(const float point1_x, const float point1_y, const flo
 
 	QVector3D minPoint = screen2world(min_x, min_y),
 		maxPoint = screen2world(max_x, max_y);
-// 	min_x /= screen_width;
-// 	max_x /= screen_width;
-// 	min_y /= screen_height;
-// 	max_y /= screen_height;
+	// 	min_x /= screen_width;
+	// 	max_x /= screen_width;
+	// 	min_y /= screen_height;
+	// 	max_y /= screen_height;
 
 	cout << min_x << " < x <" << max_x << endl;
 	cout << min_y << " < y <" << max_y << endl;
@@ -1073,8 +1163,8 @@ void GLWidget::ChosePoints(const float point1_x, const float point1_y, const flo
 			depthimage.at<float>(v, u) = z_;
 		}
 		//cout << u << "; " << v << "; " << z_ << endl;
-		if (x_>minPoint.x()&&x_<maxPoint.x()&&y_>minPoint.y()&&y_<maxPoint.y())
-		//if (x_ > 0 && z_ > 0 && y_ < 0)
+		if (x_ > minPoint.x() && x_<maxPoint.x() && y_>minPoint.y() && y_ < maxPoint.y())
+			//if (x_ > 0 && z_ > 0 && y_ < 0)
 		{
 			m_Selected[point_index] = 1;
 			continue;
@@ -1085,7 +1175,6 @@ void GLWidget::ChosePoints(const float point1_x, const float point1_y, const flo
 
 void GLWidget::delSelPoints()
 {
-
 	orth::PointCloudD points;
 	orth::Faces faces;
 	orth::PointNormal normals;
@@ -1147,30 +1236,36 @@ void GLWidget::cutModelUnderBg()
 {
 	if (!getbkGroundShowValue())
 		return;
-	cv::Mat depthimage(2000, 2000, CV_32FC1);
-
-	m_Selected.resize(mm.P.size());
-	m_Selected.clear();
-
-	int selected_points = 0;
-	for (int point_index = 0; point_index < mm.P.size(); point_index++)
-	{
-		if (m_Selected[point_index])
-		{
-			continue;
-		}
-
-		orth::Point3d point_ = mm.P[point_index];
-		//cout << x_ << "; " << y_ << "; " << z_ << "; " << w_ <<"; ";
-		if (point_.y < m_bgGroundModelPos.y()) {
-			m_Selected[point_index] = 1;
-			continue;
+// 	cv::Mat depthimage(2000, 2000, CV_32FC1);
+// 
+// 	m_Selected.resize(mm.P.size());
+// 	m_Selected.clear();
+// 
+// 	int selected_points = 0;
+// 	for (int point_index = 0; point_index < mm.P.size(); point_index++)
+// 	{
+// 		if (m_Selected[point_index])
+// 		{
+// 			continue;
+// 		}
+// 
+// 		orth::Point3d point_ = mm.P[point_index];
+// 		//cout << x_ << "; " << y_ << "; " << z_ << "; " << w_ <<"; ";
+// 		if (point_.y < m_bgGroundModelPos.y()) {
+// 			m_Selected[point_index] = 1;
+// 			continue;
+// 		}
+// 	}
+// 	delSelPoints();
+// 	remakeObject();
+	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+	for (; iter != m_ModelsVt.end(); iter++) {
+		pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+		if (pModel) {
+			pModel->cutModelUnderBg(m_bgGroundModelPos);
 		}
 	}
-	delSelPoints();
-	remakeObject();
 	update();
-	m_Selected.clear();
 }
 
 void GLWidget::setBgColor(QVector4D color)
@@ -1182,6 +1277,7 @@ void GLWidget::setBgColor(QVector4D color)
 void GLWidget::setbkGroundShowValue(bool bShow)
 {
 	m_bkGroundShow = bShow;
+	m_groundModel->Set_bVisible(bShow);
 }
 
 bool GLWidget::getbkGroundShowValue()
@@ -1217,27 +1313,152 @@ void GLWidget::GetMotorRot(float &xrot, float &yrot)
 
 void GLWidget::makeGroundObject()
 {
-	vector<GLfloat> vertData =
-		// 	{
-		// 		50.0f, -50.0f, 0.0f,  // left
-		// 		-50.0f, -50.0f, 0.0f,  // right
-		// 		-50.0f, 50.0f, 0.0f,   // top 
-		// 		50.0f, 50.0f, 0.0f   // top 
-		// 	};
+	QVector<GLfloat> vertData =
+// 		 	{
+// 		 		50.0f, -50.0f, 0.0f,  // left
+// 		 		-50.0f, -50.0f, 0.0f,  // right
+// 		 		-50.0f, 50.0f, 0.0f,   // top 
+// 		 		50.0f, 50.0f, 0.0f   // top 
+// 		 	};
 	{ 50.0f,0.0f,50.0f,50.0f,0.0f,-50.0f,-50.0f,0.0f,-50.0f,-50.0f,0.0f,50.0f };
-	m_bkgroundvbo.create();
-	m_bkgroundvbo.bind();
-	m_bkgroundvbo.allocate(vertData.data(), vertData.size() * sizeof(GLfloat));
+// 	pQOpenGLBuffer bkgroundvbo;
+// 	bkgroundvbo = make_shared<QOpenGLBuffer>();
+	m_groundModel = make_shared<CGroundObject>("./bgGround.vs", "./bgGround.fs",this);
+	m_groundModel->makeObject(vertData, 4);
+	m_groundModel->Set_bVisible(false);
+	m_ToolsModelsVt.push_back(m_groundModel);
+	this->update();
+}
+
+void GLWidget::makeAxisObject()
+{
+// 	vector<GLfloat> vertData =
+// 	{
+// 		0.0f, 0.0f, 0.0f,1.0f,0.0f,0.0f,
+// 		0.3f, 0.0f, 0.0f,1.0f,0.0f,0.0f,
+// 		0.0f, 0.0f, 0.0f, 0.0f,1.0f,0.0f,
+// 		0.0f, 0.3f, 0.0f,0.0f,1.0f,0.0f,
+// 		0.0f, 0.0f, 0.0f, 0.0f,0.0f,1.0f,
+// 		0.0f, 0.0f, 0.3f,0.0f,0.0f,1.0f,
+// 	};
+// //	{ 50.0f, 0.0f, 50.0f, 50.0f, 0.0f, -50.0f, -50.0f, 0.0f, -50.0f, -50.0f, 0.0f, 50.0f };
+// 	m_AxisNodevbo.create();
+// 	m_AxisNodevbo.bind();
+// 	m_AxisNodevbo.allocate(vertData.data(), vertData.size() * sizeof(GLfloat));
+	m_axisMode = make_shared<CAxisModel>("./AxisNode.vs","./AxisNode.fs",this);
+	m_axisMode->makeObject();
+	m_ToolsModelsVt.push_back(m_axisMode);
 }
 
 void GLWidget::bgGroundmoveDown()
 {
 	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() - 1);
+	m_groundModel->translate(m_bgGroundModelPos);
 	update();
 }
 
 void GLWidget::bgGroundmoveUp()
 {
 	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() + 1);
+	m_groundModel->translate(m_bgGroundModelPos);
 	update();
+}
+
+void GLWidget::drawGradient()
+{
+	makeCurrent();
+	glUseProgram(0);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(-1, 1, -1, 1, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+	GLubyte  qBeginColor[4] = { 0,0,0 ,255 },
+		qEndColor[4] = { 128,128,255,255 };
+	glBegin(GL_TRIANGLE_STRIP);
+	glColor4ubv(qBeginColor);  glVertex2f(-1, 1);
+	glColor4ubv(qEndColor);  glVertex2f(-1, -1);
+	glColor4ubv(qBeginColor);  glVertex2f(1, 1);
+	glColor4ubv(qEndColor);  glVertex2f(1, -1);
+	glEnd();
+	glPopAttrib();
+	glPopMatrix(); // restore modelview
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	//doneCurrent();
+}
+
+void GLWidget::drawAXIS()
+{
+	float linewidth = 2.0;
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POINT_SMOOTH);
+	glLineWidth(linewidth);
+	glPointSize(linewidth*1.5);
+	GLdouble a[3] = { 50.0f, 0, 0 },
+		_a[3] = { -50.0f, 0, 0 },
+		b[3] = { 0, 50.0f, 0 },
+		_b[3] = { 0, -50.0f, 0 },
+		c[3] = { 0, 0, 50.0f },
+		_c[3] = { 0, 0, -50.0f };
+	QVector3D test;
+	// Get gl state values
+	double mm[16], mp[16];
+	GLint vp[4];
+	glGetDoublev(GL_MODELVIEW_MATRIX, mm);
+	glGetDoublev(GL_PROJECTION_MATRIX, mp);
+	glGetIntegerv(GL_VIEWPORT, vp);
+	float scalefactor = 1.0f;//size*0.02f;
+	GLubyte  xcolor[4] = { 255,0,0 ,255 },
+		ycolor[4] = { 0,255,0,255 },
+		zcolor[4] = { 0,0,255,255 };
+	glBegin(GL_LINES);
+	glColor4ubv(xcolor);
+	glVertex3dv(_a); glVertex3dv(a);
+	glColor4ubv(ycolor);
+	glVertex3dv(_b); glVertex3dv(b);
+	glColor4ubv(zcolor);
+	glVertex3dv(_c); glVertex3dv(c);
+	glEnd();
+	glGetError(); // Patch to buggy qt rendertext;
+	glPopAttrib();
+	assert(!glGetError());
+}
+
+
+void GLWidget::DrawAxisObject() {
+	glUseProgram(0);
+	m_AxisNodeProgram->bind();
+	m_AxisNodevbo.bind();
+	m_AxisNodeProgram->setUniformValue("projection", m_projection);
+	//m_view.translate(0.5f, 0.5f);
+	m_AxisNodeProgram->setUniformValue("view", m_view);
+	m_AxisNodeModel.setToIdentity();
+	// 		m_bgGroundModel.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+	// 		m_bgGroundModel.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+	// 		m_bgGroundModel.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+	//m_AxisNodeModel.translate(m_bgGroundModelPos);
+// 	m_AxisNodeModel.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// 	m_AxisNodeModel.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// 	m_AxisNodeModel.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+	m_AxisNodeProgram->setUniformValue("model", m_AxisNodeModel);
+	m_AxisNodeProgram->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
+	m_AxisNodeProgram->enableAttributeArray(PROGRAM_NORMAL_ATTRIBUTE);
+	m_AxisNodeProgram->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
+	
+	m_AxisNodeProgram->setAttributeBuffer(PROGRAM_NORMAL_ATTRIBUTE, GL_FLOAT, 3*sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
+	glDrawArrays(GL_LINES, 0, 6);
 }

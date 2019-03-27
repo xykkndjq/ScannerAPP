@@ -63,6 +63,9 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include "./include/3DScan.h"
+#include "BaseModel.h"
+#include "GroundObject.h"
+#include "AxisModel.h"
 
 using std::cout;
 using std::endl;
@@ -75,7 +78,7 @@ using std::endl;
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram);
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions,public IParentInterface
 {
     Q_OBJECT
 
@@ -143,19 +146,30 @@ private:
 	
 
 	//QOpenGLTexture *textures;
-    QOpenGLShaderProgram *program;
-    QOpenGLBuffer vbo;
+	pQOpenGLShaderProgram program;
+
 
 	//bkgroundmodel
-	QOpenGLShaderProgram *m_bkGroundProgram;
+	pQOpenGLShaderProgram m_bkGroundProgram;
 	QMatrix4x4 m_bgGroundModel;
 	QVector3D m_bgGroundModelPos;
-	QOpenGLBuffer m_bkgroundvbo;
+
 	bool m_bkGroundShow;
 	void makeGroundObject();
 	QVector4D m_bkGroundColor;
 	//bkgroundmodel
+	//Axis
+	QOpenGLShaderProgram *m_AxisNodeProgram;
+	QMatrix4x4 m_AxisNodeModel;
+	QVector3D m_AxisNodeModelPos;
+	QOpenGLBuffer m_AxisNodevbo;
+	bool m_AxisNodeShow;
+	void makeAxisObject();
+	void DrawAxisObject();
+	//Axis
+	vector<shared_ptr<BaseModel>> m_ModelsVt;
 
+	vector<shared_ptr<BaseModel>> m_ToolsModelsVt;
 
 	QVector<QVector3D> m_vertices;
 	QVector<QVector3D> m_normals;
@@ -215,6 +229,8 @@ public:
 	void cutModelUnderBg();
 	void setBgColor(QVector4D color);
 	//…œœ¬“∆∂Ø
+	void drawGradient();
+	void drawAXIS();
 
 private:
 	bool m_bSelectRegion;
@@ -223,6 +239,8 @@ private:
 	QPoint m_drawRectEndPosition;
 	QMatrix4x4 m_projection, m_view, m_model;
 	orth::PointLabel m_Selected;
+	pCGroundObject m_groundModel;
+	pCAxisModel m_axisMode;
 };
 
 #endif
