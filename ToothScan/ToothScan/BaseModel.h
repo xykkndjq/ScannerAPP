@@ -19,6 +19,7 @@ __interface IParentInterface
 {
 	virtual QVector3D screen2world(int x, int y);
 	virtual QVector3D world2Screen(QVector3D worldPos);
+	virtual void glUseProgram(GLuint program);
 }; 
 
 

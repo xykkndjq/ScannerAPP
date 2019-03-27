@@ -20,6 +20,7 @@ public:
 	void makeObject();
 	void delSelPoints();
 	void cutModelUnderBg(QVector3D bgGroundModelPos);
+
 private:
 	QPoint m_drawRectClickPosition;
 	QPoint m_drawRectEndPosition;

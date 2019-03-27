@@ -66,7 +66,7 @@
 #include "BaseModel.h"
 #include "GroundObject.h"
 #include "AxisModel.h"
-
+#include "TeethModel.h"
 using std::cout;
 using std::endl;
 
@@ -95,7 +95,7 @@ public:
 	void SetMatrix(cv::Mat &m, cv::Mat &v);
 	//13 ªÒ»°x y Ω«∂»
 	void GetMotorRot(float &xrot, float &yrot);
-	void makeObject();
+	pCTeethModel makeObject();
 
 	vector<float> vertices_in;
 	vector<float> normal_in;
@@ -119,6 +119,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 	//void keyPressEvent(QKeyEvent *event) override;
 	//void keyReleaseEvent(QKeyEvent *event) override;
+	void glUseProgram(GLuint program);
 
 private:
     

@@ -53,7 +53,7 @@
 #include <QOpenGLTexture>
 #include <QMouseEvent>
 #include "TeethModel.h"
-
+#include <QPainter>
 
 void ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, cv::Mat &model_matrix, cv::Mat &view_matrix, cv::Mat &projection_matrix, orth::MeshModel &mm)
 {
@@ -405,6 +405,9 @@ void GLWidget::paintGL()
 		(*iter)->OnPaint(m_projection, m_view,this);
 	}
 
+//	glSwapBuffers();
+
+
 	//drawAXIS();
 // 	if (totalFaceNum > 0) {
 // 		program->bind();
@@ -720,7 +723,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 	}
 }
 
-void GLWidget::makeObject()
+void GLWidget::glUseProgram(GLuint program)
+{
+	QOpenGLFunctions::glUseProgram(program);
+}
+
+pCTeethModel GLWidget::makeObject()
 {
 	/*point_.setX(mm.P[mm.F[0].x].x / 1.0);
 	point_.setY(mm.P[mm.F[0].x].y / 1.0);
@@ -820,7 +828,9 @@ void GLWidget::makeObject()
 	l_TeethModel->makeObject();
 	m_ModelsVt.push_back(l_TeethModel);
 	this->update();
+	return l_TeethModel;
 }
+
 
 void GLWidget::TeethSegmentRun(const std::string label_file_path)
 {
