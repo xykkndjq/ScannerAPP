@@ -18,7 +18,7 @@ using namespace std;
 __interface IParentInterface
 {
 	virtual QVector3D screen2world(int x, int y);
-	virtual QVector3D world2Screen(QVector3D worldPos);
+	virtual QVector3D world2Screen(QVector3D worldPos, QMatrix4x4 modelMat);
 	virtual void glUseProgram(GLuint program);
 }; 
 
@@ -36,6 +36,7 @@ public:
 	virtual void makeObject(QVector<GLfloat> v_vertData ,int nFaceNum);
 	virtual void translate(QVector3D qvTranslate);
 	virtual void rotate(float xRot,	float yRot,	float zRot);
+	virtual void rotate(QQuaternion m);
 	virtual void mousePressEvent(QMouseEvent *event);
 	virtual void mouseMoveEvent(QMouseEvent *event);
 	QByteArray ReadShader(const QString &Path);
@@ -46,6 +47,7 @@ public:
 protected:
 	shared_ptr<QOpenGLShaderProgram> m_program;
 	QMatrix4x4 m_ModelMatrix;
+	QQuaternion m_ModelRotate;
 	shared_ptr<QOpenGLBuffer> m_vbo;
 	int m_totalFaceNum;
 	QVector3D m_qvTranslate;

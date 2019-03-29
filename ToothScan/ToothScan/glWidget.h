@@ -67,6 +67,7 @@
 #include "GroundObject.h"
 #include "AxisModel.h"
 #include "TeethModel.h"
+#include "trackball.h"
 using std::cout;
 using std::endl;
 
@@ -215,7 +216,7 @@ public:
 
 	QVector3D screen2world(int x, int y);
 
-	QVector3D world2Screen(QVector3D worldPos);
+	QVector3D world2Screen(QVector3D worldPos,QMatrix4x4 modelMat);
 
 	void remakeObject();
 
@@ -232,7 +233,8 @@ public:
 	//…œœ¬“∆∂Ø
 	void drawGradient();
 	void drawAXIS();
-
+	QPointF pixelPosToViewPos(const QPointF& p);
+	void GetRotateMotorRot(float &xrot, float &yrot);
 private:
 	bool m_bSelectRegion;
 	bool m_bSelectAddRegion;
@@ -242,6 +244,7 @@ private:
 	orth::PointLabel m_Selected;
 	pCGroundObject m_groundModel;
 	pCAxisModel m_axisMode;
+	TrackBall m_trackBall;
 };
 
 #endif

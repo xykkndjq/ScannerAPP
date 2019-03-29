@@ -42,6 +42,10 @@ void CTeethModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInt
 	//cout << view.data()[3] << ", " << view.data()[7] << ", " << view.data()[11] << ", " << view.data()[15] << endl;
 	//cout << endl;
 	m_ModelMatrix.setToIdentity();
+// 	m_ModelMatrix.rotate(m_xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// 	m_ModelMatrix.rotate(m_yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// 	m_ModelMatrix.rotate(m_zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+	m_ModelMatrix.rotate(m_ModelRotate);
 	m_program->setUniformValue("model", m_ModelMatrix);
 	m_program->setUniformValue("inv_model", m_ModelMatrix.inverted());
 	//m_program->setUniformValue("screenPos", QVector3D(0, 0, 0));
@@ -301,7 +305,7 @@ void CTeethModel::ChangeModelSelectedColor(QPoint beginPos, QPoint endPoint,IPar
 		y = m_vertData[8 * i + 1] / 1.0;
 		z = m_vertData[8 * i + 2] / 1.0;
 		QVector3D worldPos(x, y, z);
-		worldPos = pParent->world2Screen(worldPos);
+		worldPos = pParent->world2Screen(worldPos,m_ModelMatrix);
 		QRect tmprect(QPoint(beginPos.x(), beginPos.y()), QPoint(endPoint.x(), endPoint.y()));
 		if (tmprect.contains(worldPos.x(), worldPos.y())) {
 			m_vertData[8 * i + 7] = (1.0f);

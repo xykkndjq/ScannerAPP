@@ -19,6 +19,12 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	connect(ui.modelMoveStateSetBtn, SIGNAL(clicked()), this, SLOT(modelMoveStateSetBtnClicked()));
 	connect(ui.delSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
 	connect(ui.confirmSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
+	connect(ui.bgGroundmoveDownBtn, SIGNAL(clicked()), this, SLOT(bgGroundmoveDownBtnClicked()));
+	connect(ui.bgGroundmoveUpBtn, SIGNAL(clicked()), this, SLOT(bgGroundmoveUpBtnClicked()));
+	connect(ui.bgGroundShowBtn, SIGNAL(clicked()), this, SLOT(bgGroundShowBtnClicked()));
+	connect(ui.cutModelUnderBgBtn, SIGNAL(clicked()), this, SLOT(cutModelUnderBgBtnClicked()));
+	connect(ui.changeBgColorBtn, SIGNAL(clicked()), this, SLOT(changeBgColorBtnClicked()));
+	
 	
 	
 }
@@ -464,4 +470,32 @@ void ScanMainGUI::delSelectedBtnClicked()
 void ScanMainGUI::confirmSelectedBtnClicked()
 {
 	glWidget->confirmSelRegion();
+}
+void ScanMainGUI::bgGroundmoveDownBtnClicked()
+{
+	glWidget->bgGroundmoveDown();
+}
+
+void ScanMainGUI::bgGroundmoveUpBtnClicked()
+{
+	glWidget->bgGroundmoveUp();
+}
+void ScanMainGUI::bgGroundShowBtnClicked()
+{
+	glWidget->bgGroundmoveUp();
+	glWidget->showBkGround(ui.bgGroundShowBtn->isChecked());
+}
+
+void ScanMainGUI::cutModelUnderBgBtnClicked()
+{
+	glWidget->cutModelUnderBg();
+}
+
+void ScanMainGUI::changeBgColorBtnClicked()
+{
+	float r = ui.textEditR->toPlainText().toFloat()/255,
+		g = ui.textEditG->toPlainText().toFloat()/255,
+		b = ui.textEditB->toPlainText().toFloat()/255,
+		alpa = ui.textEditA->toPlainText().toFloat()/255;
+	glWidget->setBgColor(QVector4D(r,g,b,alpa));
 }

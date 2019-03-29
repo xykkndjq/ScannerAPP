@@ -72,6 +72,11 @@ void BaseModel::rotate(float xRot, float yRot, float zRot)
 	m_zRot = zRot;
 }
 
+void BaseModel::rotate(QQuaternion m)
+{
+	m_ModelRotate = m;
+}
+
 void BaseModel::mousePressEvent(QMouseEvent *event)
 {
 

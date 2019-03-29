@@ -30,9 +30,10 @@ void CGroundObject::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentI
 	m_program->setUniformValue("projection", v_Projection);
 	m_program->setUniformValue("view", v_View);
 	m_ModelMatrix.setToIdentity();
-	// 		m_bgGroundModel.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-	// 		m_bgGroundModel.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-	// 		m_bgGroundModel.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+// 	m_ModelMatrix.rotate(m_xRot / 16.0f, 1.0f, 0.0f, 0.0f);
+// 	m_ModelMatrix.rotate(m_yRot / 16.0f, 0.0f, 1.0f, 0.0f);
+// 	m_ModelMatrix.rotate(m_zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+	m_ModelMatrix.rotate(m_ModelRotate);
 	m_ModelMatrix.translate(m_qvTranslate);
 	m_program->setUniformValue("model", m_ModelMatrix);
 	m_program->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
