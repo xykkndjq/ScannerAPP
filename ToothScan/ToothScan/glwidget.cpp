@@ -391,6 +391,7 @@ void GLWidget::paintGL()
 
 	m_view.setToIdentity();
 	m_view.translate(0.0f, 0.0f, -230.0f);
+	m_view.rotate(m_trackBall.rotation());
 	m_model.setToIdentity();
 	m_model.rotate(m_trackBall.rotation());
 	// 	m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
@@ -699,15 +700,15 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		if (event->buttons() & Qt::LeftButton) {
 			QQuaternion trans;
 			m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
-			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
-			for (; iter != m_ModelsVt.end(); iter++) {
-				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-				if (pModel) {
-					pModel->rotate(m_trackBall.rotation());
-				}
-			}
-			m_groundModel->rotate(m_trackBall.rotation());
-			m_axisMode->rotate(m_trackBall.rotation());
+// 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+// 			for (; iter != m_ModelsVt.end(); iter++) {
+// 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+// 				if (pModel) {
+// 					pModel->rotate(m_trackBall.rotation());
+// 				}
+// 			}
+// 			m_groundModel->rotate(m_trackBall.rotation());
+// 			m_axisMode->rotate(m_trackBall.rotation());
 		}
 		else {
 			QQuaternion trans;

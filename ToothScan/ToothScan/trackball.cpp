@@ -162,6 +162,7 @@ void TrackBall::stop()
 
 QQuaternion TrackBall::rotation() const
 {
+	return m_rotation;
     if (m_paused || m_pressed)
         return m_rotation;
 

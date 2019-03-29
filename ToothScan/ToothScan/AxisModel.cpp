@@ -59,7 +59,7 @@ void CAxisModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInte
 // 	m_ModelMatrix.rotate(m_xRot / 16.0f, 1.0f, 0.0f, 0.0f);
 // 	m_ModelMatrix.rotate(m_yRot / 16.0f, 0.0f, 1.0f, 0.0f);
 // 	m_ModelMatrix.rotate(m_zRot / 16.0f, 0.0f, 0.0f, 1.0f);
-	m_ModelMatrix.rotate(m_ModelRotate);
+	//m_ModelMatrix.rotate(m_ModelRotate);
 	m_program->setUniformValue("model", m_ModelMatrix);
 	m_program->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
 	m_program->enableAttributeArray(PROGRAM_NORMAL_ATTRIBUTE);
