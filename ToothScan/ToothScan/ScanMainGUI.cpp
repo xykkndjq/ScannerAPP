@@ -590,10 +590,13 @@ void ScanMainGUI::judgeBackStep()
 		if (upperJawIndex == 2)
 		{
 			scanTipWidget->upperPlaceConstructIHM1();
+			globalTipIndex = 1;
 			forwardIndex = 1;
+			chooseJawIndex = 1;
 			ControlComputeThread->upper_mModel.clear();
 			ControlComputeThread->upper_points_cloud_end2.clear();
 			ControlComputeThread->upper_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (upperJawIndex == 3)
@@ -621,10 +624,13 @@ void ScanMainGUI::judgeBackStep()
 		if (lowerJawIndex == 2)
 		{
 			scanTipWidget->lowerPlaceConstructIHM1();
+			globalTipIndex = 2;
 			forwardIndex = 1;
+			chooseJawIndex = 2;
 			ControlComputeThread->lower_mModel.clear();
 			ControlComputeThread->lower_points_cloud_end2.clear();
 			ControlComputeThread->lower_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (lowerJawIndex == 3)
@@ -652,10 +658,13 @@ void ScanMainGUI::judgeBackStep()
 		if (allJawIndex == 2)
 		{
 			scanTipWidget->allPlaceConstructIHM1();
+			globalTipIndex = 3;
 			forwardIndex = 1;
+			chooseJawIndex = 3;
 			ControlComputeThread->all_mModel.clear();
 			ControlComputeThread->all_points_cloud_end2.clear();
 			ControlComputeThread->all_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (allJawIndex == 3)
@@ -785,7 +794,10 @@ void ScanMainGUI::discardCompensationSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 2)
@@ -799,7 +811,10 @@ void ScanMainGUI::discardCompensationSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("下颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 3)
@@ -813,7 +828,10 @@ void ScanMainGUI::discardCompensationSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("全颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 }
@@ -1011,7 +1029,11 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+			//QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 		}
 	}
 	else if (chooseJawIndex == 2)
@@ -1024,7 +1046,10 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("下颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 3)
@@ -1037,7 +1062,10 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("全颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 
