@@ -329,5 +329,9 @@
         <file>Resources/images/TopView.png</file>
         <file>Resources/images/FrontView.png</file>
         <file>Resources/images/BackView.png</file>
+        <file>Resources/images/DeleteSelected.png</file>
+        <file>Resources/images/SelectRegion.png</file>
+        <file>Resources/images/enlarge.png</file>
+        <file>Resources/images/shrink.png</file>
     </qresource>
 </RCC>

@@ -68,8 +68,10 @@ TabMainGUI::~TabMainGUI()
 void TabMainGUI::setConnections()
 {
 	//订单信息子页面
+	//导入
+	connect(exportButton, SIGNAL(clicked()), this, SLOT(openFileDialogSlot()));
+
 	//保存
-	//connect(saveButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
 	connect(saveScanButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
 	connect(this, SIGNAL(scanSignal()), this, SLOT(ScanDataPackagePress()));//扫描按钮连接
 	//未分模
@@ -81,7 +83,6 @@ void TabMainGUI::setConnections()
 	connect(MoulageButton3, SIGNAL(clicked()), this, SLOT(MoulagePress3()));
 	//分模
 	connect(toothRadioButtonGroup,SIGNAL(buttonClicked(int)), this,SLOT(ToothGroupClicked(int)));
-
 	connect(clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllButtonPress()));
 
 	for (int i = 0; i < 32; i++)
@@ -111,8 +112,16 @@ void TabMainGUI::initVariable()
 
 	//leftbutton
 	dateLineEdit = new QDateTimeEdit(this);
-	dateLineEdit->setDateTime(QDateTime::currentDateTime());
+	QDateTime currentDateTime = QDateTime::currentDateTime();
+	dateLineEdit->setDateTime(currentDateTime);
+	dateLineEdit->setReadOnly(true);
+
 	orderLineEdit = new QLineEdit(this);
+	QString curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
+	lastDateTimeStr = curDateTimeStr;
+	orderLineEdit->setText(curDateTimeStr);
+	orderLineEdit->setReadOnly(true);
+
 	patientLineEdit = new QLineEdit(this);
 	doctorLineEdit = new QLineEdit(this);
 	additionTextEdit = new QTextEdit(this);
@@ -440,6 +449,13 @@ bool TabMainGUI::isDirExist(QString fullPath)
 	}
 }
 
+QByteArray TabMainGUI::ToChineseStr(const QString &chineseString)
+{
+	QTextCodec *codec = QTextCodec::codecForName("GBK");
+	QByteArray byteArray = codec->fromUnicode(chineseString);
+	return byteArray;
+}
+
 bool TabMainGUI::judgePatientSaveFlag()
 {
 	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL)&&
@@ -447,15 +463,16 @@ bool TabMainGUI::judgePatientSaveFlag()
 	{
 		QString fullPath = "./data/" + orderNumber;
 		bool creatFlag = isDirExist(fullPath);
+		fileQStr = "./data/" + orderNumber + "/";
+		QByteArray orderPN = ToChineseStr(orderPatientName);
+		std::string filePath = "./data/" + orderNumber.toStdString() + "/" + orderPN.data() + ".OI";
+		cv::FileStorage fwrite(filePath.c_str(), cv::FileStorage::WRITE);
 
-		std::string fileStr = "./data/" + orderNumber.toStdString() + "/" + orderPatientName.toStdString() + ".orderInformation";
-		cv::FileStorage fwrite(fileStr.c_str(), cv::FileStorage::WRITE);
-
-		fwrite << "Date" << orderDate.toStdString()
-			<< "Number" << orderNumber.toStdString()
-			<< "Patient Name" << orderPatientName.toStdString()
-			<< "Doctor Name" << orderDoctorName.toStdString()
-			<< "Addition" << orderAddition.toStdString();
+		fwrite << "Order Date" << orderDate.toStdString()
+			<< "Order Number" << orderNumber.toStdString()
+			<< "Patient Name" << orderPN.data()
+			<< "Doctor Name" << ToChineseStr(orderDoctorName).data()
+			<< "Addition" << ToChineseStr(orderAddition).data();
 
 		if (unMoulageFlag == true)
 		{
@@ -593,6 +610,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 
 void TabMainGUI::PatientInformationSave()
 {
+
 	std::cout << "storage a order information..." << std::endl;
 	orderDate = dateLineEdit->text();
 	orderNumber = orderLineEdit->text();
@@ -605,10 +623,6 @@ void TabMainGUI::PatientInformationSave()
 	{
 		emit scanSignal();
 	}
-	//QByteArray cdata = orderPatientName.toLocal8Bit();
-	//std::string pn(cdata);
-	
-	
 }
 
 void TabMainGUI::UpperJawPress()
@@ -1208,5 +1222,14 @@ void TabMainGUI::ScanDataPackagePress()
 	{
 		scanObj.insert("caseType", 3);
 	}
+	/*QString fileQstr = QString::fromStdString(fileStr);*/
+	scanObj.insert("filePath", fileQStr);
+	scanObj.insert("patientName", orderPatientName);
 	emit scanDataSignal(scanObj);
+}
+
+void TabMainGUI::openFileDialogSlot()
+{
+	//QFileDialog *fileDialog = new QFileDialog(this);
+
 }

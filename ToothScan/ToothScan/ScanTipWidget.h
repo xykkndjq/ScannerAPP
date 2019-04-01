@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include "ui_ScanTipWidget.h"
+#include <Qtimer>
 
 class ScanTipWidget : public QWidget
 {
@@ -20,6 +21,8 @@ public:
 	ScanTipWidget(QWidget *parent = Q_NULLPTR);
 	~ScanTipWidget();
 	
+	void setConnection();
+	int globalSpinCutValue;
 	//top
 	QLabel *primaryTipLabel;
 	QLabel *secondTipLabel;
@@ -28,6 +31,7 @@ public:
 	//插入
 	QLabel *imageTipLabel;
 	//补扫
+	QTimer *timer;
 	QPushButton *compensationButton;//增加补扫
 	QPushButton *discardButton;//丢弃补扫
 	QLabel *rotationLabel;//旋转角度
@@ -54,34 +58,52 @@ public:
 
 	void placeVariable1();//插入
 	void compenVariable2();//补扫
+	void cutVariable2();//水平切割
 	void finishVariable3();//完成
 	void splitScanVariable4();//完成
 
 	void placeConstruct1();//插入
 	void compenConstruct2();//补扫
-	void finishConstruct3();//完成
+	void cutConstruct2();
+	void upperFinishConstruct3();//完成
+	void lowerFinishConstruct3();//完成
+	void allFinishConstruct3();//完成
 
 	void allPlaceConstructIHM1();//插入全颌
 	
 	void allCompenConstructIHM2();//补扫全颌
 
-	void allPlaceConstructIHM3();//插入下颌
+	void allCutConstructIHM3();
+
+	void allPlaceConstructIHM4();//插入下颌
 	
-	void allCompenConstructIHM4();//补扫下颌
+	void allCompenConstructIHM5();//补扫下颌
 
-	void allPlaceConstructIHM5();//插入上颌
+	void allCutConstructIHM6();
 
-	void allCompenConstructIHM6();//补扫上颌
+	void allPlaceConstructIHM7();//插入上颌
 
-	void allFinishConstructIHM7();//完成
+	void allCompenConstructIHM8();//补扫上颌
+
+	void allCutConstructIHM9();
+
+	void allFinishConstructIHM10();//完成
 
 	void upperPlaceConstructIHM1();
 
 	void upperCompenConstructIHM2();
 
+	void upperCutConstructIHM3();
+
+	void upperFinishConstructIHM4();
+
 	void lowerPlaceConstructIHM1();
 
 	void lowerCompenConstructIHM2();
+
+	void lowerCutConstructIHM3();
+
+	void lowerFinishConstructIHM4();
 
 	//split分模 
 	//代型
@@ -96,6 +118,13 @@ public:
 	void lowerSplitRemoveConstructIHM6();
 	void lowerSplitFinishConstructIHM7();
 	void allSplitFinishConstructIHM8();
+
+signals:
+	void updateModelAngle();
+
+public slots:
+	void updatePage();
+
 private:
 	Ui::ScanTipWidget ui;
 };

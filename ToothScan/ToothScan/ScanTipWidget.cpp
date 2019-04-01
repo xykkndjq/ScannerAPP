@@ -5,7 +5,9 @@ ScanTipWidget::ScanTipWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 	this->InitVariable();
-	//this->upperCompenConstructIHM2();
+	this->setConnection();
+	this->setStyleSheet("background-color:rgb(199,215,235);");
+	//this->upperFinishConstructIHM4();
 	//this->lowerSplitScanConstructIHM5();
 	//this->upperPlaceConstructIHM1();
 }
@@ -14,8 +16,32 @@ ScanTipWidget::~ScanTipWidget()
 {
 }
 
+void ScanTipWidget::updatePage()
+{
+	emit updateModelAngle();
+}
+
+
+void ScanTipWidget::setConnection()
+{
+	spinCutBox->setRange(-50,50);
+	sliderCut->setRange(-50,50);
+
+	QObject::connect(sliderCut, &QSlider::valueChanged, spinCutBox, &QSpinBox::setValue);
+	void (QSpinBox:: *spinBoxSignal)(int) = &QSpinBox::valueChanged;
+	QObject::connect(spinCutBox, spinBoxSignal, sliderCut, &QSlider::setValue);
+	spinCutBox->setValue(0);
+	globalSpinCutValue = 0;
+	cutHeightLineEdit->setText(QString::number(globalSpinCutValue, 10));
+
+	connect(timer, SIGNAL(timeout()), this, SLOT(updatePage()));
+	timer->start(1000);
+}
+
 void ScanTipWidget::InitVariable()
 {
+	timer = new QTimer(this);
+
 	//top
 	QFont ft;
 	ft.setPointSize(14);
@@ -29,20 +55,24 @@ void ScanTipWidget::InitVariable()
 	imageTipLabel = new QLabel(this);
 	
 	compensationButton = new QPushButton(QStringLiteral("增加扫描"), this);//增加补扫
-	discardButton = new QPushButton(QStringLiteral("丢弃增扫"), this);//丢弃补扫
+	discardButton = new QPushButton(QStringLiteral("撤销增扫"), this);//丢弃补扫
 	rotationLabel = new QLabel(QStringLiteral("旋转角度:"), this);
 	rotationLineEdit = new QLineEdit(this);//旋转角度
 	rotationLineEdit->setFixedSize(50, 20);
+	rotationLineEdit->setStyleSheet("background-color:rgb(255,255,255);");
 	waverLineEdit = new QLineEdit(this);//摆动角度
 	waverLabel = new QLabel(QStringLiteral("摆动角度:"), this);
 	waverLineEdit->setFixedSize(50, 20);
+	waverLineEdit->setStyleSheet("background-color:rgb(255,255,255);");
 	cutHeightLabel = new QLabel(QStringLiteral("切割高度:"), this);
 	cutHeightLineEdit = new QLineEdit(this);//切割高度
 	cutHeightLineEdit->setFixedSize(50, 20);
+	cutHeightLineEdit->setStyleSheet("background-color:rgb(255,255,255);");
 	spinCutBox = new QSpinBox();//切割控制
+	spinCutBox->setFixedWidth(18);
 	sliderCut = new QSlider(Qt::Horizontal);
 	cutHeightButton = new QPushButton(QStringLiteral("切割模型"), this);//切割高度应用
-	discardCutHeightButton = new QPushButton(QStringLiteral("丢弃切割"), this);//丢弃切割高度应用
+	discardCutHeightButton = new QPushButton(QStringLiteral("撤销切割"), this);//丢弃切割高度应用
 	saveCutHeightButton = new QPushButton(QStringLiteral("保存为默认切割高度"), this);//保存当前切割高度
 
 	upperShowButton = new QPushButton(this);
@@ -154,55 +184,12 @@ void ScanTipWidget::compenConstruct2()
 	QWidget *middleGWidget = new QWidget();
 	QGridLayout *middleGLayout = new QGridLayout(middleGWidget);
 
-	/*QWidget *middleLeftFWidget = new QWidget(middleGWidget);
-	QFormLayout *middleLeftFLayout = new QFormLayout(middleLeftFWidget);
-	middleLeftFLayout->addRow(QStringLiteral("旋转角度:"), rotationLineEdit);
-	middleLeftFLayout->addRow(QStringLiteral("切割高度:"), cutHeightLineEdit);
-	middleLeftFLayout->setVerticalSpacing(0);
-	middleLeftFLayout->setHorizontalSpacing(0);
-	middleLeftFLayout->setMargin(0);
-	middleLeftFWidget->setFixedHeight(40);*/
-	
-	/*QWidget *middleTopHWidget = new QWidget(middleGWidget);
-	QHBoxLayout *middleTopHLayout = new QHBoxLayout(middleTopHWidget);
-	middleRightTopHWidget->setFixedSize(105, 20);
-
-	middleTopHLayout->addWidget(rotationLabel);
-	middleTopHLayout->addWidget(rotationLineEdit);
-	middleTopHLayout->addWidget(waverLabel);
-	middleTopHLayout->addWidget(waverLineEdit);
-	middleTopHLayout->setMargin(0);
-	middleTopHLayout->setSpacing(0);*/
-
-	QWidget *middleRightBottomHWidget = new QWidget();
-	QHBoxLayout *middleRightBottomHLayout = new QHBoxLayout(middleRightBottomHWidget);
-	middleRightBottomHWidget->setFixedSize(113, 20);
-	middleRightBottomHLayout->addWidget(spinCutBox);
-	middleRightBottomHLayout->addWidget(sliderCut);
-	middleRightBottomHLayout->setMargin(0);
-	middleRightBottomHLayout->setSpacing(0);
-	
-	/*QWidget *middleRightVWidget = new QWidget(middleGWidget);
-	QVBoxLayout *middleRightVLayout = new QVBoxLayout(middleRightVWidget);
-	middleRightVWidget->setFixedSize(200,40);
-	middleRightVLayout->addWidget(middleRightTopHWidget);
-	middleRightVLayout->addWidget(middleRightBottomHWidget);
-	middleRightVLayout->setMargin(0);
-	middleRightVLayout->setSpacing(0);*/
-
 	middleGLayout->addWidget(rotationLabel,0,0,1,1);
 	middleGLayout->addWidget(rotationLineEdit, 0, 1, 1, 1);
 	middleGLayout->addWidget(waverLabel, 0, 2, 1, 1);
 	middleGLayout->addWidget(waverLineEdit, 0, 3, 1, 1);
-	middleGLayout->addWidget(cutHeightLabel, 1, 0, 1, 1);
-	middleGLayout->addWidget(cutHeightLineEdit, 1, 1, 1, 1);
-	middleGLayout->addWidget(middleRightBottomHWidget, 1, 2, 1, 2);
-
-	middleGLayout->addWidget(cutHeightButton, 2, 0, 1, 2);
-	middleGLayout->addWidget(discardCutHeightButton, 2, 2, 1, 2);
-	middleGLayout->addWidget(saveCutHeightButton, 3, 0, 1, 4);
-	middleGLayout->addWidget(compensationButton, 4, 0, 1, 2);
-	middleGLayout->addWidget(discardButton, 4, 2, 1, 2);
+	middleGLayout->addWidget(compensationButton, 1, 0, 1, 2);
+	middleGLayout->addWidget(discardButton, 1, 2, 1, 2);
 	middleGWidget->setFixedSize(250,150);
 
 	QWidget *middleWidget = new QWidget();
@@ -242,7 +229,210 @@ void ScanTipWidget::compenConstruct2()
 	
 }
 
-void ScanTipWidget::finishConstruct3()
+void ScanTipWidget::cutConstruct2()
+{
+	if (this->layout() != NULL)
+	{
+		delete this->layout();
+	}
+	QVBoxLayout *totalVLayout = new QVBoxLayout();
+	//total
+	QWidget *centerWidget = new QWidget(this);
+	QVBoxLayout *centerLayout = new QVBoxLayout(centerWidget);
+
+	//top
+	QWidget *topWidget = new QWidget();
+	QVBoxLayout *topHLayout = new QVBoxLayout(topWidget);
+
+	topHLayout->addWidget(primaryTipLabel);
+	//topHLayout->addStretch(1);
+	topHLayout->addWidget(secondTipLabel);
+	//topHLayout->addStretch();
+	topWidget->setFixedSize(300, 120);
+
+	//middle
+	QWidget *middleGWidget = new QWidget();
+	QGridLayout *middleGLayout = new QGridLayout(middleGWidget);
+
+	QWidget *middleRightBottomHWidget = new QWidget();
+	QHBoxLayout *middleRightBottomHLayout = new QHBoxLayout(middleRightBottomHWidget);
+	middleRightBottomHWidget->setFixedSize(113, 20);
+	middleRightBottomHLayout->addWidget(spinCutBox);
+	middleRightBottomHLayout->addWidget(sliderCut);
+	middleRightBottomHLayout->setMargin(0);
+	middleRightBottomHLayout->setSpacing(0);
+
+	middleGLayout->addWidget(cutHeightLabel, 0, 0, 1, 1);
+	middleGLayout->addWidget(cutHeightLineEdit, 0, 1, 1, 1);
+	middleGLayout->addWidget(middleRightBottomHWidget, 0, 2, 1, 2);
+	middleGLayout->addWidget(cutHeightButton, 1, 0, 1, 2);
+	middleGLayout->addWidget(discardCutHeightButton, 1, 2, 1, 2);
+	middleGLayout->addWidget(saveCutHeightButton, 2, 0, 1, 4);
+
+	middleGWidget->setFixedSize(250, 150);
+
+	QWidget *middleWidget = new QWidget();
+	QHBoxLayout *middleHLayout = new QHBoxLayout(middleWidget);
+	middleHLayout->addStretch(2);
+	middleHLayout->addWidget(middleGWidget);
+	middleHLayout->addStretch(8);
+	middleHLayout->setSpacing(0);
+	middleHLayout->setMargin(0);
+	middleWidget->setFixedSize(300, 450);
+
+	//bottom
+	QWidget *bottomWidget = new QWidget();
+	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
+	bottomHLayout->addStretch(2);
+	bottomHLayout->addWidget(backStepButton);
+	bottomHLayout->addStretch(9);
+	bottomHLayout->addWidget(forwardStepButton);
+	bottomHLayout->addStretch(2);
+	bottomWidget->setFixedSize(300, 100);
+
+	//total
+	centerLayout->addStretch(2);
+	centerLayout->addWidget(topWidget);
+	//centerLayout->addStretch(1);
+	centerLayout->addWidget(middleWidget);
+	centerLayout->addStretch(2);
+	centerLayout->addWidget(bottomWidget);
+	centerLayout->addStretch(3);
+	centerLayout->setMargin(0);
+	centerLayout->setSpacing(0);
+
+	totalVLayout->addWidget(centerWidget);
+	centerWidget->setObjectName("TipWidget");
+	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	this->setLayout(totalVLayout);
+
+}
+
+void ScanTipWidget::upperFinishConstruct3()
+{
+	if (this->layout() != NULL)
+	{
+		delete this->layout();
+	}
+	QVBoxLayout *totalVLayout = new QVBoxLayout();
+	//total
+	QWidget *centerWidget = new QWidget(this);
+	QVBoxLayout *centerLayout = new QVBoxLayout(centerWidget);
+
+	//top
+	QWidget *topWidget = new QWidget();
+	QVBoxLayout *topHLayout = new QVBoxLayout(topWidget);
+
+	topHLayout->addWidget(primaryTipLabel);
+	topHLayout->addStretch(1);
+	topHLayout->addWidget(secondTipLabel);
+	topHLayout->addStretch(2);
+	topWidget->setFixedSize(300, 100);
+
+	//middle
+	QWidget *middleVWidget = new QWidget();
+	QVBoxLayout *middleVLayout = new QVBoxLayout(middleVWidget);
+	middleVLayout->addStretch();
+	middleVLayout->addWidget(upperShowButton);
+	middleVLayout->addStretch();
+	QWidget *middleWidget = new QWidget();
+	QHBoxLayout *middleHLayout = new QHBoxLayout(middleWidget);
+	middleHLayout->addStretch();
+	middleHLayout->addWidget(middleVWidget);
+	middleHLayout->addStretch();
+	middleWidget->setFixedSize(300, 500);
+
+	//bottom
+	QWidget *bottomWidget = new QWidget();
+	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
+	bottomHLayout->addStretch(2);
+	bottomHLayout->addWidget(backStepButton);
+	bottomHLayout->addStretch(9);
+	bottomHLayout->addWidget(forwardStepButton);
+	bottomHLayout->addStretch(2);
+	bottomWidget->setFixedSize(300, 100);
+
+	//total
+	centerLayout->addStretch(2);
+	centerLayout->addWidget(topWidget);
+	centerLayout->addStretch(1);
+	centerLayout->addWidget(middleWidget);
+	centerLayout->addStretch(1);
+	centerLayout->addWidget(bottomWidget);
+	centerLayout->addStretch(2);
+	centerLayout->setMargin(0);
+	centerLayout->setSpacing(0);
+
+	totalVLayout->addWidget(centerWidget);
+	centerWidget->setObjectName("TipWidget");
+	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	this->setLayout(totalVLayout);
+	
+}
+
+void ScanTipWidget::lowerFinishConstruct3()
+{
+	if (this->layout() != NULL)
+	{
+		delete this->layout();
+	}
+	QVBoxLayout *totalVLayout = new QVBoxLayout();
+	//total
+	QWidget *centerWidget = new QWidget(this);
+	QVBoxLayout *centerLayout = new QVBoxLayout(centerWidget);
+
+	//top
+	QWidget *topWidget = new QWidget();
+	QVBoxLayout *topHLayout = new QVBoxLayout(topWidget);
+
+	topHLayout->addWidget(primaryTipLabel);
+	topHLayout->addStretch(1);
+	topHLayout->addWidget(secondTipLabel);
+	topHLayout->addStretch(2);
+	topWidget->setFixedSize(300, 100);
+
+	//middle
+	QWidget *middleVWidget = new QWidget();
+	QVBoxLayout *middleVLayout = new QVBoxLayout(middleVWidget);
+	middleVLayout->addStretch();
+	middleVLayout->addWidget(lowerShowButton);
+	middleVLayout->addStretch();
+	QWidget *middleWidget = new QWidget();
+	QHBoxLayout *middleHLayout = new QHBoxLayout(middleWidget);
+	middleHLayout->addStretch();
+	middleHLayout->addWidget(middleVWidget);
+	middleHLayout->addStretch();
+	middleWidget->setFixedSize(300, 500);
+
+	//bottom
+	QWidget *bottomWidget = new QWidget();
+	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
+	bottomHLayout->addStretch(2);
+	bottomHLayout->addWidget(backStepButton);
+	bottomHLayout->addStretch(9);
+	bottomHLayout->addWidget(forwardStepButton);
+	bottomHLayout->addStretch(2);
+	bottomWidget->setFixedSize(300, 100);
+
+	//total
+	centerLayout->addStretch(2);
+	centerLayout->addWidget(topWidget);
+	centerLayout->addStretch(1);
+	centerLayout->addWidget(middleWidget);
+	centerLayout->addStretch(1);
+	centerLayout->addWidget(bottomWidget);
+	centerLayout->addStretch(2);
+	centerLayout->setMargin(0);
+	centerLayout->setSpacing(0);
+
+	totalVLayout->addWidget(centerWidget);
+	centerWidget->setObjectName("TipWidget");
+	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	this->setLayout(totalVLayout);
+
+}
+
+void ScanTipWidget::allFinishConstruct3()
 {
 	if (this->layout() != NULL)
 	{
@@ -302,8 +492,9 @@ void ScanTipWidget::finishConstruct3()
 	centerWidget->setObjectName("TipWidget");
 	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
-	
+
 }
+
 
 void ScanTipWidget::splitScanConstruct1()
 {
@@ -413,14 +604,49 @@ void ScanTipWidget::compenVariable2()
 
 	imageTipLabel->setVisible(false);
 
-	rotationLabel->setVisible(true);
-	cutHeightLabel->setVisible(true);
 	compensationButton->setVisible(true);//增加补扫
 	discardButton->setVisible(true);//丢弃补扫
 	rotationLineEdit->setVisible(true);//旋转角度
-	rotationLineEdit->setVisible(true);
+	rotationLabel->setVisible(true);
 	waverLineEdit->setVisible(true);//摆动角度
 	waverLabel->setVisible(true);
+
+	cutHeightLabel->setVisible(false);
+	cutHeightLineEdit->setVisible(false);//切割高度
+	spinCutBox->setVisible(false);//切割控制
+	sliderCut->setVisible(false);
+	cutHeightButton->setVisible(false);//切割高度应用
+	discardCutHeightButton->setVisible(false);//丢弃切割高度应用
+	saveCutHeightButton->setVisible(false);//保存当前切割高度
+
+	upperShowButton->setVisible(false);
+	lowerShowButton->setVisible(false);
+
+	for (int i = 0; i < 8; i++)
+	{
+		toothList[i]->setVisible(false);
+	}
+	backStepButton->setVisible(true);
+	forwardStepButton->setVisible(true);
+}
+
+void ScanTipWidget::cutVariable2()
+{
+	primaryTipLabel->setVisible(true);
+	secondTipLabel->setVisible(true);
+
+	imageTipLabel->setVisible(false);
+
+	rotationLabel->setVisible(false);
+	
+	compensationButton->setVisible(false);//增加补扫
+	discardButton->setVisible(false);//丢弃补扫
+	rotationLineEdit->setVisible(false);//旋转角度
+	rotationLabel->setVisible(false);
+	waverLineEdit->setVisible(false);//摆动角度
+	waverLabel->setVisible(false);
+
+	cutHeightLabel->setVisible(true);
 	cutHeightLineEdit->setVisible(true);//切割高度
 	spinCutBox->setVisible(true);//切割控制
 	sliderCut->setVisible(true);
@@ -523,7 +749,7 @@ void ScanTipWidget::allCompenConstructIHM2()
 {
 	//全颌—————2—————
 	compenVariable2();
-	primaryTipLabel->setText(QStringLiteral("全颌模型"));
+	primaryTipLabel->setText(QStringLiteral("全颌模型扫描完成，可以增加模型数据"));
 	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据"));
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
@@ -533,9 +759,25 @@ void ScanTipWidget::allCompenConstructIHM2()
 	compenConstruct2();
 }
 
-void ScanTipWidget::allPlaceConstructIHM3()
+void ScanTipWidget::allCutConstructIHM3()
 {
 	//全颌—————3—————
+	cutVariable2();
+	primaryTipLabel->setText(QStringLiteral("全颌模型增加扫描完成，可以水平切割模型数据"));
+	primaryTipLabel->adjustSize();
+	primaryTipLabel->setWordWrap(true);
+	secondTipLabel->setText(QStringLiteral("调整水平切割平面的位置，通过“切割模型”可修剪模型数据"));
+	secondTipLabel->adjustSize();
+	secondTipLabel->setWordWrap(true);
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+
+	cutConstruct2();
+}
+
+void ScanTipWidget::allPlaceConstructIHM4()
+{
+	//下颌—————4—————
 	placeVariable1();
 	primaryTipLabel->setText(QStringLiteral("请移除全郃模型，插入下颌模型"));
 	primaryTipLabel->adjustSize();
@@ -549,11 +791,11 @@ void ScanTipWidget::allPlaceConstructIHM3()
 	placeConstruct1();
 }
 
-void ScanTipWidget::allCompenConstructIHM4()
+void ScanTipWidget::allCompenConstructIHM5()
 {
-	//全颌—————4—————
+	//下颌—————5—————
 	compenVariable2();
-	primaryTipLabel->setText(QStringLiteral("下颌模型"));
+	primaryTipLabel->setText(QStringLiteral("下颌模型扫描完成，可以增加模型数据"));
 	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据"));
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
@@ -563,9 +805,25 @@ void ScanTipWidget::allCompenConstructIHM4()
 	compenConstruct2();
 }
 
-void ScanTipWidget::allPlaceConstructIHM5()
+void ScanTipWidget::allCutConstructIHM6()
 {
-	//全颌—————5—————
+	//下颌—————6—————
+	cutVariable2();
+	primaryTipLabel->setText(QStringLiteral("下颌模型增加扫描完成，可以水平切割模型数据"));
+	primaryTipLabel->adjustSize();
+	primaryTipLabel->setWordWrap(true);
+	secondTipLabel->setText(QStringLiteral("调整水平切割平面的位置，通过“切割模型”可修剪模型数据"));
+	secondTipLabel->adjustSize();
+	secondTipLabel->setWordWrap(true);
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+
+	cutConstruct2();
+}
+
+void ScanTipWidget::allPlaceConstructIHM7()
+{
+	//上颌—————7—————
 	placeVariable1();
 	primaryTipLabel->setText(QStringLiteral("请移除下颌模型，插入上颌模型"));
 	primaryTipLabel->adjustSize();
@@ -579,11 +837,11 @@ void ScanTipWidget::allPlaceConstructIHM5()
 	placeConstruct1();
 }
 
-void ScanTipWidget::allCompenConstructIHM6()
+void ScanTipWidget::allCompenConstructIHM8()
 {
-	//全颌—————6—————
+	//上颌—————8—————
 	compenVariable2();
-	primaryTipLabel->setText(QStringLiteral("上颌模型"));
+	primaryTipLabel->setText(QStringLiteral("上颌模型扫描完成，可以增加模型数据"));
 	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据"));
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
@@ -593,9 +851,25 @@ void ScanTipWidget::allCompenConstructIHM6()
 	compenConstruct2();
 }
 
-void ScanTipWidget::allFinishConstructIHM7()
+void ScanTipWidget::allCutConstructIHM9()
 {
-	//全颌—————7—————
+	//上颌—————9—————
+	cutVariable2();
+	primaryTipLabel->setText(QStringLiteral("上颌模型增加扫描完成，可以水平切割模型数据"));
+	primaryTipLabel->adjustSize();
+	primaryTipLabel->setWordWrap(true);
+	secondTipLabel->setText(QStringLiteral("调整水平切割平面的位置，通过“切割模型”可修剪模型数据"));
+	secondTipLabel->adjustSize();
+	secondTipLabel->setWordWrap(true);
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+
+	cutConstruct2();
+}
+
+void ScanTipWidget::allFinishConstructIHM10()
+{
+	//全颌—————10—————
 	finishVariable3();
 	primaryTipLabel->setText(QStringLiteral("拼接完成"));
 	secondTipLabel->setText(QStringLiteral("可以修剪模型数据"));
@@ -608,7 +882,7 @@ void ScanTipWidget::allFinishConstructIHM7()
 	backStepButton->setText(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
 
-	finishConstruct3();
+	allFinishConstruct3();
 }
 
 void ScanTipWidget::upperPlaceConstructIHM1()
@@ -629,15 +903,48 @@ void ScanTipWidget::upperCompenConstructIHM2()
 {
 	//上颌—————2—————
 	compenVariable2();
-	compenConstruct2();
-	primaryTipLabel->setText(QStringLiteral("上颌模型扫描完成，可以修剪模型数据"));
+	primaryTipLabel->setText(QStringLiteral("上颌模型扫描完成，可以增加模型数据"));
 	primaryTipLabel->adjustSize();
 	primaryTipLabel->setWordWrap(true);
-	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据；或者进行修剪模型数据"));
+	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据"));
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+
+	compenConstruct2();
+}
+
+void ScanTipWidget::upperCutConstructIHM3()
+{
+	//上颌—————3—————
+	cutVariable2();
+	primaryTipLabel->setText(QStringLiteral("上颌模型增加扫描完成，可以水平切割模型数据"));
+	primaryTipLabel->adjustSize();
+	primaryTipLabel->setWordWrap(true);
+	secondTipLabel->setText(QStringLiteral("调整水平切割平面的位置，通过“切割模型”可修剪模型数据"));
+	secondTipLabel->adjustSize();
+	secondTipLabel->setWordWrap(true);
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+
+	cutConstruct2();
+}
+
+void ScanTipWidget::upperFinishConstructIHM4()
+{
+	//上颌—————4—————
+	finishVariable3();
+	primaryTipLabel->setText(QStringLiteral("拼接完成"));
+	secondTipLabel->setText(QStringLiteral("可以通过工具栏修剪上颌模型数据"));
+	upperShowButton->setFixedSize(200, 100);
+	upperShowButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}"
+		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
+	lowerShowButton->setVisible(false);
+	backStepButton->setText(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
+
+	upperFinishConstruct3();
 }
 
 void ScanTipWidget::lowerPlaceConstructIHM1()
@@ -658,18 +965,48 @@ void ScanTipWidget::lowerCompenConstructIHM2()
 {
 	//下颌—————2—————
 	compenVariable2();
-	compenConstruct2();
-	primaryTipLabel->setText(QStringLiteral("下颌模型扫描完成，可以修剪模型数据"));
+	primaryTipLabel->setText(QStringLiteral("下颌模型扫描完成，可以增加模型数据"));
 	primaryTipLabel->adjustSize();
 	primaryTipLabel->setWordWrap(true);
-	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据；"));
+	secondTipLabel->setText(QStringLiteral("旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据"));
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
-	forwardStepButton->setText(QStringLiteral("完  成"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
+	compenConstruct2();
 }
 
+void ScanTipWidget::lowerCutConstructIHM3()
+{
+	//下颌—————3—————
+	cutVariable2();
+	primaryTipLabel->setText(QStringLiteral("下颌模型增加扫描完成，可以水平切割模型数据"));
+	primaryTipLabel->adjustSize();
+	primaryTipLabel->setWordWrap(true);
+	secondTipLabel->setText(QStringLiteral("调整水平切割平面的位置，通过“切割模型”可修剪模型数据"));
+	secondTipLabel->adjustSize();
+	secondTipLabel->setWordWrap(true);
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("下一步"));
 
+	cutConstruct2();
+}
+
+void ScanTipWidget::lowerFinishConstructIHM4()
+{
+	//下颌—————4—————
+	finishVariable3();
+	primaryTipLabel->setText(QStringLiteral("拼接完成"));
+	secondTipLabel->setText(QStringLiteral("可以修剪下颌模型数据"));
+	upperShowButton->setVisible(false);
+	lowerShowButton->setFixedSize(200, 100);
+	lowerShowButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}"
+		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
+	backStepButton->setText(QStringLiteral("后  退"));
+	forwardStepButton->setText(QStringLiteral("完  成"));
+
+	lowerFinishConstruct3();
+}
 
 void ScanTipWidget::upperSplitScanConstructIHM5()
 {
@@ -711,7 +1048,7 @@ void ScanTipWidget::upperSplitFinishConstructIHM7()
 	backStepButton->setText(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
 
-	finishConstruct3();
+	upperFinishConstruct3();
 }
 
 void ScanTipWidget::lowerSplitScanConstructIHM5()
@@ -753,7 +1090,7 @@ void ScanTipWidget::lowerSplitFinishConstructIHM7()
 	backStepButton->setText(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
 
-	finishConstruct3();
+	lowerFinishConstruct3();
 }
 
 void ScanTipWidget::allSplitFinishConstructIHM8()
@@ -770,5 +1107,5 @@ void ScanTipWidget::allSplitFinishConstructIHM8()
 	backStepButton->setText(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
 
-	finishConstruct3();
+	allFinishConstruct3();
 }

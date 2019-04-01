@@ -198,12 +198,15 @@ GLWidget::GLWidget(QWidget *parent)
 	SCR_WIDTH = this->frameGeometry().width();
 	SCR_HEIGHT = this->frameGeometry().height();
 
-	orth::ModelRead mr("./0016.ply", mm);
-	TeethSegmentRun("./0016.txt");
+	//orth::ModelRead mr("./0016.ply", mm);
+	//TeethSegmentRun("./0016.txt");
 
 	model_Mat = cv::Mat::eye(4, 4, CV_32FC1);
 	view_Mat = cv::Mat::eye(4, 4, CV_32FC1);
 	m_trackBall = TrackBall(0.05f, QVector3D(0, 1, 0), TrackBall::Sphere);
+
+	motor_rot_x=0;
+	motor_rot_y=0;
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -388,12 +391,48 @@ void GLWidget::paintGL()
 
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
-
 	m_view.setToIdentity();
 	m_view.translate(0.0f, 0.0f, -230.0f);
-	m_view.rotate(m_trackBall.rotation());
 	m_model.setToIdentity();
-	m_model.rotate(m_trackBall.rotation());
+
+	/*---------------------------------------------------------------------------------------*/
+	QVector3D camera_pos2 = QVector3D(0.0f, 0.0f, 0.0f);
+#define ToDeg(x) x*57.295780490442968321226628812406
+
+	//任何旋转事件 改变 view矩阵后 计算camera位置
+	QVector3D zaxis(0.0f, 0.0f, 1.0f);
+	QMatrix4x4 view_camera; 
+	view_camera.setToIdentity();
+	view_camera.rotate(m_trackBall.rotation());
+	QMatrix4x4 viewinv = view_camera.inverted(0);//view.inverted(0);
+	camera_pos2 = viewinv*zaxis;
+	//cout << "###### ---- " << camera_pos2[0] << ", " << camera_pos2[1] << ", " << camera_pos2[2] << endl;
+
+	//计算旋转角度
+	double c_x = camera_pos2[0];
+	double c_y = camera_pos2[1];
+	double c_z = camera_pos2[2];
+	//double c_xy = sqrt(c_x*c_x + c_z*c_z);
+	double ax = ToDeg(atan2(c_x, c_z));
+	double ay = ToDeg(atan2(c_y, c_z));
+	//cout << " ax = " << ax << " ay = " << ay << endl;
+	float yaw = -ax;
+	float pitch = ay;
+
+	if (pitch>-20&&pitch<160)
+	{
+		motor_rot_x = ay;
+		motor_rot_y = -ax;
+		
+		m_view.rotate(m_trackBall.rotation());	
+		m_model.rotate(m_trackBall.rotation());
+	}
+
+
+	//cout << " xrot = " << xrot << " yrot = " << yrot << endl;
+	/*---------------------------------------------------------------------------------------*/
+
+
 	// 	m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
 	// 	m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
 	// 	m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
@@ -1326,6 +1365,7 @@ void GLWidget::setbkGroundShowValue(bool bShow)
 {
 	m_bkGroundShow = bShow;
 	m_groundModel->Set_bVisible(bShow);
+	m_groundModel->rotate(60,0,0);
 }
 
 bool GLWidget::getbkGroundShowValue()
@@ -1515,28 +1555,7 @@ void GLWidget::DrawAxisObject() {
 /*----------------------------------- new rot x rot y --------------------------------*/
 //全局
 void GLWidget::GetRotateMotorRot(float &xrot, float &yrot) {
-	QVector3D camera_pos2 = QVector3D(0.0f, 0.0f, 0.0f);
-#define ToDeg(x) x*57.295780490442968321226628812406
-
-	//任何旋转事件 改变 view矩阵后 计算camera位置
-	QVector3D zaxis(0.0f, 0.0f, 1.0f);
-	//QMatrix4x4 viewinv = view.inverted(0);
-	QMatrix4x4 viewinv = m_model;//view.inverted(0);
-	camera_pos2 = viewinv*zaxis;
-	cout << "###### ---- " << camera_pos2[0] << ", " << camera_pos2[1] << ", " << camera_pos2[2] << endl;
-
-	//计算旋转角度
-	double c_x = camera_pos2[0];
-	double c_y = camera_pos2[1];
-	double c_z = camera_pos2[2];
-	double c_xy = sqrt(c_x*c_x + c_z*c_z);
-	double ax = ToDeg(atan2(c_x, c_z));
-	double ay = ToDeg(atan2(c_y, c_xy));
-	//cout << " ax = " << ax << " ay = " << ay << endl;
-	float yaw = -ax;
-	float pitch = ay;
-
-
-	cout << " yaw = " << yaw << " pitch = " << pitch << endl;
-}
+	xrot = motor_rot_x;
+	yrot = motor_rot_y;
+}		
 /*---------------------------------------------------------------------------*/

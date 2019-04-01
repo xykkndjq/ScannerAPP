@@ -653,6 +653,7 @@ int Octree< Real >::SetTree( PointStream< PointReal >* pointStream , int minDept
 	MemoryUsage();
 	{
 		std::vector< int > indexMap;
+
 		if( makeComplete ) MakeComplete( &indexMap );
 		else ClipTree( normalInfo ) , Finalize( &indexMap );
 
@@ -690,6 +691,7 @@ int Octree< Real >::SetTree( PointStream< PointReal >* pointStream , int minDept
 template< class Real >
 void Octree< Real >::MakeComplete( std::vector< int >* map )
 {
+	cout << " make complete !!" << endl;
 	tree.setFullDepth( tree.maxDepth() );
 	refineBoundary( map );
 	MemoryUsage();
@@ -1881,7 +1883,7 @@ int Octree< Real >::_SolveSystemGS( PointInfo& pointInfo , int depth , const typ
 		}
 	}
 
-	MemoryUsage();
+	//MemoryUsage();
 	//if( !forceSilent ) DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
 	maxMemoryUsage = std::max< double >( maxMemoryUsage , _maxMemoryUsage );
 
@@ -1978,7 +1980,7 @@ int Octree< Real >::_SolveSystemCG( PointInfo& pointInfo , int depth , const typ
 		}
 	}
 
-	MemoryUsage();
+	//MemoryUsage();
 	//DumpOutput( "\tEvaluated / Got / Solved in: %6.3f / %6.3f / %6.3f\t(%.3f MB)\n" , evaluateTime , systemTime , solveTime , float( maxMemoryUsage ) );
 	maxMemoryUsage = std::max< double >( maxMemoryUsage , _maxMemoryUsage );
 	return iter;
@@ -2014,7 +2016,7 @@ Pointer( Real ) Octree< Real >::SetLaplacianConstraints( const NormalInfo& norma
 	Pointer( Real ) _constraints = AllocPointer< Real >( _sNodes.nodeCount[maxDepth] );
 	if( !_constraints ) fprintf( stderr , "[ERROR] Failed to allocate _constraints: %d * %zu\n" , _sNodes.nodeCount[maxDepth] , sizeof( Real ) ) , exit( 0 );
 	memset( _constraints , 0 , sizeof(Real)*_sNodes.nodeCount[maxDepth] );
-	MemoryUsage();
+	//MemoryUsage();
 
 	for( int d=maxDepth ; d>=(_boundaryType==0?2:0) ; d-- )
 	{
@@ -2117,7 +2119,7 @@ Pointer( Real ) Octree< Real >::SetLaplacianConstraints( const NormalInfo& norma
 					}
 			}
 		}
-		MemoryUsage();
+		//MemoryUsage();
 	}
 
 	// Fine-to-coarse down-sampling of constraints
@@ -2206,7 +2208,7 @@ Pointer( Real ) Octree< Real >::SetLaplacianConstraints( const NormalInfo& norma
 				constraints[ node->nodeData.nodeIndex ] += constraint;
 		}
 	}
-	MemoryUsage();
+	//MemoryUsage();
 	return constraints;
 }
 template< class Real >

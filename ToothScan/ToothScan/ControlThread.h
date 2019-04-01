@@ -9,8 +9,8 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <iostream>
 
-#include "VTK_render.h"
-#include "3DScan.h"
+//#include "VTK_render.h"
+#include "./include/3DScan.h"
 //#include "3DScan_cuda.cuh"
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
@@ -36,8 +36,8 @@ extern scan::RasterScan *rs;
 extern cv::Mat rt_r;
 extern std::vector<cv::Mat> scanner_rt;
 
-extern float c_addscan_x;
-extern float c_addscan_y;
+extern float c_scan_x;
+extern float c_scan_y;
 
 extern QSemaphore freeSpace;
 extern QSemaphore usedSpace;
@@ -53,20 +53,20 @@ static byte ProjectOneSet_SCAN_MIN[11] = { 0xaa,0xbb,0x0b,0x01,0x03,  0x83,0x00,
 
 
 static byte WhiteDisplay[5] = { 0xaa,0xbb,0x05,0x01,0x05 }; //ÏÔÊ¾°×ÆÁ
-
-static byte SMXEnable[5] = { 0xaa,0xbb,0x05,0x02,0x00 }; //Ê¹ÄÜ
-static byte SMXDisable[5] = { 0xaa,0xbb,0x05,0x02,0x01 }; //Ê§ÄÜ
-static byte SMXRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMXRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMXRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
-static byte SMXRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
-
-static byte SMYEnable[5] = { 0xaa,0xbb,0x05,0x03,0x00 }; //Ê¹ÄÜ
-static byte SMYDisable[5] = { 0xaa,0xbb,0x05,0x03,0x01 }; //Ê§ÄÜ
-static byte SMYRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMYRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMYRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
-static byte SMYRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
+//Ð¡µç»ú
+static byte SMYEnable[5] = { 0xaa,0xbb,0x05,0x02,0x00 }; //Ê¹ÄÜ
+static byte SMYDisable[5] = { 0xaa,0xbb,0x05,0x02,0x01 }; //Ê§ÄÜ
+static byte SMYRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
+static byte SMYRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
+static byte SMYRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
+static byte SMYRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
+//´óµç»ú
+static byte SMXEnable[5] = { 0xaa,0xbb,0x05,0x03,0x00 }; //Ê¹ÄÜ
+static byte SMXDisable[5] = { 0xaa,0xbb,0x05,0x03,0x01 }; //Ê§ÄÜ
+static byte SMXRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
+static byte SMXRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
+static byte SMXRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
+static byte SMXRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
 
 //static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 45, -90, 45, 45, -90, 45, 45, -90, 45, 45, 135, 135, 45 };
 //static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  45,  0,  0,  45,  0,  0,  -60, 0,  0,  0,  -30 };
@@ -76,22 +76,23 @@ static byte SMYRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x01 }; //²½½øµç»
 //static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 30, 0,   0,   0,   0,   0,   0,   0,    -30, 80, -80 };
 //static int SM_SCAN_BRIGHTNESS[SCAN_ROTATE_POS_CNT] = { 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 
-static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 30, -60, -150, -45, -90, 0,-45, -45, 0, 45, 45, -45 };
-static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  0,  0,  0,  -30,  0,  0,  60,  0,  0, -30 };
+static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 30, -60, -150, -45, -90, 0,-45, -45, 0, 45, 45, -45 };
+static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  0,  0,  0,  -30,  0,  0,  60,  0,  0, -30 };
 static int SM_CALI_BRIGHTNESS[CALI_ROTATE_POS_CNT] = { 2,  2,  2,  2,  3,  3,  3,  2,  2,  2,  2,  2 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 
 																									   //static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
-static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 0, 45, 45, 45, 45, 45, 45, 45, 115, -70,  -70,  70 };
-static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { -45, 0,   0,   0,   0,   0,   0,   0,    -35, 0,  0, 80 };
+static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 0, 45, 45, 45, 45, 45, 45, 45, 115, -70,  -70,  70 };
+static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { -45, 0,   0,   0,   0,   0,   0,   0,    -35, 0,  0, 80 };
 static int SM_SCAN_BRIGHTNESS[SCAN_ROTATE_POS_CNT] = { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 
-static int SMX_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0,   0,  -30,  30,-25,   0,  25, -30,   0,  30,    0 };
-static int SMY_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0, 30,  30, 30, 20,  20,  20,  10,  10,  10,    0 };
+static int SMY_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0,   0,  -30,  30,-25,   0,  25, -30,   0,  30,    0 };
+static int SMX_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0, 30,  30, 30, 20,  20,  20,  10,  10,  10,    0 };
 static int SM_CALI_BRIGHTNESS2[CALI_ROTATE_POS_CNT2] = { 2,   2,    2,   2,  2,   2,   2,   2,   2,   2,    0 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 
 																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
-static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  45,  90, 135,175, 0 };
-static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
+static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  45,  90, 135,175, 0 };
+static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
+
 static int SM_SCAN_BRIGHTNESS2[SCAN_ROTATE_POS_CNT2] = { 2,/*  2,   2,   2,   2,   2,   2,*/   3,   3,   3,    3,   3,   3,   3,  3, 2 }; //ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 ////static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
 //static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,-60,   0,  60, -50,   0,  50,   0, -40,  -80, -140,    40,   80,  140, 0 };
@@ -135,8 +136,8 @@ public:
 	float l_scan_z;
 	
 	float c_scan_z;
-	float c_scan_x;
-	float c_scan_y;
+	//float c_scan_x;
+	//float c_scan_y;
 
 	void setFlage(bool flag = true);  //ÉèÖÃ±êÖ¾Î»£¬ºÎÊ±¹Ø±Õ×ÓÏß³Ì
 
@@ -194,6 +195,8 @@ private:
 
 	/*****************************3¡¢ÏÂÎ»»ú¶¯×÷º¯Êý*******************************************/
 	//3.1²½½øµç»úÐý×ªÒ»¸ö½Ç¶È (1:x 2:y) //ÕâÀïÐ´Ò»¸öº¯Êý£¬Ê×ÏÈ·¢ËÍÐý×ªÖ¸Áî£¬È»ºóÔÚº¯ÊýÀïÓÃÑÓÊ±µÈ´ýÐý×ª½áÊø£¬È»ºóreturn
+	void cameraInitParameters();
+
 	bool SMX_RotOneDeg(double deg);
 	bool SMY_RotOneDeg(double deg);
 	//3.2µç»úÊ¹ÄÜ

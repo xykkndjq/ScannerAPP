@@ -190,7 +190,7 @@ void CTeethModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInt
 		m_program->setUniformValue("selectedAreaEnd", 0.0f, 0.0f);
 	}
 	glDrawArrays(GL_TRIANGLES, 0, m_totalFaceNum * 3);
-	cout << glGetError() << endl;
+	//cout << glGetError() << endl;
 }
 
 void CTeethModel::setScreenPos(float xTrans, float yTrans)
@@ -330,7 +330,8 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].x].x);
 			m_vertData.append(m_model.P[m_model.F[i].x].y);
 			m_vertData.append(m_model.P[m_model.F[i].x].z);
-			m_vertData.append((float)m_model.L[m_model.F[i].x]);
+			//m_vertData.append((float)m_model.L[m_model.F[i].x]);
+			m_vertData.append(0.0);
 			m_vertData.append(m_model.N[m_model.F[i].x].x);
 			m_vertData.append(m_model.N[m_model.F[i].x].y);
 			m_vertData.append(m_model.N[m_model.F[i].x].z);
@@ -338,7 +339,8 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].y].x);
 			m_vertData.append(m_model.P[m_model.F[i].y].y);
 			m_vertData.append(m_model.P[m_model.F[i].y].z);
-			m_vertData.append((float)m_model.L[m_model.F[i].y]);
+			//m_vertData.append((float)m_model.L[m_model.F[i].y]);
+			m_vertData.append(0.0);
 			m_vertData.append(m_model.N[m_model.F[i].y].x);
 			m_vertData.append(m_model.N[m_model.F[i].y].y);
 			m_vertData.append(m_model.N[m_model.F[i].y].z);
@@ -346,7 +348,8 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].z].x);
 			m_vertData.append(m_model.P[m_model.F[i].z].y);
 			m_vertData.append(m_model.P[m_model.F[i].z].z);
-			m_vertData.append((float)m_model.L[m_model.F[i].z]);
+			//m_vertData.append((float)m_model.L[m_model.F[i].z]);
+			m_vertData.append(0.0);
 			m_vertData.append(m_model.N[m_model.F[i].z].x);
 			m_vertData.append(m_model.N[m_model.F[i].z].y);
 			m_vertData.append(m_model.N[m_model.F[i].z].z);
@@ -375,7 +378,8 @@ void CTeethModel::delSelPoints()
 			points.push_back(m_model.P[point_index]);
 			//colors_.push_back(mm.C[point_index]);
 			normals.push_back(m_model.N[point_index]);
-			labels.push_back(m_model.L[point_index]);
+			//labels.push_back(m_model.L[point_index]);
+			labels.push_back(0.0);
 			new_point_index[point_index] = points.size() - 1;
 
 		}
@@ -436,4 +440,9 @@ void CTeethModel::cutModelUnderBg(QVector3D bgGroundModelPos)
 	}
 	delSelPoints();
 	makeObject();
+}
+
+void CTeethModel::getMeshModel(orth::MeshModel &meshModel)
+{
+	meshModel = this->m_model;
 }

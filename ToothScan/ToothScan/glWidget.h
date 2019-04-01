@@ -106,6 +106,7 @@ public:
 	int totalFaceNum = 0;
 
 	orth::MeshModel mm;
+	vector<shared_ptr<BaseModel>> m_ModelsVt;
 
 signals:
     void clicked();
@@ -169,7 +170,7 @@ private:
 	void makeAxisObject();
 	void DrawAxisObject();
 	//Axis
-	vector<shared_ptr<BaseModel>> m_ModelsVt;
+	
 
 	vector<shared_ptr<BaseModel>> m_ToolsModelsVt;
 
@@ -245,6 +246,9 @@ private:
 	pCGroundObject m_groundModel;
 	pCAxisModel m_axisMode;
 	TrackBall m_trackBall;
+
+	float motor_rot_x;
+	float motor_rot_y;
 };
 
 #endif

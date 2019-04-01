@@ -26,6 +26,9 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QMessageBox>
+#include <iostream>
+#include <QFileDialog>
+
 
 #define TOOTHNUM 32
 
@@ -55,6 +58,12 @@ public:
 	 
 	//判断是否满足保存订单信息条件
 	bool judgePatientSaveFlag();
+
+	//转化为中文字符串
+	QByteArray ToChineseStr(const QString &chineseString);
+
+	QString lastDateTimeStr;//最新订单时间字符串
+	QString fileQStr;//保存文件路径
 
 public:
 	Ui::TabMainGUI ui;
@@ -151,6 +160,10 @@ signals:
 public slots:
 	//订单管理信息槽
 	void PatientInformationSave();
+
+	//打开文件
+	void openFileDialogSlot();
+
     //未分模
 	void UpperJawPress();
 	void LowerJawPress();

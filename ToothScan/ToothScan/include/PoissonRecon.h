@@ -163,20 +163,20 @@ extern "C"
 
 PoissonRec::PoissonRec()
 {
-	Depth = 8;
+	Depth = 10;
 	MaxSolveDepth = Depth;
 	kernelDepth = Depth - 2;
-	FullDepth = DEFAULT_FULL_DEPTH;
+	FullDepth = 3;
 
 	CGDepth = 0;
 	AdaptiveExponent = 1;
 	Iters = 8;
-	VoxelDepth = -1;
+	VoxelDepth = 10;
 	MinDepth = 0;
 	BoundaryType = 1;
 	Threads = omp_get_num_procs();
 
-	SamplesPerNode = 1.f;
+	SamplesPerNode = 1.5f;
 	Scale = 1.1f;
 	CSSolverAccuracy = float(1e-3);
 	PointWeight = 4.f;
@@ -184,12 +184,12 @@ PoissonRec::PoissonRec()
 	Density = true;
 	Verbose = false;
 	VoxelGrid = false;
-	bool NonManifold = false;
-	bool PolygonMesh = false;
-	bool Confidence = false;
-	bool NormalWeights = false;
-	bool ShowResidual = false;
-	bool Complete = false;
+	NonManifold = false;
+	PolygonMesh = false;
+	Confidence = false;
+	NormalWeights = false;
+	ShowResidual = false;
+	Complete = false;
 }
 
 //template< class Real, class Vertex >
@@ -227,7 +227,6 @@ int PoissonRec::Execute(orth::MeshModel &mm)
 	//else xForm = XForm4x4< Real >::Identity();
 	xForm = XForm4x4< float  >::Identity();
 	iXForm = xForm.inverse();
-
 	//XForm4x4<float> sd2 = XForm4x4<float>::Identity();
 	//sd2.Identity()
 
@@ -256,7 +255,6 @@ int PoissonRec::Execute(orth::MeshModel &mm)
 	//if (!MaxSolveDepth.set) MaxSolveDepth.value = Depth.value;
 
 	OctNode< TreeNodeData >::SetAllocator(MEMORY_ALLOCATOR_BLOCK_SIZE);
-
 	t = Time();
 	//int kernelDepth = KernelDepth.set ? KernelDepth.value : Depth.value - 2;
 	//if (kernelDepth>Depth.value)
@@ -273,7 +271,6 @@ int PoissonRec::Execute(orth::MeshModel &mm)
 	std::vector< float  >* kernelDensityWeights = new std::vector< float  >();
 	std::vector< float  >* centerWeights = new std::vector< float  >();
 	PointStream< float >* pointStream;
-
 	//char* ext = GetFileExtension(In.value);
 	//if     ( !strcasecmp( ext , "bnpts" ) ) pointStream = new BinaryPointStream< float >( In.value );
 	//else if( !strcasecmp( ext , "ply"   ) ) pointStream = new    PLYPointStream< float >( In.value );
@@ -297,7 +294,6 @@ int PoissonRec::Execute(orth::MeshModel &mm)
 		pn.push_back(pp);
 	}
 	pointStream = new MemoryPointStream< float >(mm.P.size(), &(pn[0]));
-
 
 	int pointCount = tree.template SetTree< float >(pointStream, MinDepth, Depth, FullDepth, kernelDepth, SamplesPerNode, Scale, Confidence, NormalWeights, PointWeight, AdaptiveExponent, *pointInfo, *normalInfo, *kernelDensityWeights, *centerWeights, BoundaryType, xForm, Complete);
 	if (!Density) delete kernelDensityWeights, kernelDensityWeights = NULL;
@@ -378,6 +374,9 @@ int PoissonRec::Execute(orth::MeshModel &mm)
 			mm.F.push_back(ff);
 
 		}
+
+		mm.NormalUpdate();
+		mm.L.resize(mm.P.size());
 		//for (int point_index = 0; point_index < length; point_index++)
 		//{
 

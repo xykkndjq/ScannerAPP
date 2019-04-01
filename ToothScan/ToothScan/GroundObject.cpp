@@ -42,7 +42,7 @@ void CGroundObject::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentI
 	glDrawArrays(GL_QUADS, 0, m_totalFaceNum);
 	glDisable(GL_BLEND);
 	glDepthMask(true);
-	cout << glGetError() << endl;
+	//cout << glGetError() << endl;
 }
 
 

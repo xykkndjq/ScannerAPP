@@ -66,6 +66,12 @@ namespace scan
 		int edge3_node_ = -1;
 	};
 
+	struct PointAndIndex
+	{
+		orth::Point3d point_coor_;
+		int	point_index_;
+	};
+
 	typedef std::vector<std::vector<std::vector<Voxel>>> Volume;
 	typedef std::vector<std::vector<std::vector<Voxel2>>> Volume2;
 
@@ -98,7 +104,7 @@ namespace scan
 
 		void __declspec (dllexport) RasterScan::ChosePoints(const float point1_x, const float point1_y, const float point2_x, const float point2_y, const int screen_width, const int screen_height, float *model_matrix, float *view_matrix, float *projection_matrix, orth::MeshModel &mm);
 
-		void __declspec (dllexport) delaunayAlgorithm(const cv::Mat &point_cloud, vector<cv::Mat> &image_rgb, const float color_red_parameter, const float color_green_parameter, const float color_blue_parameter,const float max_edge_length, orth::MeshModel &mm, const float sample_rate, vector<double>& points2);
+		void __declspec (dllexport) delaunayAlgorithm(const cv::Mat &point_cloud, vector<cv::Mat> &image_rgb, cv::Mat &Rtmatrix, const float color_red_parameter, const float color_green_parameter, const float color_blue_parameter,const float max_edge_length, orth::MeshModel &mm, const float sample_rate, vector<double>& points2);
 
 		void RasterScan::CircleCenterCalculate(Mat &image, std::vector<cv::Point2d> &imagePoints, bool flag);
 
@@ -146,7 +152,8 @@ namespace scan
 		void RasterScan::FindLaserPoints(const Mat &LaserImage, vector<cv::Point2f> &points);
 
 		//bool RasterScan::EdgeSearch(vector<Eigen::VectorXd> &points_mask, Eigen::Matrix4d &Rt);
-		bool RasterScan::EdgeSearch(orth::PointCloudD &points_mask, cv::Mat &Rt);
+		//bool RasterScan::EdgeSearch(orth::PointCloudD &points_mask, cv::Mat &Rt);
+		bool RasterScan::EdgeSearch(orth::PointCloudD &globel_points, orth::PointCloudD &points_mask, cv::Mat &Rt);
 
 		double RasterScan::Distance(double x1, double y1, double z1, double x2, double y2, double z2);
 

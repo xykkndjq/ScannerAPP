@@ -1,13 +1,36 @@
 #include "ComputeThread.h"
+//#include "include/PoissonRecon.h"
+#include "VTK_render.h"
 
 ComputeThread::ComputeThread(QObject *parent)
 	: QObject(parent)
 {
-	
+	argc = 7;
+
+	argv[0] = "111";
+	argv[1] = "--in";
+	argv[2] = "12.ply";
+	argv[3] = "--out";
+	argv[4] = "123.ply";
+	argv[5] = "--depth";
+	argv[6] = "10";
+
+	hdll = LoadLibrary(L"SSDRecon.dll");
+	if (hdll == NULL)
+	{
+		FreeLibrary(hdll);
+	}
+	poissonRecon = (Dllfun)GetProcAddress(hdll,"reconstruction_ssd");
+	if (poissonRecon == NULL)
+	{
+		FreeLibrary(hdll);
+	}
+	camera_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
 }
 
 ComputeThread::~ComputeThread()
 {
+	FreeLibrary(hdll);
 }
 
 void ComputeThread::InitParameters()
@@ -37,7 +60,7 @@ void ComputeThread::InitParameters()
 
 	cout << rt_r << endl;
 
-	rt_r = rt_r.inv();
+	//rt_r = rt_r.inv();
 
 	Mat pre_move = Mat::eye(4, 4, CV_64FC1);
 	pre_move.at<double>(0, 0) = 1; pre_move.at<double>(0, 1) = 0; pre_move.at<double>(0, 2) = 0; pre_move.at<double>(0, 3) = -50;
@@ -145,6 +168,7 @@ void ComputeThread::pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT)
 
 void ComputeThread::pointcloudrotation(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT)
 {
+	
 	orth::PointCloudD pointCloud2;
 	orth::PointCloudD pointNormal2;
 	for (int point_index = 0; point_index < pointCloud.size(); point_index++)
@@ -152,14 +176,14 @@ void ComputeThread::pointcloudrotation(orth::PointCloudD &pointCloud, orth::Poin
 		orth::Point3d p;
 		orth::Point3d n;
 		double x = pointCloud[point_index].x, y = pointCloud[point_index].y, z = pointCloud[point_index ].z;
-		double nx = pointCloud[point_index].x, ny = pointCloud[point_index].y, nz = pointCloud[point_index].z;
+		double nx = pointNormal[point_index].x, ny = pointNormal[point_index].y, nz = pointNormal[point_index].z;
 		p.x = RT.at<double>(0, 0)*x + RT.at<double>(0, 1)*y + RT.at<double>(0, 2)*z + RT.at<double>(0, 3);
 		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
 		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
 
-		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
-		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
-		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
+		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz;
+		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz;
+		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz;
 
 		pointCloud2.push_back(p);
 		pointNormal2.push_back(n);
@@ -299,7 +323,7 @@ bool ComputeThread::pointcloudICP(vector<double> &cloud1, vector<double> &cloud2
 
 	finish = clock();
 	duration = (double)(finish - start) / CLOCKS_PER_SEC;
-	//std::cout << "&&& regisitration calculate time is " << duration << " second " << std::endl;
+	std::cout << "&&& regisitration calculate time is " << duration << " second " << std::endl;
 
 	CloudPtr tmp(new Cloud);
 	pcl::transformPointCloud(*data2, *tmp, iicp.getAbsoluteTransform());
@@ -391,258 +415,131 @@ void ComputeThread::NormalCalculate(vector<double> &pointcloud, vector<float> &p
 	//memcpy(normal_current.data(), downloaded.data(), sizeof(pcl::PointXYZ)*downloaded.size());
 }
 
-void ComputeThread::delaunayAlgorithm(const cv::Mat &point_cloud, const cv::Mat &normal_cloud, vector<cv::Mat> &image_rgb, float color_red_parameter, float color_green_parameter, float color_blue_parameter, vector<double>& points,vector<float>& normal, vector<double>& points2,  vector<unsigned char>& points_color, vector<uint32_t> & faces)
-{
-	if (point_cloud.empty())
-	{
-		return;
-	}
-
-	clock_t start, time1, time2, time3, finish;
-	double  duration1, duration2, duration3, duration4, duration5;
-
-	const cv::Rect pageRc(0, 0, point_cloud.cols, point_cloud.rows);
-
-	vector<cv::Vec6f> _temp_result;
-	cv::Subdiv2D subdiv2d(pageRc);
-	cv::Mat point_flag = cv::Mat::ones(point_cloud.size(), CV_64FC1);
-	point_flag *= -1;
-	start = clock();
-	for (int u = 0; u < point_cloud.cols; u++)
-	{
-		for (int v = 0; v < point_cloud.rows; v++)
-		{
-			if (point_cloud.at<cv::Vec3d>(v, u)[0] != 0)
-			{
-				subdiv2d.insert(cv::Point2f(u, v));
-			}
-		}
-	}
-
-	time1 = clock();
-
-	subdiv2d.getTriangleList(_temp_result);
-
-	time2 = clock();
-
-	int index_ = 0;
-	for (const auto _tmp_vec : _temp_result)
-	{
-		if (isTriangle(_tmp_vec, point_cloud))
-		{
-			int face1 = -1, face2 = -1, face3 = -1;
-			{
-				int u = (int)_tmp_vec[0], v = (int)_tmp_vec[1];
-				if ((int)(point_flag.at<double>(v, u)) == -1)
-				{
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[0]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[1]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[2]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[0]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[1]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[2]);
-					int red = image_rgb[0].at<unsigned char>(v, u)*color_red_parameter;
-					int green = image_rgb[1].at<unsigned char>(v, u)*color_green_parameter;
-					int blue = image_rgb[2].at<unsigned char>(v, u)*color_blue_parameter;
-					points_color.push_back((unsigned char)(red < 255 ? red : 255));
-					points_color.push_back((unsigned char)(green < 255 ? green : 255));
-					points_color.push_back((unsigned char)(blue < 255 ? blue : 255));
-					point_flag.at<double>(v, u) = index_;
-					face1 = index_;
-					index_++;
-				}
-				else
-				{
-					face1 = (int)(point_flag.at<double>(v, u));
-				}
-			}
-			{
-				int u = (int)_tmp_vec[2], v = (int)_tmp_vec[3];
-				if ((int)(point_flag.at<double>(v, u)) == -1)
-				{
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[0]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[1]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[2]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[0]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[1]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[2]);
-					int red = image_rgb[0].at<unsigned char>(v, u)*color_red_parameter;
-					int green = image_rgb[1].at<unsigned char>(v, u)*color_green_parameter;
-					int blue = image_rgb[2].at<unsigned char>(v, u)*color_blue_parameter;
-					points_color.push_back((unsigned char)(red < 255 ? red : 255));
-					points_color.push_back((unsigned char)(green < 255 ? green : 255));
-					points_color.push_back((unsigned char)(blue < 255 ? blue : 255));
-					point_flag.at<double>(v, u) = index_;
-					face2 = index_;
-					index_++;
-				}
-				else
-				{
-					face2 = (int)(point_flag.at<double>(v, u));
-				}
-			}
-			{
-				int u = (int)_tmp_vec[4], v = (int)_tmp_vec[5];
-				if ((int)(point_flag.at<double>(v, u)) == -1)
-				{
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[0]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[1]);
-					points.push_back(point_cloud.at<cv::Vec3d>(v, u)[2]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[0]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[1]);
-					normal.push_back(normal_cloud.at<cv::Vec3d>(v, u)[2]);
-					int red = image_rgb[0].at<unsigned char>(v, u)*color_red_parameter;
-					int green = image_rgb[1].at<unsigned char>(v, u)*color_green_parameter;
-					int blue = image_rgb[2].at<unsigned char>(v, u)*color_blue_parameter;
-					points_color.push_back((unsigned char)(red < 255 ? red : 255));
-					points_color.push_back((unsigned char)(green < 255 ? green : 255));
-					points_color.push_back((unsigned char)(blue < 255 ? blue : 255));
-					point_flag.at<double>(v, u) = index_;
-					face3 = index_;
-					index_++;
-				}
-				else
-				{
-					face3 = (int)(point_flag.at<double>(v, u));
-				}
-			}
-			faces.push_back(face1);
-			faces.push_back(face2);
-			faces.push_back(face3);
-		}
-
-	}
-
-	time3 = clock();
-
-	for (int point_index = 0; point_index < points.size() / 3; point_index += 30)
-	{
-		points2.push_back(points[point_index * 3 + 0]);
-		points2.push_back(points[point_index * 3 + 1]);
-		points2.push_back(points[point_index * 3 + 2]);
-	}
-
-	finish = clock();
-	duration1 = (double)(time1 - start) / CLOCKS_PER_SEC;
-	duration2 = (double)(time2 - time1) / CLOCKS_PER_SEC;
-	duration3 = (double)(time3 - time2) / CLOCKS_PER_SEC;
-	duration4 = (double)(finish - time3) / CLOCKS_PER_SEC;
-	duration5 = (double)(finish - start) / CLOCKS_PER_SEC;
-	std::cout << "&&&calculate time mesh1 " << duration1 << "  mesh2 " << duration2 << "  mesh3 " << duration3 << "  mesh4 " << duration4 << "   " << duration5 << " second " << std::endl;
-
-	cout << " sampled number " << points2.size() << " !!" << endl;
-
-	//for (int u = 0; u < point_cloud.cols; u++)
-	//{
-	//	for (int v = 0; v < point_cloud.rows; v++)
-	//	{
-	//		if (point_cloud.at<cv::Vec3d>(v, u)[0] != 0)
-	//		{
-	//			points.push_back(point_cloud.at<cv::Vec3d>(v, u)[0]);
-	//			points.push_back(point_cloud.at<cv::Vec3d>(v, u)[1]);
-	//			points.push_back(point_cloud.at<cv::Vec3d>(v, u)[2]);
-	//			int red = image_rgb[0].at<unsigned char>(v, u)*color_red_parameter;
-	//			int green = image_rgb[1].at<unsigned char>(v, u)*color_green_parameter;
-	//			int blue = image_rgb[2].at<unsigned char>(v, u)*color_blue_parameter;
-	//			points_color.push_back((unsigned char)(red < 255 ? red : 255));
-	//			points_color.push_back((unsigned char)(green < 255 ? green : 255));
-	//			points_color.push_back((unsigned char)(blue < 255 ? blue : 255));
-	//			subdiv2d.insert(cv::Point2f((float)u, (float)v));
-	//			if (u % 4 == 0 && v % 4 == 0)
-	//			{
-	//				points2.push_back(point_cloud.at<cv::Vec3d>(v, u)[0]);
-	//				points2.push_back(point_cloud.at<cv::Vec3d>(v, u)[1]);
-	//				points2.push_back(point_cloud.at<cv::Vec3d>(v, u)[2]);
-	//			}
-	//		}
-	//	}
-	//}
-	//return result;
-}
-
-void ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex)
+bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int index)
 {
 	vector<double> points_2;
 	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
 
+	vector<cv::Mat> rt_matrixs;
+
 	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 0.02, points_2);
+	cv::Mat rt_curr;
+	Motor2Rot(SMX_SCAN_ROTATE_DEGREE2[index], SMY_SCAN_ROTATE_DEGREE2[index], rt_curr);
+	cout << "********************************" << endl;
+	cout << rt_curr << endl;
+	cout << "*******************************" << endl;
+	//double rate = matched_pixel_image.size() / 3;
+
+	//vector<double> pointcloud;
+	//for (size_t u = 0; u < matched_pixel_image.cols; u++)
+	//{
+
+	//	for (size_t v = 0; v < matched_pixel_image.rows; v++)
+	//	{
+	//		cv::Vec3d point = matched_pixel_image.at<cv::Vec3d>(v, u);
+	//		if (point[0]!=0)
+	//		{
+	//			pointcloud.push_back(point[0]);
+	//			pointcloud.push_back(point[1]);
+	//			pointcloud.push_back(point[2]);
+	//		}
+	//	}
+	//}
+	//ColoredPoints(pointcloud, 3);
+
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
 	
 	if (chooseJawIndex == 1)
 	{
-		int scan_index = upper_mModel.size();
+		int scan_index = lower_mModel.size();
 		clock_t time1, time2;
 		time1 = clock();
-		upper_mModel.push_back(mModel);
-		cv::Mat cloudrot = scanner_rt[scan_index];
-		pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		if (upper_points_cloud_globle2.size())
 		{
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-			if (!pointcloudICP(upper_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return;
+				return false;
 			}
 		}
+
+		upper_mModel.push_back(mModel);
+
 		cloudrot = rt_icp;
-		pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+		unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
+		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		upper_points_cloud_globle2.push_back(points_2);
 		upper_points_cloud_end2.insert(upper_points_cloud_end2.end(), points_2.begin(), points_2.end());
 		time2 = clock();
-		cout << "The time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
 	else if (chooseJawIndex == 2)
 	{
 		int scan_index = lower_mModel.size();
 		clock_t time1, time2;
 		time1 = clock();
-		lower_mModel.push_back(mModel);
-		cv::Mat cloudrot = scanner_rt[scan_index];
-		pointcloudrotation(lower_mModel[scan_index].P, lower_mModel[scan_index].N, cloudrot);
+
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		if (lower_points_cloud_globle2.size())
 		{
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-			if (!pointcloudICP(lower_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			if (!pointcloudICP(lower_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return;
+				return false;
 			}
 		}
+
+		lower_mModel.push_back(mModel);
+
 		cloudrot = rt_icp;
-		pointcloudrotation(lower_mModel[scan_index].P, lower_mModel[scan_index].N, cloudrot);
+		unwarp->MeshRot((double*)cloudrot.data, &lower_mModel[scan_index]);
+		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		lower_points_cloud_globle2.push_back(points_2);
 		lower_points_cloud_end2.insert(lower_points_cloud_end2.end(), points_2.begin(), points_2.end());
 		time2 = clock();
-		cout << "The time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
 	else if (chooseJawIndex == 3)
 	{
 		int scan_index = all_mModel.size();
 		clock_t time1, time2;
 		time1 = clock();
-		all_mModel.push_back(mModel);
-		cv::Mat cloudrot = scanner_rt[scan_index];
-		pointcloudrotation(all_mModel[scan_index].P, all_mModel[scan_index].N, cloudrot);
+
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		if (all_points_cloud_globle2.size())
 		{
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-			if (!pointcloudICP(all_points_cloud_globle2[0], points_2, 1, 1, rt_icp))
+			if (!pointcloudICP(all_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return;
+				return false;
 			}
 		}
+
+		all_mModel.push_back(mModel);
+
 		cloudrot = rt_icp;
-		pointcloudrotation(all_mModel[scan_index].P, all_mModel[scan_index].N, cloudrot);
+		unwarp->MeshRot((double*)cloudrot.data, &all_mModel[scan_index]);
+		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		all_points_cloud_globle2.push_back(points_2);
 		all_points_cloud_end2.insert(all_points_cloud_end2.end(), points_2.begin(), points_2.end());
 		time2 = clock();
-		cout << "The time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
+	return true;
 }
 
 void ComputeThread::controlComputeScan(int chooseJawIndex)
@@ -662,64 +559,72 @@ void ComputeThread::controlComputeScan(int chooseJawIndex)
 	image_rgb.resize(3, imageMat);
 
 	int bufferBias = 0;
+	scan::Unwarp *unwarp = new scan::Unwarp();
 
 	for (int scan_index = 0; scan_index < DataSize; scan_index++)
 	{
 		usedSpace.acquire();
-		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
-		scan::Unwarp *unwarp = new scan::Unwarp();
+		
 		int image_bias = 0;
+		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		image_bias++;
 		for (int j = 0; j < 15; j++)
 		{
-			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 33 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
 		
-			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 33 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
 		}
-		if (image_bias > 29)
+		if (image_bias > 30)
 		{
 			for (int i = 0; i < 3; i++)
 			{
-				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 33 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 				image_bias++;
 			}
 		}
 		cout << "scan_index:" << scan_index <<endl;
 		unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
-		                                                                                              
-		chooseJawAndIcp(matched_pixel_image, image_rgb, chooseJawIndex);
-
-		bufferBias++;
-
-		if (oldJawIndex == 0)
+		                                                                                  
+		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, unwarp, chooseJawIndex, scan_index);
+		if (scanFlag == true)
 		{
-			oldJawIndex = chooseJawIndex;
-			emit showModeltoGlSingel(1);
-		}
-		else if (oldJawIndex != 0)
-		{
-			if (oldJawIndex == chooseJawIndex)
+			if (oldJawIndex == 0)
 			{
-				emit showModeltoGlSingel(0);
-			}
-			else if (oldJawIndex != chooseJawIndex)
-			{
+				oldJawIndex = chooseJawIndex;
 				emit showModeltoGlSingel(1);
 			}
+			else if (oldJawIndex != 0)
+			{
+				if (oldJawIndex == chooseJawIndex)
+				{
+					emit showModeltoGlSingel(0);
+				}
+				else if (oldJawIndex != chooseJawIndex)
+				{
+					emit showModeltoGlSingel(1);
+				}
+			}
 		}
-		
+		emit cameraShowSignal();
+		bufferBias++;
+		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
 		freeSpace.release();
-		
 		if (scan_index == (DataSize-1))
 		{
+			/*for (int i = 0; i < 9; i++)
+			{
+				string name = std::to_string(i) + ".ply";
+				writefile(upper_mModel[i], name);
+			}*/
+			
 			emit computeFinish();
-			//GPAMeshing(chooseJawIndex);
 		}
 	}
 }
 
-void ComputeThread::Motor2Rot(const float yaw, const float pitch, cv::Mat &Rot)
+void ComputeThread::Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot)
 {
 
 	Mat rt_curr = Mat::eye(4, 4, CV_64FC1);
@@ -730,79 +635,124 @@ void ComputeThread::Motor2Rot(const float yaw, const float pitch, cv::Mat &Rot)
 	rt_curr.at<double>(3, 0) = 0; rt_curr.at<double>(3, 1) = 0; rt_curr.at<double>(3, 2) = 0; rt_curr.at<double>(3, 3) = 1;
 
 	Mat rt_curr2 = Mat::eye(4, 4, CV_64FC1);
-	double alpha2 = ToRad(yaw);  // z axis
-	rt_curr2.at<double>(0, 0) = cosf(alpha2); rt_curr2.at<double>(0, 1) = sinf(alpha2); rt_curr2.at<double>(0, 2) = 0; rt_curr2.at<double>(0, 3) = 0;
-	rt_curr2.at<double>(1, 0) = -sinf(alpha2); rt_curr2.at<double>(1, 1) = cosf(alpha2); rt_curr2.at<double>(1, 2) = 0; rt_curr2.at<double>(1, 3) = 0;
-	rt_curr2.at<double>(2, 0) = 0; rt_curr2.at<double>(2, 1) = 0; rt_curr2.at<double>(2, 2) = 1; rt_curr2.at<double>(2, 3) = 0;
+	double alpha2 = ToRad(yaw);  // y axis
+	rt_curr2.at<double>(0, 0) = cosf(alpha2); rt_curr2.at<double>(0, 1) = 0; rt_curr2.at<double>(0, 2) = -sinf(alpha2); rt_curr2.at<double>(0, 3) = 0;
+	rt_curr2.at<double>(1, 0) = 0; rt_curr2.at<double>(1, 1) = 1; rt_curr2.at<double>(1, 2) = 0; rt_curr2.at<double>(1, 3) = 0;
+	rt_curr2.at<double>(2, 0) = sinf(alpha2); rt_curr2.at<double>(2, 1) = 0; rt_curr2.at<double>(2, 2) = cosf(alpha2); rt_curr2.at<double>(2, 3) = 0;
 	rt_curr2.at<double>(3, 0) = 0; rt_curr2.at<double>(3, 1) = 0; rt_curr2.at<double>(3, 2) = 0; rt_curr2.at<double>(3, 3) = 1;
+
+	//Mat rt_curr2 = Mat::eye(4, 4, CV_64FC1);
+	//double alpha2 = ToRad(yaw);  // z axis
+	//rt_curr2.at<double>(0, 0) = cosf(alpha2); rt_curr2.at<double>(0, 1) = sinf(alpha2); rt_curr2.at<double>(0, 2) = 0; rt_curr2.at<double>(0, 3) = 0;
+	//rt_curr2.at<double>(1, 0) = -sinf(alpha2); rt_curr2.at<double>(1, 1) = cosf(alpha2); rt_curr2.at<double>(1, 2) = 0; rt_curr2.at<double>(1, 3) = 0;
+	//rt_curr2.at<double>(2, 0) = 0; rt_curr2.at<double>(2, 1) = 0; rt_curr2.at<double>(2, 2) = 1; rt_curr2.at<double>(2, 3) = 0;
+	//rt_curr2.at<double>(3, 0) = 0; rt_curr2.at<double>(3, 1) = 0; rt_curr2.at<double>(3, 2) = 0; rt_curr2.at<double>(3, 3) = 1;
 
 	Rot = rt_curr2*rt_curr;
 	cout << Rot << endl;
 }
 
-void ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex)
+bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex)
 {
 	vector<double> points_2;
 
 	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
-
-	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 0.02, points_2);
-
 	cv::Mat rt_curr;
-	Motor2Rot(c_addscan_x, c_addscan_y, rt_curr);
+	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
+	orth::MeshModel mModel;
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_curr, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
 
 	if (chooseJawIndex == 1)
 	{
 		int scan_index = upper_mModel.size();
-		upper_mModel.push_back(mModel);
-		
-		pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, rt_curr);
-		pointcloudrotation(points_2, rt_curr);
+		clock_t time1, time2;
+		time1 = clock();
 
-		if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		if (upper_points_cloud_globle2.size())
 		{
-			return;
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
+			{
+				//return false;
+			}
 		}
-		pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, rt_icp);
-		pointcloudrotation(points_2, rt_icp);
+
+		upper_mModel.push_back(mModel);
+
+		cloudrot = rt_icp;
+		unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
+		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
 		upper_points_cloud_globle2.push_back(points_2);
 		upper_points_cloud_end2.insert(upper_points_cloud_end2.end(), points_2.begin(), points_2.end());
+		time2 = clock();
+		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
 	else if (chooseJawIndex == 2)
 	{
 		int scan_index = lower_mModel.size();
+		clock_t time1, time2;
+		time1 = clock();
+
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		if (lower_points_cloud_globle2.size())
+		{
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(lower_points_cloud_end2, points_2, 1, 1, rt_icp))
+			{
+				//return false;
+			}
+		}
+
 		lower_mModel.push_back(mModel);
 
-		pointcloudrotation(lower_mModel[scan_index].P, upper_mModel[scan_index].N, rt_curr);
-		pointcloudrotation(points_2, rt_curr);
-
-		if (!pointcloudICP(lower_points_cloud_end2, points_2, 1, 1, rt_icp))
-		{
-			return;
-		}
-		pointcloudrotation(lower_mModel[scan_index].P, upper_mModel[scan_index].N, rt_icp);
-		pointcloudrotation(points_2, rt_icp);
+		cloudrot = rt_icp;
+		unwarp->MeshRot((double*)cloudrot.data, &lower_mModel[scan_index]);
+		//pointcloudrotation(lower_mModel[scan_index].P, lower_mModel[scan_index].N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
 		lower_points_cloud_globle2.push_back(points_2);
 		lower_points_cloud_end2.insert(lower_points_cloud_end2.end(), points_2.begin(), points_2.end());
+		time2 = clock();
+		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
 	else if (chooseJawIndex == 3)
 	{
 		int scan_index = all_mModel.size();
+		clock_t time1, time2;
+		time1 = clock();
+
+		cv::Mat cloudrot = rt_curr;
+		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
+		if (all_points_cloud_globle2.size())
+		{
+			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
+			if (!pointcloudICP(all_points_cloud_end2, points_2, 1, 1, rt_icp))
+			{
+				//return false;
+			}
+		}
+
 		all_mModel.push_back(mModel);
 
-		pointcloudrotation(all_mModel[scan_index].P, upper_mModel[scan_index].N, rt_curr);
-		pointcloudrotation(points_2, rt_curr);
-
-		if (!pointcloudICP(all_points_cloud_end2, points_2, 1, 1, rt_icp))
-		{
-			return;
-		}
-		pointcloudrotation(all_mModel[scan_index].P, upper_mModel[scan_index].N, rt_icp);
-		pointcloudrotation(points_2, rt_icp);
+		cloudrot = rt_icp;
+		unwarp->MeshRot((double*)cloudrot.data, &all_mModel[scan_index]);
+		//pointcloudrotation(all_mModel[scan_index].P, all_mModel[scan_index].N, cloudrot);
+		pointcloudrotation(points_2, cloudrot);
 		all_points_cloud_globle2.push_back(points_2);
 		all_points_cloud_end2.insert(all_points_cloud_end2.end(), points_2.begin(), points_2.end());
+		time2 = clock();
+		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
+	return true;
 }
 
 void ComputeThread::compensationComputeScan(int chooseJawIndex)
@@ -828,6 +778,8 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	usedSpace.acquire();
 	scan::Unwarp *unwarp = new scan::Unwarp();
 	int image_bias = 0;
+	memcpy(camera_image.data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
+	image_bias++;
 	for (int j = 0; j < 15; j++)
 	{
 		memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
@@ -836,7 +788,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 		memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
 		image_bias++;
 	}
-	if (image_bias > 29)
+	if (image_bias > 30)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -844,8 +796,8 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 			image_bias++;
 		}
 	}
-
-	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
+	
+	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
 
 	/*vector<double> points_;
 	vector<float> normal;
@@ -854,90 +806,236 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	/*vector<unsigned char> points_color2;
 	vector<uint32_t> faces;*/
 
-	chooseCompenJawAndIcp(matched_pixel_image, image_rgb, chooseJawIndex);
+	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, unwarp, chooseJawIndex);
 
-	if (oldJawIndex != 0)
+	if (scanFlag == true)
 	{
-		if (oldJawIndex == chooseJawIndex)
+		if (oldJawIndex != 0)
 		{
-			emit showModeltoGlSingel(0);
-		}
-		else if (oldJawIndex != chooseJawIndex)
-		{
-			emit showModeltoGlSingel(1);
+			if (oldJawIndex == chooseJawIndex)
+			{
+				emit showModeltoGlSingel(0);
+			}
+			else if (oldJawIndex != chooseJawIndex)
+			{
+				emit showModeltoGlSingel(1);
+			}
 		}
 	}
+	
 	freeSpace.release();
 	cout << "补扫一个角度图片计算完成" << endl;
-	
+
+	emit cameraShowSignal();
 	emit computeFinish();
 }
 
-//void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel)
-//{
-//	orth::PointCloudD pointCloud2;
-//	orth::PointCloudD pointNormal2;
-//	for (int point_index = 0; point_index < pointCloud.size(); point_index++)
-//	{
-//		orth::Point3d p;
-//		orth::Point3d n;
-//		double x = pointCloud[point_index].x, y = pointCloud[point_index].y, z = pointCloud[point_index].z;
-//		double nx = pointCloud[point_index].x, ny = pointCloud[point_index].y, nz = pointCloud[point_index].z;
-//		p.x = RT.at<double>(0, 0)*x + RT.at<double>(0, 1)*y + RT.at<double>(0, 2)*z + RT.at<double>(0, 3);
-//		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
-//		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
-//
-//		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
-//		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
-//		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
-//
-//		pointCloud2.push_back(p);
-//		pointNormal2.push_back(n);
-//		totalMeshModel.P.push_back(p);
-//		totalMeshModel.F.push_back(n);
-//	}
-//	pointCloud2.swap(pointCloud);
-//	pointNormal2.swap(pointNormal);
-//}
-//
-//void ComputeThread::GPAMeshing(int chooseJawIndex)
-//{
-//	GPA gpa;
-//	vector<vector<double>> points_target;
-//	if (chooseJawIndex == 1)
-//	{
-//		vector<cv::Mat> rt_matrixs(upper_points_cloud_globle2.size());
-//		gpa.GpaRegistrationGPU(upper_points_cloud_globle2, points_target, rt_matrixs, 80);
-//		orth::MeshModel totalMeshModel;
-//		for (int data_index = 0; data_index < upper_points_cloud_globle2.size(); data_index++)
-//		{
-//			pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
-//		}
-//		recon::PoissonRec pr;
-//		pr.Execute(totalMeshModel);
-//	}
-//	else if (chooseJawIndex == 2)
-//	{
-//		vector<cv::Mat> rt_matrixs(lower_points_cloud_globle2.size());
-//		gpa.GpaRegistrationGPU(lower_points_cloud_globle2, points_target, rt_matrixs, 80);
-//		orth::MeshModel totalMeshModel;
-//		for (int data_index = 0; data_index < lower_points_cloud_globle2.size(); data_index++)
-//		{
-//			pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
-//		}
-//		recon::PoissonRec pr;
-//		pr.Execute(totalMeshModel);
-//	}
-//	else if (chooseJawIndex == 3)
-//	{
-//		vector<cv::Mat> rt_matrixs(all_points_cloud_globle2.size());
-//		gpa.GpaRegistrationGPU(all_points_cloud_globle2, points_target, rt_matrixs, 80);
-//		orth::MeshModel totalMeshModel;
-//		for (int data_index = 0; data_index < all_points_cloud_globle2.size(); data_index++)
-//		{
-//			pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
-//		}
-//		recon::PoissonRec pr;
-//		pr.Execute(totalMeshModel);
-//	}
-//}
+void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel)
+{
+	orth::PointCloudD pointCloud2;
+	orth::PointCloudD pointNormal2;
+	for (int point_index = 0; point_index < pointCloud.size(); point_index++)
+	{
+		orth::Point3d p;
+		orth::Point3d n;
+		double x = pointCloud[point_index].x, y = pointCloud[point_index].y, z = pointCloud[point_index].z;
+		double nx = pointNormal[point_index].x, ny = pointNormal[point_index].y, nz = pointNormal[point_index].z;
+
+		p.x = RT.at<double>(0, 0)*x + RT.at<double>(0, 1)*y + RT.at<double>(0, 2)*z + RT.at<double>(0, 3);
+		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
+		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
+
+		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
+		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
+		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
+
+		pointCloud2.push_back(p);
+		pointNormal2.push_back(n);
+		totalMeshModel.P.push_back(p);
+		totalMeshModel.N.push_back(n);
+		//totalMeshModel.L.push_back(0);
+	}
+	pointCloud2.swap(pointCloud);
+	pointNormal2.swap(pointNormal);
+}
+
+void ComputeThread::writefile(orth::MeshModel totalMeshModel,string name)
+{
+	pcl::PointXYZLNormal p;
+	pcl::PointCloud<pcl::PointXYZLNormal>::Ptr outCloud(new pcl::PointCloud<pcl::PointXYZLNormal>);
+	for (int j = 0; j < totalMeshModel.P.size(); j++)
+	{
+		p.x = totalMeshModel.P[j].x;
+		p.y = totalMeshModel.P[j].y;
+		p.z = totalMeshModel.P[j].z;
+		p.normal_x = totalMeshModel.N[j].x;
+		p.normal_y = totalMeshModel.N[j].y;
+		p.normal_z = totalMeshModel.N[j].z;
+		outCloud->points.push_back(p);
+	}
+	pcl::io::savePLYFile(name, *outCloud); //将点云保存到PLY文件中
+	//pcl::io::savePLYFileBinary(name, *outCloud); //将点云保存到PLY文件中
+	cerr << "Saved " << outCloud->points.size() << " data points to totalMeshModel.ply." << endl;
+}
+
+void ComputeThread::writefile(vector<double> cloud, string name)
+{
+	pcl::PointXYZLNormal p;
+	pcl::PointCloud<pcl::PointXYZLNormal>::Ptr outCloud(new pcl::PointCloud<pcl::PointXYZLNormal>);
+	for (int j = 0; j < cloud.size(); j++)
+	{
+		p.x = cloud[j];
+		++j;
+		p.y = cloud[j];
+		++j;
+		p.z = cloud[j];
+		outCloud->points.push_back(p);
+	}
+	pcl::io::savePLYFile(name, *outCloud); //将点云保存到PLY文件中
+										   //pcl::io::savePLYFileBinary(name, *outCloud); //将点云保存到PLY文件中
+	cerr << "Saved " << outCloud->points.size() << " data points to cloud.ply." << endl;
+}
+
+void ComputeThread::GPAMeshing(int chooseJawIndex)
+{
+	
+	vector<vector<double>> points_target;
+	int TotalIterNum = 82;
+	if (chooseJawIndex == 1)
+	{
+		if (upper_points_cloud_globle2.size() > 1)
+		{
+			vector<cv::Mat> rt_matrixs;
+			clock_t time1, time2, time3, time4;
+			time1 = clock();
+			gpa.GpaRegistrationGPU(upper_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			time2 = clock();
+			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "GPA is finished..." << endl;
+
+			
+
+			orth::MeshModel totalMeshModel;
+			for (int data_index = 0; data_index < upper_points_cloud_globle2.size(); data_index++)
+			{
+				pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
+			}
+
+			/*for (int i = 0; i < points_target.size(); i++)
+			{
+				string name1 = std::to_string(i) + "_rotation.ply";
+				writefile(points_target[i], name1);
+
+				string name2 = std::to_string(i) + "_totalpoint.ply";
+				writefile(upper_mModel[i], name2);
+			}
+			string name = "totalMeshModel.ply";
+			writefile(totalMeshModel, name);*/
+			//recon::PoissonRec pr;
+			time3 = clock();
+			//pr.Execute(totalMeshModel);
+			poissonRecon(argc,argv,&totalMeshModel);
+			time4 = clock();
+			upper_mModel.push_back(totalMeshModel);
+			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "reconstruction is finished..." << endl;
+		}
+		else
+		{
+			clock_t time1, time2;
+			time1 = clock();
+			//recon::PoissonRec pr;
+			//pr.Execute(upper_mModel[0]);
+			orth::MeshModel totalMeshModel;
+			totalMeshModel = upper_mModel[0];
+			poissonRecon(argc, argv, &totalMeshModel);
+			upper_mModel.push_back(totalMeshModel);
+			time2 = clock();
+			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		}
+	}
+	else if (chooseJawIndex == 2)
+	{
+		if (lower_points_cloud_globle2.size() > 1)
+		{
+			vector<cv::Mat> rt_matrixs;
+			clock_t time1, time2, time3, time4;
+			time1 = clock();
+			gpa.GpaRegistrationGPU(lower_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			time2 = clock();
+			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "GPA is finished..." << endl;
+
+			orth::MeshModel totalMeshModel;
+			for (int data_index = 0; data_index < lower_points_cloud_globle2.size(); data_index++)
+			{
+				pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
+			}
+			//cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+			//writefile(totalMeshModel);
+			//recon::PoissonRec pr;
+			time3 = clock();
+			//pr.Execute(totalMeshModel);
+			poissonRecon(argc, argv, &totalMeshModel);
+			lower_mModel.push_back(totalMeshModel);
+			time4 = clock();
+			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "reconstruction is finished..." << endl;
+		}
+		else
+		{
+			clock_t time1, time2;
+			time1 = clock();
+			//recon::PoissonRec pr;
+			orth::MeshModel totalMeshModel;
+			totalMeshModel = lower_mModel[0];
+			poissonRecon(argc, argv, &totalMeshModel);
+			lower_mModel.push_back(totalMeshModel);
+			//pr.Execute(lower_mModel[0]);
+			time2 = clock();
+			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		}
+	}
+	else if (chooseJawIndex == 3)
+	{
+		if (all_points_cloud_globle2.size() > 1)
+		{
+			vector<cv::Mat> rt_matrixs;
+			clock_t time1, time2, time3, time4;
+			time1 = clock();
+			gpa.GpaRegistrationGPU(all_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			time2 = clock();
+			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "GPA is finished..." << endl;
+			
+			orth::MeshModel totalMeshModel;
+			for (int data_index = 0; data_index < all_points_cloud_globle2.size(); data_index++)
+			{
+				pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, rt_matrixs[data_index], totalMeshModel);
+			}
+			//cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+			//writefile(totalMeshModel);
+			//recon::PoissonRec pr;
+			time3 = clock();
+			poissonRecon(argc, argv, &totalMeshModel);
+			all_mModel.push_back(totalMeshModel);
+			time4 = clock();
+			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "reconstruction is finished..." << endl;
+		}
+		else
+		{
+			clock_t time1, time2;
+			time1 = clock();
+			//recon::PoissonRec pr;
+			orth::MeshModel totalMeshModel;
+			totalMeshModel = all_mModel[0];
+			poissonRecon(argc, argv, &totalMeshModel);
+			all_mModel.push_back(totalMeshModel);
+			time2 = clock();
+			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		}
+	}
+	emit showModeltoGlSingel(2);
+	emit computeFinish();
+}

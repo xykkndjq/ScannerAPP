@@ -69,6 +69,943 @@ private:
 };
 vtkStandardNewMacro(InteractorStyle);
 
+void MeshRender(orth::MeshModel &mm,float size_)
+{
+	vtkSmartPointer<vtkPoints> points =
+		vtkSmartPointer<vtkPoints>::New();
+
+	// Setup colors
+	vtkSmartPointer<vtkNamedColors> namedColors =
+		vtkSmartPointer<vtkNamedColors>::New();
+
+	vtkSmartPointer<vtkUnsignedCharArray> colors =
+		vtkSmartPointer<vtkUnsignedCharArray>::New();
+	colors->SetNumberOfComponents(3);
+	colors->SetName("Colors");
+
+	//orth::PointCloudD Vertices = mm.P;
+	vector<double> Vertices(mm.P.size() * 3);
+	memcpy(Vertices.data(), mm.P[0].data(), sizeof(double)*mm.P.size() * 3);
+
+	double min_dis = Vertices[1];
+	double max_dis = Vertices[1];
+	for (int point_index = 1; point_index < Vertices.size() / 3; point_index++)
+	{
+		if (Vertices[3 * point_index + 1]>max_dis)
+		{
+			max_dis = Vertices[3 * point_index + 1];
+		}
+		if (Vertices[3 * point_index + 1]<min_dis)
+		{
+			min_dis = Vertices[3 * point_index + 1];
+		}
+	}
+	double l = max_dis - min_dis;
+	for (int point_index = 0; point_index < Vertices.size() / 3; point_index++)
+	{
+		points->InsertNextPoint(Vertices[3 * point_index + 0], Vertices[3 * point_index + 1], Vertices[3 * point_index + 2]);
+		unsigned char color[3] = { (Vertices[3 * point_index + 1] - min_dis)*255.0 / l,255 - (Vertices[3 * point_index + 1] - min_dis)*255.0 / l,127 };
+		colors->InsertNextTupleValue(color);
+	}
+
+	vtkSmartPointer<vtkPolyData> pointsPolydata =
+		vtkSmartPointer<vtkPolyData>::New();
+
+	pointsPolydata->SetPoints(points);
+
+	vtkSmartPointer<vtkVertexGlyphFilter> vertexFilter =
+		vtkSmartPointer<vtkVertexGlyphFilter>::New();
+	vertexFilter->SetInputData(pointsPolydata);
+	vertexFilter->Update();
+
+	vtkSmartPointer<vtkPolyData> polydata =
+		vtkSmartPointer<vtkPolyData>::New();
+	polydata->ShallowCopy(vertexFilter->GetOutput());
+
+	polydata->GetPointData()->SetScalars(colors);
+
+	vtkSmartPointer<vtkAxesActor> axes =
+		vtkSmartPointer<vtkAxesActor>::New();
+	axes->SetShaftTypeToLine();
+	axes->SetTotalLength(30, 30, 30);
+	axes->SetNormalizedShaftLength(1.0, 1.0, 1.0);
+	axes->SetNormalizedTipLength(0.05, 0.05, 0.05);
+
+	// Visualization
+
+	vtkSmartPointer<vtkPolyDataMapper> mapper =
+		vtkSmartPointer<vtkPolyDataMapper>::New();
+	mapper->SetInputData(polydata);
+
+	vtkSmartPointer<vtkActor> actor =
+		vtkSmartPointer<vtkActor>::New();
+	actor->SetMapper(mapper);
+	actor->GetProperty()->SetPointSize(size_);
+
+	vtkSmartPointer<vtkRenderer> renderer =
+		vtkSmartPointer<vtkRenderer>::New();
+
+	/*----------------------------- camera 1 --------------------------*/
+	//vtkSmartPointer<vtkCamera> camera1 =
+	//	vtkSmartPointer<vtkCamera>::New();
+	//camera1->SetPosition(300,50,-300);
+	//camera1->SetFocalPoint(50,50,-10);
+	//renderer->SetActiveCamera(camera1);
+
+	vtkSmartPointer<vtkRenderWindow> renderWindow =
+		vtkSmartPointer<vtkRenderWindow>::New();
+	renderWindow->AddRenderer(renderer);
+	renderWindow->SetSize(1000, 1000);
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+		vtkSmartPointer<vtkRenderWindowInteractor>::New();
+
+	renderWindowInteractor->SetRenderWindow(renderWindow);
+
+	vtkSmartPointer<vtkAreaPicker> areaPicker =
+		vtkSmartPointer<vtkAreaPicker>::New();
+	renderWindowInteractor->SetPicker(areaPicker);
+
+	renderer->AddActor(axes);
+	renderer->AddActor(actor);
+	renderer->SetBackground(namedColors->GetColor3d("White").GetData());
+	renderWindow->Render();
+
+	renderWindowInteractor->Start();
+
+}
+
+void MeshRender(orth::MaxillaryTeeth &mm)
+
+{
+	vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+	// Setup colors
+	vtkSmartPointer<vtkUnsignedCharArray> colors =
+		vtkSmartPointer<vtkUnsignedCharArray>::New();
+	colors->SetNumberOfComponents(3);
+	colors->SetName("Colors");
+
+	vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
+	if (!(mm.teeths.size()))
+	{
+		for (size_t face_num = 0; face_num < mm.F.size(); face_num++)
+		{
+			points->InsertNextPoint(mm.P[mm.F[face_num].x].x, mm.P[mm.F[face_num].x].y, mm.P[mm.F[face_num].x].z);
+			points->InsertNextPoint(mm.P[mm.F[face_num].y].x, mm.P[mm.F[face_num].y].y, mm.P[mm.F[face_num].y].z);
+			points->InsertNextPoint(mm.P[mm.F[face_num].z].x, mm.P[mm.F[face_num].z].y, mm.P[mm.F[face_num].z].z);
+			vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+			polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+			polygon->GetPointIds()->SetId(0, face_num * 3);
+			polygon->GetPointIds()->SetId(1, face_num * 3 + 1);
+			polygon->GetPointIds()->SetId(2, face_num * 3 + 2);
+			polygons->InsertNextCell(polygon);
+			unsigned char color[3] = { 180,180,180 };
+			colors->InsertNextTupleValue(color);
+			colors->InsertNextTupleValue(color);
+			colors->InsertNextTupleValue(color);
+		}
+	}
+	else
+	{
+		int point_id = 0;
+		for (size_t teeth_index = 0; teeth_index < mm.teeths.size(); teeth_index++)
+		{
+			for (size_t face_num = 0; face_num < mm.teeths[teeth_index].F.size(); face_num++)
+			{
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].z);
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].z);
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].z);
+				vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+				polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+				polygon->GetPointIds()->SetId(0, point_id++);
+				polygon->GetPointIds()->SetId(1, point_id++);
+				polygon->GetPointIds()->SetId(2, point_id++);
+				polygons->InsertNextCell(polygon);
+
+				/*
+				198 226 255
+				159 121 238
+				0   139 139
+				238 118 0
+				32  178 170
+				255 236 139
+				0   255 255
+				112 128 144
+				84  255 159
+				255 255 0
+				178 34  34
+				148 0   211
+				238 0   0
+				238 213 210
+				99  184 255
+				144 238 144
+				232 232 232
+				139 0   139
+				0   0   139
+				139 0   0
+				238 64  20
+				255 165 0
+				34  139 34
+				255 215 0
+				127 255 212
+				255 246 143
+				105 105 105
+				110 139 61
+				0   206 209
+				139 69  19
+				159 121 238
+				255 250 250
+				*/
+
+				unsigned char color[3];
+				color[0] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].x;
+				color[1] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].y;
+				color[2] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].z;
+
+				//switch (teeth_index)
+				//{
+				//case -1: {color[0] = 180; color[1] = 180; color[2] = 180; break; }
+				//case 0:{color[0] = 198; color[1] = 226; color[2] = 255; break; }// 
+				//case 1: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+				//case 2: {color[0] = 0; color[1] = 139; color[2] = 139; break; }
+				//case 3: {color[0] = 238; color[1] = 118; color[2] = 0; break; }
+				//case 4: {color[0] = 32; color[1] = 178; color[2] = 170; break; }
+				//case 5: {color[0] = 255; color[1] = 236; color[2] = 139; break; }
+				//case 6: {color[0] = 0; color[1] = 0; color[2] = 0; break; } //{color[0] = 0; color[1] = 255; color[2] = 255; break; }
+				//case 7: {color[0] = 112; color[1] = 128; color[2] = 144; break; }
+				//case 8: {color[0] = 84; color[1] = 255; color[2] = 159; break; }
+				//case 9: {color[0] = 255; color[1] = 255; color[2] = 0; break; }
+				//case 10: {color[0] = 178; color[1] = 34; color[2] = 34; break; }
+				//case 11: {color[0] = 148; color[1] = 0; color[2] = 211; break; }
+				//case 12: {color[0] = 238; color[1] = 0; color[2] = 0; break; }
+				//case 13: {color[0] = 238; color[1] = 213; color[2] = 210; break; }
+				//case 14: {color[0] = 99; color[1] = 184; color[2] = 255; break; }
+				//case 15: {color[0] = 144; color[1] = 238; color[2] = 144; break; }
+				//case 16: {color[0] = 232; color[1] = 232; color[2] = 232; break; }
+				//case 17: {color[0] = 139; color[1] = 0; color[2] = 139; break; }
+				//case 18: {color[0] = 0; color[1] = 0; color[2] = 139; break; }
+				//case 19: {color[0] = 139; color[1] = 0; color[2] = 0; break; }
+				//case 20: {color[0] = 238; color[1] = 64; color[2] = 20; break; }
+				//case 21: {color[0] = 255; color[1] = 165; color[2] = 0; break; }
+				//case 22: {color[0] = 34; color[1] = 139; color[2] = 34; break; }
+				//case 23: {color[0] = 255; color[1] = 215; color[2] = 0; break; }
+				//case 24: {color[0] = 127; color[1] = 255; color[2] = 212; break; }
+				//case 25: {color[0] = 255; color[1] = 246; color[2] = 143; break; }
+				//case 26: {color[0] = 105; color[1] = 105; color[2] = 105; break; }
+				//case 27: {color[0] = 110; color[1] = 139; color[2] = 61; break; }
+				//case 28: {color[0] = 0; color[1] = 206; color[2] = 209; break; }
+				//case 29: {color[0] = 139; color[1] = 69; color[2] = 19; break; }
+				//case 30: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+				//case 31: {color[0] = 255; color[1] = 250; color[2] = 250; break; }
+				//default:
+				//	break;
+				//}
+
+				//unsigned char color[3] = { mm.L[mm.F[face_num].x],180,180 };
+				colors->InsertNextTupleValue(color);
+				colors->InsertNextTupleValue(color);
+				colors->InsertNextTupleValue(color);
+			}
+		}
+
+		//for (size_t face_num = 0; face_num < mm.F.size(); face_num++)
+		//{
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].x].x, mm.P[mm.F[face_num].x].y, mm.P[mm.F[face_num].x].z);
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].y].x, mm.P[mm.F[face_num].y].y, mm.P[mm.F[face_num].y].z);
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].z].x, mm.P[mm.F[face_num].z].y, mm.P[mm.F[face_num].z].z);
+		//	vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+		//	polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+		//	polygon->GetPointIds()->SetId(0, face_num * 3);
+		//	polygon->GetPointIds()->SetId(1, face_num * 3 + 1);
+		//	polygon->GetPointIds()->SetId(2, face_num * 3 + 2);
+		//	polygons->InsertNextCell(polygon);
+
+		//	/*
+		//	198 226 255
+		//	159 121 238
+		//	0   139 139
+		//	238 118 0
+		//	32  178 170
+		//	255 236 139
+		//	0   255 255
+		//	112 128 144
+		//	84  255 159
+		//	255 255 0
+		//	178 34  34
+		//	148 0   211
+		//	238 0   0
+		//	238 213 210
+		//	99  184 255
+		//	144 238 144
+		//	232 232 232
+		//	139 0   139
+		//	0   0   139
+		//	139 0   0
+		//	238 64  20
+		//	255 165 0
+		//	34  139 34
+		//	255 215 0
+		//	127 255 212
+		//	255 246 143
+		//	105 105 105
+		//	110 139 61
+		//	0   206 209
+		//	139 69  19
+		//	159 121 238
+		//	255 250 250
+		//	*/
+
+		//	unsigned char color[3];
+		//	switch ((int)(mm.L[mm.F[face_num].x]))
+		//	{
+		//	case -1: {color[0] = 180; color[1] = 180; color[2] = 180; break; }
+		//	case 0: {color[0] = 198; color[1] = 226; color[2] = 255; break; }
+		//	case 1: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+		//	case 2: {color[0] = 0; color[1] = 139; color[2] = 139; break; }
+		//	case 3: {color[0] = 238; color[1] = 118; color[2] = 0; break; }
+		//	case 4: {color[0] = 32; color[1] = 178; color[2] = 170; break; }
+		//	case 5: {color[0] = 255; color[1] = 236; color[2] = 139; break; }
+		//	case 6: {color[0] = 0; color[1] = 255; color[2] = 255; break; }
+		//	case 7: {color[0] = 112; color[1] = 128; color[2] = 144; break; }
+		//	case 8: {color[0] = 84; color[1] = 255; color[2] = 159; break; }
+		//	case 9: {color[0] = 255; color[1] = 255; color[2] = 0; break; }
+		//	case 10: {color[0] = 178; color[1] = 34; color[2] = 34; break; }
+		//	case 11: {color[0] = 148; color[1] = 0; color[2] = 211; break; }
+		//	case 12: {color[0] = 238; color[1] = 0; color[2] = 0; break; }
+		//	case 13: {color[0] = 238; color[1] = 213; color[2] = 210; break; }
+		//	case 14: {color[0] = 99; color[1] = 184; color[2] = 255; break; }
+		//	case 15: {color[0] = 144; color[1] = 238; color[2] = 144; break; }
+		//	case 16: {color[0] = 232; color[1] = 232; color[2] = 232; break; }
+		//	case 17: {color[0] = 139; color[1] = 0; color[2] = 139; break; }
+		//	case 18: {color[0] = 0; color[1] = 0; color[2] = 139; break; }
+		//	case 19: {color[0] = 139; color[1] = 0; color[2] = 0; break; }
+		//	case 20: {color[0] = 238; color[1] = 64; color[2] = 20; break; }
+		//	case 21: {color[0] = 255; color[1] = 165; color[2] = 0; break; }
+		//	case 22: {color[0] = 34; color[1] = 139; color[2] = 34; break; }
+		//	case 23: {color[0] = 255; color[1] = 215; color[2] = 0; break; }
+		//	case 24: {color[0] = 127; color[1] = 255; color[2] = 212; break; }
+		//	case 25: {color[0] = 255; color[1] = 246; color[2] = 143; break; }
+		//	case 26: {color[0] = 105; color[1] = 105; color[2] = 105; break; }
+		//	case 27: {color[0] = 110; color[1] = 139; color[2] = 61; break; }
+		//	case 28: {color[0] = 0; color[1] = 206; color[2] = 209; break; }
+		//	case 29: {color[0] = 139; color[1] = 69; color[2] = 19; break; }
+		//	case 30: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+		//	case 31: {color[0] = 255; color[1] = 250; color[2] = 250; break; }
+		//	default:
+		//		break;
+		//	}
+		//	
+		//	//unsigned char color[3] = { mm.L[mm.F[face_num].x],180,180 };
+		//	colors->InsertNextTupleValue(color);
+		//	colors->InsertNextTupleValue(color);
+		//	colors->InsertNextTupleValue(color);
+
+		//}
+	}
+
+	vtkSmartPointer<vtkPolyData> triple = vtkSmartPointer<vtkPolyData>::New();
+	triple->SetPoints(points);
+	//cout << points->GetReferenceCount() << endl;
+	triple->SetPolys(polygons);
+
+	triple->GetPointData()->SetScalars(colors);
+
+	vtkSmartPointer<vtkPolyDataMapper> mapper =
+		vtkSmartPointer<vtkPolyDataMapper>::New();
+#if VTK_MAJOR_VERSION <= 5
+	mapper->SetInput(triple);
+#else
+	mapper->SetInputData(triple);
+#endif
+
+	vtkSmartPointer<vtkActor> texturedQuad =
+		vtkSmartPointer<vtkActor>::New();
+	texturedQuad->SetMapper(mapper);
+
+	// Visualize the textured plane
+	vtkSmartPointer<vtkRenderer> renderer =
+		vtkSmartPointer<vtkRenderer>::New();
+	renderer->AddActor(texturedQuad);
+
+
+
+	vtkSmartPointer<vtkNamedColors> colors2 =
+		vtkSmartPointer<vtkNamedColors>::New();
+	vtkSmartPointer<vtkPoints> points2 = vtkSmartPointer<vtkPoints>::New();
+	// Create three points. We will join (Origin and P0) with a red line and (Origin and P1) with a green line
+	//if (mm.arch.size()==3)
+	//{
+	//	double a, b, c, d;
+	//	orth::Point3d p1 = mm.arch[0], p2 = mm.arch[1], p3 = mm.arch[2];
+	//	a = (p2.y - p3.y) / (p2.x*p2.x-2*p1.x*p2.x-p3.x*p3.x+2*p1.x*p3.x);
+	//	b = -2 * p1.x*a;
+	//	c = p1.x*p1.x*a + p1.y;
+	//	cout << a << " -- " << b << " -- " << c << endl;
+	//	double p[3];
+	//	for (size_t x_index = -30; x_index < 30; x_index++)
+	//	{
+	//		p[0] = x_index;
+	//		p[1] = a * x_index*x_index + b*x_index + c;
+	//		p[2] = 0;
+	//		points2->InsertNextPoint(p);
+	//	}
+	//}
+
+	if (mm.arch.size())
+	{
+		double p[3];
+
+		for (size_t x_index = 0; x_index < mm.arch.size(); x_index++)
+		{
+			p[0] = mm.arch[x_index].x;
+			p[1] = mm.arch[x_index].y;
+			p[2] = mm.arch[x_index].z;
+			points2->InsertNextPoint(p);
+		}
+
+
+		vtkSmartPointer<vtkParametricSpline> spline =
+			vtkSmartPointer<vtkParametricSpline>::New();
+		spline->SetPoints(points2);
+
+		vtkSmartPointer<vtkParametricFunctionSource> functionSource =
+			vtkSmartPointer<vtkParametricFunctionSource>::New();
+		functionSource->SetParametricFunction(spline);
+		functionSource->Update();
+
+		vtkSmartPointer<vtkPolyDataMapper> mapper2 =
+			vtkSmartPointer<vtkPolyDataMapper>::New();
+		mapper2->SetInputConnection(functionSource->GetOutputPort());
+
+		vtkSmartPointer<vtkActor> actor2 =
+			vtkSmartPointer<vtkActor>::New();
+		actor2->SetMapper(mapper2);
+		actor2->GetProperty()->SetColor(colors2->GetColor3d("Green").GetData());
+		actor2->GetProperty()->SetLineWidth(3.0);
+
+
+
+		renderer->AddActor(actor2);
+	}
+
+	if (mm.division_plane.size()>0)
+	{
+		for (int plane_index = 0; plane_index < mm.division_plane.size(); plane_index++)
+		{
+			vtkSmartPointer<vtkNamedColors> colors3 =
+				vtkSmartPointer<vtkNamedColors>::New();
+
+			//// Set the background color.
+			//std::array<unsigned char, 4> bkg{ { 26, 51, 77, 255 } };
+			//colors3->SetColor("BkgColor", bkg.data());
+
+
+			// Create a plane
+			vtkSmartPointer<vtkPlaneSource> planeSource =
+				vtkSmartPointer<vtkPlaneSource>::New();
+			planeSource->SetCenter(mm.division_plane[plane_index].center.x, mm.division_plane[plane_index].center.y, mm.division_plane[plane_index].center.z);
+			planeSource->SetNormal(mm.division_plane[plane_index].A, mm.division_plane[plane_index].B, mm.division_plane[plane_index].C);
+			planeSource->SetResolution(20, 20);
+
+			planeSource->Update();
+
+			vtkPolyData* plane = planeSource->GetOutput();
+
+			// Create a mapper and actor
+			vtkSmartPointer<vtkPolyDataMapper> mapper3 =
+				vtkSmartPointer<vtkPolyDataMapper>::New();
+			mapper3->SetInputData(plane);
+
+			vtkSmartPointer<vtkActor> actor3 =
+				vtkSmartPointer<vtkActor>::New();
+			actor3->SetMapper(mapper3);
+			actor3->GetProperty()->SetColor(colors3->GetColor3d("White").GetData());
+
+			renderer->AddActor(actor3);
+		}
+
+	}
+
+	//double origin[3] = { 0.0, 0.0, 0.0 };
+	//double p0[3] = { 10.0, 0.0, 0.0 };
+	//double p1[3] = { 0.0, 10.0, 0.0 };
+	//double p2[3] = { 0.0, 10.0, 20.0 };
+	//double p3[3] = { 10.0, 20.0, 30.0 };
+
+	//// Create a vtkPoints object and store the points in it
+	//
+	//points2->InsertNextPoint(origin);
+	//points2->InsertNextPoint(p0);
+	//points2->InsertNextPoint(p1);
+	//points2->InsertNextPoint(p2);
+	//points2->InsertNextPoint(p3);
+
+
+	renderer->SetBackground(0.4392, 0.5020, 0.5647);
+	renderer->ResetCamera();
+
+	vtkSmartPointer<vtkRenderWindow> renderWindow =
+		vtkSmartPointer<vtkRenderWindow>::New();
+	renderWindow->AddRenderer(renderer);
+	renderWindow->SetSize(1000, 1000);
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+		vtkSmartPointer<vtkRenderWindowInteractor>::New();
+	renderWindowInteractor->SetRenderWindow(renderWindow);
+
+	renderWindow->Render();
+
+	renderWindowInteractor->Start();
+}
+
+void MeshRender(orth::MaxillaryTeeth &mm, orth::PointCloudD &V_query, orth::PointCloudD &V_target)
+{
+	/*------------------------------------------------- teeth -----------------------------------------------------*/
+
+	vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
+	// Setup colors
+	vtkSmartPointer<vtkUnsignedCharArray> colors =
+		vtkSmartPointer<vtkUnsignedCharArray>::New();
+	colors->SetNumberOfComponents(3);
+	colors->SetName("Colors");
+
+
+	vtkSmartPointer<vtkCellArray> polygons = vtkSmartPointer<vtkCellArray>::New();
+	if (!(mm.teeths.size()))
+	{
+		for (size_t face_num = 0; face_num < mm.F.size(); face_num++)
+		{
+			points->InsertNextPoint(mm.P[mm.F[face_num].x].x, mm.P[mm.F[face_num].x].y, mm.P[mm.F[face_num].x].z);
+			points->InsertNextPoint(mm.P[mm.F[face_num].y].x, mm.P[mm.F[face_num].y].y, mm.P[mm.F[face_num].y].z);
+			points->InsertNextPoint(mm.P[mm.F[face_num].z].x, mm.P[mm.F[face_num].z].y, mm.P[mm.F[face_num].z].z);
+			vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+			polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+			polygon->GetPointIds()->SetId(0, face_num * 3);
+			polygon->GetPointIds()->SetId(1, face_num * 3 + 1);
+			polygon->GetPointIds()->SetId(2, face_num * 3 + 2);
+			polygons->InsertNextCell(polygon);
+			unsigned char color[3] = { 180,180,180 };
+			colors->InsertNextTupleValue(color);
+			colors->InsertNextTupleValue(color);
+			colors->InsertNextTupleValue(color);
+		}
+	}
+	else
+	{
+		int point_id = 0;
+		for (size_t teeth_index = 0; teeth_index < mm.teeths.size(); teeth_index++)
+		{
+			if (teeth_index == 0 || teeth_index == 15)
+			{
+				continue;
+			}
+			for (size_t face_num = 0; face_num < mm.teeths[teeth_index].F.size(); face_num++)
+			{
+
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].x].z);
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].y].z);
+				points->InsertNextPoint(mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].x, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].y, mm.teeths[teeth_index].P[mm.teeths[teeth_index].F[face_num].z].z);
+				vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+				polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+				polygon->GetPointIds()->SetId(0, point_id++);
+				polygon->GetPointIds()->SetId(1, point_id++);
+				polygon->GetPointIds()->SetId(2, point_id++);
+				polygons->InsertNextCell(polygon);
+
+				/*
+				198 226 255
+				159 121 238
+				0   139 139
+				238 118 0
+				32  178 170
+				255 236 139
+				0   255 255
+				112 128 144
+				84  255 159
+				255 255 0
+				178 34  34
+				148 0   211
+				238 0   0
+				238 213 210
+				99  184 255
+				144 238 144
+				232 232 232
+				139 0   139
+				0   0   139
+				139 0   0
+				238 64  20
+				255 165 0
+				34  139 34
+				255 215 0
+				127 255 212
+				255 246 143
+				105 105 105
+				110 139 61
+				0   206 209
+				139 69  19
+				159 121 238
+				255 250 250
+				*/
+
+				unsigned char color[3];
+				color[0] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].x;
+				color[1] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].y;
+				color[2] = mm.teeths[teeth_index].C[mm.teeths[teeth_index].F[face_num].x].z;
+
+				//unsigned char color[3];
+				//switch (teeth_index)
+				//{
+				//case -1: {color[0] = 180; color[1] = 180; color[2] = 180; break; }
+				//case 0:{color[0] = 198; color[1] = 226; color[2] = 255; break; }
+				//case 1: {color[0] = 159; color[1] = 121; color[2] = 238; break; }//{color[0] = 0; color[1] = 0; color[2] = 0; break; } //
+				//case 2: {color[0] = 0; color[1] = 139; color[2] = 139; break; }
+				//case 3: {color[0] = 238; color[1] = 118; color[2] = 0; break; }
+				//case 4: {color[0] = 32; color[1] = 178; color[2] = 170; break; }
+				//case 5: {color[0] = 255; color[1] = 236; color[2] = 139; break; }
+				//case 6: {color[0] = 0; color[1] = 0; color[2] = 255; break; }
+				//case 7: {color[0] = 0; color[1] = 0; color[2] = 0; break; } //{color[0] = 112; color[1] = 128; color[2] = 144; break; }
+				//case 8: {color[0] = 84; color[1] = 255; color[2] = 159; break; }
+				//case 9: {color[0] = 255; color[1] = 255; color[2] = 0; break; }
+				//case 10: {color[0] = 178; color[1] = 34; color[2] = 34; break; }
+				//case 11: {color[0] = 148; color[1] = 0; color[2] = 211; break; }
+				//case 12: {color[0] = 238; color[1] = 0; color[2] = 0; break; }
+				//case 13: {color[0] = 238; color[1] = 213; color[2] = 210; break; }
+				//case 14: {color[0] = 99; color[1] = 184; color[2] = 255; break; }
+				//case 15: {color[0] = 144; color[1] = 238; color[2] = 144; break; }
+				//case 16: {color[0] = 232; color[1] = 232; color[2] = 232; break; }
+				//case 17: {color[0] = 139; color[1] = 0; color[2] = 139; break; }
+				//case 18: {color[0] = 0; color[1] = 0; color[2] = 139; break; }
+				//case 19: {color[0] = 139; color[1] = 0; color[2] = 0; break; }
+				//case 20: {color[0] = 238; color[1] = 64; color[2] = 20; break; }
+				//case 21: {color[0] = 255; color[1] = 165; color[2] = 0; break; }
+				//case 22: {color[0] = 34; color[1] = 139; color[2] = 34; break; }
+				//case 23: {color[0] = 255; color[1] = 215; color[2] = 0; break; }
+				//case 24: {color[0] = 127; color[1] = 255; color[2] = 212; break; }
+				//case 25: {color[0] = 255; color[1] = 246; color[2] = 143; break; }
+				//case 26: {color[0] = 105; color[1] = 105; color[2] = 105; break; }
+				//case 27: {color[0] = 110; color[1] = 139; color[2] = 61; break; }
+				//case 28: {color[0] = 0; color[1] = 206; color[2] = 209; break; }
+				//case 29: {color[0] = 139; color[1] = 69; color[2] = 19; break; }
+				//case 30: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+				//case 31: {color[0] = 255; color[1] = 250; color[2] = 250; break; }
+				//default:
+				//	break;
+				//}
+
+				//unsigned char color[3] = { mm.L[mm.F[face_num].x],180,180 };
+				colors->InsertNextTupleValue(color);
+				colors->InsertNextTupleValue(color);
+				colors->InsertNextTupleValue(color);
+			}
+		}
+
+
+
+		//for (size_t face_num = 0; face_num < mm.F.size(); face_num++)
+		//{
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].x].x, mm.P[mm.F[face_num].x].y, mm.P[mm.F[face_num].x].z);
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].y].x, mm.P[mm.F[face_num].y].y, mm.P[mm.F[face_num].y].z);
+		//	points->InsertNextPoint(mm.P[mm.F[face_num].z].x, mm.P[mm.F[face_num].z].y, mm.P[mm.F[face_num].z].z);
+		//	vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+		//	polygon->GetPointIds()->SetNumberOfIds(3); //make a triple
+		//	polygon->GetPointIds()->SetId(0, face_num * 3);
+		//	polygon->GetPointIds()->SetId(1, face_num * 3 + 1);
+		//	polygon->GetPointIds()->SetId(2, face_num * 3 + 2);
+		//	polygons->InsertNextCell(polygon);
+
+		//	/*
+		//	198 226 255
+		//	159 121 238
+		//	0   139 139
+		//	238 118 0
+		//	32  178 170
+		//	255 236 139
+		//	0   255 255
+		//	112 128 144
+		//	84  255 159
+		//	255 255 0
+		//	178 34  34
+		//	148 0   211
+		//	238 0   0
+		//	238 213 210
+		//	99  184 255
+		//	144 238 144
+		//	232 232 232
+		//	139 0   139
+		//	0   0   139
+		//	139 0   0
+		//	238 64  20
+		//	255 165 0
+		//	34  139 34
+		//	255 215 0
+		//	127 255 212
+		//	255 246 143
+		//	105 105 105
+		//	110 139 61
+		//	0   206 209
+		//	139 69  19
+		//	159 121 238
+		//	255 250 250
+		//	*/
+
+		//	unsigned char color[3];
+		//	switch ((int)(mm.L[mm.F[face_num].x]))
+		//	{
+		//	case -1: {color[0] = 180; color[1] = 180; color[2] = 180; break; }
+		//	case 0: {color[0] = 198; color[1] = 226; color[2] = 255; break; }
+		//	case 1: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+		//	case 2: {color[0] = 0; color[1] = 139; color[2] = 139; break; }
+		//	case 3: {color[0] = 238; color[1] = 118; color[2] = 0; break; }
+		//	case 4: {color[0] = 32; color[1] = 178; color[2] = 170; break; }
+		//	case 5: {color[0] = 255; color[1] = 236; color[2] = 139; break; }
+		//	case 6: {color[0] = 0; color[1] = 255; color[2] = 255; break; }
+		//	case 7: {color[0] = 112; color[1] = 128; color[2] = 144; break; }
+		//	case 8: {color[0] = 84; color[1] = 255; color[2] = 159; break; }
+		//	case 9: {color[0] = 255; color[1] = 255; color[2] = 0; break; }
+		//	case 10: {color[0] = 178; color[1] = 34; color[2] = 34; break; }
+		//	case 11: {color[0] = 148; color[1] = 0; color[2] = 211; break; }
+		//	case 12: {color[0] = 238; color[1] = 0; color[2] = 0; break; }
+		//	case 13: {color[0] = 238; color[1] = 213; color[2] = 210; break; }
+		//	case 14: {color[0] = 99; color[1] = 184; color[2] = 255; break; }
+		//	case 15: {color[0] = 144; color[1] = 238; color[2] = 144; break; }
+		//	case 16: {color[0] = 232; color[1] = 232; color[2] = 232; break; }
+		//	case 17: {color[0] = 139; color[1] = 0; color[2] = 139; break; }
+		//	case 18: {color[0] = 0; color[1] = 0; color[2] = 139; break; }
+		//	case 19: {color[0] = 139; color[1] = 0; color[2] = 0; break; }
+		//	case 20: {color[0] = 238; color[1] = 64; color[2] = 20; break; }
+		//	case 21: {color[0] = 255; color[1] = 165; color[2] = 0; break; }
+		//	case 22: {color[0] = 34; color[1] = 139; color[2] = 34; break; }
+		//	case 23: {color[0] = 255; color[1] = 215; color[2] = 0; break; }
+		//	case 24: {color[0] = 127; color[1] = 255; color[2] = 212; break; }
+		//	case 25: {color[0] = 255; color[1] = 246; color[2] = 143; break; }
+		//	case 26: {color[0] = 105; color[1] = 105; color[2] = 105; break; }
+		//	case 27: {color[0] = 110; color[1] = 139; color[2] = 61; break; }
+		//	case 28: {color[0] = 0; color[1] = 206; color[2] = 209; break; }
+		//	case 29: {color[0] = 139; color[1] = 69; color[2] = 19; break; }
+		//	case 30: {color[0] = 159; color[1] = 121; color[2] = 238; break; }
+		//	case 31: {color[0] = 255; color[1] = 250; color[2] = 250; break; }
+		//	default:
+		//		break;
+		//	}
+		//	
+		//	//unsigned char color[3] = { mm.L[mm.F[face_num].x],180,180 };
+		//	colors->InsertNextTupleValue(color);
+		//	colors->InsertNextTupleValue(color);
+		//	colors->InsertNextTupleValue(color);
+
+		//}
+	}
+
+
+
+
+	vtkSmartPointer<vtkPolyData> triple = vtkSmartPointer<vtkPolyData>::New();
+	triple->SetPoints(points);
+	//cout << points->GetReferenceCount() << endl;
+	triple->SetPolys(polygons);
+
+	triple->GetPointData()->SetScalars(colors);
+
+
+	vtkSmartPointer<vtkPolyDataMapper> mapper =
+		vtkSmartPointer<vtkPolyDataMapper>::New();
+#if VTK_MAJOR_VERSION <= 5
+	mapper->SetInput(triple);
+#else
+	mapper->SetInputData(triple);
+#endif
+
+	vtkSmartPointer<vtkActor> texturedQuad =
+		vtkSmartPointer<vtkActor>::New();
+	texturedQuad->SetMapper(mapper);
+
+	// Visualize the textured plane
+	vtkSmartPointer<vtkRenderer> renderer =
+		vtkSmartPointer<vtkRenderer>::New();
+	renderer->AddActor(texturedQuad);
+
+
+
+
+
+	vtkSmartPointer<vtkNamedColors> colors2 =
+		vtkSmartPointer<vtkNamedColors>::New();
+	vtkSmartPointer<vtkPoints> points2 = vtkSmartPointer<vtkPoints>::New();
+
+	// Create three points. We will join (Origin and P0) with a red line and (Origin and P1) with a green line
+	//if (mm.arch.size()==3)
+	//{
+	//	double a, b, c, d;
+	//	orth::Point3d p1 = mm.arch[0], p2 = mm.arch[1], p3 = mm.arch[2];
+	//	a = (p2.y - p3.y) / (p2.x*p2.x-2*p1.x*p2.x-p3.x*p3.x+2*p1.x*p3.x);
+	//	b = -2 * p1.x*a;
+	//	c = p1.x*p1.x*a + p1.y;
+	//	cout << a << " -- " << b << " -- " << c << endl;
+	//	double p[3];
+	//	for (size_t x_index = -30; x_index < 30; x_index++)
+	//	{
+	//		p[0] = x_index;
+	//		p[1] = a * x_index*x_index + b*x_index + c;
+	//		p[2] = 0;
+	//		points2->InsertNextPoint(p);
+	//	}
+	//}
+
+	/*------------------------------------------------- arch ----------------------------------------------------*/
+
+	if (mm.arch.size())
+	{
+		double p[3];
+		for (size_t x_index = 0; x_index < mm.arch.size(); x_index++)
+		{
+			p[0] = mm.arch[x_index].x;
+			p[1] = mm.arch[x_index].y;
+			p[2] = mm.arch[x_index].z;
+			points2->InsertNextPoint(p);
+		}
+
+
+		vtkSmartPointer<vtkParametricSpline> spline =
+			vtkSmartPointer<vtkParametricSpline>::New();
+		spline->SetPoints(points2);
+
+		vtkSmartPointer<vtkParametricFunctionSource> functionSource =
+			vtkSmartPointer<vtkParametricFunctionSource>::New();
+		functionSource->SetParametricFunction(spline);
+		functionSource->Update();
+
+		vtkSmartPointer<vtkPolyDataMapper> mapper2 =
+			vtkSmartPointer<vtkPolyDataMapper>::New();
+		mapper2->SetInputConnection(functionSource->GetOutputPort());
+
+		vtkSmartPointer<vtkActor> actor2 =
+			vtkSmartPointer<vtkActor>::New();
+		actor2->SetMapper(mapper2);
+		actor2->GetProperty()->SetColor(colors2->GetColor3d("Green").GetData());
+		actor2->GetProperty()->SetLineWidth(3.0);
+		renderer->AddActor(actor2);
+	}
+
+
+	/*------------------------------------------------- feature points -----------------------------------------------------*/
+
+	if (V_query.size()>0)
+	{
+		vtkSmartPointer<vtkPoints> points3 =
+			vtkSmartPointer<vtkPoints>::New();
+
+		// Setup colors
+		vtkSmartPointer<vtkNamedColors> namedColors3 =
+			vtkSmartPointer<vtkNamedColors>::New();
+
+		vtkSmartPointer<vtkUnsignedCharArray> colors3 =
+			vtkSmartPointer<vtkUnsignedCharArray>::New();
+		colors3->SetNumberOfComponents(3);
+		colors3->SetName("Colors3");
+
+		for (int point_index = 0; point_index < V_query.size(); point_index++)
+		{
+			points3->InsertNextPoint(V_query[point_index].x, V_query[point_index].y, V_query[point_index].z);
+			unsigned char color3[3] = { 255,100,100 };
+			colors3->InsertNextTupleValue(color3);
+		}
+
+		for (int point_index = 0; point_index < V_target.size(); point_index++)
+		{
+			points3->InsertNextPoint(V_target[point_index].x, V_target[point_index].y, V_target[point_index].z);
+			unsigned char color3[3] = { 100,100,255 };
+			colors3->InsertNextTupleValue(color3);
+		}
+
+		vtkSmartPointer<vtkPolyData> pointsPolydata3 =
+			vtkSmartPointer<vtkPolyData>::New();
+
+		pointsPolydata3->SetPoints(points3);
+
+		vtkSmartPointer<vtkVertexGlyphFilter> vertexFilter3 =
+			vtkSmartPointer<vtkVertexGlyphFilter>::New();
+		vertexFilter3->SetInputData(pointsPolydata3);
+		vertexFilter3->Update();
+
+		vtkSmartPointer<vtkPolyData> polydata3 =
+			vtkSmartPointer<vtkPolyData>::New();
+		polydata3->ShallowCopy(vertexFilter3->GetOutput());
+
+		polydata3->GetPointData()->SetScalars(colors3);
+
+		vtkSmartPointer<vtkPolyDataMapper> mapper3 =
+			vtkSmartPointer<vtkPolyDataMapper>::New();
+		mapper3->SetInputData(polydata3);
+
+		vtkSmartPointer<vtkActor> actor3 =
+			vtkSmartPointer<vtkActor>::New();
+		actor3->SetMapper(mapper3);
+		actor3->GetProperty()->SetPointSize(10);
+
+		renderer->AddActor(actor3);
+	}
+
+	vtkSmartPointer<vtkAxesActor> axes =
+		vtkSmartPointer<vtkAxesActor>::New();
+	axes->SetShaftTypeToLine();
+	axes->SetTotalLength(20, 20, 20);
+	axes->SetNormalizedShaftLength(1.0, 1.0, 1.0);
+	axes->SetNormalizedTipLength(0.05, 0.05, 0.05);
+
+	renderer->AddActor(axes);
+
+	if (mm.division_plane.size()>0)
+	{
+		for (int plane_index = 0; plane_index < mm.division_plane.size(); plane_index++)
+		{
+			vtkSmartPointer<vtkNamedColors> colors3 =
+				vtkSmartPointer<vtkNamedColors>::New();
+
+			//// Set the background color.
+			//std::array<unsigned char, 4> bkg{ { 26, 51, 77, 255 } };
+			//colors3->SetColor("BkgColor", bkg.data());
+
+
+			// Create a plane
+			vtkSmartPointer<vtkPlaneSource> planeSource =
+				vtkSmartPointer<vtkPlaneSource>::New();
+			planeSource->SetCenter(mm.division_plane[plane_index].center.x, mm.division_plane[plane_index].center.y, mm.division_plane[plane_index].center.z);
+			planeSource->SetNormal(mm.division_plane[plane_index].A, mm.division_plane[plane_index].B, mm.division_plane[plane_index].C);
+			planeSource->SetResolution(20, 20);
+
+			planeSource->Update();
+
+			vtkPolyData* plane = planeSource->GetOutput();
+
+			// Create a mapper and actor
+			vtkSmartPointer<vtkPolyDataMapper> mapper3 =
+				vtkSmartPointer<vtkPolyDataMapper>::New();
+			mapper3->SetInputData(plane);
+
+			vtkSmartPointer<vtkActor> actor3 =
+				vtkSmartPointer<vtkActor>::New();
+			actor3->SetMapper(mapper3);
+			actor3->GetProperty()->SetColor(colors3->GetColor3d("White").GetData());
+
+			renderer->AddActor(actor3);
+		}
+
+	}
+
+	renderer->SetBackground(0.4392, 0.5020, 0.5647);
+	renderer->ResetCamera();
+
+	vtkSmartPointer<vtkRenderWindow> renderWindow =
+		vtkSmartPointer<vtkRenderWindow>::New();
+	renderWindow->AddRenderer(renderer);
+	renderWindow->SetSize(1000, 1000);
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+		vtkSmartPointer<vtkRenderWindowInteractor>::New();
+	renderWindowInteractor->SetRenderWindow(renderWindow);
+
+	renderWindow->Render();
+
+	renderWindowInteractor->Start();
+}
+
 void MeshRender(vector<float> &Vertices, vector<int32_t> &vertexIndicies)
 {
 	vtkSmartPointer<vtkPoints> points = vtkSmartPointer<vtkPoints>::New();
@@ -900,6 +1837,151 @@ int ColoredPoints2(vector<double> &Vertices, vector<double> &Vertices2, double s
 	return EXIT_SUCCESS;
 }
 
+int ColoredPoints2(vector<double> &Vertices, vector<double> &Vertices2, double size_, vector<orth::Plane> &planes)
+{
+	vtkSmartPointer<vtkPoints> points =
+		vtkSmartPointer<vtkPoints>::New();
+
+	// Setup colors
+	vtkSmartPointer<vtkNamedColors> namedColors =
+		vtkSmartPointer<vtkNamedColors>::New();
+
+	vtkSmartPointer<vtkUnsignedCharArray> colors =
+		vtkSmartPointer<vtkUnsignedCharArray>::New();
+	colors->SetNumberOfComponents(3);
+	colors->SetName("Colors");
+
+	//double min_dis = Vertices[1];
+	//double max_dis = Vertices[1];
+	//for (int point_index = 1; point_index < Vertices.size() / 3; point_index++)
+	//{
+	//	if (Vertices[3 * point_index + 1]>max_dis)
+	//	{
+	//		max_dis = Vertices[3 * point_index + 1];
+	//	}
+	//	if (Vertices[3 * point_index + 1]<min_dis)
+	//	{
+	//		min_dis = Vertices[3 * point_index + 1];
+	//	}
+	//}
+	//double l = max_dis - min_dis;
+	for (int point_index = 0; point_index < Vertices.size() / 3; point_index++)
+	{
+		points->InsertNextPoint(Vertices[3 * point_index + 0], Vertices[3 * point_index + 1], Vertices[3 * point_index + 2]);
+		unsigned char color[3] = { 10,255,127 };
+		colors->InsertNextTupleValue(color);
+	}
+	for (int point_index = 0; point_index < Vertices2.size() / 3; point_index++)
+	{
+		points->InsertNextPoint(Vertices2[3 * point_index + 0], Vertices2[3 * point_index + 1], Vertices2[3 * point_index + 2]);
+		unsigned char color[3] = { 255.0 ,10,127 };
+		colors->InsertNextTupleValue(color);
+	}
+
+	vtkSmartPointer<vtkPolyData> pointsPolydata =
+		vtkSmartPointer<vtkPolyData>::New();
+
+	pointsPolydata->SetPoints(points);
+
+	vtkSmartPointer<vtkVertexGlyphFilter> vertexFilter =
+		vtkSmartPointer<vtkVertexGlyphFilter>::New();
+	vertexFilter->SetInputData(pointsPolydata);
+	vertexFilter->Update();
+
+	vtkSmartPointer<vtkPolyData> polydata =
+		vtkSmartPointer<vtkPolyData>::New();
+	polydata->ShallowCopy(vertexFilter->GetOutput());
+
+	polydata->GetPointData()->SetScalars(colors);
+
+	vtkSmartPointer<vtkAxesActor> axes =
+		vtkSmartPointer<vtkAxesActor>::New();
+	axes->SetShaftTypeToLine();
+	axes->SetTotalLength(20, 20, 20);
+	axes->SetNormalizedShaftLength(1.0, 1.0, 1.0);
+	axes->SetNormalizedTipLength(0.05, 0.05, 0.05);
+
+	// Visualization
+
+	vtkSmartPointer<vtkPolyDataMapper> mapper =
+		vtkSmartPointer<vtkPolyDataMapper>::New();
+	mapper->SetInputData(polydata);
+
+	vtkSmartPointer<vtkActor> actor =
+		vtkSmartPointer<vtkActor>::New();
+	actor->SetMapper(mapper);
+	actor->GetProperty()->SetPointSize(size_);
+
+	vtkSmartPointer<vtkRenderer> renderer =
+		vtkSmartPointer<vtkRenderer>::New();
+
+	/*----------------------------- camera 1 --------------------------*/
+	vtkSmartPointer<vtkCamera> camera1 =
+		vtkSmartPointer<vtkCamera>::New();
+	camera1->SetPosition(300, 50, -300);
+	camera1->SetFocalPoint(50, 50, -10);
+	renderer->SetActiveCamera(camera1);
+
+	vtkSmartPointer<vtkRenderWindow> renderWindow =
+		vtkSmartPointer<vtkRenderWindow>::New();
+	renderWindow->AddRenderer(renderer);
+	renderWindow->SetSize(1000, 1000);
+	vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+		vtkSmartPointer<vtkRenderWindowInteractor>::New();
+
+	renderWindowInteractor->SetRenderWindow(renderWindow);
+
+	vtkSmartPointer<vtkAreaPicker> areaPicker =
+		vtkSmartPointer<vtkAreaPicker>::New();
+	renderWindowInteractor->SetPicker(areaPicker);
+
+	if (planes.size()>0)
+	{
+		for (int plane_index = 0; plane_index < planes.size(); plane_index++)
+		{
+			vtkSmartPointer<vtkNamedColors> colors3 =
+				vtkSmartPointer<vtkNamedColors>::New();
+
+			//// Set the background color.
+			//std::array<unsigned char, 4> bkg{ { 26, 51, 77, 255 } };
+			//colors3->SetColor("BkgColor", bkg.data());
+
+			// Create a plane
+			vtkSmartPointer<vtkPlaneSource> planeSource =
+				vtkSmartPointer<vtkPlaneSource>::New();
+			planeSource->SetCenter(planes[plane_index].center.x, planes[plane_index].center.y, planes[plane_index].center.z);
+			planeSource->SetNormal(planes[plane_index].A, planes[plane_index].B, planes[plane_index].C);
+			planeSource->SetResolution(20, 20);
+
+			planeSource->Update();
+
+			vtkPolyData* plane = planeSource->GetOutput();
+
+			// Create a mapper and actor
+			vtkSmartPointer<vtkPolyDataMapper> mapper3 =
+				vtkSmartPointer<vtkPolyDataMapper>::New();
+			mapper3->SetInputData(plane);
+
+			vtkSmartPointer<vtkActor> actor3 =
+				vtkSmartPointer<vtkActor>::New();
+			actor3->SetMapper(mapper3);
+			actor3->GetProperty()->SetColor(colors3->GetColor3d("Yellow").GetData());
+
+			renderer->AddActor(actor3);
+		}
+
+	}
+
+	renderer->AddActor(axes);
+	renderer->AddActor(actor);
+	renderer->SetBackground(namedColors->GetColor3d("White").GetData());
+	renderWindow->Render();
+
+	renderWindowInteractor->Start();
+
+	return EXIT_SUCCESS;
+}
+
 int ColoredPoints3(vector<double> &Vertices, vector<double> &Vertices2, vector<double> &Vertices3, double size_)
 {
 	vtkSmartPointer<vtkPoints> points =
@@ -1236,10 +2318,13 @@ void ColoredImage3DDistribution(cv::Mat &image_in, double size_)
 
 		for (int u = 0; u < image_in.cols; u++)
 		{
+			if (image_in.at<double>(v, u) != 0)
+			{
+				Vertices.push_back((float)u);
+				Vertices.push_back((float)v);
+				Vertices.push_back(image_in.at<double>(v, u));
+			}
 
-			Vertices.push_back((float)u);
-			Vertices.push_back((float)v);
-			Vertices.push_back(image_in.at<double>(v, u) * 10);
 		}
 	}
 
@@ -1507,7 +2592,7 @@ int ColoredTSDF(vector<float> &Vertices, int resolution_x, int resolution_y, int
 		int z = (point_index % (resolution_y * resolution_z)) % resolution_z;
 		double cc = Vertices[x*resolution_y*resolution_z + y*resolution_z + z];
 
-		if (cc != 0)
+		if ((cc != 0) && (cc != -20) && (abs(cc) < 0.3))
 		{
 			points->InsertNextPoint(x, y, z);
 			unsigned char r = (-255 * cc) > 0 ? (-255 * cc) : 0;

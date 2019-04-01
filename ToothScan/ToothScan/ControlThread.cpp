@@ -1,14 +1,14 @@
 #include "ControlThread.h"
 
-extern int DataSize = 9;
+extern int DataSize = SCAN_ROTATE_POS_CNT2 - 1;
 //extern int BufferSize = 5;
-extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2-1) * 33 * 1280 * 1024 * sizeof(unsigned char));
+extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2-1) * 34 * 1280 * 1024 * sizeof(unsigned char));
 
 extern cv::Mat rt_r = cv::Mat::eye(4, 4, CV_64FC1);
 extern std::vector<cv::Mat> scanner_rt(9, rt_r);
 
-extern float c_addscan_x = 0.0;
-extern float c_addscan_y = 0.0;
+extern float c_scan_x = 0.0;
+extern float c_scan_y = 0.0;
 
 extern QSemaphore freeSpace(DataSize);
 extern QSemaphore usedSpace(0);
@@ -27,11 +27,11 @@ ControlThread::ControlThread(QObject *parent)
 	WriteByte(OpenDLP, 5);
 	WriteByte(OpenDLP, 5);
 	WriteByte(OpenDLP, 5);
-	cout << "等待3秒。。。 " << endl;
+	cout << "等待1秒。。。 " << endl;
 	_sleep(1000);
 
-	l_scan_x = 0;
-	l_scan_y = 0;
+	l_scan_x = 0.0;
+	l_scan_y = 0.0;
 
 	//scan_times = 0;
 }
@@ -40,6 +40,7 @@ ControlThread::~ControlThread()
 {
 }
 
+///*****************************2、串口初始化函数*******************************************/
 void ControlThread::OpenOrCloseSerialPort()
 {
 	if (serial_port_open)
@@ -87,7 +88,7 @@ void ControlThread::InitParameters()
 	//float start_xy = sqrt(pow(-camera_center.at<double>(0) - plane_center.at<double>(0), 2) + pow(-camera_center.at<double>(1) - plane_center.at<double>(1), 2));
 	cout << rt_r << endl;
 
-	rt_r = rt_r.inv();
+	//rt_r = rt_r.inv();
 
 	Mat pre_move = Mat::eye(4, 4, CV_64FC1);
 	pre_move.at<double>(0, 0) = 1; pre_move.at<double>(0, 1) = 0; pre_move.at<double>(0, 2) = 0; pre_move.at<double>(0, 3) = -50;
@@ -533,31 +534,29 @@ int ControlThread::ConfigureExposure(INodeMap & nodeMap)
 	return result;
 }
 
-///*****************************2、串口初始化函数*******************************************/
-
-
 /*****************************3、下位机动作函数*******************************************/
 //3.1步进电机旋转一个角度 (1:x 2:y) //这里写一个函数，首先发送旋转指令，然后在函数里用延时等待旋转结束，然后return
-bool ControlThread::SMX_RotOneDeg(double deg)
+bool ControlThread::SMY_RotOneDeg(double deg)
 {
-	byte RXBuff[128] = {};
+	byte RYBuff[128] = {};
 	//下发命令
-	uint deg_x = abs(deg) * 266.6666;
+	uint deg_y = abs(deg) * 266.6666;
 	if (deg > 0)
 	{
-		SMXRotOneDegPos[6] = deg_x / 65536;
-		SMXRotOneDegPos[7] = (deg_x - (deg_x / 65536) * 65536) / 256;
-		SMXRotOneDegPos[8] = deg_x % 256;
+		SMYRotOneDegNeg[6] = deg_y / 65536;
+		SMYRotOneDegNeg[7] = (deg_y - (deg_y / 65536) * 65536) / 256;
+		SMYRotOneDegNeg[8] = deg_y % 256;
 		//cout << "电机X旋转..." << deg << endl;
-		WriteByte(SMXRotOneDegPos, 9);//转动角度
+		WriteByte(SMYRotOneDegNeg, 9);//转动角度
 	}
 	else if (deg < 0)
 	{
-		SMXRotOneDegNeg[6] = deg_x / 65536;
-		SMXRotOneDegNeg[7] = (deg_x - (deg_x / 65536) * 65536) / 256;
-		SMXRotOneDegNeg[8] = deg_x % 256;
+		SMYRotOneDegPos[6] = deg_y / 65536;
+		SMYRotOneDegPos[7] = (deg_y - (deg_y / 65536) * 65536) / 256;
+		SMYRotOneDegPos[8] = deg_y % 256;
 		//cout << "电机X旋转..." << deg << endl;
-		WriteByte(SMXRotOneDegNeg, 9);//转动角度
+		WriteByte(SMYRotOneDegPos, 9);//转动角度
+		
 	}
 
 	else
@@ -566,8 +565,8 @@ bool ControlThread::SMX_RotOneDeg(double deg)
 		return 1;
 	}
 	_sleep(100);
-	int BufferNum = ReadData(RXBuff);
-	cout << RXBuff << endl;
+	int BufferNum = ReadData(RYBuff);
+	cout << RYBuff << endl;
 	//_sleep(600);
 	////接收命令
 	//for (int k = 0; k < 100; k++)
@@ -604,26 +603,26 @@ bool ControlThread::SMX_RotOneDeg(double deg)
 	//}
 	return 1;
 }
-bool ControlThread::SMY_RotOneDeg(double deg)
+bool ControlThread::SMX_RotOneDeg(double deg)
 {
 	byte RXBuff[128] = {};
 	//下发命令
-	uint deg_y = abs(deg) * 355.5555;
+	uint deg_x = abs(deg) * 355.5555;
 	if (deg > 0)
 	{
-		SMYRotOneDegPos[6] = deg_y / 65536;
-		SMYRotOneDegPos[7] = (deg_y - (deg_y / 65536) * 65536) / 256;
-		SMYRotOneDegPos[8] = deg_y % 256;
+		SMXRotOneDegPos[6] = deg_x / 65536;
+		SMXRotOneDegPos[7] = (deg_x - (deg_x / 65536) * 65536) / 256;
+		SMXRotOneDegPos[8] = deg_x % 256;
 		//cout << "电机Y旋转..." << deg << endl;
-		WriteByte(SMYRotOneDegPos, 9);
+		WriteByte(SMXRotOneDegPos, 9);
 	}
 	else if (deg < 0)
 	{
-		SMYRotOneDegNeg[6] = deg_y / 65536;
-		SMYRotOneDegNeg[7] = (deg_y - (deg_y / 65536) * 65536) / 256;
-		SMYRotOneDegNeg[8] = deg_y % 256;
+		SMXRotOneDegNeg[6] = deg_x / 65536;
+		SMXRotOneDegNeg[7] = (deg_x - (deg_x / 65536) * 65536) / 256;
+		SMXRotOneDegNeg[8] = deg_x % 256;
 		//cout << "电机Y旋转..." << deg << endl;
-		WriteByte(SMYRotOneDegNeg, 9);
+		WriteByte(SMXRotOneDegNeg, 9);
 	}
 	else
 	{
@@ -719,7 +718,6 @@ void ControlThread::DLP_ProjectOneSet_Cali(int caliCnt, vector<cv::Mat> &img_L_s
 	//4、相机初始化及触发设置
 	ConfigureTrigger(nodeMap_L, pCam_L);
 	ConfigureTrigger(nodeMap_R, pCam_R);
-
 	//cout << "start acquisition !!" << endl;
 	pCam_L->BeginAcquisition();
 	pCam_R->BeginAcquisition();
@@ -1044,52 +1042,47 @@ void ControlThread::controlNormalScan()
 	int bufferBias = 0;
 	////1、开启及配置DLP
 	SM_Enable();//电机使能
-
+	clock_t time1, time2, time3, time4, time5, time6;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
 	{
-		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
-		{
-			l_scan_x = 0;
-			l_scan_y = 0;
-			//3、关闭DLP
-			SM_Disable();//电机失能
-						 //cout << "关闭DLP。。 " << endl;
-						 //WriteByte(CloseDLP, 5);
-			continue;
-		}
-		freeSpace.acquire();
+		double d_scan_x = 0.0;
+		double d_scan_y = 0.0;
 		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
 		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
 
-		double d_scan_x = (c_scan_x - l_scan_x);
-		double d_scan_y = (c_scan_y - l_scan_y);
+		d_scan_x = (c_scan_x - l_scan_x);
+		d_scan_y = (c_scan_y - l_scan_y);
 		//double d_scan_z = (c_scan_z - l_scan_z);
 		l_scan_x = c_scan_x;
 		l_scan_y = c_scan_y;
+		//2、电机旋转
+		time1 = clock();
+		SMX_RotOneDeg(d_scan_x);
+		_sleep(100);
+		SMY_RotOneDeg(d_scan_y);
+		_sleep(100);
+		time2 = clock();
 
+		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
+		{
+			//3、关闭DLP
+			SM_Disable();//电机失能
+			continue;
+		}
+		freeSpace.acquire();
 		//cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 		//l_scan_z = c_scan_z;
-		if (c_scan_y<-120 || c_scan_y>120)
+		if (c_scan_x<-120 || c_scan_x>120)
 		{
 			return;
 		}
 
 		vector<cv::Mat> imgL_set, imgR_set;
-		//cout << "******************************************************************" << endl;
-		//cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
-
 		///**************************************扫描过程*****************************************/
-		//2、电机旋转
-		SMX_RotOneDeg(d_scan_x);
-		_sleep(100);
-		SMY_RotOneDeg(d_scan_y);
-		_sleep(100);
-
-		
 		//开始投影多组光栅
+		time3 = clock();
 		DLP_ProjectOneSet_Scan(SM_SCAN_BRIGHTNESS[scan_index], imgL_set, imgR_set);
-		
-		//存进总数组
+		time4 = clock();
 		//cout << "开始存图片。。 " << endl;
 
 		vector<cv::Mat> images_l, images_r;
@@ -1099,17 +1092,24 @@ void ControlThread::controlNormalScan()
 		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 		int imageBias = 0;
+		time5 = clock();
 		for (int image_index = 0; image_index < 19; image_index++)
 		{
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			
 			ostringstream filename_L;
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
+			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
 			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			if (image_index == 0)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
 
 			if (image_index>0 && image_index<16)
 			{
@@ -1117,21 +1117,26 @@ void ControlThread::controlNormalScan()
 				//images_r.push_back(imgR_set[image_index]);
 				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
 				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
-				memcpy(totalNormalScanImageBuffer + bufferBias * 33 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;
-				memcpy(totalNormalScanImageBuffer + bufferBias * 33 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;
 				
 			}
 			else if (image_index>=16)
 			{
-				memcpy(totalNormalScanImageBuffer + bufferBias * 33 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;
 			}
 		}
+		time6 = clock();
 		bufferBias++;
 		usedSpace.release();
 		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+
+		cout << "The rotation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The projection time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The memcpy time is " << (double)(time6 - time5) / CLOCKS_PER_SEC << " s;" << endl;
 	}
 
 	//3、关闭DLP
@@ -1156,7 +1161,7 @@ void ControlThread::controlCalibrationScan()
 
 		cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 		//l_scan_z = c_scan_z;
-		if (c_scan_y<-120 || c_scan_y>120)
+		if (c_scan_x<-120 || c_scan_x>120)
 		{
 			return;
 		}
@@ -1186,12 +1191,11 @@ void ControlThread::controlCalibrationScan()
 		DLP_ProjectOneSet_Cali(SM_CALI_BRIGHTNESS2[scan_index], imgL_set, imgR_set);
 		//存进总数组
 
-		cout << "关闭DLP。。 " << endl;
 		cout << "开始存图片。。 " << endl;
 		vector<cv::Mat> group;
 		for (size_t j = 0; j < 31; j++)
 		{
-			cv::flip(imgL_set[j], imgL_set[j], -1);
+			
 			group.push_back(imgL_set[j]);
 			//if (j != 0)
 			//{
@@ -1203,6 +1207,7 @@ void ControlThread::controlCalibrationScan()
 		}
 		for (size_t j = 0; j < 31; j++)
 		{
+			cv::flip(imgR_set[j], imgR_set[j], -1);
 			group.push_back(imgR_set[j]);
 			//if (j != 0)
 			//{
@@ -1244,7 +1249,7 @@ void ControlThread::controlGlobalCaliScan()
 
 		cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 		//l_scan_z = c_scan_z;
-		if (c_scan_y<-120 || c_scan_y>120)
+		if (c_scan_x<-120 || c_scan_x>120)
 		{
 			return;
 		}
@@ -1274,10 +1279,9 @@ void ControlThread::controlGlobalCaliScan()
 		DLP_ProjectOneSet_Global(SM_CALI_BRIGHTNESS2[scan_index], imgL_set, imgR_set);
 		//存进总数组
 
-		cout << "关闭DLP。。 " << endl;
 		cout << "开始存图片。。 " << endl;
 
-		cv::flip(imgL_set[0], imgL_set[0], -1);
+		cv::flip(imgR_set[0], imgR_set[0], -1);
 		image_groups_left.push_back(imgL_set[0]);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
@@ -1302,7 +1306,7 @@ void ControlThread::controlGlobalCaliScan()
 
 	vector<double> mask_points;
 	rs->PlaneRTCalculate(image_groups_left, image_groups_right, "D:/dentalimage/dentalimage2/external_parameter.yml", mask_points);
-	ColoredPoints(mask_points, 2);
+	//ColoredPoints(mask_points, 2);
 	InitParameters();
 }
 
@@ -1313,8 +1317,8 @@ void ControlThread::compensationControlScan()
 	double d_scan_x = (c_scan_x - l_scan_x);
 	double d_scan_y = (c_scan_y - l_scan_y);
 	//double d_scan_z = (c_scan_z - l_scan_z);
-	l_scan_x = c_scan_x;
-	l_scan_y = c_scan_y;
+	l_scan_x = 0;
+	l_scan_y = 0;
 
 	cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 
@@ -1342,15 +1346,21 @@ void ControlThread::compensationControlScan()
 	int imageBias = 0;
 	for (int image_index = 0; image_index < 19; image_index++)
 	{
-		cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+		
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "L" << ".png";
 		cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
-
+		cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 		ostringstream filename_R;
 		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "R" << ".png";
 		cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+
+		if (image_index == 0)
+		{
+			memcpy(totalNormalScanImageBuffer + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+			imageBias++;
+		}
 
 		if (image_index>0 && image_index<16)
 		{
@@ -1370,5 +1380,14 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 	}
+	SMX_RotOneDeg(-d_scan_x);
+	_sleep(100);
+	SMY_RotOneDeg(-d_scan_y);
+	_sleep(100);
+	//3、关闭DLP
+	SM_Disable();//电机失能
+				 //WriteByte(CloseDLP, 5);
+	cout << "关闭DLP。。 " << endl;
 	usedSpace.release();
 }
+

@@ -95,9 +95,6 @@
     <ClCompile Include="ScanTipWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VTK_render.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_glWidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -107,10 +104,25 @@
     <ClCompile Include="glwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3DScan.cpp">
+    <ClCompile Include="basetype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="basetype.cpp">
+    <ClCompile Include="AxisModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TeethModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trackball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VTK_render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,16 +177,28 @@
     <ClInclude Include="GeneratedFiles\ui_ScanTipWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="VTk_render.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="octree.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="features.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\3DScan.h">
+    <ClInclude Include="AxisModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TeethModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trackball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VTK_render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

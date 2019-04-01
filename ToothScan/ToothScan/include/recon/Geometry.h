@@ -406,7 +406,7 @@ BufferedReadWriteFile::BufferedReadWriteFile(char* fileName, int bufferSize)
 	{
 		strcpy(_fileName, "PR_XXXXXX");
 #ifdef _WIN32
-		//_mktemp(_fileName);
+		_mktemp(_fileName);
 		_fp = fopen(_fileName, "w+b");
 #else // !_WIN32
 		_fp = fdopen(mkstemp(_fileName), "w+b");

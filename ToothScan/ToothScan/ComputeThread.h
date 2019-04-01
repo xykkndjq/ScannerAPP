@@ -13,12 +13,16 @@
 #include "octree.hpp"
 #include "ConTrolThread.h"
 #include "3DScan_cuda.h"
-//#include "GPA.h"
-//#include "PoissonRecon.h"
+#include "GPA.h"
+#include <pcl/io/ply_io.h>
+#include <Windows.h>
+#include <time.h>
+
 
 #define SCAN_ROTATE_POS_CNT2 10    //定义扫描过程的位置数 11
 #define IMG_ROW 1024
 #define IMG_COL 1280
+
 class ComputeThread : public QObject
 {
 	Q_OBJECT
@@ -26,6 +30,8 @@ class ComputeThread : public QObject
 public:
 	ComputeThread(QObject *parent = 0);
 	~ComputeThread();
+
+	GPA gpa;
 
 	int oldJawIndex = 0;
 	vector<orth::MeshModel> all_mModel;//全颌
@@ -38,6 +44,8 @@ public:
 	vector<vector<double>> lower_points_cloud_globle2;
 	vector<double> lower_points_cloud_end2;
 	
+	cv::Mat camera_image;//相机上图像
+
 	/*vector<vector<double>> all_points_cloud_globle;
 	vector<vector<double>> all_points_cloud_globle2;
 	vector<vector<uint32_t>> all_vertexIndicies;
@@ -69,28 +77,36 @@ public:
 	void InitParameters();
 	void setFlage(bool flag = true);  //设置标志位，何时关闭子线程
 
+	int  argc;
+	char *argv[7];
+	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel* mm);
+	Dllfun poissonRecon;
+	HINSTANCE hdll;
+	
 public:
 	inline double  ToRad(const double &a) { return M_PI*a / 180.0; }
-	void delaunayAlgorithm(const cv::Mat &point_cloud, const cv::Mat &normal_cloud, vector<cv::Mat> &image_rgb, float color_red_parameter, float color_green_parameter, float color_blue_parameter, vector<double>& points,vector<float>& normal, vector<double>& points2,  vector<unsigned char>& points_color, vector<uint32_t> & faces);
 	bool isTriangle(const cv::Vec6f &triangle, const cv::Mat &point_cloud);
 	float DistanceCalculate(float x1, float y1, float z1, float x2, float y2, float z2);
 	void pointcloudrotation(orth::PointCloudD &pointcloud, orth::PointNormal &PointNormal, cv::Mat &RT);
-	//void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel);
+	void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel);
 	void pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT);
 	double MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2);
 	bool pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt);
 	void NormalCalculate(vector<double> &pointcloud, vector<float> &pointnormal, cv::Mat &rt);
-	void Motor2Rot(const float yaw, const float pitch, cv::Mat &Rot);
-	void chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb,int chooseJawIndex);
-	void chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, int chooseJawIndex);
-	//void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
+	void Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot);
+	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index);
+	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex);
+	void writefile(orth::MeshModel totalMeshModel, string name);
+	void writefile(vector<double> cloud, string name);
 
 signals:
 	void showModeltoGlSingel(int refreshIndex);
+	void cameraShowSignal();
 	void computeFinish();
 public slots:
 	void controlComputeScan(int chooseJawIndex);
 	void compensationComputeScan(int chooseJawIndex);
+	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 };
 
 #endif // ComputeThread_H
