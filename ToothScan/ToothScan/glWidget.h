@@ -235,7 +235,7 @@ public:
 	void drawGradient();
 	void drawAXIS();
 	QPointF pixelPosToViewPos(const QPointF& p);
-	void GetRotateMotorRot(float &xrot, float &yrot, TrackBall & v_TrackBall);
+	void GetRotateMotorRot(float &xrot, float &yrot);
 private:
 	bool m_bSelectRegion;
 	bool m_bSelectAddRegion;
@@ -249,8 +249,6 @@ private:
 
 	float motor_rot_x;
 	float motor_rot_y;
-	TrackBall m_trackBallTest;
-	float m_xMinRotLim, m_yMinRotLim, m_xMaxRotLim, m_yMaxRotLim;
 };
 
 #endif
