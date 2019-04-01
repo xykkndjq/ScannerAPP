@@ -193,20 +193,24 @@ GLWidget::GLWidget(QWidget *parent)
 	m_bgGroundModelPos(0, 0, 0),
 	m_bkGroundShow(false),
 	m_bkGroundColor(0.65f, 0.79f, 1.0f, 0.7f),
+	m_xMinRotLim(-21.7f),
+	m_yMinRotLim(-180.0f),
+	m_xMaxRotLim(158.3f),
+	m_yMaxRotLim(180.0f),
 	program(0)
 {
 	SCR_WIDTH = this->frameGeometry().width();
 	SCR_HEIGHT = this->frameGeometry().height();
 
-	//orth::ModelRead mr("./0016.ply", mm);
-	//TeethSegmentRun("./0016.txt");
+	orth::ModelRead mr("./0016.ply", mm);
+	TeethSegmentRun("./0016.txt");
 
 	model_Mat = cv::Mat::eye(4, 4, CV_32FC1);
 	view_Mat = cv::Mat::eye(4, 4, CV_32FC1);
 	m_trackBall = TrackBall(0.05f, QVector3D(0, 1, 0), TrackBall::Sphere);
-
-	motor_rot_x=0;
-	motor_rot_y=0;
+	m_trackBallTest = m_trackBall;
+	motor_rot_x = 0;
+	motor_rot_y = 0;
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -393,46 +397,9 @@ void GLWidget::paintGL()
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
 	m_view.setToIdentity();
 	m_view.translate(0.0f, 0.0f, -230.0f);
+	m_view.rotate(m_trackBall.rotation());
 	m_model.setToIdentity();
-
-	/*---------------------------------------------------------------------------------------*/
-	QVector3D camera_pos2 = QVector3D(0.0f, 0.0f, 0.0f);
-#define ToDeg(x) x*57.295780490442968321226628812406
-
-	//任何旋转事件 改变 view矩阵后 计算camera位置
-	QVector3D zaxis(0.0f, 0.0f, 1.0f);
-	QMatrix4x4 view_camera; 
-	view_camera.setToIdentity();
-	view_camera.rotate(m_trackBall.rotation());
-	QMatrix4x4 viewinv = view_camera.inverted(0);//view.inverted(0);
-	camera_pos2 = viewinv*zaxis;
-	//cout << "###### ---- " << camera_pos2[0] << ", " << camera_pos2[1] << ", " << camera_pos2[2] << endl;
-
-	//计算旋转角度
-	double c_x = camera_pos2[0];
-	double c_y = camera_pos2[1];
-	double c_z = camera_pos2[2];
-	//double c_xy = sqrt(c_x*c_x + c_z*c_z);
-	double ax = ToDeg(atan2(c_x, c_z));
-	double ay = ToDeg(atan2(c_y, c_z));
-	//cout << " ax = " << ax << " ay = " << ay << endl;
-	float yaw = -ax;
-	float pitch = ay;
-
-	if (pitch>-20&&pitch<160)
-	{
-		motor_rot_x = ay;
-		motor_rot_y = -ax;
-		
-		m_view.rotate(m_trackBall.rotation());	
-		m_model.rotate(m_trackBall.rotation());
-	}
-
-
-	//cout << " xrot = " << xrot << " yrot = " << yrot << endl;
-	/*---------------------------------------------------------------------------------------*/
-
-
+	m_model.rotate(m_trackBall.rotation());
 	// 	m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
 	// 	m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
 	// 	m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
@@ -694,7 +661,15 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 	else {
 		lastPos = event->pos();
 		QQuaternion trans;
-		m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
+		float xRot = 0, yRot = 0;
+		m_trackBallTest.push(pixelPosToViewPos(event->pos()), trans);
+		GetRotateMotorRot(xRot, yRot,m_trackBallTest);
+		//if (abs(xRot - m_xRotLim) >= 0 || abs(yRot - m_yRotLim) >= 0)
+		if (xRot > m_xMaxRotLim || xRot<m_xMinRotLim)
+			return;
+		
+		//m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
+		//m_trackBallTest = m_trackBall;
 	}
 }
 
@@ -737,8 +712,19 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 			translateBy(dx, dy, 0);
 		}
 		if (event->buttons() & Qt::LeftButton) {
+			float xRot = 0, yRot = 0;
+			TrackBall trackBallTest;
+			trackBallTest = m_trackBallTest;
 			QQuaternion trans;
-			m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
+			trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
+			GetRotateMotorRot(xRot,yRot, trackBallTest);
+			if (xRot> m_xMaxRotLim || xRot < m_xMinRotLim)
+				return;
+			
+			//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
+			//m_trackBallTest = m_trackBall;
+			m_trackBallTest = trackBallTest;
+			m_trackBall = m_trackBallTest;
 // 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 // 			for (; iter != m_ModelsVt.end(); iter++) {
 // 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
@@ -751,7 +737,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		}
 		else {
 			QQuaternion trans;
-			m_trackBall.release(pixelPosToViewPos(event->pos()), trans);
+			m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
 		}
 		lastPos = event->pos();
 	}
@@ -794,8 +780,15 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 			SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), this);
 	}
 	if (event->button() == Qt::LeftButton) {
+		float xRot = 0, yRot = 0;
+		TrackBall trackBallTest;
+		trackBallTest = m_trackBallTest;
 		QQuaternion trans;
-		m_trackBall.release(pixelPosToViewPos(event->pos()), trans);
+		trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
+		GetRotateMotorRot(xRot, yRot, trackBallTest);
+		if (xRot > m_xMaxRotLim || xRot  < m_xMinRotLim )
+			return;
+		m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
 	}
 }
 
@@ -1395,7 +1388,7 @@ void GLWidget::GetMotorRot(float &xrot, float &yrot)
 	//view_Mat = v.t();
 // 	xrot = xRot / 16.0f;
 // 	yrot = yRot / 16.0f;
-	return GetRotateMotorRot(xrot,yrot);
+	return GetRotateMotorRot(xrot,yrot,m_trackBall);
 
 
 }
@@ -1554,8 +1547,36 @@ void GLWidget::DrawAxisObject() {
 
 /*----------------------------------- new rot x rot y --------------------------------*/
 //全局
-void GLWidget::GetRotateMotorRot(float &xrot, float &yrot) {
-	xrot = motor_rot_x;
-	yrot = motor_rot_y;
+void GLWidget::GetRotateMotorRot(float &xrot, float &yrot, TrackBall & v_TrackBall) {
+	QVector3D camera_pos2 = QVector3D(0.0f, 0.0f, 0.0f);
+#define ToDeg(x) x*57.295780490442968321226628812406
+
+	//任何旋转事件 改变 view矩阵后 计算camera位置
+	QVector3D zaxis(0.0f, 0.0f, 1.0f);
+	//QMatrix4x4 viewinv = view.inverted(0);
+	QMatrix4x4 view;
+	view.setToIdentity();
+	view.translate(0.0f, 0.0f, -230.0f);
+	view.rotate(v_TrackBall.rotation());
+
+
+	QMatrix4x4 viewinv = view.inverted(0);//view.inverted(0);
+	camera_pos2 = viewinv*zaxis;
+	//cout << "###### ---- " << camera_pos2[0] << ", " << camera_pos2[1] << ", " << camera_pos2[2] << endl;
+
+	//计算旋转角度
+	double c_x = camera_pos2[0];
+	double c_y = camera_pos2[1];
+	double c_z = camera_pos2[2];
+	double c_xy = sqrt(c_x*c_x + c_z*c_z);
+	double ax = ToDeg(atan2(c_x, c_z));
+	double ay = ToDeg(atan2(c_y, c_xy));
+	//cout << " ax = " << ax << " ay = " << ay << endl;
+	float yaw = -ax;
+	float pitch = ay;
+	xrot = pitch;
+	yrot = yaw;
+	//cout << " yaw = " << yaw << " pitch = " << pitch << endl;
 }		
-/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------------------*/
