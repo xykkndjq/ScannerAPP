@@ -467,7 +467,6 @@ bool TabMainGUI::judgePatientSaveFlag()
 		QByteArray orderPN = ToChineseStr(orderPatientName);
 		std::string filePath = "./data/" + orderNumber.toStdString() + "/" + orderPN.data() + ".OI";
 		cv::FileStorage fwrite(filePath.c_str(), cv::FileStorage::WRITE);
-
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
 			<< "Patient Name" << orderPN.data()
@@ -1216,7 +1215,6 @@ void TabMainGUI::ScanDataPackagePress()
 	else if (splitModelFlag == true)//分模
 	{
 		scanObj.insert("caseType", 2);
-
 	}
 	else if(doMoulageFlag == true)//印模
 	{
@@ -1230,6 +1228,20 @@ void TabMainGUI::ScanDataPackagePress()
 
 void TabMainGUI::openFileDialogSlot()
 {
-	//QFileDialog *fileDialog = new QFileDialog(this);
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"),".",tr("Text Files(*.OI)"));
+	if (!path.isEmpty()) 
+	{
+		QFile file(path);
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+		{
+			QMessageBox::warning(this, QStringLiteral("读取文件"),
+				QStringLiteral("不能打开文件:\n%1").arg(path));
+			return;
+		}
+		
+	}
+	else {
+		QMessageBox::warning(this, QStringLiteral("路径"),QStringLiteral("您未选择任何路径。"));
+	}
 
 }

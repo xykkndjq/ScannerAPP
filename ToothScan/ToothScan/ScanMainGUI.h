@@ -80,8 +80,7 @@ public:
 	int allCutModelNum = 0;
 	//删除所有切割数据
 	void deleteAllCutModel();
-	//增加补扫数量
-	int addCompensationNum = 0;
+	
 	
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals

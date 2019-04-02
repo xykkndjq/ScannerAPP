@@ -610,10 +610,13 @@ void ScanMainGUI::judgeBackStep()
 		if (upperJawIndex == 2)
 		{
 			scanTipWidget->upperPlaceConstructIHM1();
+			globalTipIndex = 1;
 			forwardIndex = 1;
+			chooseJawIndex = 1;
 			ControlComputeThread->upper_mModel.clear();
 			ControlComputeThread->upper_points_cloud_end2.clear();
 			ControlComputeThread->upper_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (upperJawIndex == 3)
@@ -641,10 +644,13 @@ void ScanMainGUI::judgeBackStep()
 		if (lowerJawIndex == 2)
 		{
 			scanTipWidget->lowerPlaceConstructIHM1();
+			globalTipIndex = 2;
 			forwardIndex = 1;
+			chooseJawIndex = 2;
 			ControlComputeThread->lower_mModel.clear();
 			ControlComputeThread->lower_points_cloud_end2.clear();
 			ControlComputeThread->lower_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (lowerJawIndex == 3)
@@ -672,10 +678,13 @@ void ScanMainGUI::judgeBackStep()
 		if (allJawIndex == 2)
 		{
 			scanTipWidget->allPlaceConstructIHM1();
+			globalTipIndex = 3;
 			forwardIndex = 1;
+			chooseJawIndex = 3;
 			ControlComputeThread->all_mModel.clear();
 			ControlComputeThread->all_points_cloud_end2.clear();
 			ControlComputeThread->all_points_cloud_globle2.clear();
+			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
 		else if (allJawIndex == 3)
@@ -796,44 +805,53 @@ void ScanMainGUI::discardCompensationSlot()
 {
 	if (chooseJawIndex == 1)
 	{
-		int totalScanNum = ControlComputeThread->upper_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addUpperCompensationNum > 0)
 		{
 			ControlComputeThread->upper_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addUpperCompensationNum;
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 2)
 	{
-		int totalScanNum = ControlComputeThread->lower_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addLowerCompensationNum > 0)
 		{
 			ControlComputeThread->lower_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addLowerCompensationNum;
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("下颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 3)
 	{
-		int totalScanNum = ControlComputeThread->all_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addAllCompensationNum > 0)
 		{
 			ControlComputeThread->all_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addAllCompensationNum;
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("全颌没有增扫的数据!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有增扫数据!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 }
@@ -944,8 +962,7 @@ void ScanMainGUI::cutModelSlot()
 void ScanMainGUI::setRotationWaverSlot()
 {
 	glWidget->GetMotorRot(ax, ay);
-	ax -= 68.3;
-	ay += 30.8;
+	
 	while (ay<-180||ay>180)
 	{
 		if (ay>180)
@@ -962,6 +979,8 @@ void ScanMainGUI::setRotationWaverSlot()
 	
 	scanTipWidget->rotationLineEdit->setText(QString("%1").arg(ay));
 	scanTipWidget->waverLineEdit->setText(QString("%1").arg(ax));
+
+	ax -= 68.3;
 }
 
 void ScanMainGUI::updateCamera()
@@ -1031,7 +1050,11 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+			//QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 		}
 	}
 	else if (chooseJawIndex == 2)
@@ -1044,7 +1067,10 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("下颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 	else if (chooseJawIndex == 3)
@@ -1057,7 +1083,10 @@ void ScanMainGUI::discardCutModelSlot()
 		}
 		else
 		{
-			QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("全颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有切割模型!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
 		}
 	}
 
@@ -1100,32 +1129,35 @@ void ScanMainGUI::saveModeltoFileSlot()
 		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize-1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 	else if (chooseJawIndex == 2)
 	{
 		int mModelVSize = ControlComputeThread->lower_mModel.size();
-		for (int index = 0; index < mModelVSize - 1; index++)
+		/*for (int index = 0; index < mModelVSize - 1; index++)
 		{
 			orth::ModelIO model_io(&ControlComputeThread->lower_mModel[index]);
 			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_LowerJaw_" + std::to_string(index) + ".stl";
 			model_io.writeModel(fileStr, "stl");
-		}
+		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 	else if (chooseJawIndex == 3)
 	{
 		int mModelVSize = ControlComputeThread->all_mModel.size();
-		for (int index = 0; index < mModelVSize - 1; index++)
+		/*for (int index = 0; index < mModelVSize - 1; index++)
 		{
 			orth::ModelIO model_io(&ControlComputeThread->all_mModel[index]);
 			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_AllJaw_" + std::to_string(index) + ".stl";
 			model_io.writeModel(fileStr, "stl");
-		}
+		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 }

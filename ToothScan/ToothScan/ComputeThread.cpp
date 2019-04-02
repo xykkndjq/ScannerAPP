@@ -451,13 +451,13 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 	
 	if (chooseJawIndex == 1)
 	{
-		int scan_index = lower_mModel.size();
+		int scan_index = upper_mModel.size();
 		clock_t time1, time2;
 		time1 = clock();
 
 		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
+		//unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		if (upper_points_cloud_globle2.size())
 		{
@@ -471,8 +471,8 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		upper_mModel.push_back(mModel);
 
 		cloudrot = rt_icp;
-		unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
-		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+		//unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
+		pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
 		upper_points_cloud_globle2.push_back(points_2);
 		upper_points_cloud_end2.insert(upper_points_cloud_end2.end(), points_2.begin(), points_2.end());
@@ -660,7 +660,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	cv::Mat rt_curr;
 	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
 	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_curr, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
 
 	if (chooseJawIndex == 1)
 	{
@@ -677,12 +677,12 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
 			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return false;
+				return false;
 			}
 		}
 
 		upper_mModel.push_back(mModel);
-
+		++addUpperCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
 		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
@@ -712,7 +712,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		}
 
 		lower_mModel.push_back(mModel);
-
+		++addLowerCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &lower_mModel[scan_index]);
 		//pointcloudrotation(lower_mModel[scan_index].P, lower_mModel[scan_index].N, cloudrot);
@@ -742,7 +742,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		}
 
 		all_mModel.push_back(mModel);
-
+		++addAllCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &all_mModel[scan_index]);
 		//pointcloudrotation(all_mModel[scan_index].P, all_mModel[scan_index].N, cloudrot);

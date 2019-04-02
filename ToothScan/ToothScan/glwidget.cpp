@@ -202,8 +202,8 @@ GLWidget::GLWidget(QWidget *parent)
 	SCR_WIDTH = this->frameGeometry().width();
 	SCR_HEIGHT = this->frameGeometry().height();
 
-	orth::ModelRead mr("./0016.ply", mm);
-	TeethSegmentRun("./0016.txt");
+	//orth::ModelRead mr("./0016.ply", mm);
+	//TeethSegmentRun("./0016.txt");
 
 	model_Mat = cv::Mat::eye(4, 4, CV_32FC1);
 	view_Mat = cv::Mat::eye(4, 4, CV_32FC1);
