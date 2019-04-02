@@ -1128,7 +1128,7 @@ QVector3D GLWidget::world2Screen(QVector3D worldPos, QMatrix4x4 modelMat)
 	GLfloat winX, winY, winZ;
 	GLdouble posX, posY, posZ;
 	GLint l_view[4] = { 0,0,SCR_WIDTH,SCR_HEIGHT };
-	QVector3D worldPosition = worldPos.project(QMatrix4x4(m_view*modelMat), QMatrix4x4(m_projection), QRect(l_view[0], l_view[1], l_view[2], l_view[3]));
+	QVector3D worldPosition = worldPos.project(QMatrix4x4(modelMat*m_view), QMatrix4x4(m_projection), QRect(l_view[0], l_view[1], l_view[2], l_view[3]));
 	//worldPosition = QVector3D(x, SCR_HEIGHT - y, 1).unproject(QMatrix4x4(model), QMatrix4x4(projection), QRect(view[0], view[1], view[2], view[3]));
 	return worldPosition;
 }

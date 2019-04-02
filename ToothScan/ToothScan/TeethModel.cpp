@@ -245,7 +245,7 @@ void CTeethModel::ChosePoints(const float point1_x, const float point1_y,
 
 	//cv::Mat model_ = cv::Mat::eye(4, 4, CV_32FC1);
 	//memcpy(model_.data, model_matrix, 16 * sizeof(float));
-	model_matrix = model_matrix.t();
+	model_matrix = cv::Mat(4, 4, CV_32F, m_ModelMatrix.data()).t();
 
 	//cv::Mat view_ = cv::Mat::eye(4, 4, CV_32FC1);
 	//memcpy(view_.data, view_matrix, 16 * sizeof(float));
@@ -331,7 +331,7 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].x].y);
 			m_vertData.append(m_model.P[m_model.F[i].x].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].x]);
-			m_vertData.append(0.0);
+			m_vertData.append(0.0f);
 			m_vertData.append(m_model.N[m_model.F[i].x].x);
 			m_vertData.append(m_model.N[m_model.F[i].x].y);
 			m_vertData.append(m_model.N[m_model.F[i].x].z);
@@ -340,7 +340,7 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].y].y);
 			m_vertData.append(m_model.P[m_model.F[i].y].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].y]);
-			m_vertData.append(0.0);
+			m_vertData.append(0.0f);
 			m_vertData.append(m_model.N[m_model.F[i].y].x);
 			m_vertData.append(m_model.N[m_model.F[i].y].y);
 			m_vertData.append(m_model.N[m_model.F[i].y].z);
@@ -349,7 +349,7 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].z].y);
 			m_vertData.append(m_model.P[m_model.F[i].z].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].z]);
-			m_vertData.append(0.0);
+			m_vertData.append(0.0f);
 			m_vertData.append(m_model.N[m_model.F[i].z].x);
 			m_vertData.append(m_model.N[m_model.F[i].z].y);
 			m_vertData.append(m_model.N[m_model.F[i].z].z);
@@ -379,7 +379,7 @@ void CTeethModel::delSelPoints()
 			//colors_.push_back(mm.C[point_index]);
 			normals.push_back(m_model.N[point_index]);
 			//labels.push_back(m_model.L[point_index]);
-			labels.push_back(0.0);
+			labels.push_back(0.0f);
 			new_point_index[point_index] = points.size() - 1;
 
 		}

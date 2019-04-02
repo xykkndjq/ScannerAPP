@@ -82,17 +82,17 @@ void CAxisModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInte
 	QVector4D stringPos = { 0.0f,0.0f,0.0f,1.0f};
 	stringPos.setX(stringPos.x() + 11);
 	//cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y() << "stringPos z" << stringPos.z() << endl;
-	stringPos = Projection * v_View * m_ModelMatrix * stringPos;
+	stringPos = Projection * v_View * stringPos;
 	//cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y() << "stringPos z" << stringPos.z() <<"stringPos w"<< stringPos.w()<< endl;
 	stringPos += QVector4D(stringPos.w() * -0.8, stringPos.w()*-0.8, 0,0);
-	//cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y()<< "stringPos z" <<stringPos.z()<< endl;
+	cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y()<< "stringPos z" <<stringPos.z()<< "stringPos w" << stringPos.w() << endl;
 	glRasterPos3f(stringPos.x()/stringPos.w(), stringPos.y() / stringPos.w(), stringPos.z() / stringPos.w());
 	drawString("X");
 
 	glColor3f(0.0f, 1.0f, 0.0f);
 	stringPos = { -0.0f,-0.0f,0.0f,1.0f};
 	stringPos.setY(stringPos.y() + 11);
-	stringPos = Projection * v_View * m_ModelMatrix * stringPos;
+	stringPos = Projection * v_View * stringPos;
 	stringPos += QVector4D(stringPos.w() * -0.8, stringPos.w()*-0.8, 0, 0);
 	glRasterPos3f(stringPos.x() / stringPos.w(), stringPos.y() / stringPos.w(), stringPos.z() / stringPos.w());
 	drawString("Y");
@@ -100,7 +100,7 @@ void CAxisModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInte
 	glColor3f(0.0f, 0.0f, 1.0f);
 	stringPos = { -0.0f,-0.0f,0.0f,1.0f};
 	stringPos.setZ(stringPos.z() + 11);
-	stringPos = Projection * v_View * m_ModelMatrix * stringPos;
+	stringPos = Projection * v_View * stringPos;
 	stringPos += QVector4D(stringPos.w() * -0.8, stringPos.w()*-0.8, 0, 0);
 	glRasterPos3f(stringPos.x() / stringPos.w(), stringPos.y() / stringPos.w(), stringPos.z() / stringPos.w());
 	drawString("Z");
