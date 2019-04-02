@@ -35,12 +35,14 @@ void CTeethModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInt
 	//cout << endl;
 
 	m_program->setUniformValue("view", v_View);
-	m_program->setUniformValue("viewPos", v_View.column(3));
+	m_program->setUniformValue("viewPos", v_View.column(3).x(), v_View.column(3).y(), v_View.column(3).z());
+	
 	//cout << view.data()[0] << ", " << view.data()[4] << ", " << view.data()[8] << ", " << view.data()[12] << endl;
 	//cout << view.data()[1] << ", " << view.data()[5] << ", " << view.data()[9] << ", " << view.data()[13] << endl;
 	//cout << view.data()[2] << ", " << view.data()[6] << ", " << view.data()[10] << ", " << view.data()[14] << endl;
 	//cout << view.data()[3] << ", " << view.data()[7] << ", " << view.data()[11] << ", " << view.data()[15] << endl;
 	//cout << endl;
+
 	m_ModelMatrix.setToIdentity();
 // 	m_ModelMatrix.rotate(m_xRot / 16.0f, 1.0f, 0.0f, 0.0f);
 // 	m_ModelMatrix.rotate(m_yRot / 16.0f, 0.0f, 1.0f, 0.0f);
