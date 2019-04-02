@@ -464,7 +464,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
 			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return false;
+				return false;
 			}
 		}
 
@@ -677,12 +677,12 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
 			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return false;
+				return false;
 			}
 		}
 
 		upper_mModel.push_back(mModel);
-
+		++addUpperCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &upper_mModel[scan_index]);
 		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
@@ -712,7 +712,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		}
 
 		lower_mModel.push_back(mModel);
-
+		++addLowerCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &lower_mModel[scan_index]);
 		//pointcloudrotation(lower_mModel[scan_index].P, lower_mModel[scan_index].N, cloudrot);
@@ -742,7 +742,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		}
 
 		all_mModel.push_back(mModel);
-
+		++addAllCompensationNum;
 		cloudrot = rt_icp;
 		unwarp->MeshRot((double*)cloudrot.data, &all_mModel[scan_index]);
 		//pointcloudrotation(all_mModel[scan_index].P, all_mModel[scan_index].N, cloudrot);

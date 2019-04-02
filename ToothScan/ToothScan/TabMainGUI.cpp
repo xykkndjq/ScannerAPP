@@ -467,7 +467,6 @@ bool TabMainGUI::judgePatientSaveFlag()
 		QByteArray orderPN = ToChineseStr(orderPatientName);
 		std::string filePath = "./data/" + orderNumber.toStdString() + "/" + orderPN.data() + ".OI";
 		cv::FileStorage fwrite(filePath.c_str(), cv::FileStorage::WRITE);
-
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
 			<< "Patient Name" << orderPN.data()

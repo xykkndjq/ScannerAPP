@@ -785,12 +785,12 @@ void ScanMainGUI::discardCompensationSlot()
 {
 	if (chooseJawIndex == 1)
 	{
-		int totalScanNum = ControlComputeThread->upper_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addUpperCompensationNum > 0)
 		{
 			ControlComputeThread->upper_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addUpperCompensationNum;
 		}
 		else
 		{
@@ -802,12 +802,12 @@ void ScanMainGUI::discardCompensationSlot()
 	}
 	else if (chooseJawIndex == 2)
 	{
-		int totalScanNum = ControlComputeThread->lower_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addLowerCompensationNum > 0)
 		{
 			ControlComputeThread->lower_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addLowerCompensationNum;
 		}
 		else
 		{
@@ -819,12 +819,12 @@ void ScanMainGUI::discardCompensationSlot()
 	}
 	else if (chooseJawIndex == 3)
 	{
-		int totalScanNum = ControlComputeThread->all_mModel.size();
-		if (totalScanNum > SCAN_ROTATE_POS_CNT2 - 1)
+		if (ControlComputeThread->addAllCompensationNum > 0)
 		{
 			ControlComputeThread->all_mModel.pop_back();
 			glWidget->m_ModelsVt.pop_back();
 			glWidget->update();
+			--ControlComputeThread->addAllCompensationNum;
 		}
 		else
 		{
@@ -942,8 +942,7 @@ void ScanMainGUI::cutModelSlot()
 void ScanMainGUI::setRotationWaverSlot()
 {
 	glWidget->GetMotorRot(ax, ay);
-	ax -= 68.3;
-	ay += 30.8;
+	
 	while (ay<-180||ay>180)
 	{
 		if (ay>180)
@@ -960,6 +959,8 @@ void ScanMainGUI::setRotationWaverSlot()
 	
 	scanTipWidget->rotationLineEdit->setText(QString("%1").arg(ay));
 	scanTipWidget->waverLineEdit->setText(QString("%1").arg(ax));
+
+	ax -= 68.3;
 }
 
 void ScanMainGUI::updateCamera()
@@ -1108,32 +1109,35 @@ void ScanMainGUI::saveModeltoFileSlot()
 		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize-1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 	else if (chooseJawIndex == 2)
 	{
 		int mModelVSize = ControlComputeThread->lower_mModel.size();
-		for (int index = 0; index < mModelVSize - 1; index++)
+		/*for (int index = 0; index < mModelVSize - 1; index++)
 		{
 			orth::ModelIO model_io(&ControlComputeThread->lower_mModel[index]);
 			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_LowerJaw_" + std::to_string(index) + ".stl";
 			model_io.writeModel(fileStr, "stl");
-		}
+		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 	else if (chooseJawIndex == 3)
 	{
 		int mModelVSize = ControlComputeThread->all_mModel.size();
-		for (int index = 0; index < mModelVSize - 1; index++)
+		/*for (int index = 0; index < mModelVSize - 1; index++)
 		{
 			orth::ModelIO model_io(&ControlComputeThread->all_mModel[index]);
 			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_AllJaw_" + std::to_string(index) + ".stl";
 			model_io.writeModel(fileStr, "stl");
-		}
+		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stl");
 	}
 }

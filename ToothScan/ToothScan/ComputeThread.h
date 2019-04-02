@@ -33,6 +33,11 @@ public:
 
 	GPA gpa;
 
+	//增加补扫数量
+	int addUpperCompensationNum = 0;
+	int addLowerCompensationNum = 0;
+	int addAllCompensationNum = 0;
+
 	int oldJawIndex = 0;
 	vector<orth::MeshModel> all_mModel;//全颌
 	vector<vector<double>> all_points_cloud_globle2;
