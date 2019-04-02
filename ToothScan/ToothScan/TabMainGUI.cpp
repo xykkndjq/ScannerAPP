@@ -241,7 +241,7 @@ void TabMainGUI::initVariable()
 	aboutImageLabel = new QLabel(this);
 
 	//calibatepage标定页面
-	calibratePushButton = new QPushButton(QStringLiteral("开始标定"));
+	calibratePushButton = new QPushButton(QStringLiteral("开始标定"),this);
 	calibratePushButton->setFixedSize(150, 30);
 	calibratePushButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 
