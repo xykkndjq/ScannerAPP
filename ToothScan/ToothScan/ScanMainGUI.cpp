@@ -3,30 +3,10 @@
 ScanMainGUI::ScanMainGUI(QWidget *parent)
 	: QWidget(parent)
 {
-	
+	ui.setupUi(this);
 	this->initVariable();
 	this->constructIHM();
-	//this->setConnections();
-	ui.setupUi(this);
-	connect(ui.pushButton, SIGNAL(clicked()), this, SLOT(pushBtnClicked()));
-	connect(ui.frontviewBtn, SIGNAL(clicked()), this, SLOT(fontviewBtnClicked()));
-	connect(ui.rightViewBtn, SIGNAL(clicked()), this, SLOT(rightViewBtnClicked()));
-	connect(ui.leftViewBtn, SIGNAL(clicked()), this, SLOT(leftViewBtnClicked()));
-	connect(ui.backViewBtn, SIGNAL(clicked()), this, SLOT(backViewBtnClicked()));
-	connect(ui.jawViewBtn, SIGNAL(clicked()), this, SLOT(jawViewBtnClicked()));
-	connect(ui.narrowViewBtn, SIGNAL(clicked()), this, SLOT(narrowViewBtnClicked()));
-	connect(ui.enlargeViewBtn, SIGNAL(clicked()), this, SLOT(enlargeViewBtnClicked()));
-	connect(ui.modelMoveStateSetBtn, SIGNAL(clicked()), this, SLOT(modelMoveStateSetBtnClicked()));
-	connect(ui.delSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
-	connect(ui.confirmSelectedBtn, SIGNAL(clicked()), this, SLOT(delSelectedBtnClicked()));
-	connect(ui.bgGroundmoveDownBtn, SIGNAL(clicked()), this, SLOT(bgGroundmoveDownBtnClicked()));
-	connect(ui.bgGroundmoveUpBtn, SIGNAL(clicked()), this, SLOT(bgGroundmoveUpBtnClicked()));
-	connect(ui.bgGroundShowBtn, SIGNAL(clicked()), this, SLOT(bgGroundShowBtnClicked()));
-	connect(ui.cutModelUnderBgBtn, SIGNAL(clicked()), this, SLOT(cutModelUnderBgBtnClicked()));
-	connect(ui.changeBgColorBtn, SIGNAL(clicked()), this, SLOT(changeBgColorBtnClicked()));
-	
-	
-	
+	this->setConnections();
 }
 
 ScanMainGUI::~ScanMainGUI()
@@ -48,7 +28,7 @@ ScanMainGUI::~ScanMainGUI()
 void ScanMainGUI::initVariable()
 {
 	glWidget = new GLWidget(this);
-	return;
+	
 	tabMainPage = new TabMainGUI();
 	tabMainPage->showMaximized();
 
@@ -101,7 +81,7 @@ void ScanMainGUI::constructIHM()
 	glWidget->setGeometry(0,0,1920,1080);
 	glWidget->setWindowSize(QSize(1920, 1080));
 	glWidget->showFullScreen();
-	return;
+	
 	//相机设置
 	cameraWindow->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable); // 设置停靠窗口特性，可移动,可关闭
 	cameraWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);//设置可停靠区域为主窗口左边和右边
@@ -228,6 +208,7 @@ void ScanMainGUI::setConnections()
 	connect(this, SIGNAL(compensationSignal(int)), ControlComputeThread, SLOT(compensationComputeScan(int)));
 	connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(controlNormalScan()));
 	connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(controlComputeScan(int)));
+	connect(this, SIGNAL(startControlCalibrationSignal()), ControlScanThread, SLOT(controlCalibrationScan()));
 	connect(ControlComputeThread, SIGNAL(computeFinish()), this, SLOT(JawScan()));
 	//展示模型
 	connect(ControlComputeThread, SIGNAL(showModeltoGlSingel(int)),this, SLOT(updateMeshModel(int)));
@@ -238,7 +219,8 @@ void ScanMainGUI::setConnections()
 	//Calibrate标定子页面
 	connect(tabMainPage->calibratePushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
 	connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
-
+	connect(ControlScanThread, SIGNAL(calibImageSignal(int)), this, SLOT(calibImageCameraSlot(int)));//展示标定照片
+	
 	//模型工具栏操作
 	connect(this->topWatchButton,SIGNAL(clicked()), this, SLOT(topModelWatchSlot()));
 	connect(this->bottomWatchButton, SIGNAL(clicked()), this, SLOT(bottomModelWatchSlot()));
@@ -261,7 +243,17 @@ void ScanMainGUI::setConnections()
 
 void ScanMainGUI::ToothCalibrateSlot()
 {
-	ControlScanThread->controlCalibrationScan();
+	QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("开始标定!"));
+	box.setStandardButtons(QMessageBox::Yes);
+	box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+	box.exec();
+	if (controlScanQThread->isRunning() == false)
+	{
+		//启动子线程，但没有启动线程处理函数
+		controlScanQThread->start();
+		ControlScanThread->setFlage(false);
+	}
+	emit startControlCalibrationSignal();
 }
 
 void ScanMainGUI::GlobalCalibrateSlot()
@@ -1130,7 +1122,7 @@ void ScanMainGUI::saveModeltoFileSlot()
 		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize-1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stl");
+		finish_model_io.writeModel(modelNameStr, "stlb");
 	}
 	else if (chooseJawIndex == 2)
 	{
@@ -1144,7 +1136,7 @@ void ScanMainGUI::saveModeltoFileSlot()
 		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stl");
+		finish_model_io.writeModel(modelNameStr, "stlb");
 	}
 	else if (chooseJawIndex == 3)
 	{
@@ -1158,95 +1150,42 @@ void ScanMainGUI::saveModeltoFileSlot()
 		orth::ModelIO finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stl");
+		finish_model_io.writeModel(modelNameStr, "stlb");
 	}
 }
 
-void ScanMainGUI::fontviewBtnClicked()
+void ScanMainGUI::calibImageCameraSlot(int endFlag)
 {
-	//glWidget->frontView();
-	glWidget->mainView();
-}
-
-void ScanMainGUI::pushBtnClicked()
-{
-	cout << "pushBtnClicked" << endl;
-// 	QColor clearColor(Qt::GlobalColor::white);
-// 	glWidget->setClearColor(clearColor);
-	glWidget->upwardView();
-}
-
-void ScanMainGUI::rightViewBtnClicked()
-{
-	glWidget->rightView();
-}
-
-void ScanMainGUI::leftViewBtnClicked()
-{
-	glWidget->leftView();
-}
-
-void ScanMainGUI::backViewBtnClicked()
-{
-	glWidget->backView();
-}
-
-void ScanMainGUI::jawViewBtnClicked()
-{
-	//glWidget->jawView();
-	glWidget->overView();
-}
-
-void ScanMainGUI::narrowViewBtnClicked()
-{
-	glWidget->shrinkView();
-}
-
-void ScanMainGUI::enlargeViewBtnClicked()
-{
-	glWidget->enlargeView();
-}
-
-void ScanMainGUI::modelMoveStateSetBtnClicked()
-{
-	//glWidget->setModelMoveState(ui.modelMoveStateSetBtn->isChecked());
-	glWidget->selectRegion(ui.modelMoveStateSetBtn->isChecked());
-}
-
-void ScanMainGUI::delSelectedBtnClicked()
-{
-	glWidget->delSelected();
-}
-
-void ScanMainGUI::confirmSelectedBtnClicked()
-{
-	glWidget->confirmSelRegion();
-}
-void ScanMainGUI::bgGroundmoveDownBtnClicked()
-{
-	glWidget->bgGroundmoveDown();
-}
-
-void ScanMainGUI::bgGroundmoveUpBtnClicked()
-{
-	glWidget->bgGroundmoveUp();
-}
-void ScanMainGUI::bgGroundShowBtnClicked()
-{
-	glWidget->bgGroundmoveUp();
-	glWidget->showBkGround(ui.bgGroundShowBtn->isChecked());
-}
-
-void ScanMainGUI::cutModelUnderBgBtnClicked()
-{
-	glWidget->cutModelUnderBg();
-}
-
-void ScanMainGUI::changeBgColorBtnClicked()
-{
-	float r = ui.textEditR->toPlainText().toFloat()/255,
-		g = ui.textEditG->toPlainText().toFloat()/255,
-		b = ui.textEditB->toPlainText().toFloat()/255,
-		alpa = ui.textEditA->toPlainText().toFloat()/255;
-	glWidget->setBgColor(QVector4D(r,g,b,alpa));
+	static int nnum = 0;
+	cout << "calibImageCameraSlot num" << nnum++ << endl;
+	QImage leftCalibCameraImage, rightCalibCameraImage;
+	int CameraImageSize = ControlScanThread->calibImageCamera.size();
+	cv::Mat leftImageMat, rightImageMat;
+	leftImageMat = ControlScanThread->calibImageCamera[CameraImageSize - 2];
+	rightImageMat = ControlScanThread->calibImageCamera[CameraImageSize - 1];
+	
+	leftCalibCameraImage = Mat2QImage(leftImageMat);
+	tabMainPage->leftCameraLable->clear();
+	tabMainPage->leftCameraLable->setPixmap(QPixmap::fromImage(leftCalibCameraImage));
+	tabMainPage->leftCameraLable->setScaledContents(true);
+	rightCalibCameraImage = Mat2QImage(rightImageMat);
+	tabMainPage->rightCameraLable->clear();
+	tabMainPage->rightCameraLable->setPixmap(QPixmap::fromImage(rightCalibCameraImage));;
+	tabMainPage->rightCameraLable->setScaledContents(true);
+	cout <<"endFlag: " <<endFlag << endl;
+	if (endFlag == 1)
+	{
+		_sleep(3000);
+		tabMainPage->leftCameraLable->clear();
+		tabMainPage->rightCameraLable->clear();
+		tabMainPage->leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->leftCameraLable->update();
+		tabMainPage->rightCameraLable->update();
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("标定结束!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+	}
+	tabMainPage->showMaximized();
 }

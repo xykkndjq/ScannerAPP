@@ -28,7 +28,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QFileDialog>
-
+#include <QDockWidget>
 
 #define TOOTHNUM 32
 
@@ -152,7 +152,16 @@ public:
 	//Calibrate标定页面
 	QPushButton *calibratePushButton;
 	QPushButton *globalCaliPushButton;
+	QLabel *leftCameraLable;
+	QLabel *rightCameraLable;
 
+	//设置子页面
+	QButtonGroup *settingButtonGroup;
+	QCheckBox *textureCheckBox;
+	QCheckBox *ACheckBox;
+	QCheckBox *BCheckBox;
+	QLabel *scanDataPathLabel;
+	QLineEdit *scanDataPathEdit;
 signals:
 	void scanDataSignal(QJsonObject scanObj);
 	void scanSignal();

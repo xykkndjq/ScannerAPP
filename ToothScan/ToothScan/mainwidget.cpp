@@ -23,11 +23,11 @@ MainWidget::~MainWidget()
 
 //!---------------------------------------------------------------------------------
 //! \brief MainWidget::initVariable
-//!
+
 void MainWidget::initVariable() 
 {
 	scanMainPage = new ScanMainGUI();	
-	scanMainPage->showMaximized();
+	//scanMainPage->showMaximized();
 }
 
 void MainWidget::setConnections()

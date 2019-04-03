@@ -157,20 +157,20 @@ namespace scan
 
 		double RasterScan::Distance(double x1, double y1, double z1, double x2, double y2, double z2);
 
-		void  __declspec (dllexport) RasterScan::XY_TsdfVolume(const double* size, const int* resolution, const double &truncation, const int width_, const int height_);
+		void  __declspec (dllexport) XY_TsdfVolume(const double* size, const int* resolution, const double &truncation, const int width_, const int height_);
 
-		void  __declspec (dllexport) RasterScan::XY_TsdfVolume(double* tsdf_info, float* tsdf_data);
+		void  __declspec (dllexport) XY_TsdfVolume(double* tsdf_info, float* tsdf_data);
 
-		void __declspec (dllexport) RasterScan::XY_PointFilterVolume(const double* size, const int* resolution);
+		void __declspec (dllexport) XY_PointFilterVolume(const double* size, const int* resolution);
 
-		void __declspec (dllexport)  RasterScan::CloseFilter(cv::Mat &depth);
+		void __declspec (dllexport)  CloseFilter(cv::Mat &depth);
 
-		void __declspec (dllexport)  RasterScan::TSDF(const Mat &depth, cv::Mat &RT2 /*const Eigen::Matrix4d &RT2*/);
+		void __declspec (dllexport)  TSDF(const Mat &depth, cv::Mat &RT2 /*const Eigen::Matrix4d &RT2*/);
 
-		void RasterScan::TSDFGaussFilter();
+		void TSDFGaussFilter();
 
-		void __declspec (dllexport)  RasterScan::MarchingCube();
-		void __declspec (dllexport)  RasterScan::MarchingCube2();
+		void __declspec (dllexport)  MarchingCube();
+		void __declspec (dllexport)  MarchingCube2();
 
 		std::vector<float> verts;
 
@@ -178,27 +178,31 @@ namespace scan
 
 		std::vector<int32_t> vertexIndicies;
 
-		void __declspec (dllexport) RasterScan::SystemCalibration(const int projector_width, const int projector_height, const int image_number, std::vector<std::vector<cv::Mat>> &image_groups, std::string out_put_name);
+		void __declspec (dllexport) SystemCalibration(std::string out_put_name, orth::Point3d &error_);
 
-		void RasterScan::CalculateProjectorCameraParameter(const vector<double> &Points, const vector<double> &k, const vector<double> &t, cv::Mat &X);
+		void __declspec (dllexport) PreCalibration(const int projector_width_, const int projector_height_, const int image_number_, std::vector<std::vector<cv::Mat>> &image_groups_);
+		
+		void __declspec(dllexport) CalibrationImagePrint(cv::Mat &image_show_l, cv::Mat &image_show_r, int image_index, bool &left_flag, bool &right_flag);
+		
+		void CalculateProjectorCameraParameter(const vector<double> &Points, const vector<double> &k, const vector<double> &t, cv::Mat &X);
 
-		void RasterScan::OneCameraPointCloudCalculate(cv::Mat &periodic_, cv::Mat &phase_, vector<double> &point_cloud, const bool camera_flag);
+		void OneCameraPointCloudCalculate(cv::Mat &periodic_, cv::Mat &phase_, vector<double> &point_cloud, const bool camera_flag);
 
-		void __declspec (dllexport) RasterScan::CompareCameraAndProjectorPointCloud(cv::Mat &periodic_, cv::Mat &phase_, cv::Mat &depth_map, vector<cv::Point2d> &points1, vector<cv::Point2d> &points2, vector<double> &point_cloud, double threshold_value);
+		void __declspec (dllexport) CompareCameraAndProjectorPointCloud(cv::Mat &periodic_, cv::Mat &phase_, cv::Mat &depth_map, vector<cv::Point2d> &points1, vector<cv::Point2d> &points2, vector<double> &point_cloud, double threshold_value);
 
-		void __declspec (dllexport) RasterScan::UnwrapComp(const vector<Mat> &cimg, Mat &phiO, Mat &periodO);
+		void __declspec (dllexport) UnwrapComp(const vector<Mat> &cimg, Mat &phiO, Mat &periodO);
 
-		void __declspec (dllexport) RasterScan::PointCloudAddIn(vector<double> &point_cloud_, vector<float> &point_normal_, cv::Mat &Rt_);
+		void __declspec (dllexport) PointCloudAddIn(vector<double> &point_cloud_, vector<float> &point_normal_, cv::Mat &Rt_);
 
-		void __declspec (dllexport) RasterScan::ReductionWholePoints(vector<double> &point_cloud_, vector<float> &point_normal_);
+		void __declspec (dllexport) ReductionWholePoints(vector<double> &point_cloud_, vector<float> &point_normal_);
 
-		void __declspec (dllexport) RasterScan::PlaneRTCalculate(vector<cv::Mat> &left_circle_images, vector<cv::Mat> &right_circle_images, const string RT_file_name, vector<double> &totle_mask_point);
+		void __declspec (dllexport) PlaneRTCalculate(vector<cv::Mat> &left_circle_images, vector<cv::Mat> &right_circle_images, const string RT_file_name, vector<double> &totle_mask_point);
 
-		void RasterScan::PatternsComp(vector<Mat> &pimg);
+		void PatternsComp(vector<Mat> &pimg);
 
-		void RasterScan::CompensatePhase(const Mat &phi1, const Mat &phi2, Mat &phi_out);
+		void CompensatePhase(const Mat &phi1, const Mat &phi2, Mat &phi_out);
 
-		Mat RasterScan::PatternPlain(int n, float f, int N, float init_phase);
+		Mat PatternPlain(int n, float f, int N, float init_phase);
 
 		Mat intr1, intr2, distCoeffs[3], intrp;
 
@@ -266,6 +270,27 @@ namespace scan
 
 		std::vector<std::vector<std::vector<MeshEdgeNode>>> meshedge;
 		std::vector<std::vector<std::vector<float> > > GaussTemplate;
+
+		std::vector<std::vector<cv::Point3f>> objectPoints_l;
+		std::vector<std::vector<cv::Point3f>> objectPoints_r;
+		std::vector<std::vector<cv::Point3f>> objectPoints_projector;
+		std::vector<std::vector<cv::Point2f>> imagePoints_l;
+		std::vector<std::vector<cv::Point2f>> imagePoints_r;
+		std::vector<std::vector<cv::Point2f>> imagePoints_projector;
+		std::vector<std::vector<int>> CCPoints_index_l;
+		std::vector<std::vector<int>> CCPoints_index_r;
+
+		std::vector<std::vector<double>> projector_phase_whole_l;
+		std::vector<std::vector<double>> projector_period_whole_l;
+		std::vector<std::vector<double>> projector_phase_whole_r;
+		std::vector<std::vector<double>> projector_period_whole_r;
+
+		std::vector<std::vector<cv::Mat>> image_groups;
+
+		vector<vector<Mat>> images_h_l, images_v_l;
+		vector<vector<Mat>> images_h_r, images_v_r;
+
+		int projector_width, projector_height;
 
 		//vector<Eigen::VectorXd> mask_points_list;
 		//vector<MaskEdge> mask_edge_list;

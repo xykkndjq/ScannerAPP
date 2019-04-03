@@ -84,6 +84,7 @@ public:
 	
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
+	void startControlCalibrationSignal();//开始标定信号
 	void compensationSignal(int chooseJawIndex);//补充扫描信号
 	void doScanSignal();
 	void cutSurfaceSignal(bool bShow);
@@ -94,6 +95,7 @@ signals:
 	void updateMeshModelSingel(int refreshIndex);//刷新模型显示信号
 	void updateModelsVtSingle();
 	void saveModeltoFileSignal();
+
 private:
 	Ui::ScanMainGUI ui;
 
@@ -124,6 +126,8 @@ private slots:
 	//标定
 	void ToothCalibrateSlot();
 	void GlobalCalibrateSlot();
+	void calibImageCameraSlot(int endFlag);//更新标定相机照片
+
 	//展示模型
 	void updateMeshModel(int refreshIndex);
 	void updateModelsVtSlot();
@@ -165,23 +169,6 @@ private slots:
 
 	//保存所有模型到文件
 	void saveModeltoFileSlot();
-	public slots:
-	void fontviewBtnClicked();
-	void pushBtnClicked();
-	void rightViewBtnClicked();
-	void leftViewBtnClicked();
-	void backViewBtnClicked();
-	void jawViewBtnClicked();
-	void narrowViewBtnClicked();
-	void enlargeViewBtnClicked();
-	void modelMoveStateSetBtnClicked();
-	void delSelectedBtnClicked();
-	void confirmSelectedBtnClicked();
-	void bgGroundmoveDownBtnClicked();
-	void bgGroundmoveUpBtnClicked();
-	void bgGroundShowBtnClicked();
-	void cutModelUnderBgBtnClicked();
-	void changeBgColorBtnClicked();
 };
 
 #endif

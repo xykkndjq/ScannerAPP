@@ -243,12 +243,27 @@ void TabMainGUI::initVariable()
 	//calibatepage标定页面
 	calibratePushButton = new QPushButton(QStringLiteral("开始标定"),this);
 	calibratePushButton->setFixedSize(150, 30);
-	calibratePushButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-
-	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"));
+	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"),this);
 	globalCaliPushButton->setFixedSize(150, 30);
-	globalCaliPushButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	leftCameraLable = new QLabel(this);
+	leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+	leftCameraLable->setScaledContents(true);
+	leftCameraLable->setFixedSize(800, 640);
+	rightCameraLable = new QLabel(this);
+	rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+	rightCameraLable->setScaledContents(true);
+	rightCameraLable->setFixedSize(800, 640);
 
+	//设置子页面
+	/*settingButtonGroup = new QButtonGroup(this);
+	textureCheckBox = new QCheckBox(this);
+	textureCheckBox->setText(QStringLiteral("纹理"));
+	ACheckBox = new QCheckBox(this);
+	ACheckBox->setText(QStringLiteral("标志点"));
+	BCheckBox = new QCheckBox(this);
+	BCheckBox->setText(QStringLiteral("颌架"));
+	scanDataPathLabel = new QLabel(this);
+	scanDataPathEdit = new QLineEdit(this);*/
 }
 
 void TabMainGUI::constructIHM()
@@ -420,10 +435,28 @@ void TabMainGUI::constructIHM()
 	totalAboutGLayout->addWidget(aboutTextLabel, 1, 3, 1, 2);
 	
 	//标定子页面
-	calibratePushButton->setParent(calibrateWidget);
-	calibratePushButton->setGeometry(1400, 50, 40, 40);
-	globalCaliPushButton->setParent(calibrateWidget);
-	globalCaliPushButton->setGeometry(500, 50, 40, 40);
+	QVBoxLayout *calibVLayout = new QVBoxLayout(calibrateWidget);
+	
+	QWidget *topCalibHWidget = new QWidget();
+	QHBoxLayout *topCalibHLayout = new QHBoxLayout(topCalibHWidget);
+	topCalibHLayout->addStretch(1);
+	topCalibHLayout->addWidget(globalCaliPushButton);
+	topCalibHLayout->addStretch(2);
+	topCalibHLayout->addWidget(calibratePushButton);
+	topCalibHLayout->addStretch(1);
+
+	QWidget *bottomCalibHWidget = new QWidget();
+	QHBoxLayout *bottomCalibHLayout = new QHBoxLayout(bottomCalibHWidget);
+	bottomCalibHLayout->addStretch(2);
+	bottomCalibHLayout->addWidget(leftCameraLable);
+	bottomCalibHLayout->addStretch(3);
+	bottomCalibHLayout->addWidget(rightCameraLable);
+	bottomCalibHLayout->addStretch(2);
+	calibVLayout->addStretch(2);
+	calibVLayout->addWidget(topCalibHWidget);
+	calibVLayout->addStretch(1);
+	calibVLayout->addWidget(bottomCalibHWidget);
+	calibVLayout->addStretch(3);
 
 	totalTabWidget->addTab(orderInforWidget, QStringLiteral("订单管理"));
 	totalTabWidget->addTab(settingWidget, QStringLiteral("设置"));

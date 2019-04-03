@@ -122,10 +122,10 @@ public:
 	ControlThread(QObject *parent=0);
 	~ControlThread();
 
-	int point_cloud_index;
+	//int point_cloud_index;
 	bool serial_port_open;
-	vector<bool> point_cloud_right;
-	QMutex* mutex;
+	//vector<bool> point_cloud_right;
+	///QMutex* mutex;
 
 	QSerialPort *serial;
 
@@ -143,6 +143,9 @@ public:
 
 	bool  isStop;
 
+	vector<cv::Mat> calibImageCamera;
+signals:
+	void calibImageSignal(int endFlag);
 public slots:
 	void controlNormalScan();
 	void controlCalibrationScan();
