@@ -18,9 +18,9 @@ ControlThread::ControlThread(QObject *parent)
 	: QObject(parent)
 {
 	isStop = false;
-	point_cloud_index = 0;
+	//point_cloud_index = 0;
 	serial_port_open = false;
-	point_cloud_right.resize(CALI_ROTATE_POS_CNT2 - 1);
+	//point_cloud_right.resize(CALI_ROTATE_POS_CNT2 - 1);
 	InitParameters();
 	OpenOrCloseSerialPort();
 	WriteByte(OpenDLP, 5);
@@ -1195,12 +1195,12 @@ void ControlThread::controlCalibrationScan()
 		vector<cv::Mat> group;
 		for (size_t j = 0; j < 31; j++)
 		{
-			
 			group.push_back(imgL_set[j]);
-			//if (j != 0)
-			//{
-			//	continue;
-			//}
+			if (j == 0)
+			{
+				calibImageCamera.push_back(imgL_set[j]);
+			}
+			
 			ostringstream filename_L;
 			filename_L << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "L" << ".png";
 			cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
@@ -1209,10 +1209,11 @@ void ControlThread::controlCalibrationScan()
 		{
 			cv::flip(imgR_set[j], imgR_set[j], -1);
 			group.push_back(imgR_set[j]);
-			//if (j != 0)
-			//{
-			//	continue;
-			//}
+			if (j == 0)
+			{
+				calibImageCamera.push_back(imgR_set[j]);
+				emit calibImageSignal(0);
+			}
 			ostringstream filename_R;
 			filename_R << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "R" << ".png";
 			cv::imwrite(filename_R.str().c_str(), imgR_set[j]);
@@ -1229,7 +1230,29 @@ void ControlThread::controlCalibrationScan()
 					//cout << "¿ªÊ¼´æÍ¼Æ¬¡£¡£ " << endl;
 					/*****************************************************************************************/
 
-	rs->SystemCalibration(1280, 720, CALI_ROTATE_POS_CNT2 - 1, image_groups, "D:/dentalimage/dentalimage2/SystemCalibration.yml");
+	rs->PreCalibration(1280, 960, 10, image_groups);
+
+	for (int image_index = 0; image_index < CALI_ROTATE_POS_CNT2 - 1; image_index++)
+	{
+		cv::Mat image_l, image_r;
+		bool f_l, f_r;
+		rs->CalibrationImagePrint(image_l, image_r, image_index, f_l, f_r);
+		calibImageCamera.push_back(image_l);
+		calibImageCamera.push_back(image_r);
+		int endFlag = 0;
+		if (image_index == (CALI_ROTATE_POS_CNT2 - 2))
+		{
+			endFlag = 1;
+			emit calibImageSignal(endFlag);
+		}
+		else if(image_index != (CALI_ROTATE_POS_CNT2 - 2))
+		{
+			emit calibImageSignal(endFlag);
+		}
+	}
+	orth::Point3d error;
+	rs->SystemCalibration("D:/dentalimage/dentalimage2/SystemCalibration.yml", error);
+	cout << error << endl;
 	InitParameters();
 }
 

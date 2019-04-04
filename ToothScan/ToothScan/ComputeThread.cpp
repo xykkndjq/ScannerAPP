@@ -5,7 +5,7 @@
 ComputeThread::ComputeThread(QObject *parent)
 	: QObject(parent)
 {
-	argc = 7;
+	argc = 9;
 
 	argv[0] = "111";
 	argv[1] = "--in";
@@ -14,7 +14,8 @@ ComputeThread::ComputeThread(QObject *parent)
 	argv[4] = "123.ply";
 	argv[5] = "--depth";
 	argv[6] = "10";
-
+	argv[7] = "--bType";
+	argv[8] = "1";
 	hdll = LoadLibrary(L"SSDRecon.dll");
 	if (hdll == NULL)
 	{
@@ -464,7 +465,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
 			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				return false;
+				//return false;
 			}
 		}
 
@@ -585,7 +586,7 @@ void ComputeThread::controlComputeScan(int chooseJawIndex)
 			}
 		}
 		cout << "scan_index:" << scan_index <<endl;
-		unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
 		                                                                                  
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, unwarp, chooseJawIndex, scan_index);
 		if (scanFlag == true)
@@ -613,11 +614,14 @@ void ComputeThread::controlComputeScan(int chooseJawIndex)
 		freeSpace.release();
 		if (scan_index == (DataSize-1))
 		{
-			/*for (int i = 0; i < 9; i++)
-			{
-				string name = std::to_string(i) + ".ply";
-				writefile(upper_mModel[i], name);
-			}*/
+			//for (int i = 0; i < 9; i++)
+			//{
+			//	string modelNameStr = std::to_string(i) + ".ply";
+			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
+			//	cout << "pathname: " << modelNameStr << endl;
+			//	finish_model_io.writeModel(modelNameStr, "stl");
+			//	//writefile(upper_mModel[i], name);
+			//}
 			
 			emit computeFinish();
 		}
@@ -797,7 +801,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 		}
 	}
 	
-	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
 
 	/*vector<double> points_;
 	vector<float> normal;
@@ -928,10 +932,16 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 
 				string name2 = std::to_string(i) + "_totalpoint.ply";
 				writefile(upper_mModel[i], name2);
-			}
-			string name = "totalMeshModel.ply";
+			}*/
+			/*string name = "totalMeshModel.ply";
+			cout << name << endl;
 			writefile(totalMeshModel, name);*/
-			//recon::PoissonRec pr;
+			
+			/*string modelNameStr = "totalMeshModel.stl";
+			orth::ModelIO finish_model_io(&totalMeshModel);
+			cout << "pathname: " << modelNameStr << endl;
+			finish_model_io.writeModel(modelNameStr, "stlb");*/
+
 			time3 = clock();
 			//pr.Execute(totalMeshModel);
 			poissonRecon(argc,argv,&totalMeshModel);
@@ -1016,6 +1026,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
 			//writefile(totalMeshModel);
 			//recon::PoissonRec pr;
+			
 			time3 = clock();
 			poissonRecon(argc, argv, &totalMeshModel);
 			all_mModel.push_back(totalMeshModel);

@@ -83,7 +83,7 @@ public:
 	void setFlage(bool flag = true);  //设置标志位，何时关闭子线程
 
 	int  argc;
-	char *argv[7];
+	char *argv[9];
 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel* mm);
 	Dllfun poissonRecon;
 	HINSTANCE hdll;

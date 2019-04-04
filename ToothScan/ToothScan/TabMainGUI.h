@@ -28,7 +28,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QFileDialog>
-
+#include <QDockWidget>
 
 #define TOOTHNUM 32
 
@@ -64,6 +64,10 @@ public:
 
 	QString lastDateTimeStr;//最新订单时间字符串
 	QString fileQStr;//保存文件路径
+	QString filePath = "./ScanData/";//文件目录路径
+
+	//读取订单信息文件
+	void readFileStorage(QString fPath);
 
 public:
 	Ui::TabMainGUI ui;
@@ -152,10 +156,31 @@ public:
 	//Calibrate标定页面
 	QPushButton *calibratePushButton;
 	QPushButton *globalCaliPushButton;
+	QLabel *leftCameraLable;
+	QLabel *rightCameraLable;
+
+	//设置子页面
+	QButtonGroup *settingButtonGroup;
+	QCheckBox *textureCheckBox;
+	QCheckBox *ACheckBox;
+	QCheckBox *BCheckBox;
+	QLabel *scanDataPathLabel;
+	QLineEdit *scanDataPathEdit;
+	QPushButton *choosePathButton;
 
 signals:
 	void scanDataSignal(QJsonObject scanObj);
 	void scanSignal();
+	//导入上颌
+	void exportUpperJawSignal();
+	//导入上颌
+	void exportLowerJawSignal();
+	//导入印模1
+	void exportFirstMoulageSignal();
+	//导入印模2
+	void exportSecondMoulageSignal();
+	//导入印模3
+	void exportThirdMoulageSignal();
 
 public slots:
 	//订单管理信息槽
@@ -163,6 +188,9 @@ public slots:
 
 	//打开文件
 	void openFileDialogSlot();
+
+	//打开路径
+	void openDirectoryDialogSlot();
 
     //未分模
 	void UpperJawPress();
@@ -179,5 +207,8 @@ public slots:
 	void clearAllButtonPress();
 
 	void ScanDataPackagePress();
+
+	//
+	void settingButtonClicked(QAbstractButton *button);
 };
 #endif

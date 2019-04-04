@@ -12,8 +12,8 @@ public:
 		QSize s = QProxyStyle::sizeFromContents(type, option, size, widget);
 		if (type == QStyle::CT_TabBarTab) {
 			s.transpose();
-			s.rwidth() = 90; // 设置每个tabBar中item的大小
-			s.rheight() = 44;
+			s.rwidth() = 100; // 设置每个tabBar中item的大小
+			s.rheight() = 60;
 		}
 		return s;
 	}
@@ -76,11 +76,18 @@ void TabMainGUI::setConnections()
 	connect(this, SIGNAL(scanSignal()), this, SLOT(ScanDataPackagePress()));//扫描按钮连接
 	//未分模
 	connect(upperJawButton, SIGNAL(clicked()), this, SLOT(UpperJawPress()));
+	connect(this, SIGNAL(exportUpperJawSignal()), this, SLOT(UpperJawPress()));
 	connect(lowerJawButton, SIGNAL(clicked()), this, SLOT(LowerJawPress()));
+	connect(this, SIGNAL(exportLowerJawSignal()), this, SLOT(LowerJawPress()));
+
 	//印模
 	connect(MoulageButton1, SIGNAL(clicked()), this, SLOT(MoulagePress1()));
+	connect(this, SIGNAL(exportFirstMoulageSignal()), this, SLOT(MoulagePress1()));
 	connect(MoulageButton2, SIGNAL(clicked()), this, SLOT(MoulagePress2()));
+	connect(this, SIGNAL(exportSecondMoulageSignal()), this, SLOT(MoulagePress2()));
 	connect(MoulageButton3, SIGNAL(clicked()), this, SLOT(MoulagePress3()));
+	connect(this, SIGNAL(exportThirdMoulageSignal()), this, SLOT(MoulagePress3()));
+
 	//分模
 	connect(toothRadioButtonGroup,SIGNAL(buttonClicked(int)), this,SLOT(ToothGroupClicked(int)));
 	connect(clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllButtonPress()));
@@ -89,6 +96,9 @@ void TabMainGUI::setConnections()
 	{
 		connect(toothList[i], SIGNAL(clicked()), this, SLOT(ToothButtonListPress()));
 	}
+	connect(settingButtonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
+
+	connect(choosePathButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
 }
 
 void TabMainGUI::initVariable()
@@ -243,12 +253,39 @@ void TabMainGUI::initVariable()
 	//calibatepage标定页面
 	calibratePushButton = new QPushButton(QStringLiteral("开始标定"),this);
 	calibratePushButton->setFixedSize(150, 30);
-	calibratePushButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-
-	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"));
+	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"),this);
 	globalCaliPushButton->setFixedSize(150, 30);
-	globalCaliPushButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	leftCameraLable = new QLabel(this);
+	leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+	leftCameraLable->setScaledContents(true);
+	leftCameraLable->setFixedSize(800, 640);
+	rightCameraLable = new QLabel(this);
+	rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+	rightCameraLable->setScaledContents(true);
+	rightCameraLable->setFixedSize(800, 640);
 
+	//设置子页面
+	settingButtonGroup = new QButtonGroup(this);
+	textureCheckBox = new QCheckBox(this);
+	textureCheckBox->setText(QStringLiteral("纹理"));
+
+	textureCheckBox->setFixedSize(100,60);
+	ACheckBox = new QCheckBox(this);
+	ACheckBox->setText(QStringLiteral("标志点"));
+	ACheckBox->setFixedSize(100, 60);
+	BCheckBox = new QCheckBox(this);
+	BCheckBox->setText(QStringLiteral("颌架"));
+	BCheckBox->setFixedSize(100, 60);
+
+	settingButtonGroup->addButton(textureCheckBox);
+	settingButtonGroup->addButton(ACheckBox);
+	settingButtonGroup->addButton(BCheckBox);
+	settingButtonGroup->setExclusive(false);
+
+	scanDataPathLabel = new QLabel(QStringLiteral("扫描路径:"), this);
+	scanDataPathEdit = new QLineEdit(this);
+	scanDataPathEdit->setText("./ScanData");
+	choosePathButton = new QPushButton(QStringLiteral("选择路径"), this);
 }
 
 void TabMainGUI::constructIHM()
@@ -420,11 +457,56 @@ void TabMainGUI::constructIHM()
 	totalAboutGLayout->addWidget(aboutTextLabel, 1, 3, 1, 2);
 	
 	//标定子页面
-	calibratePushButton->setParent(calibrateWidget);
-	calibratePushButton->setGeometry(1400, 50, 40, 40);
-	globalCaliPushButton->setParent(calibrateWidget);
-	globalCaliPushButton->setGeometry(500, 50, 40, 40);
+	QVBoxLayout *calibVLayout = new QVBoxLayout(calibrateWidget);
+	
+	QWidget *topCalibHWidget = new QWidget();
+	QHBoxLayout *topCalibHLayout = new QHBoxLayout(topCalibHWidget);
+	topCalibHLayout->addStretch(1);
+	topCalibHLayout->addWidget(globalCaliPushButton);
+	topCalibHLayout->addStretch(2);
+	topCalibHLayout->addWidget(calibratePushButton);
+	topCalibHLayout->addStretch(1);
 
+	QWidget *bottomCalibHWidget = new QWidget();
+	QHBoxLayout *bottomCalibHLayout = new QHBoxLayout(bottomCalibHWidget);
+	bottomCalibHLayout->addStretch(2);
+	bottomCalibHLayout->addWidget(leftCameraLable);
+	bottomCalibHLayout->addStretch(3);
+	bottomCalibHLayout->addWidget(rightCameraLable);
+	bottomCalibHLayout->addStretch(2);
+	calibVLayout->addStretch(2);
+	calibVLayout->addWidget(topCalibHWidget);
+	calibVLayout->addStretch(1);
+	calibVLayout->addWidget(bottomCalibHWidget);
+	calibVLayout->addStretch(3);
+
+	//设置子页面
+	QVBoxLayout *settingVLayout = new QVBoxLayout(settingWidget);
+
+	QWidget *topSettingHWidget = new QWidget();
+	QHBoxLayout *topSettingHLayout = new QHBoxLayout(topSettingHWidget);
+	topSettingHLayout->addStretch();
+	topSettingHLayout->addWidget(textureCheckBox);
+	topSettingHLayout->addWidget(ACheckBox);
+	topSettingHLayout->addWidget(BCheckBox);
+	topSettingHLayout->addStretch();
+
+	QWidget *bottomSettingHWidget = new QWidget();
+	QHBoxLayout *bottomSettingHLayout = new QHBoxLayout(bottomSettingHWidget);
+	bottomSettingHLayout->addStretch();
+	bottomSettingHLayout->addWidget(scanDataPathLabel);
+	bottomSettingHLayout->addWidget(scanDataPathEdit); 
+	bottomSettingHLayout->addWidget(choosePathButton);
+	bottomSettingHLayout->addStretch();
+	
+	settingVLayout->addStretch(2);
+	settingVLayout->addWidget(topSettingHWidget);
+	settingVLayout->addStretch(1);
+	settingVLayout->addWidget(bottomSettingHWidget);
+	settingVLayout->addStretch(3);
+
+
+	//总TabWidget
 	totalTabWidget->addTab(orderInforWidget, QStringLiteral("订单管理"));
 	totalTabWidget->addTab(settingWidget, QStringLiteral("设置"));
 	totalTabWidget->addTab(calibrateWidget, QStringLiteral("标定"));
@@ -432,12 +514,12 @@ void TabMainGUI::constructIHM()
 	totalGLayOut->addWidget(totalTabWidget);
 	totalGLayOut->setContentsMargins(0, 0, 0, 0);
 	this->setLayout(totalGLayOut);
+
 }
 
 bool TabMainGUI::isDirExist(QString fullPath)
 {
 	QDir dir(fullPath);
-	std::cout << fullPath.toStdString() << std::endl;
 	if (dir.exists())
 	{
 		return true;
@@ -461,12 +543,15 @@ bool TabMainGUI::judgePatientSaveFlag()
 	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL)&&
 		(unMoulageFlag == true|| doMoulageFlag == true|| splitModelFlag == true))
 	{
-		QString fullPath = "./data/" + orderNumber;
-		bool creatFlag = isDirExist(fullPath);
-		fileQStr = "./data/" + orderNumber + "/";
+		QString tempFilePath = filePath + "/" + orderNumber;
+		std::cout << "tempFilePath is " << tempFilePath.toStdString() << std::endl;
+		bool creatFlag = isDirExist(tempFilePath);
+		fileQStr = tempFilePath + "/";
+		std::cout <<"fileQStr is " << fileQStr.toStdString() << std::endl;
 		QByteArray orderPN = ToChineseStr(orderPatientName);
-		std::string filePath = "./data/" + orderNumber.toStdString() + "/" + orderPN.data() + ".OI";
-		cv::FileStorage fwrite(filePath.c_str(), cv::FileStorage::WRITE);
+		std::string filePathStr = fileQStr.toStdString() + orderPN.data() + ".OI";
+		std::cout << "string filepath is " << filePathStr << std::endl;
+		cv::FileStorage fwrite(filePathStr.c_str(), cv::FileStorage::WRITE);
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
 			<< "Patient Name" << orderPN.data()
@@ -477,127 +562,134 @@ bool TabMainGUI::judgePatientSaveFlag()
 		{
 			if (upperJawButtonFlag == true && lowerJawButtonFlag == false)
 			{
-				fwrite << "onlyUpperJaw" << true;
+				fwrite << "scanModel" << 1;
 			}
 			if (lowerJawButtonFlag == true && upperJawButtonFlag == false)
 			{
-				fwrite << "onlyLowerJaw" << true;
+				fwrite << "scanModel" << 2;
 			}
 			else if (upperJawButtonFlag == true && lowerJawButtonFlag == true)
 			{
-				fwrite << "allJaw" << true;
+				fwrite << "scanModel" << 3;
 			}
 		}
 		else if (doMoulageFlag == true)
 		{
 			if (MoulageFlag1 == true)
 			{
-				fwrite << "MoulageFlag1" << true;
+				fwrite << "scanModel" << 4;
 			}
 			else if (MoulageFlag2 == true)
 			{
-				fwrite << "MoulageFlag2" << true;
+				fwrite << "scanModel" << 5;
 			}
 			else if (MoulageFlag3 == true)
 			{
-				fwrite << "MoulageFlag3" << true;
+				fwrite << "scanModel" << 6;
 			}
 		}
-
-		for (int j = 1; j < 9; j++)
+		else 
 		{
-			switch (j)
+			fwrite << "scanModel" << 7;
+			for (int j = 1; j < 9; j++)
 			{
-			case 1:
-			{
-				if (totalCrownList.size() != 0)
+				switch (j)
 				{
-					for (int i = 0; i < totalCrownList.size(); i++)
+					case 1:
 					{
-						fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
+						if (totalCrownList.size() != 0)
+						{
+							//fwrite << "splitModel" << 1;
+							for (int i = 0; i < totalCrownList.size(); i++)
+							{
+								fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 2:
+					{
+						if (toothCrownList.size() != 0)
+						{
+							//fwrite << "splitModel" << 2;
+							for (int i = 0; i < toothCrownList.size(); i++)
+							{
+								fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 3:
+					{
+						if (lossToothList.size() != 0)
+						{
+							for (int i = 0; i < lossToothList.size(); i++)
+							{
+								fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 4:
+					{
+						if (inlayList.size() != 0)
+						{
+							for (int i = 0; i < inlayList.size(); i++)
+							{
+								fwrite << "inlay" << inlayList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 5:
+					{
+						if (facingList.size() != 0)
+						{
+							for (int i = 0; i < facingList.size(); i++)
+							{
+								fwrite << "facing" << facingList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 6:
+					{
+						if (waxTypeList.size() != 0)
+						{
+							for (int i = 0; i < waxTypeList.size(); i++)
+							{
+								fwrite << "waxType" << waxTypeList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 7:
+					{
+						if (implantList.size() != 0)
+						{
+							for (int i = 0; i < implantList.size(); i++)
+							{
+								fwrite << "implant" << implantList[i]->text().toStdString();
+							}
+						}
+						break;
+					}
+					case 8:
+					{
+						if (jawToothList.size() != 0)
+						{
+							for (int i = 0; i < jawToothList.size(); i++)
+							{
+								fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
+							}
+						}
+						break;
 					}
 				}
-				break;
-			}
-			case 2:
-			{
-				if (toothCrownList.size() != 0)
-				{
-					for (int i = 0; i < toothCrownList.size(); i++)
-					{
-						fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 3:
-			{
-				if (lossToothList.size() != 0)
-				{
-					for (int i = 0; i < lossToothList.size(); i++)
-					{
-						fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 4:
-			{
-				if (inlayList.size() != 0)
-				{
-					for (int i = 0; i < inlayList.size(); i++)
-					{
-						fwrite << "inlay" << inlayList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 5:
-			{
-				if (facingList.size() != 0)
-				{
-					for (int i = 0; i < facingList.size(); i++)
-					{
-						fwrite << "facing" << facingList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 6:
-			{
-				if (waxTypeList.size() != 0)
-				{
-					for (int i = 0; i < waxTypeList.size(); i++)
-					{
-						fwrite << "waxType" << waxTypeList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 7:
-			{
-				if (implantList.size() != 0)
-				{
-					for (int i = 0; i < implantList.size(); i++)
-					{
-						fwrite << "implant" << implantList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
-			case 8:
-			{
-				if (jawToothList.size() != 0)
-				{
-					for (int i = 0; i < jawToothList.size(); i++)
-					{
-						fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
-					}
-				}
-				break;
-			}
 			}
 		}
+		
+		fwrite.release();
 		return true;
 	}
 	else
@@ -1226,6 +1318,47 @@ void TabMainGUI::ScanDataPackagePress()
 	emit scanDataSignal(scanObj);
 }
 
+void TabMainGUI::readFileStorage(QString fPath)
+{
+	std::string fPathStr = fPath.toStdString();
+	cv::FileStorage fRead(fPathStr.c_str(),cv::FileStorage::READ);
+	orderDate = QString::fromStdString(fRead["Order Date"].string());
+	orderNumber = QString::fromStdString(fRead["Order Number"].string());
+	orderPatientName = QString::fromStdString(fRead["Patient Name"].string());
+	orderDoctorName = QString::fromStdString(fRead["Doctor Name"].string());
+	orderAddition = QString::fromStdString(fRead["Addition"].string());
+
+	if (fRead["scanModel"].real() == 1)
+	{
+		emit exportUpperJawSignal();
+	}
+	else if (fRead["scanModel"].real() == 2)
+	{
+		emit exportLowerJawSignal();
+	}
+	else if (fRead["scanModel"].real() == 3)
+	{
+		emit exportUpperJawSignal();
+		emit exportLowerJawSignal();
+	}
+	else if (fRead["scanModel"].real() == 4)
+	{
+		emit exportFirstMoulageSignal();
+	}
+	else if (fRead["scanModel"].real() == 5)
+	{
+		emit exportSecondMoulageSignal();
+	}
+	else if (fRead["scanModel"].real() == 6)
+	{
+		emit exportThirdMoulageSignal();
+	}
+	else if (fRead["scanModel"].real() == 7)
+	{
+
+	}
+}
+
 void TabMainGUI::openFileDialogSlot()
 {
 	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"),".",tr("Text Files(*.OI)"));
@@ -1244,4 +1377,32 @@ void TabMainGUI::openFileDialogSlot()
 		QMessageBox::warning(this, QStringLiteral("路径"),QStringLiteral("您未选择任何路径。"));
 	}
 
+}
+
+void TabMainGUI::openDirectoryDialogSlot()
+{
+	QString file_path = QFileDialog::getExistingDirectory(this, "请选择扫描数据保存路径...", "./");
+	if (!file_path.isEmpty())
+	{
+		scanDataPathEdit->setText(file_path);
+		filePath = file_path;
+	}
+	else {
+		QMessageBox::warning(this, QStringLiteral("路径"), QStringLiteral("您未选择任何路径。"));
+	}
+
+}
+
+void TabMainGUI::settingButtonClicked(QAbstractButton *button)
+{
+	// 当前点击的按钮
+	qDebug() << QString("Clicked Button : %1").arg(button->text());
+
+	// 遍历按钮，获取选中状态
+	QList<QAbstractButton*> list = settingButtonGroup->buttons();
+	foreach(QAbstractButton *pCheckBox, list)
+	{
+		QString strStatus = pCheckBox->isChecked() ? "Checked" : "Unchecked";
+		qDebug() << QString("Button : %1 is %2").arg(pCheckBox->text()).arg(strStatus);
+	}
 }
