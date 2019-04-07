@@ -50,7 +50,7 @@ public:
 	int lowerJawIndex = 1;
 
 	int allJawIndex = 1;
-	
+
 	int chooseJawIndex = 0;//1代表是只扫上颌；2代表只扫下颌；3代表扫全颌；
 
 	bool compensationFlag = false;
@@ -63,12 +63,13 @@ public:
 	QThread *controlScanQThread, *controlComputeQThread;
 
 	ScanTipWidget *scanTipWidget;
-	
+
 	void initVariable();
 	void constructIHM();
 	void setConnections();
 	//扫描模型
 	void CalculatePointCloud();
+	void splitModelCalculatePointCloud(pCScanTask pScanTask);
 	//Mat2QImage
 	QImage Mat2QImage(const cv::Mat &InputMat);
 	QString filePath;//保存文件路径
@@ -80,8 +81,8 @@ public:
 	int allCutModelNum = 0;
 	//删除所有切割数据
 	void deleteAllCutModel();
-	
-	
+
+
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
 	void startControlCalibrationSignal();//开始标定信号
@@ -96,6 +97,9 @@ signals:
 	void updateModelsVtSingle();
 	void saveModeltoFileSignal();
 
+	void startNormalScan(pCScanTask pScanTask);//控制正常扫描信号signals
+	void compensationScanSignal(pCScanTask pScanTask);//补充扫描信号
+	void gpaTaskMeshSignal(pCScanTask pScanTask);
 private:
 	Ui::ScanMainGUI ui;
 
@@ -120,9 +124,9 @@ private:
 	QLabel *cameraImageLabel;
 	QSpinBox *spinCameraBox;
 	QSlider *sliderCamera;
+	bool m_bsplitModelFlag;	//分模
+	private slots:
 
-private slots:
-	
 	//标定
 	void ToothCalibrateSlot();
 	void GlobalCalibrateSlot();
@@ -169,6 +173,21 @@ private slots:
 
 	//保存所有模型到文件
 	void saveModeltoFileSlot();
+
+	void scanJawScanBtnClick();
+	void compensationBtnClick();
+	void discardBtnClick();		//撤销补扫
+	void compensationScanPanelNextBtnClick();
+	void cutModelBtnClick();
+	void unDoCutBtnClick();
+	void saveCutHeightCutBtnClick();
+	void cutPaneNextStepBtnClick();
+	void CutJawFinishPanelNextStepBtnClick();
+	
+	public:
+	void updateTaskModel();
+	void meshFinishSlot();
+	
 };
 
 #endif

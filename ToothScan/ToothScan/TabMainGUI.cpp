@@ -59,6 +59,7 @@ TabMainGUI::TabMainGUI(QWidget *parent)
 	this->initVariable();
 	this->constructIHM();
 	this->setConnections();
+	m_eScanType = eScanType::eScanNULL;
 }
 
 TabMainGUI::~TabMainGUI()
@@ -89,7 +90,7 @@ void TabMainGUI::setConnections()
 	connect(this, SIGNAL(exportThirdMoulageSignal()), this, SLOT(MoulagePress3()));
 
 	//分模
-	connect(toothRadioButtonGroup,SIGNAL(buttonClicked(int)), this,SLOT(ToothGroupClicked(int)));
+	connect(toothRadioButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(ToothGroupClicked(int)));
 	connect(clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllButtonPress()));
 
 	for (int i = 0; i < 32; i++)
@@ -106,12 +107,12 @@ void TabMainGUI::initVariable()
 	totalGLayOut = new QGridLayout(this);
 
 	totalTabWidget = new QTabWidget(this);
-	
+
 	orderInforWidget = new QWidget(this);
 	settingWidget = new QWidget(this);
 	calibrateWidget = new QWidget(this);
 	aboutWidget = new QWidget(this);
-	 
+
 	//orderInformPage订单管理页面
 	//topbutton
 	newButton = new QPushButton(QStringLiteral("新建"), this);
@@ -138,7 +139,7 @@ void TabMainGUI::initVariable()
 	additionLabel = new QLabel(QStringLiteral("备注："), this);
 	//未分模
 	upperJawButton = new QPushButton(this);
-	upperJawButton->setFixedSize(310,110);
+	upperJawButton->setFixedSize(310, 110);
 	upperJawButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}"
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
 	lowerJawButton = new QPushButton(this);
@@ -171,9 +172,11 @@ void TabMainGUI::initVariable()
 		int value = (row + 1) * 10 + col + 1;
 		QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
 		toothList[i]->setStyleSheet(path);
-		toothList[i]->setObjectName(QString::number(i,10));
+		toothList[i]->setObjectName(QString::number(i, 10));
 		toothFlagList.append(false);
 		toothID.append(0);
+		m_pTeethScanTaskArray[i] = make_shared<CScanTask>();
+		m_pTeethScanTaskArray[i]->Set_TeethId(i);
 	}
 	toothList[0]->setText("11");
 	toothList[1]->setText("12");
@@ -212,14 +215,14 @@ void TabMainGUI::initVariable()
 	toothList[31]->setText("48");
 
 	clearAllButton = new QPushButton(QStringLiteral("清除所有"));
-	clearAllButton->setFixedSize(60,20);
-	
+	clearAllButton->setFixedSize(60, 20);
+
 	//splitright
 	toothRadioButtonGroup = new QButtonGroup();
 	toothRadioButtonGroup->setExclusive(true);
-	
+
 	totalCrownButton = new QRadioButton(QStringLiteral("              全冠"));
-	totalCrownButton->setFixedSize(150,30);
+	totalCrownButton->setFixedSize(150, 30);
 	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 	toothCrownButton = new QRadioButton(QStringLiteral("              牙冠"));
 	toothCrownButton->setFixedSize(150, 30);
@@ -251,9 +254,9 @@ void TabMainGUI::initVariable()
 	aboutImageLabel = new QLabel(this);
 
 	//calibatepage标定页面
-	calibratePushButton = new QPushButton(QStringLiteral("开始标定"),this);
+	calibratePushButton = new QPushButton(QStringLiteral("开始标定"), this);
 	calibratePushButton->setFixedSize(150, 30);
-	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"),this);
+	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"), this);
 	globalCaliPushButton->setFixedSize(150, 30);
 	leftCameraLable = new QLabel(this);
 	leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
@@ -269,7 +272,7 @@ void TabMainGUI::initVariable()
 	textureCheckBox = new QCheckBox(this);
 	textureCheckBox->setText(QStringLiteral("纹理"));
 
-	textureCheckBox->setFixedSize(100,60);
+	textureCheckBox->setFixedSize(100, 60);
 	ACheckBox = new QCheckBox(this);
 	ACheckBox->setText(QStringLiteral("标志点"));
 	ACheckBox->setFixedSize(100, 60);
@@ -293,7 +296,7 @@ void TabMainGUI::constructIHM()
 	totalTabWidget->setTabPosition(QTabWidget::West);
 	totalTabWidget->setStyle(new CustomTabStyle);
 	totalTabWidget->setStyleSheet("QTabWidget::pane{ \border-left: 1px solid #eeeeee;}");
-	
+
 	//订单管理子页面
 	totalOrderVLayout = new QVBoxLayout(orderInforWidget);
 
@@ -308,7 +311,7 @@ void TabMainGUI::constructIHM()
 	topHLayout->addWidget(watchButton);
 	topHLayout->addStretch(8);
 	topHLayout->addWidget(saveScanButton);
-	
+
 	//leftwidget
 	QWidget *leftTopWidget = new QWidget();
 	QFormLayout *leftTopFLayout = new QFormLayout(leftTopWidget);
@@ -317,7 +320,7 @@ void TabMainGUI::constructIHM()
 	leftTopFLayout->addRow(QStringLiteral("订单编号:"), orderLineEdit);
 	leftTopFLayout->addRow(QStringLiteral("患者姓名:"), patientLineEdit);
 	leftTopFLayout->addRow(QStringLiteral("医生姓名:"), doctorLineEdit);
-	
+
 	QWidget *leftBottomWidget = new QWidget();
 	QGridLayout *leftBottomFLayout = new QGridLayout(leftBottomWidget);
 	leftBottomFLayout->addWidget(additionLabel);
@@ -348,7 +351,7 @@ void TabMainGUI::constructIHM()
 	rightTotalModelHLayout->addStretch();
 	//分模
 	QWidget *middleSplitModelWidget = new QWidget(rightTabWidget);
-	middleSplitModelWidget->setGeometry(0,0,1000,1000);
+	middleSplitModelWidget->setGeometry(0, 0, 1000, 1000);
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
 		toothList[i]->setParent(middleSplitModelWidget);
@@ -372,7 +375,7 @@ void TabMainGUI::constructIHM()
 	toothList[15]->setGeometry(390, 337, 40, 40);
 
 	clearAllButton->setParent(middleSplitModelWidget);
-	clearAllButton->setGeometry(220,390,60,20);
+	clearAllButton->setGeometry(220, 390, 60, 20);
 
 	toothList[23]->setGeometry(390, 437, 40, 40);
 	toothList[22]->setGeometry(370, 478, 40, 40);
@@ -411,7 +414,7 @@ void TabMainGUI::constructIHM()
 	implantButton->setParent(middleSplitModelWidget);
 	jawToothButton->setParent(middleSplitModelWidget);
 
-	totalCrownButton->setGeometry(550,100,150,30);
+	totalCrownButton->setGeometry(550, 100, 150, 30);
 	toothCrownButton->setGeometry(550, 150, 150, 30);
 	lossToothButton->setGeometry(550, 200, 150, 30);
 	inlayButton->setGeometry(550, 250, 150, 30);
@@ -448,17 +451,17 @@ void TabMainGUI::constructIHM()
 
 	//关于子页面
 	totalAboutGLayout = new QGridLayout(aboutWidget);
-	
+
 	aboutImageLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/Setting.png"));
 	aboutTextLabel->setStyleSheet(QString("color:rgb(128,128,128);"));
 	aboutTextLabel->setText(QStringLiteral("牙齿扫描仪软件是一款对牙齿模型进行扫描，取得相应三维模型的软件，该软件配套牙齿扫描仪器使用。"));
-	
+
 	totalAboutGLayout->addWidget(aboutImageLabel, 1, 0, 1, 1);
 	totalAboutGLayout->addWidget(aboutTextLabel, 1, 3, 1, 2);
-	
+
 	//标定子页面
 	QVBoxLayout *calibVLayout = new QVBoxLayout(calibrateWidget);
-	
+
 	QWidget *topCalibHWidget = new QWidget();
 	QHBoxLayout *topCalibHLayout = new QHBoxLayout(topCalibHWidget);
 	topCalibHLayout->addStretch(1);
@@ -495,10 +498,10 @@ void TabMainGUI::constructIHM()
 	QHBoxLayout *bottomSettingHLayout = new QHBoxLayout(bottomSettingHWidget);
 	bottomSettingHLayout->addStretch();
 	bottomSettingHLayout->addWidget(scanDataPathLabel);
-	bottomSettingHLayout->addWidget(scanDataPathEdit); 
+	bottomSettingHLayout->addWidget(scanDataPathEdit);
 	bottomSettingHLayout->addWidget(choosePathButton);
 	bottomSettingHLayout->addStretch();
-	
+
 	settingVLayout->addStretch(2);
 	settingVLayout->addWidget(topSettingHWidget);
 	settingVLayout->addStretch(1);
@@ -540,14 +543,14 @@ QByteArray TabMainGUI::ToChineseStr(const QString &chineseString)
 
 bool TabMainGUI::judgePatientSaveFlag()
 {
-	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL)&&
-		(unMoulageFlag == true|| doMoulageFlag == true|| splitModelFlag == true))
+	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL) &&
+		(unMoulageFlag == true || doMoulageFlag == true || splitModelFlag == true))
 	{
 		QString tempFilePath = filePath + "/" + orderNumber;
 		std::cout << "tempFilePath is " << tempFilePath.toStdString() << std::endl;
 		bool creatFlag = isDirExist(tempFilePath);
 		fileQStr = tempFilePath + "/";
-		std::cout <<"fileQStr is " << fileQStr.toStdString() << std::endl;
+		std::cout << "fileQStr is " << fileQStr.toStdString() << std::endl;
 		QByteArray orderPN = ToChineseStr(orderPatientName);
 		std::string filePathStr = fileQStr.toStdString() + orderPN.data() + ".OI";
 		std::cout << "string filepath is " << filePathStr << std::endl;
@@ -588,107 +591,107 @@ bool TabMainGUI::judgePatientSaveFlag()
 				fwrite << "scanModel" << 6;
 			}
 		}
-		else 
+		else
 		{
 			fwrite << "scanModel" << 7;
 			for (int j = 1; j < 9; j++)
 			{
 				switch (j)
 				{
-					case 1:
+				case 1:
+				{
+					if (totalCrownList.size() != 0)
 					{
-						if (totalCrownList.size() != 0)
+						//fwrite << "splitModel" << 1;
+						for (int i = 0; i < totalCrownList.size(); i++)
 						{
-							//fwrite << "splitModel" << 1;
-							for (int i = 0; i < totalCrownList.size(); i++)
-							{
-								fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
-							}
+							fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 2:
+					break;
+				}
+				case 2:
+				{
+					if (toothCrownList.size() != 0)
 					{
-						if (toothCrownList.size() != 0)
+						//fwrite << "splitModel" << 2;
+						for (int i = 0; i < toothCrownList.size(); i++)
 						{
-							//fwrite << "splitModel" << 2;
-							for (int i = 0; i < toothCrownList.size(); i++)
-							{
-								fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
-							}
+							fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 3:
+					break;
+				}
+				case 3:
+				{
+					if (lossToothList.size() != 0)
 					{
-						if (lossToothList.size() != 0)
+						for (int i = 0; i < lossToothList.size(); i++)
 						{
-							for (int i = 0; i < lossToothList.size(); i++)
-							{
-								fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
-							}
+							fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 4:
+					break;
+				}
+				case 4:
+				{
+					if (inlayList.size() != 0)
 					{
-						if (inlayList.size() != 0)
+						for (int i = 0; i < inlayList.size(); i++)
 						{
-							for (int i = 0; i < inlayList.size(); i++)
-							{
-								fwrite << "inlay" << inlayList[i]->text().toStdString();
-							}
+							fwrite << "inlay" << inlayList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 5:
+					break;
+				}
+				case 5:
+				{
+					if (facingList.size() != 0)
 					{
-						if (facingList.size() != 0)
+						for (int i = 0; i < facingList.size(); i++)
 						{
-							for (int i = 0; i < facingList.size(); i++)
-							{
-								fwrite << "facing" << facingList[i]->text().toStdString();
-							}
+							fwrite << "facing" << facingList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 6:
+					break;
+				}
+				case 6:
+				{
+					if (waxTypeList.size() != 0)
 					{
-						if (waxTypeList.size() != 0)
+						for (int i = 0; i < waxTypeList.size(); i++)
 						{
-							for (int i = 0; i < waxTypeList.size(); i++)
-							{
-								fwrite << "waxType" << waxTypeList[i]->text().toStdString();
-							}
+							fwrite << "waxType" << waxTypeList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 7:
+					break;
+				}
+				case 7:
+				{
+					if (implantList.size() != 0)
 					{
-						if (implantList.size() != 0)
+						for (int i = 0; i < implantList.size(); i++)
 						{
-							for (int i = 0; i < implantList.size(); i++)
-							{
-								fwrite << "implant" << implantList[i]->text().toStdString();
-							}
+							fwrite << "implant" << implantList[i]->text().toStdString();
 						}
-						break;
 					}
-					case 8:
+					break;
+				}
+				case 8:
+				{
+					if (jawToothList.size() != 0)
 					{
-						if (jawToothList.size() != 0)
+						for (int i = 0; i < jawToothList.size(); i++)
 						{
-							for (int i = 0; i < jawToothList.size(); i++)
-							{
-								fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
-							}
+							fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
 						}
-						break;
 					}
+					break;
+				}
 				}
 			}
 		}
-		
+
 		fwrite.release();
 		return true;
 	}
@@ -709,7 +712,72 @@ void TabMainGUI::PatientInformationSave()
 	orderDoctorName = doctorLineEdit->text();
 	orderAddition = additionTextEdit->toPlainText();
 	judgeSplitModelFlag();
-	
+
+	if (splitModelFlag)//分模
+	{
+		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
+		//pCOralSubstituteScan upperJawOralScanTask, lowJawOralScanTask;
+		pCGroupScan pupperJawTotalCrownGroupScan = nullptr,plowJawTotalCrownGroupScan = nullptr;
+		for (int j = 0; j < 32; j++) {
+			eScanType l_eScanType = m_pTeethScanTaskArray[j]->Get_ScanType();
+			if (l_eScanType != eScanNULL) {
+				switch (l_eScanType) {
+				case etotalCrown:
+					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
+						if (plowJawTotalCrownGroupScan == nullptr){
+							plowJawTotalCrownGroupScan = make_shared<CGroupScan>();
+							plowJawTotalCrownGroupScan->Set_ScanType(l_eScanType);
+							plowJawTotalCrownGroupScan->Set_TaskName(g_strScanName[l_eScanType]);
+							CTaskManager::getInstance()->AddTask(plowJawTotalCrownGroupScan);
+						}
+						plowJawTotalCrownGroupScan->m_vtTeeth.push_back(m_pTeethScanTaskArray[j]);
+					}
+					else //上颌
+					{
+						if (pupperJawTotalCrownGroupScan == nullptr) {
+							pupperJawTotalCrownGroupScan = make_shared<CGroupScan>();
+							pupperJawTotalCrownGroupScan->Set_ScanType(l_eScanType);
+							pupperJawTotalCrownGroupScan->Set_TaskName(g_strScanName[l_eScanType]);
+							CTaskManager::getInstance()->AddTask(pupperJawTotalCrownGroupScan);
+						}
+						pupperJawTotalCrownGroupScan->m_vtTeeth.push_back(m_pTeethScanTaskArray[j]);
+					}
+					break;
+				case etoothCrown:
+					break;
+				case elossToothScan:
+					break;
+				case einlayScan:
+					break;
+				}
+				if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {
+					if (lowerJawScanTask == nullptr) {
+						lowerJawScanTask = make_shared<CScanTask>();
+						lowerJawScanTask->Set_ScanType(eLowerJawScan);
+						lowerJawScanTask->Set_TaskName(g_strScanName[eLowerJawScan]);
+						CTaskManager::getInstance()->AddTask(lowerJawScanTask, true);
+						if (upperScanTask) {
+							if (allJawScanTask == nullptr) {
+								allJawScanTask = make_shared<CScanTask>();
+								allJawScanTask->Set_ScanType(eAllJawScan);
+								allJawScanTask->Set_TaskName(g_strScanName[eAllJawScan]);
+								CTaskManager::getInstance()->AddTask(allJawScanTask, true);
+							}
+						}
+					}
+				}
+				else {
+					if (upperScanTask == nullptr) {
+						upperScanTask = make_shared<CScanTask>();
+						upperScanTask->Set_ScanType(eUpperJawScan);
+						upperScanTask->Set_TaskName(g_strScanName[eUpperJawScan]);
+						CTaskManager::getInstance()->AddTask(upperScanTask, true);
+					}
+				}
+			}
+		}
+	}
+
 	if (judgePatientSaveFlag() == true)
 	{
 		emit scanSignal();
@@ -718,7 +786,7 @@ void TabMainGUI::PatientInformationSave()
 
 void TabMainGUI::UpperJawPress()
 {
-	
+
 	if (upperJawButtonFlag == false)
 	{
 		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
@@ -875,170 +943,171 @@ QList<QPushButton*> TabMainGUI::judgeToothList(int id)
 {
 	switch (id)
 	{
-		case 1:
-		{
-			return totalCrownList;
-			//break;
-		}
-		case 2:
-		{
-			return toothCrownList;
-			//break;
-		}
-		case 3:
-		{
-			return lossToothList;
-			break;
-		}
-		case 4:
-		{
-			return inlayList;
-			break;
-		}
-		case 5:
-		{
-			return facingList;
-			break;
-		}
-		case 6:
-		{
-			return waxTypeList;
-			break;
-		}
-		case 7:
-		{
-			return implantList;
-			break;
-		}
-		case 8:
-		{
-			return jawToothList;
-			break;
-		}
+	case 1:
+	{
+		return totalCrownList;
+		//break;
+	}
+	case 2:
+	{
+		return toothCrownList;
+		//break;
+	}
+	case 3:
+	{
+		return lossToothList;
+		break;
+	}
+	case 4:
+	{
+		return inlayList;
+		break;
+	}
+	case 5:
+	{
+		return facingList;
+		break;
+	}
+	case 6:
+	{
+		return waxTypeList;
+		break;
+	}
+	case 7:
+	{
+		return implantList;
+		break;
+	}
+	case 8:
+	{
+		return jawToothList;
+		break;
+	}
 	}
 }
 
 void TabMainGUI::ToothGroupClicked(int id)
 {
 	chooseID = id;
+	m_eScanType = (eScanType)id;
 	switch (id)
 	{
-		case 1:
+	case 1:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/11.png);}";
+		totalCrownButton->setStyleSheet(path);
+		if (totalCrownList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/11.png);}";
-			totalCrownButton->setStyleSheet(path);
-			if (totalCrownList.size() != 0)
+			foreach(QPushButton *chooseButton, totalCrownList)
 			{
-				foreach(QPushButton *chooseButton, totalCrownList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "1.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "1.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 2:
+		break;
+	}
+	case 2:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/22.png);}";
+		toothCrownButton->setStyleSheet(path);
+		if (toothCrownList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/22.png);}";
-			toothCrownButton->setStyleSheet(path);
-			if (toothCrownList.size() != 0)
+			foreach(QPushButton *chooseButton, toothCrownList)
 			{
-				foreach(QPushButton *chooseButton, toothCrownList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "2.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "2.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 3:
+		break;
+	}
+	case 3:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/33.png);}";
+		lossToothButton->setStyleSheet(path);
+		if (lossToothList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/33.png);}";
-			lossToothButton->setStyleSheet(path);
-			if (lossToothList.size() != 0)
+			foreach(QPushButton *chooseButton, lossToothList)
 			{
-				foreach(QPushButton *chooseButton, lossToothList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "3.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "3.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 4:
+		break;
+	}
+	case 4:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/44.png);}";
+		inlayButton->setStyleSheet(path);
+		if (inlayList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/44.png);}";
-			inlayButton->setStyleSheet(path);
-			if (inlayList.size() != 0)
+			foreach(QPushButton *chooseButton, inlayList)
 			{
-				foreach(QPushButton *chooseButton, inlayList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "4.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "4.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 5:
+		break;
+	}
+	case 5:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/55.png);}";
+		facingButton->setStyleSheet(path);
+		if (facingList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/55.png);}";
-			facingButton->setStyleSheet(path);
-			if (facingList.size() != 0)
+			foreach(QPushButton *chooseButton, facingList)
 			{
-				foreach(QPushButton *chooseButton, facingList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "5.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "5.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 6:
+		break;
+	}
+	case 6:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/66.png);}";
+		waxTypeButton->setStyleSheet(path);
+		if (waxTypeList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/66.png);}";
-			waxTypeButton->setStyleSheet(path);
-			if (waxTypeList.size() != 0)
+			foreach(QPushButton *chooseButton, waxTypeList)
 			{
-				foreach(QPushButton *chooseButton, waxTypeList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "6.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "6.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 7:
+		break;
+	}
+	case 7:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/77.png);}";
+		implantButton->setStyleSheet(path);
+		if (implantList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/77.png);}";
-			implantButton->setStyleSheet(path);
-			if (implantList.size() != 0)
+			foreach(QPushButton *chooseButton, implantList)
 			{
-				foreach(QPushButton *chooseButton, implantList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "7.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "7.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
-		case 8:
+		break;
+	}
+	case 8:
+	{
+		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/88.png);}";
+		jawToothButton->setStyleSheet(path);
+		if (jawToothList.size() != 0)
 		{
-			QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/88.png);}";
-			jawToothButton->setStyleSheet(path);
-			if (jawToothList.size() != 0)
+			foreach(QPushButton *chooseButton, jawToothList)
 			{
-				foreach(QPushButton *chooseButton, jawToothList)
-				{
-					QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "8.png);}";
-					chooseButton->setStyleSheet(path);
-				}
+				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "8.png);}";
+				chooseButton->setStyleSheet(path);
 			}
-			break;
 		}
+		break;
+	}
 	}
 }
 
-void TabMainGUI::addToothList(int id,int toothButtonIndex)
+void TabMainGUI::addToothList(int id, int toothButtonIndex)
 {
 	if (id == 1)
 	{
@@ -1113,6 +1182,16 @@ void TabMainGUI::removeToothList(int id, int toothButtonIndex)
 void TabMainGUI::ToothButtonListPress()
 {
 	int toothButtonIndex = sender()->objectName().toInt();
+	QPushButton * l_pTootPushButton = static_cast<QPushButton *> (sender());
+	if (!l_pTootPushButton)
+		return;
+	if (m_pTeethScanTaskArray[toothButtonIndex]->Get_ScanType() == m_eScanType) {
+		m_pTeethScanTaskArray[toothButtonIndex]->Set_ScanType(eScanNULL);
+	}
+	else {
+		m_pTeethScanTaskArray[toothButtonIndex]->Set_ScanType(m_eScanType);
+		m_pTeethScanTaskArray[toothButtonIndex]->Set_TaskName(g_strScanName[m_eScanType]);
+	}
 	if (chooseID != -1)
 	{
 		if (toothFlagList[toothButtonIndex] == false)
@@ -1169,20 +1248,20 @@ void TabMainGUI::setSplitToothFalse()
 			int row = i / 8;
 			int col = i % 8;
 			int value = (row + 1) * 10 + col + 1;
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth"+ QString::number(value, 10)+"0.png);}";
+			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
 			toothList[i]->setStyleSheet(path);
 			QList<QPushButton *> toothPushButtonList = judgeToothList(toothID[i]);
 			toothPushButtonList.removeOne(toothList[i]);
 
 		}
 	}
-	
+
 	totalCrownButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/10.png);}");
 	if (totalCrownButton->isChecked())
 	{
 		totalCrownButton->setAutoExclusive(false);
 		totalCrownButton->setChecked(false);
-		
+
 		totalCrownButton->setAutoExclusive(true);
 
 		chooseID = -1;
@@ -1205,7 +1284,7 @@ void TabMainGUI::setSplitToothFalse()
 		lossToothButton->setAutoExclusive(true);
 		chooseID = -1;
 	}
-	
+
 	inlayButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/40.png);}");//嵌体
 	if (inlayButton->isChecked())
 	{
@@ -1214,8 +1293,8 @@ void TabMainGUI::setSplitToothFalse()
 		inlayButton->setAutoExclusive(true);
 		chooseID = -1;
 	}
-	
-	
+
+
 	facingButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/50.png);}");//贴面
 	if (facingButton->isChecked())
 	{
@@ -1224,9 +1303,9 @@ void TabMainGUI::setSplitToothFalse()
 		facingButton->setAutoExclusive(true);
 		chooseID = -1;
 	}
-	
+
 	waxTypeButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/60.png);}");//蜡型
-	
+
 	if (waxTypeButton->isChecked())
 	{
 		waxTypeButton->setAutoExclusive(false);
@@ -1234,7 +1313,7 @@ void TabMainGUI::setSplitToothFalse()
 		waxTypeButton->setAutoExclusive(true);
 		chooseID = -1;
 	}
-	
+
 	implantButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/70.png);}");//种植体
 	if (implantButton->isChecked())
 	{
@@ -1243,8 +1322,8 @@ void TabMainGUI::setSplitToothFalse()
 		implantButton->setAutoExclusive(true);
 		chooseID = -1;
 	}
-	
-	
+
+
 	jawToothButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/80.png);}");//对颌牙
 	if (jawToothButton->isChecked())
 	{
@@ -1295,7 +1374,7 @@ void TabMainGUI::ScanDataPackagePress()
 		{
 			scanObj.insert("allJaw", 1);
 		}
-		else if(upperJawButtonFlag == true && lowerJawButtonFlag == false)
+		else if (upperJawButtonFlag == true && lowerJawButtonFlag == false)
 		{
 			scanObj.insert("upperJaw", 1);
 		}
@@ -1308,7 +1387,7 @@ void TabMainGUI::ScanDataPackagePress()
 	{
 		scanObj.insert("caseType", 2);
 	}
-	else if(doMoulageFlag == true)//印模
+	else if (doMoulageFlag == true)//印模
 	{
 		scanObj.insert("caseType", 3);
 	}
@@ -1321,7 +1400,7 @@ void TabMainGUI::ScanDataPackagePress()
 void TabMainGUI::readFileStorage(QString fPath)
 {
 	std::string fPathStr = fPath.toStdString();
-	cv::FileStorage fRead(fPathStr.c_str(),cv::FileStorage::READ);
+	cv::FileStorage fRead(fPathStr.c_str(), cv::FileStorage::READ);
 	orderDate = QString::fromStdString(fRead["Order Date"].string());
 	orderNumber = QString::fromStdString(fRead["Order Number"].string());
 	orderPatientName = QString::fromStdString(fRead["Patient Name"].string());
@@ -1361,20 +1440,20 @@ void TabMainGUI::readFileStorage(QString fPath)
 
 void TabMainGUI::openFileDialogSlot()
 {
-	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"),".",tr("Text Files(*.OI)"));
-	if (!path.isEmpty()) 
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"), ".", tr("Text Files(*.OI)"));
+	if (!path.isEmpty())
 	{
 		QFile file(path);
-		if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
 			QMessageBox::warning(this, QStringLiteral("读取文件"),
 				QStringLiteral("不能打开文件:\n%1").arg(path));
 			return;
 		}
-		
+
 	}
 	else {
-		QMessageBox::warning(this, QStringLiteral("路径"),QStringLiteral("您未选择任何路径。"));
+		QMessageBox::warning(this, QStringLiteral("路径"), QStringLiteral("您未选择任何路径。"));
 	}
 
 }

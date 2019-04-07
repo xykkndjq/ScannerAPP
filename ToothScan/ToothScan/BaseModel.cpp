@@ -43,7 +43,7 @@ BaseModel::~BaseModel()
 void BaseModel::OnPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInterface *pParent)
 {
 	//pParent->glUseProgram(0);
-	if (!Get_bVisible())
+	if (!Get_Visible())
 		return;
 	m_program->bind();
 	m_vbo->bind();

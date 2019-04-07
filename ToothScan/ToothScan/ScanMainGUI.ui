@@ -22,6 +22,267 @@
   <property name="toolTip">
    <string>确认选择</string>
   </property>
+  <widget class="QPushButton" name="leftViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>左视</string>
+   </property>
+   <property name="text">
+    <string>leftViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="frontviewBtn">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>前视</string>
+   </property>
+   <property name="text">
+    <string>frontview</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="modelMoveStateSetBtn">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>40</y>
+     <width>171</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>框选</string>
+   </property>
+   <property name="toolTipDuration">
+    <number>-3</number>
+   </property>
+   <property name="text">
+    <string>selectRegion</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="jawViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>颌视</string>
+   </property>
+   <property name="text">
+    <string>jawViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="rightViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>右视</string>
+   </property>
+   <property name="text">
+    <string>rightViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="backViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>后视</string>
+   </property>
+   <property name="text">
+    <string>backViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ChangeColor</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="narrowViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>缩小</string>
+   </property>
+   <property name="text">
+    <string>narrowViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="enlargeViewBtn">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>放大</string>
+   </property>
+   <property name="text">
+    <string>enlargeViewBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="delSelectedBtn">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>90</y>
+     <width>171</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>框选</string>
+   </property>
+   <property name="toolTipDuration">
+    <number>-3</number>
+   </property>
+   <property name="text">
+    <string>delSelected</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="confirmSelectedBtn">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>90</y>
+     <width>171</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>确认选择</string>
+   </property>
+   <property name="toolTipDuration">
+    <number>-3</number>
+   </property>
+   <property name="text">
+    <string>confirmSelected</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bgGroundmoveUpBtn">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>90</y>
+     <width>131</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>左视</string>
+   </property>
+   <property name="text">
+    <string>bgGroundmoveUpBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bgGroundmoveDownBtn">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>90</y>
+     <width>211</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>左视</string>
+   </property>
+   <property name="text">
+    <string>bgGroundmoveDownBtn</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bgGroundShowBtn">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>90</y>
+     <width>211</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>左视</string>
+   </property>
+   <property name="text">
+    <string>bgGroundShowBtn</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cutModelUnderBgBtn">
+   <property name="geometry">
+    <rect>
+     <x>1110</x>
+     <y>90</y>
+     <width>211</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>左视</string>
+   </property>
+   <property name="text">
+    <string>cutModelUnderBgBtn</string>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+  </widget>
   <widget class="QTextEdit" name="textEditR">
    <property name="geometry">
     <rect>
@@ -81,6 +342,819 @@
     </rect>
    </property>
   </widget>
+  <widget class="QGroupBox" name="ScanJawGroup">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="ScanJawGroupTipImage">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>271</width>
+      <height>291</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>Resources/images/alljaw.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ScanJawScanBtn">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>扫描</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ScanJawNextStepBtn">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>430</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>下一步</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ScanJawTips">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>281</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>上颌模型</string>
+    </property>
+   </widget>
+   <zorder>ScanJawGroupTipImage</zorder>
+   <zorder>ScanJawScanBtn</zorder>
+   <zorder>ScanJawNextStepBtn</zorder>
+   <zorder>ScanJawTips</zorder>
+   <zorder>compensationScanPanel</zorder>
+  </widget>
+  <widget class="QGroupBox" name="compensationScanPanel">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1600</x>
+     <y>790</y>
+     <width>281</width>
+     <height>531</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>281</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>旋转模型到你想要增加扫描的位置，通过“增加补扫”可添加新扫描数据</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="compensationScanPanelNextBtn">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>下一步</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="compensationScanPanelBackBtn">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>后退</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="compensationScanPanelTipLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>271</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>上颌模型扫描完成，可以增加模型数据</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>旋转角度</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="rotationLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>190</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="waverLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>230</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>摆动角度</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="compensationBtn">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>320</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>增加扫描</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="discardBtn">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>320</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>撤销补扫</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="CutJawPanel">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1210</x>
+     <y>770</y>
+     <width>371</width>
+     <height>513</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>281</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>调整水平切割平面的位置，通过“切割模型”可修剪模型数据</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cutPaneNextStepBtn">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>下一步</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ScanJawNextStepBtn_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>460</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>后退</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CutJawPanelTipsLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>上和模型增加扫描完成，可以水平切割模型数据</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>230</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>切割高度</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="cutHeightSlider">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>230</y>
+      <width>160</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-50</number>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="cutHeightSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>230</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>-50</number>
+    </property>
+    <property name="maximum">
+     <number>50</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cutModelBtn">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>360</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>切割模型</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="unDoCutBtn">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>360</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>撤销切割</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveCutHeightCutBtn">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>400</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>保存为默认切割高度</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="CutJawFinishPanel">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>1180</x>
+     <y>240</y>
+     <width>371</width>
+     <height>513</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="CutJawFinishPanelTips">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>281</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>可以通过工具栏修剪上颌模型数据</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CutJawFinishPanelNextStepBtn">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>完成</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CutJawFinishPanelBackBtn">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>后退</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>120</red>
+          <green>120</green>
+          <blue>120</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>拼接完成</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CutJawFinishPanelTipImage">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>140</y>
+      <width>271</width>
+      <height>291</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>Resources/images/alljaw.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <zorder>ScanJawGroup</zorder>
+  <zorder>leftViewBtn</zorder>
+  <zorder>frontviewBtn</zorder>
+  <zorder>modelMoveStateSetBtn</zorder>
+  <zorder>jawViewBtn</zorder>
+  <zorder>rightViewBtn</zorder>
+  <zorder>backViewBtn</zorder>
+  <zorder>pushButton</zorder>
+  <zorder>narrowViewBtn</zorder>
+  <zorder>enlargeViewBtn</zorder>
+  <zorder>delSelectedBtn</zorder>
+  <zorder>confirmSelectedBtn</zorder>
+  <zorder>bgGroundmoveUpBtn</zorder>
+  <zorder>bgGroundmoveDownBtn</zorder>
+  <zorder>bgGroundShowBtn</zorder>
+  <zorder>cutModelUnderBgBtn</zorder>
+  <zorder>textEditR</zorder>
+  <zorder>textEditG</zorder>
+  <zorder>textEditB</zorder>
+  <zorder>changeBgColorBtn</zorder>
+  <zorder>textEditA</zorder>
+  <zorder>ScanJawGroupTipImage</zorder>
+  <zorder>compensationScanPanel</zorder>
+  <zorder>label_2</zorder>
+  <zorder>CutJawPanel</zorder>
+  <zorder>CutJawFinishPanel</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

@@ -1,12 +1,14 @@
 #include "ScanMainGUI.h"
-
+#include "TaskManager.h"
 ScanMainGUI::ScanMainGUI(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent),
+	m_bsplitModelFlag(false)
 {
-	ui.setupUi(this);
+	
 	this->initVariable();
 	this->constructIHM();
 	this->setConnections();
+	ui.setupUi(this);
 }
 
 ScanMainGUI::~ScanMainGUI()
@@ -174,6 +176,11 @@ void ScanMainGUI::constructIHM()
 	scanTipWidget->setFixedSize(300,700);
 	scanTipWidget->setGeometry(1615,80,300,700);
 	scanTipWidget->setVisible(false);
+
+	ui.CutJawPanel->move(1630,230);
+	ui.CutJawFinishPanel->move(1630, 230);
+	ui.ScanJawGroup->move(1630, 230);
+	ui.compensationScanPanel->move(1630, 230);
 }
 
 void ScanMainGUI::setConnections()
@@ -239,6 +246,33 @@ void ScanMainGUI::setConnections()
 	connect(scanTipWidget->sliderCut, SIGNAL(valueChanged(int)), this, SLOT(moveCutSurfaceSliderSlot()));
 	connect(scanTipWidget->cutHeightButton, SIGNAL(clicked()), this, SLOT(cutModelSlot()));
 	connect(scanTipWidget->discardCutHeightButton, SIGNAL(clicked()), this, SLOT(discardCutModelSlot()));
+
+	connect(ui.ScanJawScanBtn, SIGNAL(clicked()), this, SLOT(scanJawScanBtnClick()));
+	connect(ui.compensationBtn, SIGNAL(clicked()), this, SLOT(compensationBtnClick()));
+	connect(ui.discardBtn, SIGNAL(clicked()), this, SLOT(discardBtnClick()));
+	connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelNextBtnClick()));
+	connect(ui.cutHeightSlider, &QSlider::valueChanged, ui.cutHeightSpinBox, &QSpinBox::setValue);
+	void (QSpinBox:: *spinBoxSignal2)(int) = &QSpinBox::valueChanged;
+	connect(ui.cutHeightSpinBox, spinBoxSignal2, ui.cutHeightSlider, &QSlider::setValue);
+	connect(ui.cutModelBtn, SIGNAL(clicked()), this, SLOT(cutModelBtnClick()));
+	connect(ui.unDoCutBtn, SIGNAL(clicked()), this, SLOT(unDoCutBtnClick()));
+	connect(ui.saveCutHeightCutBtn, SIGNAL(clicked()), this, SLOT(saveCutHeightCutBtnClick()));
+	connect(ui.cutPaneNextStepBtn, SIGNAL(clicked()), this, SLOT(cutPaneNextStepBtnClick()));
+	connect(ui.CutJawFinishPanelNextStepBtn, SIGNAL(clicked()), this, SLOT(cutPaneNextStepBtnClick()));
+	
+	
+	
+	connect(this, SIGNAL(startNormalScan(pCScanTask)), ControlScanThread, SLOT(normalScan()));
+	connect(this, SIGNAL(startNormalScan(pCScanTask)), ControlComputeThread, SLOT(normalComputeScan(pCScanTask)));
+	connect(ControlComputeThread, SIGNAL(showTaskModel()), this, SLOT(updateTaskModel()));
+	/*补扫*/
+	connect(this, SIGNAL(compensationScanSignal(pCScanTask pScanTask)), ControlScanThread, SLOT(compensationControlScan()));
+	connect(this, SIGNAL(compensationScanSignal(pCScanTask pScanTask)), ControlComputeThread, SLOT(compensationComputeScan(int)));
+	connect(this, SIGNAL(gpaTaskMeshSignal(pCScanTask)), ControlComputeThread, SLOT(GPAMeshing(pCScanTask)));
+	/*补扫*/
+	/*mesh*/
+	connect(ControlComputeThread, SIGNAL(meshFinish()), this, SLOT(meshFinishSlot()));
+	/*mesh*/
 }
 
 void ScanMainGUI::ToothCalibrateSlot()
@@ -281,6 +315,28 @@ void ScanMainGUI::CalculatePointCloud()
 		ControlComputeThread->setFlage(false);
 	}
 	emit startControlNormalScan(chooseJawIndex);
+}
+
+void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
+{
+	if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
+	{
+		emit startNormalScan(pScanTask);
+		return;
+	}
+	if (controlScanQThread->isRunning() == false)
+	{
+		//启动子线程，但没有启动线程处理函数
+		controlScanQThread->start();
+		ControlScanThread->setFlage(false);
+	}
+	if (controlComputeQThread->isRunning() == false)
+	{
+		//启动子线程，但没有启动线程处理函数
+		controlComputeQThread->start();
+		ControlComputeThread->setFlage(false);
+	}
+	emit startNormalScan(pScanTask);
 }
 
 void ScanMainGUI::updateMeshModel(int refreshIndex)
@@ -369,6 +425,7 @@ void ScanMainGUI::updateMeshModel(int refreshIndex)
 void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 {
 	scanTipWidget->setVisible(true);
+	m_bsplitModelFlag = false;
 	cout <<"caseType"<< scanObj.value("caseType").toInt() << endl;
 	cout << "upperJaw" << scanObj.value("upperJaw").toInt() << endl;
 	filePath = scanObj.value("filePath").toString();//保存文件路径 
@@ -399,7 +456,15 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	}
 	else if (scanObj.value("caseType").toInt() == 2)
 	{
-
+		m_bsplitModelFlag = true;
+		pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+		if(pCurrentTask){
+			ui.ScanJawGroup->setVisible(true);
+			ui.ScanJawNextStepBtn->setVisible(false);
+			QString str;
+			str.sprintf("请插入%s", pCurrentTask->Get_TaskName());
+			ui.ScanJawTips->setText(str);
+		}
 	}
 	tabMainPage->hide();
 	this->showMaximized();
@@ -437,127 +502,143 @@ void ScanMainGUI::judgeForwardStep()
 
 void ScanMainGUI::JawScan()
 {
-	scanTipWidget->setVisible(true);
-	if (globalTipIndex == 1)
-	{
-		if (compensationFlag == true)
-		{
-			--upperJawIndex;
+	if (m_bsplitModelFlag) {		//分模
+		pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+		if (!pCurrentTask) {
+			return;
 		}
-		if (upperJawIndex == 1)
-		{
-			scanTipWidget->upperCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
+		if (pCurrentTask->Get_TaskPro() == eTaskProgress::eProgressScan) {
+			//该增加补扫了
+			ui.compensationScanPanel->setVisible(true);
+			QString str;
+			str.sprintf("%s扫描完成，可以增加模型数据", pCurrentTask->Get_TaskName());
+			ui.compensationScanPanelTipLabel->setText(str);
 		}
-		else if (upperJawIndex == 2)
-		{
-			scanTipWidget->upperCutConstructIHM3();
-			forwardIndex = 3;
-			emit cutSurfaceSignal(true);
-		}
-		else if (upperJawIndex == 3)
-		{
-			scanTipWidget->upperFinishConstructIHM4();
-			forwardIndex = 4;
-			emit cutSurfaceSignal(false);
-		}
-		++upperJawIndex;
 	}
-	else if (globalTipIndex == 2)
+	else
 	{
-		if (compensationFlag == true)
+		scanTipWidget->setVisible(true);
+		if (globalTipIndex == 1)
 		{
-			--lowerJawIndex;
+			if (compensationFlag == true)
+			{
+				--upperJawIndex;
+			}
+			if (upperJawIndex == 1)
+			{
+				scanTipWidget->upperCompenConstructIHM2();
+				forwardIndex = 2;
+				compensationFlag = false;
+			}
+			else if (upperJawIndex == 2)
+			{
+				scanTipWidget->upperCutConstructIHM3();
+				forwardIndex = 3;
+				emit cutSurfaceSignal(true);
+			}
+			else if (upperJawIndex == 3)
+			{
+				scanTipWidget->upperFinishConstructIHM4();
+				forwardIndex = 4;
+				emit cutSurfaceSignal(false);
+			}
+			++upperJawIndex;
+		}
+		else if (globalTipIndex == 2)
+		{
+			if (compensationFlag == true)
+			{
+				--lowerJawIndex;
+			}
+
+			if (lowerJawIndex == 1)
+			{
+				scanTipWidget->lowerCompenConstructIHM2();
+				forwardIndex = 2;
+				compensationFlag = false;
+			}
+			else if (lowerJawIndex == 2)
+			{
+				scanTipWidget->lowerCutConstructIHM3();
+				forwardIndex = 3;
+				emit cutSurfaceSignal(true);
+			}
+			else if (lowerJawIndex == 3)
+			{
+				scanTipWidget->lowerFinishConstructIHM4();
+				forwardIndex = 4;
+				emit cutSurfaceSignal(false);
+			}
+			++lowerJawIndex;
+		}
+		else if (globalTipIndex == 3)
+		{
+			if (compensationFlag == true)
+			{
+				--allJawIndex;
+			}
+			if (allJawIndex == 1)
+			{
+				scanTipWidget->allCompenConstructIHM2();
+				forwardIndex = 2;
+				compensationFlag = false;
+			}
+			else if (allJawIndex == 2)
+			{
+				scanTipWidget->allCutConstructIHM3();
+				forwardIndex = 3;
+				emit cutSurfaceSignal(true);
+			}
+			else if (allJawIndex == 3)
+			{
+				scanTipWidget->allPlaceConstructIHM4();
+				forwardIndex = 1;
+				chooseJawIndex = 2;
+				emit cutSurfaceSignal(false);
+			}
+			else if (allJawIndex == 4)
+			{
+				scanTipWidget->allCompenConstructIHM5();
+				forwardIndex = 2;
+				compensationFlag = false;
+			}
+			else if (allJawIndex == 5)
+			{
+				scanTipWidget->allCutConstructIHM6();
+				forwardIndex = 3;
+				emit cutSurfaceSignal(true);
+			}
+			else if (allJawIndex == 6)
+			{
+				scanTipWidget->allPlaceConstructIHM7();
+				forwardIndex = 1;
+				chooseJawIndex = 1;
+				emit cutSurfaceSignal(false);
+			}
+			else if (allJawIndex == 7)
+			{
+				scanTipWidget->allCompenConstructIHM8();
+				forwardIndex = 2;
+				compensationFlag = false;
+			}
+			else if (allJawIndex == 8)
+			{
+				scanTipWidget->allCutConstructIHM9();
+				forwardIndex = 3;
+				emit cutSurfaceSignal(true);
+			}
+			else if (allJawIndex == 9)
+			{
+				scanTipWidget->allFinishConstructIHM10();
+				forwardIndex = 4;
+				emit cutSurfaceSignal(false);
+			}
+			allJawIndex++;
 		}
 
-		if (lowerJawIndex == 1)
-		{
-			scanTipWidget->lowerCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
-		}
-		else if (lowerJawIndex == 2)
-		{
-			scanTipWidget->lowerCutConstructIHM3();
-			forwardIndex = 3;
-			emit cutSurfaceSignal(true);
-		}
-		else if (lowerJawIndex == 3)
-		{
-			scanTipWidget->lowerFinishConstructIHM4();
-			forwardIndex = 4;
-			emit cutSurfaceSignal(false);
-		}
-		++lowerJawIndex;
+		this->showMaximized();
+		scanTipWidget->showMaximized();
 	}
-	else if (globalTipIndex == 3)
-	{
-		if (compensationFlag == true)
-		{
-			--allJawIndex;
-		}
-		if (allJawIndex == 1)
-		{
-			scanTipWidget->allCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
-		}
-		else if (allJawIndex == 2)
-		{
-			scanTipWidget->allCutConstructIHM3();
-			forwardIndex = 3;
-			emit cutSurfaceSignal(true);
-		}
-		else if (allJawIndex == 3)
-		{
-			scanTipWidget->allPlaceConstructIHM4();
-			forwardIndex = 1;
-			chooseJawIndex = 2;
-			emit cutSurfaceSignal(false);
-		}
-		else if (allJawIndex == 4)
-		{
-			scanTipWidget->allCompenConstructIHM5();
-			forwardIndex = 2;
-			compensationFlag = false;
-		}
-		else if (allJawIndex == 5)
-		{
-			scanTipWidget->allCutConstructIHM6();
-			forwardIndex = 3;
-			emit cutSurfaceSignal(true);
-		}
-		else if (allJawIndex == 6)
-		{
-			scanTipWidget->allPlaceConstructIHM7();
-			forwardIndex = 1;
-			chooseJawIndex = 1;
-			emit cutSurfaceSignal(false);
-		}
-		else if (allJawIndex == 7)
-		{
-			scanTipWidget->allCompenConstructIHM8();
-			forwardIndex = 2;
-			compensationFlag = false;
-		}
-		else if (allJawIndex == 8)
-		{
-			scanTipWidget->allCutConstructIHM9();
-			forwardIndex = 3;
-			emit cutSurfaceSignal(true);
-		}
-		else if (allJawIndex == 9)
-		{
-			scanTipWidget->allFinishConstructIHM10();
-			forwardIndex = 4;
-			emit cutSurfaceSignal(false);
-		}
-		allJawIndex++;
-	}
-	
-	this->showMaximized();
-	scanTipWidget->showMaximized();
 }
 
 void ScanMainGUI::deleteAllCutModel()
@@ -972,6 +1053,9 @@ void ScanMainGUI::setRotationWaverSlot()
 	scanTipWidget->rotationLineEdit->setText(QString("%1").arg(ay));
 	scanTipWidget->waverLineEdit->setText(QString("%1").arg(ax));
 
+	ui.rotationLineEdit->setText(QString("%1").arg(ay));
+	ui.waverLineEdit->setText(QString("%1").arg(ax));
+
 	ax -= 68.3;
 }
 
@@ -1151,6 +1235,151 @@ void ScanMainGUI::saveModeltoFileSlot()
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stlb");
+	}
+}
+
+void ScanMainGUI::scanJawScanBtnClick()
+{
+	ui.ScanJawGroup->setVisible(false);
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		pCurrentTask->Set_TaskPro(eProgressScan);
+	}
+	splitModelCalculatePointCloud(pCurrentTask);
+}
+
+void ScanMainGUI::compensationBtnClick()
+{
+	ui.discardBtn->setEnabled(true);
+	compensationFlag = true;
+	//float ax = 0, ay = 0;
+	//glWidget->GetMotorRot(ax, ay);
+	c_scan_x = ax;
+	c_scan_y = ay;
+	cout << "c_scan_x: " << c_scan_x << "; c_scan_y: " << c_scan_y;
+	if (c_scan_x > -90 && c_scan_x < 90)
+	{
+		if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
+		{
+			emit compensationSignal(chooseJawIndex);
+			return;
+		}
+		if (controlScanQThread->isRunning() == false)
+		{
+			//启动子线程，但没有启动线程处理函数
+			controlScanQThread->start();
+			ControlScanThread->setFlage(false);
+		}
+		if (controlComputeQThread->isRunning() == false)
+		{
+			//启动子线程，但没有启动线程处理函数
+			controlComputeQThread->start();
+			ControlComputeThread->setFlage(false);
+		}
+		emit compensationSignal(chooseJawIndex);
+	}
+}
+void ScanMainGUI::discardBtnClick() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		if (pCurrentTask->m_nAddModel > 0) {
+			pCurrentTask->m_mModel.pop_back();
+			pCurrentTask->m_points_cloud_globle.pop_back();
+			pCurrentTask->m_points_cloud_end._Pop_back_n(pCurrentTask->m_points_cloud_end_addSize[pCurrentTask->m_points_cloud_end_addSize.size() - 1]);
+			pCurrentTask->m_points_cloud_end_addSize.pop_back();
+		}
+		if (pCurrentTask->m_nAddModel == 0) {
+			ui.discardBtn->setEnabled(false);
+		}
+	}
+}
+
+//下一步 合并吧
+void ScanMainGUI::compensationScanPanelNextBtnClick() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		emit gpaTaskMeshSignal(pCurrentTask);
+	}
+}
+void ScanMainGUI::cutModelBtnClick() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		orth::MeshModel meshModel;
+		pCurrentTask->pTeethModel->getMeshModel(meshModel);
+		pCurrentTask->m_mCutModel.push_back(meshModel);
+		glWidget->cutModelUnderBg();
+		ui.unDoCutBtn->setEnabled(true);
+	}
+}
+void ScanMainGUI::unDoCutBtnClick() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		if (pCurrentTask->m_mCutModel.size()>0) {
+			orth::MeshModel meshModel;
+			meshModel = pCurrentTask->m_mCutModel[pCurrentTask->m_mCutModel.size() - 1];
+			pCurrentTask->pTeethModel->m_model = meshModel;
+			pCurrentTask->pTeethModel->makeObject();
+			glWidget->update();
+		}
+		else {
+			ui.unDoCutBtn->setEnabled(false);
+		}		
+	}
+}
+void ScanMainGUI::saveCutHeightCutBtnClick() {
+
+
+}
+void ScanMainGUI::cutPaneNextStepBtnClick() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
+	if (!pNextTask&&pCurrentTask) {
+		ui.CutJawPanel->setVisible(false);
+		ui.CutJawFinishPanel->setVisible(true);
+		QString str;
+		str.sprintf("可以通过工具栏修剪%s数据", pCurrentTask->Get_TaskName());
+		ui.CutJawFinishPanelTips->setText(str);
+	}
+	else if (pNextTask && pCurrentTask) {
+		ui.CutJawPanel->setVisible(false);
+		ui.ScanJawGroup->setVisible(true);
+		ui.ScanJawNextStepBtn->setVisible(false);
+		QString str;
+		str.sprintf("请移除%s，请插入%s", pCurrentTask->Get_TaskName(),pNextTask->Get_TaskName());
+		ui.ScanJawTips->setText(str);
+	}
+}
+
+void ScanMainGUI::CutJawFinishPanelNextStepBtnClick() {
+
+}
+
+void ScanMainGUI::updateTaskModel()
+{
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		int scan_index = pCurrentTask->m_mModel.size() - 1;
+		glWidget->mm = pCurrentTask->m_mModel[scan_index];
+		glWidget->makeObject();
+		glWidget->update();
+	}
+}
+
+void ScanMainGUI::meshFinishSlot()
+{
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		glWidget->m_ModelsVt.clear();
+		glWidget->mm = pCurrentTask->m_mAllModel;
+		pCurrentTask->pTeethModel = glWidget->makeObject();
+		glWidget->update();
+		pCurrentTask->Set_TaskPro(eProgressMesh);
+		ui.compensationScanPanel->setVisible(false);
+		ui.CutJawPanel->setVisible(true);
+		QString str;
+		str.sprintf("%s增加扫描完成，可以水平切割模型数据", pCurrentTask->Get_TaskName());
+		ui.CutJawPanelTipsLabel->setText(str);
+		ui.unDoCutBtn->setEnabled(false);
 	}
 }
 

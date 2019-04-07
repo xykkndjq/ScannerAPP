@@ -231,6 +231,7 @@
     <ClCompile Include="ScanMainGUI.cpp" />
     <ClCompile Include="ScanTipWidget.cpp" />
     <ClCompile Include="TabMainGUI.cpp" />
+    <ClCompile Include="TaskManager.cpp" />
     <ClCompile Include="TeethModel.cpp" />
     <ClCompile Include="trackball.cpp" />
     <ClCompile Include="VTK_render.cpp" />
@@ -276,7 +277,9 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="commondefine.h" />
     <ClInclude Include="GroundObject.h" />
+    <ClInclude Include="TaskManager.h" />
     <ClInclude Include="TeethModel.h" />
     <ClInclude Include="trackball.h" />
     <ClInclude Include="VTK_render.h" />

@@ -29,6 +29,7 @@
 #include <iostream>
 #include <QFileDialog>
 #include <QDockWidget>
+#include "TaskManager.h"
 
 #define TOOTHNUM 32
 
@@ -167,6 +168,8 @@ public:
 	QLabel *scanDataPathLabel;
 	QLineEdit *scanDataPathEdit;
 	QPushButton *choosePathButton;
+	pCScanTask m_pTeethScanTaskArray[32];
+	eScanType m_eScanType;
 
 signals:
 	void scanDataSignal(QJsonObject scanObj);
