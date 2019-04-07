@@ -152,6 +152,7 @@ public slots:
 	void controlGlobalCaliScan();
 	void compensationControlScan();
 
+	void normalScan();
 private:
 
 	void InitParameters();

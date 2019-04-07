@@ -6,14 +6,10 @@
 #include <QOpenGLWidget>
 #include <QDebug>
 #include <QOpenGLFunctions>
+#include "commondefine.h"
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram);
 using namespace std;
-#define PARAMDEFINE(type , prarm_name)	private:\
-										type m_##prarm_name;\
-										public:\
-										void Set_##prarm_name(type v_##prarm_name){m_##prarm_name = v_##prarm_name;};\
-										type Get_##prarm_name(){return m_##prarm_name;}
 
 __interface IParentInterface
 {
@@ -41,7 +37,7 @@ public:
 	virtual void mouseMoveEvent(QMouseEvent *event);
 	QByteArray ReadShader(const QString &Path);
 #pragma region			变量定义  get/set
-	PARAMDEFINE(bool, bVisible);
+	PARAMDEFINE(bool, b,Visible);
 #pragma endregion
 
 protected:
@@ -56,7 +52,7 @@ protected:
 	float m_zRot;
 };
 
-#define SharedPtr(ClassName) typedef shared_ptr<ClassName> p##ClassName;
+
 SharedPtr(BaseModel);
 SharedPtr(QOpenGLShaderProgram) pQOpenGLShaderProgram;
 SharedPtr(QOpenGLBuffer) pQOpenGLBuffer;

@@ -1414,3 +1414,113 @@ void ControlThread::compensationControlScan()
 	usedSpace.release();
 }
 
+void ControlThread::normalScan()
+{
+	vector<cv::Mat> image_groups_left, image_groups_right;
+	int imageSize = IMG_ROW * IMG_COL;
+	int bufferBias = 0;
+	////1、开启及配置DLP
+	SM_Enable();//电机使能
+	clock_t time1, time2, time3, time4, time5, time6;
+	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
+	{
+		double d_scan_x = 0.0;
+		double d_scan_y = 0.0;
+		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
+		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
+
+		d_scan_x = (c_scan_x - l_scan_x);
+		d_scan_y = (c_scan_y - l_scan_y);
+		//double d_scan_z = (c_scan_z - l_scan_z);
+		l_scan_x = c_scan_x;
+		l_scan_y = c_scan_y;
+		//2、电机旋转
+		time1 = clock();
+		SMX_RotOneDeg(d_scan_x);
+		_sleep(100);
+		SMY_RotOneDeg(d_scan_y);
+		_sleep(100);
+		time2 = clock();
+
+		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
+		{
+			//3、关闭DLP
+			SM_Disable();//电机失能
+			continue;
+		}
+		freeSpace.acquire();
+		//cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
+		//l_scan_z = c_scan_z;
+		if (c_scan_x < -120 || c_scan_x>120)
+		{
+			return;
+		}
+
+		vector<cv::Mat> imgL_set, imgR_set;
+		///**************************************扫描过程*****************************************/
+		//开始投影多组光栅
+		time3 = clock();
+		DLP_ProjectOneSet_Scan(SM_SCAN_BRIGHTNESS[scan_index], imgL_set, imgR_set);
+		time4 = clock();
+		//cout << "开始存图片。。 " << endl;
+
+		vector<cv::Mat> images_l, images_r;
+		vector<cv::Mat> image_rgb;
+		//unsigned char* im_l = 0;
+		//unsigned char* im_r = 0;
+		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		int imageBias = 0;
+		time5 = clock();
+		for (int image_index = 0; image_index < 19; image_index++)
+		{
+
+			ostringstream filename_L;
+			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
+			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+
+
+			ostringstream filename_R;
+			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
+			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			if (image_index == 0)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+
+			if (image_index > 0 && image_index < 16)
+			{
+				//images_l.push_back(imgL_set[image_index]);
+				//images_r.push_back(imgR_set[image_index]);
+				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+
+			}
+			else if (image_index >= 16)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+		}
+		time6 = clock();
+		bufferBias++;
+		usedSpace.release();
+		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+
+		cout << "The rotation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The projection time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The memcpy time is " << (double)(time6 - time5) / CLOCKS_PER_SEC << " s;" << endl;
+	}
+
+	//3、关闭DLP
+	SM_Disable();//电机失能
+				 //WriteByte(CloseDLP, 5);
+	cout << "关闭DLP。。 " << endl;
+}
+

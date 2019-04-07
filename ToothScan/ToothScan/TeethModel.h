@@ -21,12 +21,13 @@ public:
 	void delSelPoints();
 	void cutModelUnderBg(QVector3D bgGroundModelPos);
 	void getMeshModel(orth::MeshModel &meshModel);
+	orth::MeshModel m_model;
 private:
 	QPoint m_drawRectClickPosition;
 	QPoint m_drawRectEndPosition;
 	float m_xTrans;
 	float m_yTrans;
-	orth::MeshModel m_model;
+	
 	QVector<GLfloat> m_vertData;
 	orth::PointLabel m_Selected;
 };

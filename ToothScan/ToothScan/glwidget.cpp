@@ -1357,7 +1357,7 @@ void GLWidget::setBgColor(QVector4D color)
 void GLWidget::setbkGroundShowValue(bool bShow)
 {
 	m_bkGroundShow = bShow;
-	m_groundModel->Set_bVisible(bShow);
+	m_groundModel->Set_Visible(bShow);
 	m_groundModel->rotate(60,0,0);
 }
 
@@ -1407,7 +1407,7 @@ void GLWidget::makeGroundObject()
 	// 	bkgroundvbo = make_shared<QOpenGLBuffer>();
 	m_groundModel = make_shared<CGroundObject>("./bgGround.vs", "./bgGround.fs", this);
 	m_groundModel->makeObject(vertData, 4);
-	m_groundModel->Set_bVisible(false);
+	m_groundModel->Set_Visible(false);
 	m_ToolsModelsVt.push_back(m_groundModel);
 	this->update();
 }

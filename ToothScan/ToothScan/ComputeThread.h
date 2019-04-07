@@ -17,6 +17,7 @@
 #include <pcl/io/ply_io.h>
 #include <Windows.h>
 #include <time.h>
+#include "TaskManager.h"
 
 
 #define SCAN_ROTATE_POS_CNT2 10    //定义扫描过程的位置数 11
@@ -108,10 +109,22 @@ signals:
 	void showModeltoGlSingel(int refreshIndex);
 	void cameraShowSignal();
 	void computeFinish();
+	void showTaskModel();
+	void meshFinish();
 public slots:
 	void controlComputeScan(int chooseJawIndex);
 	void compensationComputeScan(int chooseJawIndex);
 	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
+
+	void normalComputeScan(pCScanTask pScanTask);
+	void compensationCompute(pCScanTask pScanTask);
+	void GPAMeshing(pCScanTask pScanTask);//全局配准和Meshing
+public:
+	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp,
+		int scan_index, pCScanTask pScanTask);
+
+	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, 
+		vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, pCScanTask pScanTask);
 };
 
 #endif // ComputeThread_H

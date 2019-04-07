@@ -125,6 +125,9 @@
     <ClCompile Include="VTK_render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TaskManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -199,6 +202,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VTK_render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="commondefine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
