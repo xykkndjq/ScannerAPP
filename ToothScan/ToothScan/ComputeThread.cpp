@@ -465,7 +465,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 			//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
 			if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
 			{
-				//return false;
+				return false;
 			}
 		}
 
