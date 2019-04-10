@@ -157,7 +157,7 @@ void ChosePoints(const float point1_x, const float point1_y, const float point2_
 		}
 		else
 		{
-			orth::face f;
+			orth::Face f;
 			f.x = new_point_index[mm.F[face_index].x];
 			f.y = new_point_index[mm.F[face_index].y];
 			f.z = new_point_index[mm.F[face_index].z];
@@ -1286,7 +1286,7 @@ void GLWidget::delSelPoints()
 		}
 		else
 		{
-			orth::face f;
+			orth::Face f;
 			f.x = new_point_index[mm.F[face_index].x];
 			f.y = new_point_index[mm.F[face_index].y];
 			f.z = new_point_index[mm.F[face_index].z];

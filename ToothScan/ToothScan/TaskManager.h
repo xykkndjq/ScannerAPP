@@ -5,10 +5,17 @@
 #include <vector>
 #include "basetype.h"
 #include "TeethModel.h"
+#include "datastream.h"
 using namespace std;
-
+enum eTaskType {
+	eScan,
+	eUpperStitching,
+	eLowerStitching,
+	eUpperTeethStit,
+	eLowerTeethStit
+};
 enum eScanType {
-	eScanNULL = -1,
+	eScanNULL = 0,
 	etotalCrown,
 	etoothCrown,
 	elossToothScan,
@@ -16,7 +23,7 @@ enum eScanType {
 	eUpperJawScan,
 	eLowerJawScan,
 	eAllJawScan,
-	
+
 };
 extern const char *g_strScanName[7];
 
@@ -48,22 +55,44 @@ private:
 	PARAMDEFINE(eScanType, e, ScanType);
 	PARAMDEFINE(int, i, TeethId);
 	PARAMDEFINE(eTaskProgress, e, TaskPro);
+	PARAMDEFINE(eTaskType, e, TaskType);
+
+
+public:
+	virtual void StreamValue(datastream& kData, bool bSend);
+	virtual char * getClassName() { return "CScanTask"; };
+public:
+	//friend ostream & operator<<(ostream & os, const CScanTask & c);
+	//friend istream & operator >> (istream & is, CScanTask & c);
 };
 SharedPtr(CScanTask);
 
-
-class COralSubstituteScan:public CScanTask {
+class CStitchingTask :public CScanTask
+{
+public:
+	CStitchingTask() {
+	}
+	~CStitchingTask() {
+	}
+public:
+	pCScanTask m_pSrcTask;
+	pCScanTask m_pDstTask;
+	virtual char * getClassName() { return "CStitchingTask"; };
+};
+SharedPtr(CStitchingTask);
+class COralSubstituteScan :public CScanTask {
 public:
 	COralSubstituteScan() {}
 	~COralSubstituteScan() {}
 	void delToothByid(int iTeethId) {
 		vector<int>::iterator iter = m_vtTeethId.begin();
-		for (; iter != m_vtTeethId.end();iter++) {
+		for (; iter != m_vtTeethId.end(); iter++) {
 			if (iTeethId == (*iter)) {
 				m_vtTeethId.erase(iter);
 			}
 		}
 	}
+	virtual void StreamValue(datastream& kData, bool bSend);
 private:
 	vector<int> m_vtTeethId;
 };
@@ -74,7 +103,9 @@ public:
 	CGroupScan() {}
 	~CGroupScan() {}
 public:
-	vector<pCScanTask> m_vtTeeth;
+	vector<int> m_vtTeeth;
+
+	virtual void StreamValue(datastream& kData, bool bSend);
 };
 SharedPtr(CGroupScan);
 
@@ -91,8 +122,8 @@ public:
 	}
 	pCScanTask getTask(string v_strTaskName) {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
-		for (; iter != m_vtBaseTask.end();iter++) {
-			if ((*iter)->Get_TaskName() == v_strTaskName ){
+		for (; iter != m_vtBaseTask.end(); iter++) {
+			if ((*iter)->Get_TaskName() == v_strTaskName) {
 				return (*iter);
 			}
 		}
@@ -110,7 +141,7 @@ public:
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
 		for (; iter != m_vtBaseTask.end(); iter++) {
 			if ((*iter) == m_pCurrentTask) {
-				if(++iter != m_vtBaseTask.end()){
+				if (++iter != m_vtBaseTask.end()) {
 					m_pCurrentTask = (*iter);
 				}
 				else
@@ -119,8 +150,11 @@ public:
 		}
 		return m_pCurrentTask;
 	}
+	list<pCScanTask> &getTasks() {
+		return m_vtBaseTask;
+	}
 	static CTaskManager * m_pInstance;
-	static CTaskManager * getInstance(){
+	static CTaskManager * getInstance() {
 		if (m_pInstance == nullptr)
 		{
 			m_pInstance = new CTaskManager;

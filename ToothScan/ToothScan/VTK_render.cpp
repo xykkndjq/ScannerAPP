@@ -502,7 +502,7 @@ void MeshRender(orth::MaxillaryTeeth &mm)
 			// Create a plane
 			vtkSmartPointer<vtkPlaneSource> planeSource =
 				vtkSmartPointer<vtkPlaneSource>::New();
-			planeSource->SetCenter(mm.division_plane[plane_index].center.x, mm.division_plane[plane_index].center.y, mm.division_plane[plane_index].center.z);
+			planeSource->SetCenter(mm.division_plane[plane_index].Center.x, mm.division_plane[plane_index].Center.y, mm.division_plane[plane_index].Center.z);
 			planeSource->SetNormal(mm.division_plane[plane_index].A, mm.division_plane[plane_index].B, mm.division_plane[plane_index].C);
 			planeSource->SetResolution(20, 20);
 
@@ -967,7 +967,7 @@ void MeshRender(orth::MaxillaryTeeth &mm, orth::PointCloudD &V_query, orth::Poin
 			// Create a plane
 			vtkSmartPointer<vtkPlaneSource> planeSource =
 				vtkSmartPointer<vtkPlaneSource>::New();
-			planeSource->SetCenter(mm.division_plane[plane_index].center.x, mm.division_plane[plane_index].center.y, mm.division_plane[plane_index].center.z);
+			planeSource->SetCenter(mm.division_plane[plane_index].Center.x, mm.division_plane[plane_index].Center.y, mm.division_plane[plane_index].Center.z);
 			planeSource->SetNormal(mm.division_plane[plane_index].A, mm.division_plane[plane_index].B, mm.division_plane[plane_index].C);
 			planeSource->SetResolution(20, 20);
 
@@ -1949,7 +1949,7 @@ int ColoredPoints2(vector<double> &Vertices, vector<double> &Vertices2, double s
 			// Create a plane
 			vtkSmartPointer<vtkPlaneSource> planeSource =
 				vtkSmartPointer<vtkPlaneSource>::New();
-			planeSource->SetCenter(planes[plane_index].center.x, planes[plane_index].center.y, planes[plane_index].center.z);
+			planeSource->SetCenter(planes[plane_index].Center.x, planes[plane_index].Center.y, planes[plane_index].Center.z);
 			planeSource->SetNormal(planes[plane_index].A, planes[plane_index].B, planes[plane_index].C);
 			planeSource->SetResolution(20, 20);
 

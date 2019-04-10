@@ -396,7 +396,7 @@ void CTeethModel::delSelPoints()
 		}
 		else
 		{
-			orth::face f;
+			orth::Face f;
 			f.x = new_point_index[m_model.F[face_index].x];
 			f.y = new_point_index[m_model.F[face_index].y];
 			f.z = new_point_index[m_model.F[face_index].z];

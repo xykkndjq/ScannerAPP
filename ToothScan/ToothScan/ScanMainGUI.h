@@ -82,7 +82,11 @@ public:
 	//删除所有切割数据
 	void deleteAllCutModel();
 
+	pCTeethModel m_pupperTeethModel;
+	pCTeethModel m_plowerTeethModel;
+	pCTeethModel m_pallTeethModel;
 
+	void resetValue();
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
 	void startControlCalibrationSignal();//开始标定信号
@@ -97,9 +101,11 @@ signals:
 	void updateModelsVtSingle();
 	void saveModeltoFileSignal();
 
-	void startNormalScan(pCScanTask pScanTask);//控制正常扫描信号signals
-	void compensationScanSignal(pCScanTask pScanTask);//补充扫描信号
-	void gpaTaskMeshSignal(pCScanTask pScanTask);
+	void startNormalScan();//控制正常扫描信号signals
+	void compensationScanSignal();//补充扫描信号
+	void gpaTaskMeshSignal();
+	void taskSititchingSignal();
+	void taskTeethSititSignal();
 private:
 	Ui::ScanMainGUI ui;
 
@@ -183,10 +189,16 @@ private:
 	void saveCutHeightCutBtnClick();
 	void cutPaneNextStepBtnClick();
 	void CutJawFinishPanelNextStepBtnClick();
+	void stitchingPanelBtnClick();
+	void stitchingUpperJawBtnClick();
+	void stitchingLowerJawBtnClick();
+	void stitchingFNextBtnClick();
+	void OralSubstitutePanelNextBtnClick();
 	
-	public:
+	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();
+	void StitchFinishSlot();
 	
 };
 

@@ -111,14 +111,18 @@ signals:
 	void computeFinish();
 	void showTaskModel();
 	void meshFinish();
+	void StitchFinish();
 public slots:
 	void controlComputeScan(int chooseJawIndex);
 	void compensationComputeScan(int chooseJawIndex);
 	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 
-	void normalComputeScan(pCScanTask pScanTask);
-	void compensationCompute(pCScanTask pScanTask);
-	void GPAMeshing(pCScanTask pScanTask);//全局配准和Meshing
+	void normalComputeScan();
+	void compensationCompute();
+	void GPAMeshing();//全局配准和Meshing
+
+	void Stitching();
+	void taskTeethSititSignal();
 public:
 	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp,
 		int scan_index, pCScanTask pScanTask);
