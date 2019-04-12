@@ -156,6 +156,7 @@
     <ClCompile Include="AxisModel.cpp" />
     <ClCompile Include="BaseModel.cpp" />
     <ClCompile Include="basetype.cpp" />
+    <ClCompile Include="commonFun.cpp" />
     <ClCompile Include="ComputeThread.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_ComputeThread.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -287,6 +288,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commondefine.h" />
+    <ClInclude Include="commonFun.h" />
     <ClInclude Include="datastream.h" />
     <ClInclude Include="GroundObject.h" />
     <CustomBuild Include="HLogHelper.h">

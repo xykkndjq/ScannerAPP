@@ -1,5 +1,44 @@
 #include "ScanMainGUI.h"
 #include "TaskManager.h"
+void ScanMainGUI::saveModelFile(pCScanTask &pTask) {
+	orth::MeshModel meshModel;
+	pTask->pTeethModel->getMeshModel(meshModel);
+	int mModelVSize = meshModel.size();
+	/*for (int index = 0; index < mModelVSize - 1; index++)
+	{
+	orth::ModelIO model_io(&ControlComputeThread->upper_mModel[index]);
+	std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_UpperJaw_" + std::to_string(index) + ".stl";
+	cout << "fileStr: " << fileStr << endl;
+	model_io.writeModel(fileStr,"stl");
+	}*/
+	orth::ModelIO finish_model_io(&meshModel);
+	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName();
+	cout << "pathname: " << modelNameStr << endl;
+	finish_model_io.writeModel(modelNameStr, "stlb");
+}
+bool ScanMainGUI::isModelFileExit(pCScanTask &pTask) {
+	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName()+".stlb";
+	return QFile::exists(modelNameStr.c_str());
+}
+void ScanMainGUI::loadModelFile(pCScanTask &pTask) {
+	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName()+".stlb";
+	orth::MeshModel meshModel;
+	orth::ModelIO finish_model_io(&meshModel);
+	finish_model_io.loadModel(modelNameStr);
+}
+
+void ScanMainGUI::hideAllPanel()
+{
+	ui.CutJawPanel->setVisible(false);
+	ui.CutJawFinishPanel->setVisible(false);
+	ui.ScanJawGroup->setVisible(false);
+	ui.compensationScanPanel->setVisible(false);
+	ui.StitchingPanel->setVisible(false);
+	ui.StitchingFinishPanel->setVisible(false);
+	ui.OralSubstitutePanel->setVisible(false);
+	ui.TeethStitchingPanel->setVisible(false);
+}
+
 ScanMainGUI::ScanMainGUI(QWidget *parent)
 	: QWidget(parent),
 	m_bsplitModelFlag(false)
@@ -15,6 +54,7 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.compensationScanPanel->move(1630, 230);
 	ui.StitchingPanel->move(1630, 230);
 	ui.StitchingFinishPanel->move(1630, 230);
+	ui.OralSubstitutePanel->move(1630, 230);
 	ui.OralSubstitutePanel->move(1630, 230);
 	resetValue();
 }
@@ -484,6 +524,13 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 			str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
 			//str.sprintf("%s",pCurrentTask->Get_TaskName());
 			ui.ScanJawTips->setText(str);
+			if (isModelFileExit(pCurrentTask)) {
+				if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+					//加载模型
+					loadModelFile(pCurrentTask);
+					cutPaneNextStepBtnClick();
+				}
+			}
 		}
 	}
 	tabMainPage->hide();
@@ -701,13 +748,7 @@ void ScanMainGUI::resetValue()
 	m_plowerTeethModel = nullptr;
 	m_pallTeethModel = nullptr;
 	m_bsplitModelFlag = false;
-	ui.CutJawPanel->setVisible(false);
-	ui.CutJawFinishPanel->setVisible(false);
-	ui.ScanJawGroup->setVisible(false);
-	ui.compensationScanPanel->setVisible(false);
-	ui.StitchingPanel->setVisible(false);
-	ui.StitchingFinishPanel->setVisible(false);
-	ui.OralSubstitutePanel->setVisible(false);
+	hideAllPanel();
 }
 
 void ScanMainGUI::judgeBackStep()
@@ -1369,12 +1410,15 @@ void ScanMainGUI::saveCutHeightCutBtnClick() {
 
 }
 void ScanMainGUI::cutPaneNextStepBtnClick() {
+	hideAllPanel();
 	glWidget->showBkGround(false);
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
 		m_pallTeethModel = pCurrentTask->pTeethModel;
 	}
+	saveModelFile(pCurrentTask);
+
 	if (!pNextTask&&pCurrentTask) {
 		ui.CutJawPanel->setVisible(false);
 		ui.CutJawFinishPanel->setVisible(true);
@@ -1391,6 +1435,13 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 			str = QString::fromLocal8Bit("请移除") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pNextTask->Get_TaskName().c_str());
 			ui.ScanJawTips->setText(str);
 			glWidget->m_ModelsVt.clear();
+			if (isModelFileExit(pNextTask)) {
+				if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+					//加载模型
+					loadModelFile(pNextTask);
+					cutPaneNextStepBtnClick();
+				}
+			}
 		}
 		else if (pNextTask->Get_TaskType() == eUpperStitching||pCurrentTask->Get_TaskType() == eLowerStitching) {	//上下颌的合并
 			ui.CutJawPanel->setVisible(false);
@@ -1443,12 +1494,26 @@ void ScanMainGUI::stitchingFNextBtnClick() {
 		if (!pGroupScan)
 			return;
 		int nStep = 8 / pGroupScan->m_vtTeeth.size();
+		for (int i = 0; i < 8;i++) {
+			QString strLabelName = "teethNoLabel";
+			strLabelName.sprintf("strLabelName%d", 1 + i);
+			QLabel * plabel = findChild<QLabel*>(strLabelName);
+			if (plabel)
+				plabel->setText("");
+		}
 		for (int i = 0; i < pGroupScan->m_vtTeeth.size();i++) {
 			QString strLabelName = "teethNoLabel";
 			strLabelName.sprintf("strLabelName%d", 1 + i * nStep);
 			QLabel * plabel = findChild<QLabel*>(strLabelName);
 			if (plabel)
 				plabel->setText(QString::number((pGroupScan->m_vtTeeth[i] % 7 * +1) * 10  + pGroupScan->m_vtTeeth[i]+1));
+		}
+		if (isModelFileExit(pCurrentTask)) {
+			if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+				//加载模型
+				loadModelFile(pCurrentTask);
+				cutPaneNextStepBtnClick();
+			}
 		}
 	}
 	else if (pCurrentTask->Get_ScanType() == eUpperJawScan) {

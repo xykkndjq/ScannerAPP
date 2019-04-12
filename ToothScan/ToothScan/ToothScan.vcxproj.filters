@@ -137,6 +137,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_HLogHelper.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="commonFun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -223,6 +226,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="datastream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="commonFun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

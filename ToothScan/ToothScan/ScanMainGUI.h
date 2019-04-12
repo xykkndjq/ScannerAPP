@@ -194,7 +194,10 @@ private:
 	void stitchingLowerJawBtnClick();
 	void stitchingFNextBtnClick();
 	void OralSubstitutePanelNextBtnClick();
-	
+	void saveModelFile(pCScanTask &pTask);
+	bool isModelFileExit(pCScanTask &pTask);
+	void loadModelFile(pCScanTask &pTask);
+	void hideAllPanel();
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();

@@ -115,6 +115,11 @@ public:
     QLabel *teethNoLabel6;
     QLabel *label_21;
     QLabel *teethNoLabel7;
+    QGroupBox *TeethStitchingPanel;
+    QLabel *CutJawFinishPanelTips_8;
+    QPushButton *stitchingFNextBtn_2;
+    QPushButton *CutJawFinishPanelBackBtn_8;
+    QLabel *StitchingPanelTips_4;
 
     void setupUi(QWidget *ScanMainGUI)
     {
@@ -521,6 +526,38 @@ public:
         teethNoLabel7 = new QLabel(OralSubstitutePanel);
         teethNoLabel7->setObjectName(QStringLiteral("teethNoLabel7"));
         teethNoLabel7->setGeometry(QRect(40, 280, 54, 16));
+        TeethStitchingPanel = new QGroupBox(ScanMainGUI);
+        TeethStitchingPanel->setObjectName(QStringLiteral("TeethStitchingPanel"));
+        TeethStitchingPanel->setEnabled(true);
+        TeethStitchingPanel->setGeometry(QRect(20, 530, 371, 513));
+        TeethStitchingPanel->setStyleSheet(QStringLiteral(""));
+        CutJawFinishPanelTips_8 = new QLabel(TeethStitchingPanel);
+        CutJawFinishPanelTips_8->setObjectName(QStringLiteral("CutJawFinishPanelTips_8"));
+        CutJawFinishPanelTips_8->setGeometry(QRect(10, 90, 281, 51));
+        QPalette palette13;
+        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
+        CutJawFinishPanelTips_8->setPalette(palette13);
+        CutJawFinishPanelTips_8->setFont(font);
+        CutJawFinishPanelTips_8->setToolTipDuration(-3);
+        CutJawFinishPanelTips_8->setWordWrap(true);
+        stitchingFNextBtn_2 = new QPushButton(TeethStitchingPanel);
+        stitchingFNextBtn_2->setObjectName(QStringLiteral("stitchingFNextBtn_2"));
+        stitchingFNextBtn_2->setGeometry(QRect(230, 470, 75, 23));
+        CutJawFinishPanelBackBtn_8 = new QPushButton(TeethStitchingPanel);
+        CutJawFinishPanelBackBtn_8->setObjectName(QStringLiteral("CutJawFinishPanelBackBtn_8"));
+        CutJawFinishPanelBackBtn_8->setGeometry(QRect(30, 470, 75, 23));
+        StitchingPanelTips_4 = new QLabel(TeethStitchingPanel);
+        StitchingPanelTips_4->setObjectName(QStringLiteral("StitchingPanelTips_4"));
+        StitchingPanelTips_4->setGeometry(QRect(10, 10, 281, 61));
+        QPalette palette14;
+        palette14.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette14.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette14.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
+        StitchingPanelTips_4->setPalette(palette14);
+        StitchingPanelTips_4->setFont(font);
+        StitchingPanelTips_4->setWordWrap(true);
         ScanJawGroup->raise();
         leftViewBtn->raise();
         frontviewBtn->raise();
@@ -548,6 +585,7 @@ public:
         StitchingPanel->raise();
         StitchingFinishPanel->raise();
         OralSubstitutePanel->raise();
+        TeethStitchingPanel->raise();
 
         retranslateUi(ScanMainGUI);
 
@@ -684,6 +722,11 @@ public:
         teethNoLabel6->setText(QApplication::translate("ScanMainGUI", "18", Q_NULLPTR));
         label_21->setText(QApplication::translate("ScanMainGUI", "7", Q_NULLPTR));
         teethNoLabel7->setText(QApplication::translate("ScanMainGUI", "19", Q_NULLPTR));
+        TeethStitchingPanel->setTitle(QString());
+        CutJawFinishPanelTips_8->setText(QApplication::translate("ScanMainGUI", "\345\217\214\345\207\273\350\216\267\345\217\2263\347\273\204\345\257\271\345\272\224\347\202\271", Q_NULLPTR));
+        stitchingFNextBtn_2->setText(QApplication::translate("ScanMainGUI", "\344\270\213\344\270\200\346\255\245", Q_NULLPTR));
+        CutJawFinishPanelBackBtn_8->setText(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
+        StitchingPanelTips_4->setText(QApplication::translate("ScanMainGUI", "\346\211\213\345\212\250\346\213\274\346\216\245", Q_NULLPTR));
     } // retranslateUi
 
 };

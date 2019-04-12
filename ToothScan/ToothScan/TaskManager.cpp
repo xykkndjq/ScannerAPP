@@ -1,4 +1,5 @@
 #include "TaskManager.h"
+#include "commonFun.h"
 
 extern const char *g_strScanName[7] = { { "È«¹Ú" },{ "ÑÀ¹Ú" },{ "È±Ê§ÑÀ" } ,
 { "Ç¶Ìå" },
@@ -20,6 +21,7 @@ CScanTask::CScanTask()
 	m_nAddModel = 0;
 	m_eScanType = eScanNULL;
 	m_iTeethId = 0;
+	m_strModelFileName = newGUID();
 }
 
 CScanTask::~CScanTask()
@@ -39,6 +41,7 @@ void CScanTask::StreamValue(datastream& kData, bool bSend)
 {
 	Stream_VALUE(m_strTaskName);
 	qDebug() << QString::fromLocal8Bit(m_strTaskName.c_str())<<endl;
+	Stream_VALUE(m_strModelFileName);
 	Stream_VALUEEx(int, m_eScanType);
 	qDebug() << m_eScanType << endl;
 	Stream_VALUE(m_iTeethId);

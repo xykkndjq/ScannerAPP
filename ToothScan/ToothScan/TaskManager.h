@@ -15,7 +15,7 @@ enum eTaskType {
 	eLowerTeethStit
 };
 enum eScanType {
-	eScanNULL = 0,
+	eScanNULL = -1,
 	etotalCrown,
 	etoothCrown,
 	elossToothScan,
@@ -56,6 +56,7 @@ private:
 	PARAMDEFINE(int, i, TeethId);
 	PARAMDEFINE(eTaskProgress, e, TaskPro);
 	PARAMDEFINE(eTaskType, e, TaskType);
+	PARAMDEFINE(string, str, ModelFileName);
 
 
 public:

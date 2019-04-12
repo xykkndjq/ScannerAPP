@@ -703,14 +703,14 @@ bool TabMainGUI::judgePatientSaveFlag()
 			if (CTaskManager::getInstance()->getTasks().size() > 0) {
 				QJsonDocument document;
 				QJsonArray jsonArray;
-				list<pCScanTask>::iterator iter= CTaskManager::getInstance()->getTasks().begin();
+				list<pCScanTask>::iterator iter = CTaskManager::getInstance()->getTasks().begin();
 				int i = 0;
-				for (; iter != CTaskManager::getInstance()->getTasks().end();iter++) {
+				for (; iter != CTaskManager::getInstance()->getTasks().end(); iter++) {
 					QJsonObject simp_ayjson;
 					simp_ayjson.insert("class", (*iter)->getClassName());
 					datastream kdataStream;
-					(*iter)->StreamValue(kdataStream,true);
-					QByteArray byteArray(kdataStream.data(),kdataStream.size());
+					(*iter)->StreamValue(kdataStream, true);
+					QByteArray byteArray(kdataStream.data(), kdataStream.size());
 					//simp_ayjson.insert("classdata", kdataStream.data());
 					simp_ayjson.insert("classdata", byteArray.toBase64().data());
 					//document.setObject(simp_ayjson);
@@ -723,7 +723,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 				fstream f(filePathStr2, ios::out);//供写使用，文件不存在则创建，存在则清空原内容 
 				qDebug() << QString::fromLocal8Bit("简单的QTJson数据：") << simpjson_str;
 				f << simpjson_str.toStdString(); //写入数据
-				f.close(); 
+				f.close();
 			}
 
 		}
@@ -751,7 +751,8 @@ void TabMainGUI::PatientInformationSave()
 	{
 		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
 		//pCOralSubstituteScan upperJawOralScanTask, lowJawOralScanTask;
-		pCGroupScan pupperJawTotalCrownGroupScan = nullptr,plowJawTotalCrownGroupScan = nullptr;
+		pCScanTask einlayScanTask = nullptr;
+		pCGroupScan pupperJawTotalCrownGroupScan = nullptr, plowJawTotalCrownGroupScan = nullptr;
 		for (int j = 0; j < 32; j++) {
 			eScanType l_eScanType = m_pTeethScanTaskArray[j]->Get_ScanType();
 			if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {
@@ -774,7 +775,7 @@ void TabMainGUI::PatientInformationSave()
 				switch (l_eScanType) {
 				case etotalCrown:
 					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
-						if (plowJawTotalCrownGroupScan == nullptr || plowJawTotalCrownGroupScan->m_vtTeeth.size()>8){
+						if (plowJawTotalCrownGroupScan == nullptr || plowJawTotalCrownGroupScan->m_vtTeeth.size() > 8) {
 							plowJawTotalCrownGroupScan = make_shared<CGroupScan>();
 							plowJawTotalCrownGroupScan->Set_ScanType(l_eScanType);
 							plowJawTotalCrownGroupScan->Set_TaskName((g_strScanName[l_eScanType]));
@@ -789,7 +790,7 @@ void TabMainGUI::PatientInformationSave()
 					}
 					else //上颌
 					{
-						if (pupperJawTotalCrownGroupScan == nullptr || pupperJawTotalCrownGroupScan->m_vtTeeth.size()>8) {
+						if (pupperJawTotalCrownGroupScan == nullptr || pupperJawTotalCrownGroupScan->m_vtTeeth.size() > 8) {
 							pupperJawTotalCrownGroupScan = make_shared<CGroupScan>();
 							pupperJawTotalCrownGroupScan->Set_ScanType(l_eScanType);
 							pupperJawTotalCrownGroupScan->Set_TaskName((g_strScanName[l_eScanType]));
@@ -807,7 +808,35 @@ void TabMainGUI::PatientInformationSave()
 					break;
 				case elossToothScan:
 					break;
-				case einlayScan:
+				case einlayScan:		//嵌体
+					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
+					//	if (plowJawTotalCrownGroupScan == nullptr || plowJawTotalCrownGroupScan->m_vtTeeth.size() > 8) {
+						einlayScanTask = make_shared<CGroupScan>();
+						einlayScanTask->Set_ScanType(l_eScanType);
+						einlayScanTask->Set_TaskName((g_strScanName[l_eScanType]));
+						einlayScanTask->Set_TaskType(eScan);
+						CTaskManager::getInstance()->AddTask(einlayScanTask);
+						pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
+						pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
+						pStitchingTask->Set_TaskType(eLowerTeethStit);
+						pStitchingTask->m_pSrcTask = lowerJawScanTask;
+						pStitchingTask->m_pDstTask = upperScanTask;
+						CTaskManager::getInstance()->AddTask(pStitchingTask);
+					}
+					else //上颌
+					{
+						einlayScanTask = make_shared<CGroupScan>();
+						einlayScanTask->Set_ScanType(l_eScanType);
+						einlayScanTask->Set_TaskName((g_strScanName[l_eScanType]));
+						einlayScanTask->Set_TaskType(eScan);
+						CTaskManager::getInstance()->AddTask(einlayScanTask);
+						pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
+						pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
+						pStitchingTask->Set_TaskType(eUpperTeethStit);
+						pStitchingTask->m_pSrcTask = lowerJawScanTask;
+						pStitchingTask->m_pDstTask = einlayScanTask;
+						CTaskManager::getInstance()->AddTask(pStitchingTask);
+					}
 					break;
 				}
 			}
@@ -822,7 +851,7 @@ void TabMainGUI::PatientInformationSave()
 				pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
 				pUpperStitcing->m_pSrcTask = allJawScanTask;
 				pUpperStitcing->m_pDstTask = upperScanTask;
-				CTaskManager::getInstance()->AddTask(pUpperStitcing,true);
+				CTaskManager::getInstance()->AddTask(pUpperStitcing, true);
 				pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
 				pLowerSitcing->Set_TaskType(eLowerStitching);
 				pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
@@ -832,11 +861,11 @@ void TabMainGUI::PatientInformationSave()
 				//CTaskManager::getInstance()->AddTask(allJawScanTask, true);
 			}
 		}
-		if(upperScanTask)
+		if (upperScanTask)
 			CTaskManager::getInstance()->AddTask(upperScanTask, true);
-		if(lowerJawScanTask)
+		if (lowerJawScanTask)
 			CTaskManager::getInstance()->AddTask(lowerJawScanTask, true);
-		if(allJawScanTask)
+		if (allJawScanTask)
 			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
 	}
 
@@ -1503,11 +1532,11 @@ void TabMainGUI::readFileStorage(QString fPath)
 
 	}
 	if (bsplitModelFlag) {
-		QFile file2(fPath+".json");
+		QFile file2(fPath + ".json");
 		if (!file2.open(QIODevice::ReadOnly))
 		{
 			qDebug() << "读出失败！";
-			return ;
+			return;
 		}
 		QByteArray ba = file2.readAll();
 		QJsonParseError e;
@@ -1519,7 +1548,7 @@ void TabMainGUI::readFileStorage(QString fPath)
 		if (jsonDoc.isArray()) {
 			QJsonArray jsonArray = jsonDoc.array();
 			pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
-			for (int i = 0; i < jsonArray.size();i++) {
+			for (int i = 0; i < jsonArray.size(); i++) {
 				QJsonObject simp_ayjson = jsonArray[i].toObject();
 				QString strClassName = simp_ayjson.value("class").toString(),
 					strData = simp_ayjson.value("classdata").toString();
@@ -1531,8 +1560,8 @@ void TabMainGUI::readFileStorage(QString fPath)
 					pScanTask = make_shared<CStitchingTask>();
 				}
 				QByteArray byteArray = QByteArray::fromBase64(strData.toLatin1());
-				datastream kdata(byteArray.data(),byteArray.size());
-				pScanTask->StreamValue(kdata,false);
+				datastream kdata(byteArray.data(), byteArray.size());
+				pScanTask->StreamValue(kdata, false);
 				switch (pScanTask->Get_ScanType()) {
 				case eAllJawScan:
 					allJawScanTask = pScanTask;
@@ -1546,18 +1575,18 @@ void TabMainGUI::readFileStorage(QString fPath)
 				}
 				switch (pScanTask->Get_TaskType())
 				{
-				case eUpperStitching:{
+				case eUpperStitching: {
 					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
 					pTask->m_pSrcTask = allJawScanTask;
 					pTask->m_pDstTask = upperScanTask;
 				}
-					break;
-				case eLowerStitching:{
+									  break;
+				case eLowerStitching: {
 					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
 					pTask->m_pSrcTask = allJawScanTask;
 					pTask->m_pDstTask = lowerJawScanTask;
 				}
-					break;
+									  break;
 				default:
 					break;
 				}

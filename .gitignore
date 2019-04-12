@@ -240,3 +240,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/ToothScan/ToothScan/ScanData
+/ToothScan/ToothScan/data
