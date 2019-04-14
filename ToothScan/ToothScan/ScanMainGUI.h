@@ -198,6 +198,7 @@ private:
 	bool isModelFileExit(pCScanTask &pTask);
 	void loadModelFile(pCScanTask &pTask);
 	void hideAllPanel();
+	void showScanJawGroup();
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();

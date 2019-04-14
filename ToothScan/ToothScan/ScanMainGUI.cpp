@@ -145,52 +145,52 @@ void ScanMainGUI::constructIHM()
 	//cameraWindow->setContentsMargins(0, 0, 0, 0);
 	
 	//BottomTool底部工具栏
-	leftWatchButton->setFixedSize(40,40);
+	leftWatchButton->setFixedSize(80,80);
 	leftWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/LeftView.png"));
 	leftWatchButton->setIconSize(QSize(leftWatchButton->width(), leftWatchButton->height()));
 	leftWatchButton->setStyleSheet("border-style:flat");
 
-	rightWatchButton->setFixedSize(40, 40);
+	rightWatchButton->setFixedSize(80, 80);
 	rightWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/RightView.png"));
 	rightWatchButton->setIconSize(QSize(rightWatchButton->width(), rightWatchButton->height()));
 	rightWatchButton->setStyleSheet("border-style:flat");
 
-	topWatchButton->setFixedSize(40, 40);
+	topWatchButton->setFixedSize(80, 80);
 	topWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/TopView.png"));
 	topWatchButton->setIconSize(QSize(topWatchButton->width(), topWatchButton->height()));
 	topWatchButton->setStyleSheet("border-style:flat");
 
-	bottomWatchButton->setFixedSize(40, 40);
+	bottomWatchButton->setFixedSize(80, 80);
 	bottomWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/BottomView.png"));
 	bottomWatchButton->setIconSize(QSize(bottomWatchButton->width(), bottomWatchButton->height()));
 	bottomWatchButton->setStyleSheet("border-style:flat");
 
-	frontWatchButton->setFixedSize(40, 40);
+	frontWatchButton->setFixedSize(80, 80);
 	frontWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/FrontView.png"));
 	frontWatchButton->setIconSize(QSize(topWatchButton->width(), topWatchButton->height()));
 	frontWatchButton->setStyleSheet("border-style:flat");
 
-	backWatchButton->setFixedSize(40, 40);
+	backWatchButton->setFixedSize(80, 80);
 	backWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/BackView.png"));
 	backWatchButton->setIconSize(QSize(bottomWatchButton->width(), bottomWatchButton->height()));
 	backWatchButton->setStyleSheet("border-style:flat");
 	
-	enlargeButton->setFixedSize(40, 40);
+	enlargeButton->setFixedSize(80, 80);
 	enlargeButton->setIcon(QIcon(":/MainWidget/Resources/images/enlarge.png"));
 	enlargeButton->setIconSize(QSize(enlargeButton->width(), enlargeButton->height()));
 	enlargeButton->setStyleSheet("border-style:flat");
 
-	shrinkButton->setFixedSize(40, 40);
+	shrinkButton->setFixedSize(80, 80);
 	shrinkButton->setIcon(QIcon(":/MainWidget/Resources/images/shrink.png"));
 	shrinkButton->setIconSize(QSize(shrinkButton->width(), shrinkButton->height()));
 	shrinkButton->setStyleSheet("border-style:flat");
 
-	selectRegionButton->setFixedSize(40, 40);
+	selectRegionButton->setFixedSize(80, 80);
 	selectRegionButton->setIcon(QIcon(":/MainWidget/Resources/images/SelectRegion.png"));
 	selectRegionButton->setIconSize(QSize(enlargeButton->width(), enlargeButton->height()));
 	selectRegionButton->setStyleSheet("border-style:flat");
 
-	deleteModelButton->setFixedSize(40, 40);
+	deleteModelButton->setFixedSize(80, 80);
 	deleteModelButton->setIcon(QIcon(":/MainWidget/Resources/images/DeleteSelected.png"));
 	deleteModelButton->setIconSize(QSize(shrinkButton->width(), shrinkButton->height()));
 	deleteModelButton->setStyleSheet("border-style:flat");
@@ -516,28 +516,47 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	else if (scanObj.value("caseType").toInt() == 2)
 	{
 		m_bsplitModelFlag = true;
-		pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
-		if(pCurrentTask){
-			ui.ScanJawGroup->setVisible(true);
-			ui.ScanJawNextStepBtn->setVisible(false);
-			QString str;
-			str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
-			//str.sprintf("%s",pCurrentTask->Get_TaskName());
-			ui.ScanJawTips->setText(str);
-			if (isModelFileExit(pCurrentTask)) {
-				if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
-					//加载模型
-					loadModelFile(pCurrentTask);
-					cutPaneNextStepBtnClick();
-				}
-			}
-		}
+		showScanJawGroup();
 	}
 	tabMainPage->hide();
 	this->showMaximized();
 	scanTipWidget->showMaximized();
 }
-
+void ScanMainGUI::showScanJawGroup() {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask) {
+		ui.ScanJawGroup->setVisible(true);
+		ui.ScanJawNextStepBtn->setVisible(false);
+		//ui.ScanJawGroupTipImage->
+		QString l_strLabelImagePath = "";
+		switch (pCurrentTask->Get_ScanType())
+		{
+		case eUpperJawScan:
+			l_strLabelImagePath = "./Resources/images/upperjaw.png";
+			break;
+		case eLowerJawScan:
+			l_strLabelImagePath = "./Resources/images/lowerjaw.png";
+			break;
+		case eAllJawScan:
+			l_strLabelImagePath = "./Resources/images/alljaw.png";
+			break;
+		default:
+			break;
+		}
+		ui.ScanJawGroupTipImage->setPixmap(QPixmap(l_strLabelImagePath));
+		QString str;
+		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+		//str.sprintf("%s",pCurrentTask->Get_TaskName());
+		ui.ScanJawTips->setText(str);
+		if (isModelFileExit(pCurrentTask)) {
+			if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+				//加载模型
+				loadModelFile(pCurrentTask);
+				cutPaneNextStepBtnClick();
+			}
+		}
+	}
+}
 void ScanMainGUI::judgeForwardStep()
 {
 	scanTipWidget->setVisible(false);
@@ -1429,19 +1448,20 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 	else if (pNextTask && pCurrentTask) {
 		if (pNextTask->Get_TaskType() == eScan) {
 			ui.CutJawPanel->setVisible(false);
-			ui.ScanJawGroup->setVisible(true);
-			ui.ScanJawNextStepBtn->setVisible(false);
-			QString str;
-			str = QString::fromLocal8Bit("请移除") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pNextTask->Get_TaskName().c_str());
-			ui.ScanJawTips->setText(str);
-			glWidget->m_ModelsVt.clear();
-			if (isModelFileExit(pNextTask)) {
-				if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
-					//加载模型
-					loadModelFile(pNextTask);
-					cutPaneNextStepBtnClick();
-				}
-			}
+			showScanJawGroup();
+// 			ui.ScanJawGroup->setVisible(true);
+// 			ui.ScanJawNextStepBtn->setVisible(false);
+// 			QString str;
+// 			str = QString::fromLocal8Bit("请移除") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pNextTask->Get_TaskName().c_str());
+// 			ui.ScanJawTips->setText(str);
+// 			glWidget->m_ModelsVt.clear();
+// 			if (isModelFileExit(pNextTask)) {
+// 				if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+// 					//加载模型
+// 					loadModelFile(pNextTask);
+// 					cutPaneNextStepBtnClick();
+// 				}
+// 			}
 		}
 		else if (pNextTask->Get_TaskType() == eUpperStitching||pCurrentTask->Get_TaskType() == eLowerStitching) {	//上下颌的合并
 			ui.CutJawPanel->setVisible(false);
@@ -1517,10 +1537,11 @@ void ScanMainGUI::stitchingFNextBtnClick() {
 		}
 	}
 	else if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
-		ui.ScanJawGroup->setVisible(true);
-		QString str;
-		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
-		ui.ScanJawTips->setText(str);
+// 		ui.ScanJawGroup->setVisible(true);
+// 		QString str;
+// 		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+// 		ui.ScanJawTips->setText(str);
+		showScanJawGroup();
 	}
 
 }
