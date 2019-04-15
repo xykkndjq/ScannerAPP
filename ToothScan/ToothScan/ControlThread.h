@@ -17,13 +17,15 @@
 
 #include <opencv2\opencv.hpp>
 
+#include "CCyUSBStream.h"
+
 #define IMG_ROW    1024
 #define IMG_COL   1280
 
 #define EXPOSURETIME 16666
 
-#define CALI_ROTATE_POS_CNT 12    //¶¨Òå±ê¶¨¹ý³ÌµÄÎ»ÖÃÊý 13
-#define SCAN_ROTATE_POS_CNT 12    //¶¨ÒåÉ¨Ãè¹ý³ÌµÄÎ»ÖÃÊý 11
+//#define CALI_ROTATE_POS_CNT 12    //¶¨Òå±ê¶¨¹ý³ÌµÄÎ»ÖÃÊý 13
+//#define SCAN_ROTATE_POS_CNT 12    //¶¨ÒåÉ¨Ãè¹ý³ÌµÄÎ»ÖÃÊý 11
 
 #define CALI_ROTATE_POS_CNT2 11    //¶¨Òå±ê¶¨¹ý³ÌµÄÎ»ÖÃÊý 13
 #define SCAN_ROTATE_POS_CNT2 10    //¶¨ÒåÉ¨Ãè¹ý³ÌµÄÎ»ÖÃÊý 11    
@@ -42,32 +44,6 @@ extern float c_scan_y;
 extern QSemaphore freeSpace;
 extern QSemaphore usedSpace;
 
-static byte OpenDLP[5] = { 0xaa,0xbb,0x05,0x01,0x00 }; //¿ªÆô¼°ÅäÖÃDLP
-static byte CloseDLP[5] = { 0xaa,0xbb,0x05,0x01,0x01 }; //¹Ø±ÕDLP
-static byte ProjectOneSet_CALI_MAX[11] = { 0xaa,0xbb,0x0b,0x01,0x02,  0xdf,0x02, 0xa2,0x03, 0x84,0x03 }; //±ê¶¨
-static byte ProjectOneSet_CALI_MID[11] = { 0xaa,0xbb,0x0b,0x01,0x02,  0xf5,0x00, 0x36,0x01, 0x2c,0x01 }; //±ê¶¨
-static byte ProjectOneSet_CALI_MIN[11] = { 0xaa,0xbb,0x0b,0x01,0x02,  0x83,0x00, 0x9e,0x00, 0x99,0x00 }; //±ê¶¨
-static byte ProjectOneSet_SCAN_MAX[11] = { 0xaa,0xbb,0x0b,0x01,0x03,  0xdf,0x02, 0xa2,0x03, 0x84,0x03 }; //É¨Ãè
-static byte ProjectOneSet_SCAN_MID[11] = { 0xaa,0xbb,0x0b,0x01,0x03,  0xf5,0x00, 0x36,0x01, 0x2c,0x01 }; //É¨Ãè
-static byte ProjectOneSet_SCAN_MIN[11] = { 0xaa,0xbb,0x0b,0x01,0x03,  0x83,0x00, 0x9e,0x00, 0x99,0x00 }; //É¨Ãè
-
-
-static byte WhiteDisplay[5] = { 0xaa,0xbb,0x05,0x01,0x05 }; //ÏÔÊ¾°×ÆÁ
-//Ð¡µç»ú
-static byte SMYEnable[5] = { 0xaa,0xbb,0x05,0x02,0x00 }; //Ê¹ÄÜ
-static byte SMYDisable[5] = { 0xaa,0xbb,0x05,0x02,0x01 }; //Ê§ÄÜ
-static byte SMYRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMYRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x02,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMYRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
-static byte SMYRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x02,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
-//´óµç»ú
-static byte SMXEnable[5] = { 0xaa,0xbb,0x05,0x03,0x00 }; //Ê¹ÄÜ
-static byte SMXDisable[5] = { 0xaa,0xbb,0x05,0x03,0x01 }; //Ê§ÄÜ
-static byte SMXRotOneDegPos[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x00,0x00,0x00,0x00 }; //²½½øµç»úÕý×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMXRotOneDegNeg[9] = { 0xaa,0xbb,0x09,0x03,0x02,0x01,0x00,0x00,0x00 }; //²½½øµç»ú·´×ªÒ»¸ö¹Ì¶¨½Ç¶È deg = SMXRotOneDeg[5] * 256 + SMXRotOneDeg[6]
-static byte SMXRotOneCirclePos[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x00 }; //²½½øµç»úÕý×ªÒ»È¦
-static byte SMXRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x01 }; //²½½øµç»ú·´×ªÒ»È¦
-
 //static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 45, -90, 45, 45, -90, 45, 45, -90, 45, 45, 135, 135, 45 };
 //static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  45,  0,  0,  45,  0,  0,  -60, 0,  0,  0,  -30 };
 //static int SM_CALI_BRIGHTNESS[CALI_ROTATE_POS_CNT] = { 3,  3,  1,  1,  1,  2,  2,  2,  2,  2,  3,  2,  3 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
@@ -76,24 +52,24 @@ static byte SMXRotOneCircleNeg[6] = { 0xaa,0xbb,0x06,0x03,0x03,0x01 }; //²½½øµç»
 //static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 30, 0,   0,   0,   0,   0,   0,   0,    -30, 80, -80 };
 //static int SM_SCAN_BRIGHTNESS[SCAN_ROTATE_POS_CNT] = { 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 
-static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 30, -60, -150, -45, -90, 0,-45, -45, 0, 45, 45, -45 };
-static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  0,  0,  0,  -30,  0,  0,  60,  0,  0, -30 };
-static int SM_CALI_BRIGHTNESS[CALI_ROTATE_POS_CNT] = { 2,  2,  2,  2,  3,  3,  3,  2,  2,  2,  2,  2 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
-
-																									   //static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
-static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 0, 45, 45, 45, 45, 45, 45, 45, 115, -70,  -70,  70 };
-static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { -45, 0,   0,   0,   0,   0,   0,   0,    -35, 0,  0, 80 };
-static int SM_SCAN_BRIGHTNESS[SCAN_ROTATE_POS_CNT] = { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
-
+//static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 30, -60, -150, -45, -90, 0,-45, -45, 0, 45, 45, -45 };
+//static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  0,  0,  0,  -30,  0,  0,  60,  0,  0, -30 };
+//static int SM_CALI_BRIGHTNESS[CALI_ROTATE_POS_CNT] = { 2,  2,  2,  2,  3,  3,  3,  2,  2,  2,  2,  2 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
+//
+//																									   //static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
+//static int SMY_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 0, 45, 45, 45, 45, 45, 45, 45, 115, -70,  -70,  70 };
+//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { -45, 0,   0,   0,   0,   0,   0,   0,    -35, 0,  0, 80 };
+//static int SM_SCAN_BRIGHTNESS[SCAN_ROTATE_POS_CNT] = { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
+//
 static int SMY_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0,   0,  -30,  30,-25,   0,  25, -30,   0,  30,    0 };
 static int SMX_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0, 30,  30, 30, 20,  20,  20,  10,  10,  10,    0 };
 static int SM_CALI_BRIGHTNESS2[CALI_ROTATE_POS_CNT2] = { 2,   2,    2,   2,  2,   2,   2,   2,   2,   2,    0 };//ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
-
-																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
+//
+//																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
 static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  45,  90, 135,175, 0 };
 static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
-
-static int SM_SCAN_BRIGHTNESS2[SCAN_ROTATE_POS_CNT2] = { 2,/*  2,   2,   2,   2,   2,   2,*/   3,   3,   3,    3,   3,   3,   3,  3, 2 }; //ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
+//
+//static int SM_SCAN_BRIGHTNESS2[SCAN_ROTATE_POS_CNT2] = { 2,/*  2,   2,   2,   2,   2,   2,*/   3,   3,   3,    3,   3,   3,   3,  3, 2 }; //ÁÁ¶ÈµÈ¼¶£¬3×îÁÁ£¬1ÎªÄ¬ÈÏ
 ////static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
 //static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,-60,   0,  60, -50,   0,  50,   0, -40,  -80, -140,    40,   80,  140, 0 };
 //static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0, 30,  30,  30,  20,  20,  20, -30, -30,  -30,  -30,  -30,  -30,  -30,  0 };
@@ -104,15 +80,7 @@ using namespace std;
 using namespace Spinnaker;
 using namespace Spinnaker::GenApi;
 using namespace Spinnaker::GenICam;
-
-enum triggerType
-{
-	SOFTWARE,
-	HARDWARE
-};
-
-//const triggerType chosenTrigger = SOFTWARE;
-const triggerType chosenTrigger = HARDWARE;
+using namespace Communication;
 
 class ControlThread : public QObject
 {
@@ -122,12 +90,7 @@ public:
 	ControlThread(QObject *parent=0);
 	~ControlThread();
 
-	//int point_cloud_index;
-	bool serial_port_open;
-	//vector<bool> point_cloud_right;
-	///QMutex* mutex;
-
-	QSerialPort *serial;
+	CCyUSBStream l_usbStream;
 
 	vector<vector<double>> points_cloud_globle;
 
@@ -154,65 +117,14 @@ public slots:
 
 	void normalScan();
 private:
+	double m_ddeg_x = 0.0;
+	bool m_bpositiveOrien_x;//´óµç»ú×ªÏò
+	double m_ddeg_y = 0.0;
+	bool m_bpositiveOrien_y;//Ð¡µç»ú·´×ª
+	bool m_bcali;//±ê¶¨
 
 	void InitParameters();
-	void OpenOrCloseSerialPort();
-	void WriteByte(byte* szWriteBuffer, int number);
-	int ReadData(byte* RXBuff);
-	
-	/*****************************1¡¢Ïà»úÅäÖÃº¯Êý*******************************************/
-	//1.1 Ïà»ú´¥·¢ÉèÖÃ
-	int ConfigureTrigger(INodeMap & nodeMap, CameraPtr pCam);
-	//1.2 ¸´Î»´¥·¢
-	int ResetTrigger(INodeMap & nodeMap, CameraPtr pCam);
-	//1.3 ´¥·¢ºóÍ¼Ïñ»ñÈ¡º¯Êý
-	int AcquireImages(CameraPtr pCam, INodeMap & nodeMap, INodeMap & nodeMapTLDevice, gcstring deviceSerialNumber, int index, ImagePtr &convertedImage);
-	//1.4 ÉèÖÃÏà»úÍ¼Æ¬¹æ¸ñ
-	int ConfigureCustomImageSettings(INodeMap & nodeMap);
-	//1.5 ÆØ¹âÊ±¼äÉèÖÃ
-	int ConfigureExposure(INodeMap & nodeMap);
-
-	void getfirstimage();
-
-	///*****************************2¡¢´®¿Ú³õÊ¼»¯º¯Êý*******************************************/
-	//HANDLE hComm;
-	//OVERLAPPED OverLapped;
-	//COMSTAT Comstat;
-	//DWORD dwCommEvents;
-	////2.1 ´ò¿ª´®¿Ú
-	//bool OpenPort();
-	////2.2 ÉèÖÃ´®¿Ú
-	//bool SetupDCB(int rate_arg);
-	////2.3 ÉèÖÃ³¬Ê±Ê±¼ä
-	//bool SetupTimeout(DWORD ReadInterval, DWORD ReadTotalMultiplier, DWORD ReadTotalConstant, DWORD WriteTotalMultiplier, DWORD WriteTotalConstant);
-	////2.4 ´®¿Ú½ÓÊÕ
-	//void ReceiveWaitChar();
-	////2.5 ´®¿Ú½ÓÊÕ£¬·µ»Øµ±Ç°»º´æÇøÖÐµÄËùÓÐ×Ö½ÚÊý£¬×î´ó²»³¬¹ý128×Ö½Ú
-	//void ReceiveChar(byte RXBuff[]);
-	////2.6 »ñÈ¡µ±Ç°½ÓÊÕ»º´æÇøÖÐµÄ×Ö½ÚÊý
-	//int ReceiveBufferNum();
-	////2.7 ´®¿Ú·¢ËÍ
-	//bool WriteStr(char* szWriteBuffer);
-	//bool WriteByte(byte* szWriteBuffer, DWORD dwSend);
-	////2.8 ´®¿Ú³õÊ¼»¯È«¹ý³Ì
-	//void serialPortInit();
-
-	/*****************************3¡¢ÏÂÎ»»ú¶¯×÷º¯Êý*******************************************/
-	//3.1²½½øµç»úÐý×ªÒ»¸ö½Ç¶È (1:x 2:y) //ÕâÀïÐ´Ò»¸öº¯Êý£¬Ê×ÏÈ·¢ËÍÐý×ªÖ¸Áî£¬È»ºóÔÚº¯ÊýÀïÓÃÑÓÊ±µÈ´ýÐý×ª½áÊø£¬È»ºóreturn
-	void cameraInitParameters();
-
-	bool SMX_RotOneDeg(double deg);
-	bool SMY_RotOneDeg(double deg);
-	//3.2µç»úÊ¹ÄÜ
-	void SM_Enable();
-	//3.3µç»úÊ§ÄÜ
-	void SM_Disable();
-	//3.4DLPÍ¶Ó°Ò»×é±ê¶¨Í¼Æ¬
-	void DLP_ProjectOneSet_Cali(int caliCnt, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
-	//3.5DLPÍ¶Ó°Ò»×éÉ¨ÃèÍ¼Æ¬
-	void DLP_ProjectOneSet_Scan(int scanCnt, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
-
-	void DLP_ProjectOneSet_Global(int scanCnt, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
+	void SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali);
 };
 
 #endif // ControlThread_H

@@ -1,6 +1,6 @@
 #include "ComputeThread.h"
 //#include "include/PoissonRecon.h"
-#include "VTK_render.h"
+//#include "VTK_render.h"
 #include "HLogHelper.h"
 
 #include <pcl/visualization/cloud_viewer.h>
