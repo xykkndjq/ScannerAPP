@@ -122,9 +122,6 @@
     <ClCompile Include="trackball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VTK_render.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TaskManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -214,9 +211,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trackball.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VTK_render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TaskManager.h">
