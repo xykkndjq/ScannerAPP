@@ -288,9 +288,15 @@ namespace orth
 
 	}
 
+
 	void MeshModel::ModelSample(const int rate)
 	{
 		int jump_number = (int)(P.size() / rate);
+		if (rate > P.size())
+		{
+			jump_number = 1;
+		}
+
 		for (int point_index = 0; point_index < P.size(); point_index += jump_number)
 		{
 			S.push_back(point_index);
