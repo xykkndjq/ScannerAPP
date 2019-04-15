@@ -55,7 +55,15 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.StitchingPanel->move(1630, 230);
 	ui.StitchingFinishPanel->move(1630, 230);
 	ui.OralSubstitutePanel->move(1630, 230);
-	ui.OralSubstitutePanel->move(1630, 230);
+	ui.TeethStitchingPanel->move(1630, 230);
+	ui.ScanJawGroup->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.CutJawFinishPanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.CutJawPanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.compensationScanPanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.StitchingPanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.StitchingFinishPanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.OralSubstitutePanel->setStyleSheet("background-color:rgb(248,248,248);");
+	ui.TeethStitchingPanel->setStyleSheet("background-color:rgb(248,248,248);");
 	resetValue();
 }
 
