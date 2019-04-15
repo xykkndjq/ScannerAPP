@@ -12,8 +12,8 @@
 //#include "VTK_render.h"
 #include "./include/3DScan.h"
 //#include "3DScan_cuda.cuh"
-#include "Spinnaker.h"
-#include "SpinGenApi/SpinnakerGenApi.h"
+//#include "Spinnaker.h"
+//#include "SpinGenApi/SpinnakerGenApi.h"
 
 #include <opencv2\opencv.hpp>
 
@@ -77,9 +77,9 @@ static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30, 
 
 
 using namespace std;
-using namespace Spinnaker;
-using namespace Spinnaker::GenApi;
-using namespace Spinnaker::GenICam;
+//using namespace Spinnaker;
+//using namespace Spinnaker::GenApi;
+//using namespace Spinnaker::GenICam;
 using namespace Communication;
 
 class ControlThread : public QObject
