@@ -181,15 +181,20 @@ private:
 	void saveModeltoFileSlot();
 
 	void scanJawScanBtnClick();
+	void ScanJawBackStepBtnClick();
+	
 	void compensationBtnClick();
 	void discardBtnClick();		//³·Ïú²¹É¨
 	void compensationScanPanelNextBtnClick();
+	void compensationScanPanelBackBtnClick();
 	void cutModelBtnClick();
 	void unDoCutBtnClick();
 	void saveCutHeightCutBtnClick();
 	void cutPaneNextStepBtnClick();
+	void cutPanelBackBtnClick();
 	void CutJawFinishPanelNextStepBtnClick();
 	void stitchingPanelBtnClick();
+	void stitchingBackBtnClick();
 	void stitchingUpperJawBtnClick();
 	void stitchingLowerJawBtnClick();
 	void stitchingFNextBtnClick();
@@ -198,7 +203,9 @@ private:
 	bool isModelFileExit(pCScanTask &pTask);
 	void loadModelFile(pCScanTask &pTask);
 	void hideAllPanel();
-	void showScanJawGroup();
+	void showScanJawGroup(bool bBack = false);
+	void showcompensationScanPanel(bool bBack = false);
+	void showCutJawPanel(bool bBack = false);
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();

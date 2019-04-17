@@ -24,7 +24,7 @@ ControlThread::ControlThread(QObject *parent)
 	InitParameters();
 	l_scan_x = 0.0;
 	l_scan_y = 0.0;
-
+	//l_usbStream.InitCyUSBParameter();
 	//scan_times = 0;
 }
 
@@ -106,7 +106,7 @@ void ControlThread::setFlage(bool flag)
 
 void ControlThread::SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali)
 {
-	if (v_ddeg_x > 0)
+	if (v_ddeg_x >= 0)
 	{
 		m_ddeg_x = v_ddeg_x;
 		m_bpositiveOrien_x = true;
@@ -116,7 +116,7 @@ void ControlThread::SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bc
 		m_ddeg_x = abs(v_ddeg_x);
 		m_bpositiveOrien_x = false;
 	}
-	if (v_ddeg_y > 0)
+	if (v_ddeg_y >= 0)
 	{
 		m_ddeg_y = v_ddeg_y;
 		m_bpositiveOrien_y = true;
@@ -261,7 +261,7 @@ void ControlThread::controlCalibrationScan()
 		//cout << "******************************************************************" << endl;
 		//cout << "SM Rot¡£¡£¡£ x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
-		SMRotDegAnalysis(d_scan_x, d_scan_y, false);
+		SMRotDegAnalysis(d_scan_x, d_scan_y, true);
 		l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
 
 		if (scan_index == CALI_ROTATE_POS_CNT2 - 1)
