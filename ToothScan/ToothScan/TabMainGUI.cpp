@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QGraphicsDropShadowEffect>
 
 class CustomTabStyle : public QProxyStyle
 {
@@ -25,8 +26,66 @@ public:
 
 	void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 	{
+		if (element == CE_TabBarTab) {
+			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+				if (widget->parent()->objectName() == "selftabControl") {
+					QRect allRect = tab->rect;
+					if (tab->state & QStyle::State_Selected) {
+						painter->save();
+						painter->setPen(QColor(255, 255, 255, 0));
+						painter->setBrush(QBrush(QColor(255, 255, 255)));
+						painter->drawRect(allRect);
+						painter->setPen(0x89cfff);
+						painter->setBrush(QBrush(0x89cfff));
+						painter->drawRect(allRect.adjusted(0, allRect.height() - 5, 0, 0));
+						painter->restore();
+					}
+					QTextOption option;
+					option.setAlignment(Qt::AlignCenter);
+					if (tab->state & QStyle::State_Selected) {
+						painter->setPen(QColor(128, 128, 128));
+					}
+					else {
+						painter->setPen(QColor(128, 128, 128));
+					}
+
+					painter->drawText(allRect, tab->text, option);
+					return;
+				}
+			}
+		}
 		if (element == CE_TabBarTabLabel) {
 			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+				if (widget->parent()->objectName() == "selftabControl") {
+					QRect allRect = tab->rect;
+
+					if (tab->state & QStyle::State_Selected) {
+						painter->save();
+						painter->setPen(0x89cfff);
+						painter->setBrush(QBrush(0x89cfff));
+						painter->drawRect(allRect.adjusted(6, 6, -6, -6));
+						painter->drawRoundRect(allRect.adjusted(6, 6, -1, 0), 10, 10);
+						painter->setBrush(QBrush(0xffffff));
+						painter->setPen(QColor(128, 128, 128,0));
+						painter->drawRect(allRect.adjusted(6, 10, 0, 0));
+						painter->setPen(QColor(128, 128, 128, 255));
+						painter->drawLine(allRect.x(), allRect.height()-1, allRect.x()+6,allRect.height()-1);
+						painter->drawLine(allRect.x()+6, allRect.height()-1, allRect.x()+6, allRect.y()+10);
+						painter->drawLine(allRect.right(), allRect.y()+10, allRect.right(), allRect.height() - 1);
+						painter->restore();
+					}
+					QTextOption option;
+					option.setAlignment(Qt::AlignCenter);
+					if (tab->state & QStyle::State_Selected) {
+						painter->setPen(QColor(128, 128, 128));
+					}
+					else {
+						painter->setPen(QColor(128, 128, 128));
+					}
+
+					painter->drawText(allRect, tab->text, option);
+					return;
+				}
 				QRect allRect = tab->rect;
 
 				if (tab->state & QStyle::State_Selected) {
@@ -48,6 +107,10 @@ public:
 				painter->drawText(allRect, tab->text, option);
 				return;
 			}
+			
+		}
+		else {
+			painter->setPen(QColor(128, 128, 128, 255));
 		}
 
 		if (element == CE_TabBarTab) {
@@ -56,7 +119,40 @@ public:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
 };
+void styleControl(QObject *obj) {
+	QObjectList list = obj->children();
+	qDebug() << list.length() << endl;
+	QWidget *b;
+	QBoxLayout *pBoxLayout;
+	foreach(QObject *obj, list)
+	{
+		pBoxLayout = static_cast<QBoxLayout*>(obj);
+		if (obj->metaObject()->className() == QStringLiteral("QPushButton")
+			|| obj->metaObject()->className() == QStringLiteral("QDateTimeEdit")
+			|| obj->metaObject()->className() == QStringLiteral("QLineEdit")
+			|| obj->metaObject()->className() == QStringLiteral("QTextEdit"))
+		{
+			b = static_cast<QWidget*>(obj);
+			if(b){
+				QString strStyleSheet = b->styleSheet();
+				strStyleSheet += "border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);";
+				b->setStyleSheet(strStyleSheet);
+				//b->setStyleSheet("border:1px groove gray;border-radius:10px;padding:2px 4px;border - color: rgb(128, 128, 128);background - color: rgb(255, 255, 255);");
+				QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect();
 
+				shadow_effect->setOffset(0, 0);
+
+				shadow_effect->setColor(Qt::gray);
+
+				shadow_effect->setBlurRadius(8);
+				b->setGraphicsEffect(shadow_effect);
+			}
+		}
+		if (pBoxLayout) {
+			styleControl(pBoxLayout);
+		}
+	}
+}
 TabMainGUI::TabMainGUI(QWidget *parent)
 	: QWidget(parent)
 {
@@ -65,6 +161,9 @@ TabMainGUI::TabMainGUI(QWidget *parent)
 	this->constructIHM();
 	this->setConnections();
 	m_eScanType = eScanType::eScanNULL;
+	//network_group_box->setGraphicsEffect(shadow_effect);
+	styleControl(this);
+	setWindowFlags(Qt::FramelessWindowHint);
 }
 
 TabMainGUI::~TabMainGUI()
@@ -120,11 +219,16 @@ void TabMainGUI::initVariable()
 
 	//orderInformPage订单管理页面
 	//topbutton
-	newButton = new QPushButton(QStringLiteral("新建"), this);
-	exportButton = new QPushButton(QStringLiteral("导入"), this);
+	newButton = new QPushButton(QStringLiteral("新   建"), this);
+	newButton->setFixedSize(180, 30);
+
+	exportButton = new QPushButton(QStringLiteral("导   入"), this);
+	exportButton->setFixedSize(180, 30);
 	//saveButton = new QPushButton(QStringLiteral("保存"), this);
-	watchButton = new QPushButton(QStringLiteral("预览"), this);
+	watchButton = new QPushButton(QStringLiteral("预   览"), this);
+	watchButton->setFixedSize(180, 30);
 	saveScanButton = new QPushButton(QStringLiteral("保存并扫描"), this);
+	saveScanButton->setFixedSize(180, 30);
 
 	//leftbutton
 	dateLineEdit = new QDateTimeEdit(this);
@@ -176,48 +280,68 @@ void TabMainGUI::initVariable()
 		int col = i % 8;
 		int value = (row + 1) * 10 + col + 1;
 		QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
-		toothList[i]->setStyleSheet(path);
+		//cout <<"i="<<i<<" num = " <<nNum << endl;
+		path = "QPushButton{background-image: url(./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1,10) + ".png);}";
+		//toothList[i]->setStyleSheet(path);
 		toothList[i]->setObjectName(QString::number(i, 10));
+		path = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";
+		QImage img(path);
+		cout << "img.width()" << img.width() << "img.height()" << img.height() << endl;
+		toothList[i]->setFixedSize(img.width(), img.height());
+		QImage resultImage;
+		resultImage = QImage(img.size(), QImage::Format_ARGB32_Premultiplied);
+		QPainter painter(&resultImage);
+		painter.setCompositionMode(QPainter::CompositionMode_Source);
+		QPen pen(QColor(0,0,0,0));
+		painter.setPen(pen);
+ 		painter.fillRect(resultImage.rect(), Qt::transparent);
+ 		painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+		painter.drawImage(0, 0, img);
+		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10));
+		painter.end();
+		toothList[i]->setIcon(QPixmap::fromImage(resultImage));
+		toothList[i]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
+
 		toothFlagList.append(false);
 		toothID.append(0);
 		m_pTeethScanTaskArray[i] = make_shared<CScanTask>();
 		m_pTeethScanTaskArray[i]->Set_TeethId(i);
 	}
-	toothList[0]->setText("11");
-	toothList[1]->setText("12");
-	toothList[2]->setText("13");
-	toothList[3]->setText("14");
-	toothList[4]->setText("15");
-	toothList[5]->setText("16");
-	toothList[6]->setText("17");
-	toothList[7]->setText("18");
-
-	toothList[8]->setText("21");
-	toothList[9]->setText("22");
-	toothList[10]->setText("23");
-	toothList[11]->setText("24");
-	toothList[12]->setText("25");
-	toothList[13]->setText("26");
-	toothList[14]->setText("27");
-	toothList[15]->setText("28");
-
-	toothList[16]->setText("31");
-	toothList[17]->setText("32");
-	toothList[18]->setText("33");
-	toothList[19]->setText("34");
-	toothList[20]->setText("35");
-	toothList[21]->setText("36");
-	toothList[22]->setText("37");
-	toothList[23]->setText("38");
-
-	toothList[24]->setText("41");
-	toothList[25]->setText("42");
-	toothList[26]->setText("43");
-	toothList[27]->setText("44");
-	toothList[28]->setText("45");
-	toothList[29]->setText("46");
-	toothList[30]->setText("47");
-	toothList[31]->setText("48");
+// 	toothList[0]->setText("11");
+// 	toothList[1]->setText("12");
+// 	toothList[2]->setText("13");
+// 	toothList[3]->setText("14");
+// 	toothList[4]->setText("15");
+// 	toothList[5]->setText("16");
+// 	toothList[6]->setText("17");
+// 	toothList[7]->setText("18");
+// 
+// 	toothList[8]->setText("21");
+// 	toothList[9]->setText("22");
+// 	toothList[10]->setText("23");
+// 	toothList[11]->setText("24");
+// 	toothList[12]->setText("25");
+// 	toothList[13]->setText("26");
+// 	toothList[14]->setText("27");
+// 	toothList[15]->setText("28");
+// 
+// 	toothList[16]->setText("31");
+// 	toothList[17]->setText("32");
+// 	toothList[18]->setText("33");
+// 	toothList[19]->setText("34");
+// 	toothList[20]->setText("35");
+// 	toothList[21]->setText("36");
+// 	toothList[22]->setText("37");
+// 	toothList[23]->setText("38");
+// 
+// 	toothList[24]->setText("41");
+// 	toothList[25]->setText("42");
+// 	toothList[26]->setText("43");
+// 	toothList[27]->setText("44");
+// 	toothList[28]->setText("45");
+// 	toothList[29]->setText("46");
+// 	toothList[30]->setText("47");
+// 	toothList[31]->setText("48");
 
 	clearAllButton = new QPushButton(QStringLiteral("清除所有"));
 	clearAllButton->setFixedSize(60, 20);
@@ -341,6 +465,8 @@ void TabMainGUI::constructIHM()
 	leftHLayout->addStretch();
 	//rightWidget
 	QTabWidget *rightTabWidget = new QTabWidget();
+	rightTabWidget->setStyleSheet("border:0px");
+	rightTabWidget->setStyle(new CustomTabStyle);
 	//未分模
 	QWidget *rightTotalModelVWidget = new QWidget();
 	QVBoxLayout *rightTotalModelVLayout = new QVBoxLayout(rightTotalModelVWidget);
@@ -379,6 +505,7 @@ void TabMainGUI::constructIHM()
 	toothList[14]->setGeometry(370, 296, 40, 40);
 	toothList[15]->setGeometry(390, 337, 40, 40);
 
+
 	clearAllButton->setParent(middleSplitModelWidget);
 	clearAllButton->setGeometry(220, 390, 60, 20);
 
@@ -400,6 +527,38 @@ void TabMainGUI::constructIHM()
 	toothList[25]->setGeometry(180, 683, 40, 40);
 	toothList[24]->setGeometry(200, 724, 40, 40);
 
+	toothList[0]->move(195, 27);
+	toothList[1]->move(144, 43);
+	toothList[2]->move(105, 76);
+	toothList[3]->move(76, 116);
+	toothList[4]->move(57, 167);
+	toothList[5]->move(42, 222);
+	toothList[6]->move(34, 275);
+	toothList[7]->move(30, 327);
+	toothList[8]->move(254, 27);
+	toothList[9]->move(306, 44);
+	toothList[10]->move(344, 75);
+	toothList[11]->move(370, 115);
+	toothList[12]->move(388, 168);
+	toothList[13]->move(404, 221);
+	toothList[14]->move(415, 277);
+	toothList[15]->move(417, 329);
+	toothList[16]->move(204, 732);
+	toothList[17]->move(163, 723);
+	toothList[18]->move(131, 697);
+	toothList[19]->move(103, 669);
+	toothList[20]->move(74, 625);
+	toothList[21]->move(48, 565);
+	toothList[22]->move(32, 501);
+	toothList[23]->move(30, 442);
+	toothList[24]->move(244, 733);
+	toothList[25]->move(283, 721);
+	toothList[26]->move(318, 698);
+	toothList[27]->move(345, 665);
+	toothList[28]->move(374, 622);
+	toothList[29]->move(399, 565);
+	toothList[30]->move(414, 501);
+	toothList[31]->move(415, 443);
 	toothRadioButtonGroup->setParent(middleSplitModelWidget);
 	toothRadioButtonGroup->addButton(totalCrownButton, 1);
 	toothRadioButtonGroup->addButton(toothCrownButton, 2);
@@ -445,10 +604,15 @@ void TabMainGUI::constructIHM()
 	rightTabWidget->addTab(rightTotalModelHWidget, QStringLiteral("未分模"));
 	rightTabWidget->addTab(middleSplitModelWidget, QStringLiteral("分模"));
 	rightTabWidget->addTab(rightMoulageHWidget, QStringLiteral("印模"));
+	rightTabWidget->setObjectName("selftabControl");
+	rightTotalModelHWidget->setStyleSheet("border:0px");
 
 	QWidget *bottomWidget = new QWidget();
 	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
+	bottomHLayout->setContentsMargins(0, 0, 0, 0);
+	bottomHLayout->setSpacing(0);
 	bottomHLayout->addWidget(totalleftWidget);
+	//bottomHLayout->setStretch();
 	bottomHLayout->addWidget(rightTabWidget);
 
 	totalOrderVLayout->addWidget(topWidget);
@@ -1287,8 +1451,28 @@ void TabMainGUI::ToothButtonListPress()
 	{
 		if (toothFlagList[toothButtonIndex] == false)
 		{
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png);}";
-			toothList[toothButtonIndex]->setStyleSheet(path);
+			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png);}";
+			QString dstpath = ":/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png",
+				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
+
+			QImage resultImage, destinationImage, sourceImage;
+			destinationImage.load(dstpath);
+			sourceImage.load(srcPath);
+			resultImage = QImage(sourceImage.size(), QImage::Format_ARGB32_Premultiplied);
+			QPainter painter(&resultImage);
+			painter.setCompositionMode(QPainter::CompositionMode_Source);
+			painter.fillRect(resultImage.rect(), Qt::transparent);
+			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter.drawImage(QRect(0, 0, resultImage.width(),resultImage.height()),destinationImage);
+			painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+			painter.drawImage(0, 0, sourceImage);
+// 			painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+// 			painter.fillRect(resultImage.rect(), Qt::white);
+			painter.end();
+			
+			//toothList[toothButtonIndex]->setStyleSheet(path);
+			toothList[toothButtonIndex]->setIcon(QPixmap::fromImage(resultImage));
+			toothList[toothButtonIndex]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
 			addToothList(chooseID, toothButtonIndex);
 			qDebug() << totalCrownList.size();
 			toothFlagList[toothButtonIndex] = true;

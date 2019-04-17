@@ -151,6 +151,26 @@ public:
 		}
 		return m_pCurrentTask;
 	}
+	pCScanTask getLastTask() {
+		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
+		for (; iter != m_vtBaseTask.end(); iter++) {
+			if ((*iter) == m_pCurrentTask) {
+				if (iter == m_vtBaseTask.begin()) {
+					return nullptr;
+				}
+				else{
+					m_pCurrentTask =*( --iter);
+					return m_pCurrentTask;
+				}
+// 				if (++iter != m_vtBaseTask.end()) {
+// 					m_pCurrentTask = (*iter);
+// 				}
+// 				else
+// 					m_pCurrentTask = nullptr;
+			}
+		}
+		return nullptr;
+	}
 	list<pCScanTask> &getTasks() {
 		return m_vtBaseTask;
 	}

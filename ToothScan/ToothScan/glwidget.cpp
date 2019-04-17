@@ -1462,8 +1462,8 @@ void GLWidget::drawGradient()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
-	GLubyte  qBeginColor[4] = { 0,0,0 ,255 },
-		qEndColor[4] = { 128,128,255,255 };
+	GLubyte  qBeginColor[4] = { 255,255,255,255 },
+		qEndColor[4] = { 128,128,128,255 };
 	glBegin(GL_TRIANGLE_STRIP);
 	glColor4ubv(qBeginColor);  glVertex2f(-1, 1);
 	glColor4ubv(qEndColor);  glVertex2f(-1, -1);
