@@ -37,7 +37,7 @@ ComputeThread::ComputeThread(QObject *parent)
 		FreeLibrary(hdll);
 	}
 	if (!g_hdll) {
-		g_hdll = LoadLibrary(L"icp_test.dll");
+		g_hdll = LoadLibrary(L"regist.dll");
 		//hdll = LoadLibrary("PoissonRecon.dll");
 		//hdll = LoadLibrary("SSDRecon.dll");
 		if (g_hdll == NULL)
@@ -495,7 +495,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		ss << index;
 		ss >> index_write;
 		orth::ModelIO mm_write(&mModel);
-		mm_write.writeModel("./data/" + index_write + ".stl", "stlb");
+		//mm_write.writeModel("./data/" + index_write + ".stl", "stlb");
 		
 		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		pointcloudrotation(points_2, cloudrot);
@@ -504,7 +504,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		{
 			//pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp);
 			//if (!pointcloudICP(upper_points_cloud_end2, points_2, 1, 1, rt_icp))
-			g_icp(upper_mModel[0], mModel, rt_icp, 2.0, 10.0, 30);
+			g_icp(upper_mModel[0], mModel, rt_icp, 1.0, 10.0, 50);
 // 			{
 // 				return false;
 // 			}
@@ -850,7 +850,7 @@ image_rgb.push_back(imgr);
  			}
  		}
  		cout << "scan_index:" << scan_index << endl;
- 		unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
+ 		unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
  
  		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, unwarp, chooseJawIndex, scan_index);
  		if (scanFlag == true)
@@ -1149,7 +1149,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 		}
 	}
 
-	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
+	unwarp->PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
 
 	/*vector<double> points_;
 	vector<float> normal;
@@ -1255,12 +1255,12 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 	int TotalIterNum = 82;
 	if (chooseJawIndex == 1)
 	{
-		if (upper_points_cloud_globle2.size() > 1)
+		if (upper_mModel.size() > 1)
 		{
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
-			gpa.GpaRegistrationGPU(upper_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
@@ -1314,12 +1314,12 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 	}
 	else if (chooseJawIndex == 2)
 	{
-		if (lower_points_cloud_globle2.size() > 1)
+		if (lower_mModel.size() > 1)
 		{
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
-			gpa.GpaRegistrationGPU(lower_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			gpa.GpaRegistrationGPU(lower_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
@@ -1356,12 +1356,12 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 	}
 	else if (chooseJawIndex == 3)
 	{
-		if (all_points_cloud_globle2.size() > 1)
+		if (all_mModel.size() > 1)
 		{
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
-			gpa.GpaRegistrationGPU(all_points_cloud_globle2, points_target, rt_matrixs, TotalIterNum);
+			gpa.GpaRegistrationGPU(all_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
@@ -1405,15 +1405,15 @@ void ComputeThread::GPAMeshing()
 	pScanTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pScanTask)
 		return;
-	vector<vector<double>> points_target;
+	//vector<vector<double>> points_target;
 	int TotalIterNum = 82;
 	{
-		if (pScanTask->m_points_cloud_globle.size() > 1)
+		if (pScanTask->m_mModel.size() > 1)
 		{
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
-			gpa.GpaRegistrationGPU(pScanTask->m_points_cloud_globle, points_target, rt_matrixs, TotalIterNum);
+			gpa.GpaRegistrationGPU(pScanTask->m_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
@@ -1562,7 +1562,7 @@ void ComputeThread::normalComputeScan()
 		}
 		cout << "scan_index:" << scan_index << endl;
 		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1.0);
 		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index, pScanTask);
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");

@@ -2,6 +2,7 @@
 #include <QtWidgets/QApplication>
 #include <vector>
 
+using namespace Communication;
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);

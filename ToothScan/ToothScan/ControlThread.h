@@ -64,8 +64,8 @@ extern QSemaphore usedSpace;
 static int SMY_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0,   0,  -30,  30,-25,   0,  25, -30,   0,  30,    0 };
 static int SMX_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0, 30,  30, 30, 20,  20,  20,  10,  10,  10,    0 };
 static int SM_CALI_BRIGHTNESS2[CALI_ROTATE_POS_CNT2] = { 2,   2,    2,   2,  2,   2,   2,   2,   2,   2,    0 };//亮度等级，3最亮，1为默认
-//
-//																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
+
+																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
 static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  45,  90, 135,175, 0 };
 static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
 //
@@ -117,14 +117,14 @@ public slots:
 
 	void normalScan();
 private:
-	double m_ddeg_x = 0.0;
-	bool m_bpositiveOrien_x;//大电机转向
-	double m_ddeg_y = 0.0;
-	bool m_bpositiveOrien_y;//小电机反转
-	bool m_bcali;//标定
+	//double m_ddeg_x = 0.0;
+	//bool m_bpositiveOrien_x;//大电机转向
+	//double m_ddeg_y = 0.0;
+	//bool m_bpositiveOrien_y;//小电机反转
+	//bool m_bcali;//标定
 
 	void InitParameters();
-	void SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali);
+	//void SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali);
 };
 
 #endif // ControlThread_H

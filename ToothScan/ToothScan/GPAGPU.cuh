@@ -11,6 +11,7 @@
 extern "C" void newDcloudtoPcloudCaller(double *DoubleCloud_src, float *Cloud_dst, int PointsSize);
 extern "C" void newPcloudtoDcloudCaller(float *Cloud_src, double *DoubleCloud_dst, int PointsSize);
 extern "C" void newTakeDimCaller(double *CloudSet_src, int CloudsPointsSize, double *XDim_dst, double *YDim_dst, double *ZDim_dst, double *MinMax_p);
+//extern "C" void newTakeDimCaller(double *CloudSet_src, int CloudsPointsSize, double *XDim_dst, double *YDim_dst, double *ZDim_dst);
 //ClosestPoint
 extern "C" void newCloudHashCaller(double *CloudSet_src, int CloudsPointsSize, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst);
 extern "C" void newClosestSearchCaller(double *CloudSet_src, int *CloudSize_src, int *CloudSize_p, int *StartIndex_src, char *CellSize_src, double *MinMax_src, int CloudsPointsSize, int CloudNum, double *ClosestPointMatrixV_dst, int *IndexValue_dst);

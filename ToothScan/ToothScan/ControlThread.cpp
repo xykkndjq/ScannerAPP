@@ -1,8 +1,8 @@
 #include "ControlThread.h"
 
-extern int DataSize = SCAN_ROTATE_POS_CNT2 - 1;
+extern int DataSize = SCAN_ROTATE_POS_CNT2;
 //extern int BufferSize = 5;
-extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2-1) * 34 * 1280 * 1024 * sizeof(unsigned char));
+extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2) * 34 * 1280 * 1024 * sizeof(unsigned char));
 
 extern cv::Mat rt_r = cv::Mat::eye(4, 4, CV_64FC1);
 extern std::vector<cv::Mat> scanner_rt(9, rt_r);
@@ -104,43 +104,47 @@ void ControlThread::setFlage(bool flag)
 	isStop = flag;
 }
 
-void ControlThread::SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali)
-{
-	if (v_ddeg_x > 0)
-	{
-		m_ddeg_x = v_ddeg_x;
-		m_bpositiveOrien_x = true;
-	}
-	else
-	{
-		m_ddeg_x = abs(v_ddeg_x);
-		m_bpositiveOrien_x = false;
-	}
-	if (v_ddeg_y > 0)
-	{
-		m_ddeg_y = v_ddeg_y;
-		m_bpositiveOrien_y = true;
-	}
-	else
-	{
-		m_ddeg_y = abs(v_ddeg_y);
-		m_bpositiveOrien_x = false;
-	}
-	m_bcali = v_bcali;
-}
+//void ControlThread::SMRotDegAnalysis(double v_ddeg_x, double v_ddeg_y, bool v_bcali)
+//{
+//	if (v_ddeg_x >= 0)
+//	{
+//		m_ddeg_x = v_ddeg_x;
+//		m_bpositiveOrien_x = true;
+//	}
+//	else
+//	{
+//		m_ddeg_x = abs(v_ddeg_x);
+//		m_bpositiveOrien_x = false;
+//	}
+//	if (v_ddeg_y >= 0)
+//	{
+//		m_ddeg_y = v_ddeg_y;
+//		m_bpositiveOrien_y = true;
+//	}
+//	else
+//	{
+//		m_ddeg_y = abs(v_ddeg_y);
+//		m_bpositiveOrien_x = false;
+//	}
+//	m_bcali = v_bcali;
+//}
 
 void ControlThread::controlNormalScan()
 {
+	bool l_bcali = false;
 	//vector<cv::Mat> image_groups_left, image_groups_right;
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
 	
 	l_usbStream.InitCyUSBParameter();//初始化
+	l_usbStream.ClosedDLPFunction();
+	_sleep(300);
 	l_usbStream.OpenDLPFunction();//打开光机
 
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(5000);
+	_sleep(8000);
 
+	l_usbStream.SetScanDLPLight();
 	clock_t time1, time2, time3, time4;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
 	{
@@ -164,8 +168,7 @@ void ControlThread::controlNormalScan()
 		vector<cv::Mat> imgL_set, imgR_set;
 
 		time1 = clock();
-		SMRotDegAnalysis(d_scan_x, d_scan_y, false);
-		l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y,  l_bcali, imgL_set, imgR_set);
 		time2 = clock();
 
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
@@ -229,17 +232,21 @@ void ControlThread::controlNormalScan()
 
 	//3、关闭DLP
 	l_usbStream.ClosedDLPFunction();
+	l_usbStream.AbortXferLoop();
 	cout << "关闭DLP。。 " << endl;
 }
 
 void ControlThread::controlCalibrationScan()
 {
+	bool l_bcali = true;
 	l_usbStream.InitCyUSBParameter();//初始化
+	l_usbStream.ClosedDLPFunction();
+	_sleep(300);
 	l_usbStream.OpenDLPFunction();//打开光机
 
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(5000);
-
+	_sleep(8000);
+	l_usbStream.SetMidDLPLight();
 	vector<vector<cv::Mat>> image_groups;
 	for (int scan_index = 0; scan_index < CALI_ROTATE_POS_CNT2; scan_index++)
 	{
@@ -261,8 +268,8 @@ void ControlThread::controlCalibrationScan()
 		//cout << "******************************************************************" << endl;
 		//cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
-		SMRotDegAnalysis(d_scan_x, d_scan_y, false);
-		l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+		//SMRotDegAnalysis(d_scan_x, d_scan_y, true);
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 
 		if (scan_index == CALI_ROTATE_POS_CNT2 - 1)
 		{
@@ -312,7 +319,7 @@ void ControlThread::controlCalibrationScan()
 	cout << "全部标定图片存储完毕。。 " << endl;
 	////3、关闭DLP
 	l_usbStream.ClosedDLPFunction();
-
+	l_usbStream.AbortXferLoop();
 	rs->PreCalibration(1280, 960, 10, image_groups);
 
 	for (int image_index = 0; image_index < CALI_ROTATE_POS_CNT2 - 1; image_index++)
@@ -341,6 +348,7 @@ void ControlThread::controlCalibrationScan()
 
 void ControlThread::controlGlobalCaliScan()
 {
+	bool l_bcali = true;
 	l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.OpenDLPFunction();//打开光机
 
@@ -371,8 +379,7 @@ void ControlThread::controlGlobalCaliScan()
 		cout << "******************************************************************" << endl;
 		cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
-		SMRotDegAnalysis(d_scan_x, d_scan_y, true);
-		l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
@@ -408,6 +415,7 @@ void ControlThread::controlGlobalCaliScan()
 
 void ControlThread::compensationControlScan()
 {
+	bool l_bcali = false;
 	freeSpace.acquire();
 
 	l_usbStream.InitCyUSBParameter();//初始化
@@ -435,8 +443,7 @@ void ControlThread::compensationControlScan()
 	cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
 	///**************************************扫描过程*****************************************/
-	SMRotDegAnalysis(d_scan_x, d_scan_y, false);
-	l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 	
 	//存进总数组
 	vector<cv::Mat> images_l, images_r;
@@ -482,8 +489,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 	}
-	SMRotDegAnalysis(-d_scan_x, -d_scan_y, false);
-	l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_x, l_bcali, imgL_set, imgR_set);
 
 	//3、关闭DLP
 	l_usbStream.ClosedDLPFunction();//电机失能
@@ -494,6 +500,7 @@ void ControlThread::compensationControlScan()
 
 void ControlThread::normalScan()
 {
+	bool l_bcali = false;
 	vector<cv::Mat> image_groups_left, image_groups_right;
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
@@ -527,8 +534,7 @@ void ControlThread::normalScan()
 		vector<cv::Mat> imgL_set, imgR_set;
 		//2、电机旋转
 		time1 = clock();
-		SMRotDegAnalysis(d_scan_x, d_scan_y, false);
-		l_usbStream.SMRotOneDegFunction(m_ddeg_x, m_bpositiveOrien_x, m_ddeg_y, m_bpositiveOrien_y, m_bcali, imgL_set, imgR_set);
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 		time2 = clock();
 
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
