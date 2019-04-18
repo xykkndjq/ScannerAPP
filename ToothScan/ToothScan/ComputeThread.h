@@ -105,6 +105,7 @@ public:
 	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex);
 	void writefile(orth::MeshModel totalMeshModel, string name);
 	void writefile(vector<double> cloud, string name);
+	void ReductMesh(orth::MeshModel &model_target, orth::MeshModel &model_source);
 
 signals:
 	void showModeltoGlSingel(int refreshIndex);

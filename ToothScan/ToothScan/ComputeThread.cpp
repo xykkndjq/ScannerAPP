@@ -2,7 +2,7 @@
 //#include "include/PoissonRecon.h"
 //#include "VTK_render.h"
 #include "HLogHelper.h"
-
+#include "NearestNeighborSearches.h"
 #include <pcl/visualization/cloud_viewer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRendererCollection.h>
@@ -1295,7 +1295,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 
 			time3 = clock();
 			//pr.Execute(totalMeshModel);
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			time4 = clock();
 			upper_mModel.push_back(totalMeshModel);
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1309,7 +1316,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//pr.Execute(upper_mModel[0]);
 			orth::MeshModel totalMeshModel;
 			totalMeshModel = upper_mModel[0];
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			upper_mModel.push_back(totalMeshModel);
 			time2 = clock();
 			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1337,7 +1351,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//recon::PoissonRec pr;
 			time3 = clock();
 			//pr.Execute(totalMeshModel);
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			lower_mModel.push_back(totalMeshModel);
 			time4 = clock();
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1350,7 +1371,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//recon::PoissonRec pr;
 			orth::MeshModel totalMeshModel;
 			totalMeshModel = lower_mModel[0];
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			lower_mModel.push_back(totalMeshModel);
 			//pr.Execute(lower_mModel[0]);
 			time2 = clock();
@@ -1379,7 +1407,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//recon::PoissonRec pr;
 
 			time3 = clock();
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			all_mModel.push_back(totalMeshModel);
 			time4 = clock();
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1392,7 +1427,14 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			//recon::PoissonRec pr;
 			orth::MeshModel totalMeshModel;
 			totalMeshModel = all_mModel[0];
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			all_mModel.push_back(totalMeshModel);
 			time2 = clock();
 			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1427,7 +1469,14 @@ void ComputeThread::GPAMeshing()
 				pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
 			}
 			time3 = clock();
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			time4 = clock();
 			pScanTask->m_mAllModel = totalMeshModel;
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1439,7 +1488,14 @@ void ComputeThread::GPAMeshing()
 			time1 = clock();
 			orth::MeshModel totalMeshModel;
 			totalMeshModel = pScanTask->m_mModel[0];
+
+			orth::MeshModel totalMeshModel_copy;
+			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+
 			poissonRecon(argc, argv, &totalMeshModel);
+
+			ReductMesh(totalMeshModel_copy, totalMeshModel);
+
 			pScanTask->m_mAllModel = totalMeshModel;
 			time2 = clock();
 			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1738,5 +1794,76 @@ void ComputeThread::compensationCompute()
 
 	emit cameraShowSignal();
 	emit computeFinish();
+}
+
+
+void ComputeThread::ReductMesh(orth::MeshModel &model_target, orth::MeshModel &model_source)
+{
+	vector<unsigned int> query_index;
+	vector<double> query_distance;
+	NearestNeighborSearches nns;
+	//pointcloud_source.ModelSample(90000);
+	nns.NearestPointsSearchGPU(&model_target, &model_source, 60, query_index, query_distance);
+	//orth::NearestPointSearch(model_target, model_source, 8, query_index, query_distance);
+	model_source.L.resize(model_source.P.size(), 0);
+	for (int point_index = 0; point_index < model_source.P.size(); point_index++)
+	{
+		if (query_distance[point_index] < 0.2 && query_distance[point_index] >0.0)
+		{
+			continue;
+		}
+		model_source.L[point_index] = 1;
+	}
+
+	orth::PointCloudD points;
+	orth::Faces faces;
+	orth::PointNormal normals;
+	orth::PointLabel labels;
+	//orth::PointColor colors;
+	vector<int> new_point_index(model_source.P.size(), -1);
+
+	for (int point_index = 0; point_index < model_source.P.size(); point_index++)
+	{
+		//cout << "point number "<<point_index;
+		if (!model_source.L[point_index])
+		{
+			//cout<< " good ";
+			points.push_back(model_source.P[point_index]);
+			//colors_.push_back(mm.C[point_index]);
+			normals.push_back(model_source.N[point_index]);
+			labels.push_back(model_source.L[point_index]);
+			//colors.push_back(model_source.C[point_index]);
+			new_point_index[point_index] = points.size() - 1;
+
+		}
+		//cout << endl;
+	}
+
+	for (int face_index = 0; face_index < model_source.F.size(); face_index++)
+	{
+		if (model_source.L[model_source.F[face_index].x] || model_source.L[model_source.F[face_index].y] || model_source.L[model_source.F[face_index].z])
+		{
+			continue;
+		}
+		else
+		{
+			orth::Face f;
+			f.x = new_point_index[model_source.F[face_index].x];
+			f.y = new_point_index[model_source.F[face_index].y];
+			f.z = new_point_index[model_source.F[face_index].z];
+			//if (f.x>mm.P.size()|| f.y>mm.P.size()|| f.z>mm.P.size())
+			//{
+			//	cout << mm.F[face_index].x << "; " << mm.F[face_index].y << "; " << mm.F[face_index].z << endl;
+			//	cout << new_point_index[mm.F[face_index].x] << "; " << new_point_index[mm.F[face_index].y] << "; " << new_point_index[mm.F[face_index].z] << endl;
+			//	cout << f.x << "; " << f.y << "; " << f.z << endl;
+			//}
+			faces.push_back(f);
+		}
+	}
+
+	model_source.F.swap(faces);
+	model_source.P.swap(points);
+	model_source.N.swap(normals);
+	model_source.L.swap(labels);
 }
 
