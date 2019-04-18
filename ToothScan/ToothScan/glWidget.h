@@ -151,6 +151,9 @@ private:
 	//QOpenGLTexture *textures;
 	pQOpenGLShaderProgram program;
 
+	QOpenGLShaderProgram m_bgprogram;
+	QOpenGLTexture *textures;
+
 
 	//bkgroundmodel
 	pQOpenGLShaderProgram m_bkGroundProgram;
