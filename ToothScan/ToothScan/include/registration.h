@@ -8,23 +8,23 @@
 
 namespace scan
 {
-
+	extern "C"
 	class Registration
 	{
 	public:
 		//初始化配准参数
-		Registration(const float MaxCorrespondenceDistance_, const float RANSACOutlier_,const int MaxIteration_);
-		Registration();
+		__declspec (dllexport)Registration(const float MaxCorrespondenceDistance_, const float RANSACOutlier_,const int MaxIteration_);
+		__declspec (dllexport)Registration();
 		~Registration();
 
 		//将模型加入配准队列进行配准，配准成功后模型被矫正到准确位置，返回是否配准成功
-		bool PushIn(orth::MeshModel &add_model);
+		bool __declspec (dllexport) PushIn(orth::MeshModel &add_model);
 
 		//上下颌与全颌配准 或 带型与上下颌配准时采用的配准方式，返回是否配准成功
-		bool FarRegist(orth::MeshModel &model_target, orth::MeshModel &model_source);
+		bool __declspec (dllexport) FarRegist(orth::MeshModel &model_target, orth::MeshModel &model_source);
 
 		//设定配准误差阈值
-		void SetRegistError(const float mesh_regist_error_);
+		void __declspec (dllexport) SetRegistError(const float mesh_regist_error_);
 
 	private:
 
