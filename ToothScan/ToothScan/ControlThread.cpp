@@ -35,7 +35,7 @@ ControlThread::~ControlThread()
 void ControlThread::InitParameters()
 {
 	cout << " RasterScan Start!!" << endl;
-	rs->InitRasterScan("D:/dentalimage/dentalimage2/SystemCalibration.yml");
+	rs->InitRasterScan("SystemCalibration.yml");
 
 	rt_r.at<double>(0, 0) = rs->Rot_r.at<double>(0, 0);
 	rt_r.at<double>(0, 1) = rs->Rot_r.at<double>(0, 1);
@@ -98,7 +98,7 @@ void ControlThread::InitParameters()
 	}
 	fs_g.release();
 
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 }
 
 void ControlThread::setFlage(bool flag)
