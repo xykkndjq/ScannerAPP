@@ -131,7 +131,7 @@ void TrackBall::move(const QPointF& p, const QQuaternion &transformation)
             m_axis.normalize();
             m_axis = transformation.rotatedVector(m_axis);
             m_rotation = QQuaternion::fromAxisAndAngle(m_axis, angle) * m_rotation;
-			cout << "m_rotation x" << m_rotation.x() << "m_rotation y" << m_rotation.y() << "m_rotation z" << m_rotation.z() << endl;
+			//cout << "m_rotation x" << m_rotation.x() << "m_rotation y" << m_rotation.y() << "m_rotation z" << m_rotation.z() << endl;
         }
         break;
     }

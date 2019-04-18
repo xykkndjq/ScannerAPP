@@ -1,8 +1,8 @@
 #include "ControlThread.h"
 
-extern int DataSize = SCAN_ROTATE_POS_CNT2;
+extern int DataSize = SCAN_ROTATE_POS_CNT2-1;
 //extern int BufferSize = 5;
-extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2) * 34 * 1280 * 1024 * sizeof(unsigned char));
+extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2-1) * 34 * 1280 * 1024 * sizeof(unsigned char));
 
 extern cv::Mat rt_r = cv::Mat::eye(4, 4, CV_64FC1);
 extern std::vector<cv::Mat> scanner_rt(9, rt_r);
@@ -98,7 +98,7 @@ void ControlThread::InitParameters()
 	}
 	fs_g.release();
 
-	//l_usbStream.InitCyUSBParameter();//初始化
+	l_usbStream.InitCyUSBParameter();//初始化
 }
 
 void ControlThread::setFlage(bool flag)
@@ -237,6 +237,132 @@ void ControlThread::controlNormalScan()
 				
 			}
 			else if (image_index>=16)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+		}
+		time4 = clock();
+		bufferBias++;
+		usedSpace.release();
+		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+
+		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+	}
+
+	//3、关闭DLP
+	l_usbStream.ClosedDLPFunction();
+	//l_usbStream.AbortXferLoop();
+	cout << "关闭DLP。。 " << endl;
+}
+
+void ControlThread::allJawScan()
+{
+	bool l_bcali = false;
+	//vector<cv::Mat> image_groups_left, image_groups_right;
+	int imageSize = IMG_ROW * IMG_COL;
+	int bufferBias = 0;
+
+	//l_usbStream.InitCyUSBParameter();//初始化
+	l_usbStream.ClosedDLPFunction();
+	_sleep(300);
+	l_usbStream.OpenDLPFunction();//打开光机
+
+	cout << "初始化光机，等待5秒。。。 " << endl;
+	_sleep(8000);
+
+	l_usbStream.SetScanDLPLight();
+	clock_t time1, time2, time3, time4;
+	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS; scan_index++)
+	{
+		double d_scan_x = 0.0;
+		double d_scan_y = 0.0;
+		c_scan_x = ALLJAWX_SCAN_ROTATE_DEGREE2[scan_index];
+		c_scan_y = ALLJAWY_SCAN_ROTATE_DEGREE2[scan_index];
+
+		d_scan_x = (c_scan_x - l_scan_x);
+		d_scan_y = (c_scan_y - l_scan_y);
+
+		l_scan_x = c_scan_x;
+		l_scan_y = c_scan_y;
+
+		if (c_scan_x < -90 || c_scan_x > 90)
+		{
+			return;
+		}
+		freeSpace.acquire();
+
+		vector<cv::Mat> imgL_set, imgR_set;
+
+		time1 = clock();
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+		time2 = clock();
+
+		bool flag = true;
+		while (flag)
+		{
+			if (imgL_set.size() < 19 || imgR_set.size() < 19)
+			{
+				cout << "USB is reconnected." << endl;
+				l_usbStream.m_USBDevice->ReConnect();
+				Sleep(5000);
+				l_usbStream.AbortXferLoop();
+				l_usbStream.InitCyUSBParameter();
+				Sleep(2000);
+				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
+			}
+			else
+			{
+				flag = false;
+			}
+		}
+
+		if (scan_index == SCAN_ALLJAW_POS - 1)
+		{
+			continue;
+		}
+
+		vector<cv::Mat> images_l, images_r;
+		vector<cv::Mat> image_rgb;
+		//unsigned char* im_l = 0;
+		//unsigned char* im_r = 0;
+		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		int imageBias = 0;
+		time3 = clock();
+		for (int image_index = 0; image_index < 19; image_index++)
+		{
+
+			ostringstream filename_L;
+			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
+			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+
+
+			ostringstream filename_R;
+			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
+			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			if (image_index == 0)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+
+			if (image_index > 0 && image_index < 16)
+			{
+				//images_l.push_back(imgL_set[image_index]);
+				//images_r.push_back(imgR_set[image_index]);
+				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+
+			}
+			else if (image_index >= 16)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;

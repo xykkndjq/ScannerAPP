@@ -106,6 +106,7 @@ signals:
 	void gpaTaskMeshSignal();
 	void taskSititchingSignal();
 	void taskTeethSititSignal();
+	void startAllJawScan();//控制正常扫描信号signals
 private:
 	Ui::ScanMainGUI ui;
 

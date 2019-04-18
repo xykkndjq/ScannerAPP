@@ -336,6 +336,10 @@ void ScanMainGUI::setConnections()
 	
 	connect(this, SIGNAL(startNormalScan()), ControlScanThread, SLOT(normalScan()));
 	connect(this, SIGNAL(startNormalScan()), ControlComputeThread, SLOT(normalComputeScan()));
+
+	connect(this, SIGNAL(startAllJawScan()), ControlScanThread, SLOT(allJawScan()));
+	connect(this, SIGNAL(startAllJawScan()), ControlComputeThread, SLOT(allJawComputeScan()));
+
 	connect(ControlComputeThread, SIGNAL(showTaskModel()), this, SLOT(updateTaskModel()));
 	connect(ControlComputeThread, SIGNAL(cameraShowSignal()), this, SLOT(updateCamera()));
 	/*补扫*/
@@ -408,6 +412,10 @@ void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
 {
 	if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
 	{
+		if (pScanTask->Get_ScanType() == eAllJawScan) {
+			emit startAllJawScan();
+			return;
+		}
 		emit startNormalScan();
 		return;
 	}
@@ -422,6 +430,10 @@ void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
 		//启动子线程，但没有启动线程处理函数
 		controlComputeQThread->start();
 		ControlComputeThread->setFlage(false);
+	}
+	if (pScanTask->Get_ScanType() == eAllJawScan) {
+		emit startAllJawScan();
+		return;
 	}
 	emit startNormalScan();
 }

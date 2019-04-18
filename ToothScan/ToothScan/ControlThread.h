@@ -29,6 +29,7 @@
 
 #define CALI_ROTATE_POS_CNT2 11    //定义标定过程的位置数 13
 #define SCAN_ROTATE_POS_CNT2 10    //定义扫描过程的位置数 11    
+#define SCAN_ALLJAW_POS		  7
 
 extern int DataSize;
 //extern int BufferSize;
@@ -68,6 +69,9 @@ static int SM_CALI_BRIGHTNESS2[CALI_ROTATE_POS_CNT2] = { 2,   2,    2,   2,  2, 
 																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
 static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  45,  90, 135,175, 0 };
 static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
+
+static int ALLJAWY_SCAN_ROTATE_DEGREE2[SCAN_ALLJAW_POS] = { 0,-45,45,0,-45,45,0 };
+static int ALLJAWX_SCAN_ROTATE_DEGREE2[SCAN_ALLJAW_POS] = { -30,-30,-30,-45,-45,-45,0 };
 //
 //static int SM_SCAN_BRIGHTNESS2[SCAN_ROTATE_POS_CNT2] = { 2,/*  2,   2,   2,   2,   2,   2,*/   3,   3,   3,    3,   3,   3,   3,  3, 2 }; //亮度等级，3最亮，1为默认
 ////static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
@@ -111,6 +115,7 @@ signals:
 	void calibImageSignal(int endFlag);
 public slots:
 	void controlNormalScan();
+	void allJawScan();
 	void controlCalibrationScan();
 	void controlGlobalCaliScan();
 	void compensationControlScan();

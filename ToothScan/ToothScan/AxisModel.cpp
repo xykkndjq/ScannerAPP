@@ -85,7 +85,7 @@ void CAxisModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInte
 	stringPos = Projection * v_View * stringPos;
 	//cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y() << "stringPos z" << stringPos.z() <<"stringPos w"<< stringPos.w()<< endl;
 	stringPos += QVector4D(stringPos.w() * -0.8, stringPos.w()*-0.8, 0,0);
-	cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y()<< "stringPos z" <<stringPos.z()<< "stringPos w" << stringPos.w() << endl;
+	//cout << "stringPos x" << stringPos.x() << "stringPos y" << stringPos.y()<< "stringPos z" <<stringPos.z()<< "stringPos w" << stringPos.w() << endl;
 	glRasterPos3f(stringPos.x()/stringPos.w(), stringPos.y() / stringPos.w(), stringPos.z() / stringPos.w());
 	drawString("X");
 

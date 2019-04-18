@@ -94,7 +94,7 @@ public:
 	bool isTriangle(const cv::Vec6f &triangle, const cv::Mat &point_cloud);
 	float DistanceCalculate(float x1, float y1, float z1, float x2, float y2, float z2);
 	void pointcloudrotation(orth::PointCloudD &pointcloud, orth::PointNormal &PointNormal, cv::Mat &RT);
-	void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, cv::Mat &RT, orth::MeshModel &totalMeshModel);
+	void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, orth::PointColor &pointColor, cv::Mat &RT, orth::MeshModel &totalMeshModel);
 	void pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT);
 	double MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2);
 	bool pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt);
@@ -118,6 +118,7 @@ public slots:
 	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 
 	void normalComputeScan();
+	void allJawComputeScan();
 	void compensationCompute();
 	void GPAMeshing();//全局配准和Meshing
 
