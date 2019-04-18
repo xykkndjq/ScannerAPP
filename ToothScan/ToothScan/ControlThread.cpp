@@ -97,6 +97,8 @@ void ControlThread::InitParameters()
 		scanner_rt[image_index] = rt/*.inv()*/;
 	}
 	fs_g.release();
+
+	l_usbStream.InitCyUSBParameter();//初始化
 }
 
 void ControlThread::setFlage(bool flag)
@@ -136,7 +138,7 @@ void ControlThread::controlNormalScan()
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
 	
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.ClosedDLPFunction();
 	_sleep(300);
 	l_usbStream.OpenDLPFunction();//打开光机
@@ -170,6 +172,25 @@ void ControlThread::controlNormalScan()
 		time1 = clock();
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y,  l_bcali, imgL_set, imgR_set);
 		time2 = clock();
+
+		bool flag = true;
+		while (flag)
+		{
+			if (imgL_set.size() < 19 || imgR_set.size() < 19)
+			{
+				cout << "USB is reconnected." << endl;
+				l_usbStream.m_USBDevice->ReConnect();
+				Sleep(5000);
+				l_usbStream.AbortXferLoop();
+				l_usbStream.InitCyUSBParameter();
+				Sleep(2000);
+				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
+			}
+			else
+			{
+				flag = false;
+			}
+		}
 
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
@@ -232,14 +253,14 @@ void ControlThread::controlNormalScan()
 
 	//3、关闭DLP
 	l_usbStream.ClosedDLPFunction();
-	l_usbStream.AbortXferLoop();
+	//l_usbStream.AbortXferLoop();
 	cout << "关闭DLP。。 " << endl;
 }
 
 void ControlThread::controlCalibrationScan()
 {
 	bool l_bcali = true;
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.ClosedDLPFunction();
 	_sleep(300);
 	l_usbStream.OpenDLPFunction();//打开光机
@@ -270,6 +291,26 @@ void ControlThread::controlCalibrationScan()
 
 		//SMRotDegAnalysis(d_scan_x, d_scan_y, true);
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+
+		bool flag = true;
+		while (flag)
+		{
+			if (imgL_set.size() < 31 || imgR_set.size() < 31)
+			{
+				cout << "USB is reconnected." << endl;
+				l_usbStream.m_USBDevice->ReConnect();
+				Sleep(5000);
+				l_usbStream.AbortXferLoop();
+				l_usbStream.InitCyUSBParameter();
+				Sleep(2000);
+				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
+			}
+			else
+			{
+				flag = false;
+			}
+		}
+
 
 		if (scan_index == CALI_ROTATE_POS_CNT2 - 1)
 		{
@@ -319,7 +360,7 @@ void ControlThread::controlCalibrationScan()
 	cout << "全部标定图片存储完毕。。 " << endl;
 	////3、关闭DLP
 	l_usbStream.ClosedDLPFunction();
-	l_usbStream.AbortXferLoop();
+	//l_usbStream.AbortXferLoop();
 	rs->PreCalibration(1280, 960, 10, image_groups);
 
 	for (int image_index = 0; image_index < CALI_ROTATE_POS_CNT2 - 1; image_index++)
@@ -349,11 +390,11 @@ void ControlThread::controlCalibrationScan()
 void ControlThread::controlGlobalCaliScan()
 {
 	bool l_bcali = true;
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.OpenDLPFunction();//打开光机
 
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(5000);
+	_sleep(8000);
 
 	vector<Mat> image_groups_left, image_groups_right;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
@@ -418,7 +459,7 @@ void ControlThread::compensationControlScan()
 	bool l_bcali = false;
 	freeSpace.acquire();
 
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.OpenDLPFunction();//打开光机
 
 	cout << "初始化光机，等待5秒。。。 " << endl;
@@ -445,6 +486,25 @@ void ControlThread::compensationControlScan()
 	///**************************************扫描过程*****************************************/
 	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 	
+	bool flag = true;
+	while (flag)
+	{
+		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		{
+			cout << "USB is reconnected." << endl;
+			l_usbStream.m_USBDevice->ReConnect();
+			Sleep(5000);
+			l_usbStream.AbortXferLoop();
+			l_usbStream.InitCyUSBParameter();
+			Sleep(2000);
+			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
+		}
+		else
+		{
+			flag = false;
+		}
+	}
+
 	//存进总数组
 	vector<cv::Mat> images_l, images_r;
 	vector<cv::Mat> image_rgb;
@@ -505,7 +565,7 @@ void ControlThread::normalScan()
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
 	
-	l_usbStream.InitCyUSBParameter();//初始化
+	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.OpenDLPFunction();//打开光机
 
 	cout << "初始化光机，等待5秒。。。 " << endl;

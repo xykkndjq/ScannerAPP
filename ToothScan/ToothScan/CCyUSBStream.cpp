@@ -560,12 +560,21 @@ namespace Communication
 	int CCyUSBStream::InitCyUSBParameter()
 	{
 		m_USBDevice = new CCyUSBDevice(NULL); //USB设备  
+		
 		if (!m_USBDevice->Open(0))
 		{
 			cout << " The connection of USB is failed!" << endl;
 		}//打开0号设备
+
+		
 		m_EndPtIn = m_USBDevice->EndPointOf(0X81); //使用端点1，in传输
 		m_EndPtOut = m_USBDevice->EndPointOf(0X01); //使用端点2，out传输
+		/*Sleep(1000);
+		if (!m_USBDevice->ReConnect())
+		{
+		cout << " The reconnection of USB is failed!" << endl;
+		}
+		Sleep(2000);*/
 
 		//Allocate the arrays needed for queneing
 		m_buffers = new PUCHAR[QueueSize];
@@ -598,7 +607,8 @@ namespace Communication
 	void CCyUSBStream::OpenDLPFunction()
 	{
 		LONG length = 4;
-		m_EndPtOut->XferData(OpenDLP, length);
+		bool flag  = m_EndPtOut->XferData(OpenDLP, length);
+		cout << "flag1 = " << flag << endl;
 	}
 
 	void CCyUSBStream::ClosedDLPFunction()
@@ -642,21 +652,21 @@ namespace Communication
 	{
 		LONG length = 5;
 		m_EndPtOut->XferData(MidDLPLight, length);
-		_sleep(100);
+		_sleep(1000);
 	}
 
 	void CCyUSBStream::SetMinDLPLight()
 	{
 		LONG length = 5;
 		m_EndPtOut->XferData(MinDLPLight, length);
-		_sleep(100);
+		_sleep(1000);
 	}
 
 	void CCyUSBStream::SetScanDLPLight()
 	{
 		LONG length = 11;
 		m_EndPtOut->XferData(ScanDLPLight, length);
-		_sleep(100);
+		_sleep(1000);
 	}
 
 	bool CCyUSBStream::initRealTimeParameter()
@@ -858,13 +868,14 @@ namespace Communication
 			{
 				cout << "Xfer request rejected. NTSTATUS = " << m_EndPtIn->NtStatus << endl;
 				AbortXferLoopIn(i + 1);
-				return;
+				return; 
 			}
 		}
 
 		LONG length = 9;
-		m_EndPtOut->XferData(SMRotOneDeg, length);
-
+		bool flag = m_EndPtOut->XferData(SMRotOneDeg, length);
+		cout << "flag = " << flag << endl;
+		cout << endl;
 		while (true)
 		{
 			if (!m_EndPtIn->WaitForXfer(&m_inOvLap[l_iQNum], TimeOut))
@@ -874,7 +885,8 @@ namespace Communication
 					WaitForSingleObject(m_inOvLap[l_iQNum].hEvent, 2000);
 			}
 
-			m_EndPtIn->FinishDataXfer(m_buffers[l_iQNum], m_endptInLength, &m_inOvLap[l_iQNum], m_contexts[l_iQNum]);
+			bool dataFlag = m_EndPtIn->FinishDataXfer(m_buffers[l_iQNum], m_endptInLength, &m_inOvLap[l_iQNum], m_contexts[l_iQNum]);
+			//cout << "dataFlag = " << dataFlag << endl;
 			int l_istartPosition = 0;
 			if (m_startSave == false)
 			{

@@ -49,7 +49,12 @@ namespace Communication
 			 CCyUSBStream();
 			 ~CCyUSBStream();
 		
+			 CCyUSBDevice *m_USBDevice;
+
 			 int InitCyUSBParameter();//初始化USB
+
+			 int InitCyParameter();//初始化USB
+
 			 void OpenDLPFunction();//打开光机
 			 void ClosedDLPFunction();//关闭光机
 			 void ResetDLPFunction();//电机归位
@@ -74,7 +79,7 @@ namespace Communication
 			void AbortXferLoop();//清理内存
 
 		private:
-			CCyUSBDevice *m_USBDevice;
+			
 			CCyUSBEndPoint *m_EndPtIn;
 			CCyUSBEndPoint *m_EndPtOut;
 			PUCHAR *m_buffers;
