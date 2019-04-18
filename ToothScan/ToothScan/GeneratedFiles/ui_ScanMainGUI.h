@@ -104,7 +104,7 @@ public:
     {
         if (ScanMainGUI->objectName().isEmpty())
             ScanMainGUI->setObjectName(QStringLiteral("ScanMainGUI"));
-        ScanMainGUI->resize(1920, 1080);
+        ScanMainGUI->resize(1844, 1080);
         ScanMainGUI->setMaximumSize(QSize(1920, 1080));
         ScanJawGroup = new QGroupBox(ScanMainGUI);
         ScanJawGroup->setObjectName(QStringLiteral("ScanJawGroup"));

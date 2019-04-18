@@ -391,7 +391,7 @@ void GLWidget::paintGL()
 	//cout << clearColor.redF() << " ;" << clearColor.greenF() << " ;" << clearColor.blueF() << " ;" << endl;
 	//glClearColor()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	drawGradient();
+//	drawGradient();
 
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -1462,8 +1462,8 @@ void GLWidget::drawGradient()
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
 
-	GLubyte  qBeginColor[4] = { 255,255,255,255 },
-		qEndColor[4] = { 128,128,128,255 };
+	GLubyte  qBeginColor[4] = { 0,0,0 ,255 },
+		qEndColor[4] = { 128,128,255,255 };
 	glBegin(GL_TRIANGLE_STRIP);
 	glColor4ubv(qBeginColor);  glVertex2f(-1, 1);
 	glColor4ubv(qEndColor);  glVertex2f(-1, -1);

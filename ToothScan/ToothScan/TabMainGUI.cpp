@@ -20,6 +20,11 @@ public:
 			s.transpose();
 			s.rwidth() = 100; // 设置每个tabBar中item的大小
 			s.rheight() = 60;
+			if (widget->parent()->objectName() == "selftabControl") {
+				s.transpose();
+				s.rwidth() = 200; // 设置每个tabBar中item的大小
+				s.rheight() = 60;
+			}
 		}
 		return s;
 	}
@@ -292,14 +297,15 @@ void TabMainGUI::initVariable()
 		resultImage = QImage(img.size(), QImage::Format_ARGB32_Premultiplied);
 		QPainter painter(&resultImage);
 		painter.setCompositionMode(QPainter::CompositionMode_Source);
-		QPen pen(QColor(0,0,0,0));
-		painter.setPen(pen);
  		painter.fillRect(resultImage.rect(), Qt::transparent);
  		painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 		painter.drawImage(0, 0, img);
-		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10));
+		QTextOption option;
+		option.setAlignment(Qt::AlignCenter);
+		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10), option);
 		painter.end();
 		toothList[i]->setIcon(QPixmap::fromImage(resultImage));
+		toothList[i]->setStyleSheet("border:0px");
 		toothList[i]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
 
 		toothFlagList.append(false);
@@ -350,31 +356,31 @@ void TabMainGUI::initVariable()
 	toothRadioButtonGroup = new QButtonGroup();
 	toothRadioButtonGroup->setExclusive(true);
 
-	totalCrownButton = new QRadioButton(QStringLiteral("              全冠"));
+	totalCrownButton = new QCheckBox(QStringLiteral("全冠"));
 	totalCrownButton->setFixedSize(150, 30);
 	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	toothCrownButton = new QRadioButton(QStringLiteral("              牙冠"));
+	toothCrownButton = new QCheckBox(QStringLiteral("              牙冠"));
 	toothCrownButton->setFixedSize(150, 30);
 	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	lossToothButton = new QRadioButton(QStringLiteral("          缺失牙"));
+	lossToothButton = new QCheckBox(QStringLiteral("          缺失牙"));
 	lossToothButton->setFixedSize(150, 30);
 	lossToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 	lossToothButton->setIcon(QIcon(":/MainWidget/Resources/images/loseTooth.png"));
-	inlayButton = new QRadioButton(QStringLiteral("           嵌体"));
+	inlayButton = new QCheckBox(QStringLiteral("           嵌体"));
 	inlayButton->setFixedSize(150, 30);
 	inlayButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 	inlayButton->setIcon(QIcon(":/MainWidget/Resources/images/inlay.png"));
-	facingButton = new QRadioButton(QStringLiteral("           贴面"));
+	facingButton = new QCheckBox(QStringLiteral("           贴面"));
 	facingButton->setFixedSize(150, 30);
 	facingButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 	facingButton->setIcon(QIcon(":/MainWidget/Resources/images/facing.png"));
-	waxTypeButton = new QRadioButton(QStringLiteral("               蜡型"));
+	waxTypeButton = new QCheckBox(QStringLiteral("               蜡型"));
 	waxTypeButton->setFixedSize(150, 30);
 	waxTypeButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	implantButton = new QRadioButton(QStringLiteral("             种植体"));
+	implantButton = new QCheckBox(QStringLiteral("             种植体"));
 	implantButton->setFixedSize(150, 30);
 	implantButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	jawToothButton = new QRadioButton(QStringLiteral("             对颌牙"));
+	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
 	jawToothButton->setFixedSize(150, 30);
 	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 
@@ -1452,7 +1458,8 @@ void TabMainGUI::ToothButtonListPress()
 		if (toothFlagList[toothButtonIndex] == false)
 		{
 			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png);}";
-			QString dstpath = ":/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png",
+			//QString dstpath = ":/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png",
+			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + QString::number(chooseID, 10) + ".png",
 				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
 
 			QImage resultImage, destinationImage, sourceImage;
@@ -1466,8 +1473,10 @@ void TabMainGUI::ToothButtonListPress()
 			painter.drawImage(QRect(0, 0, resultImage.width(),resultImage.height()),destinationImage);
 			painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
 			painter.drawImage(0, 0, sourceImage);
-// 			painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-// 			painter.fillRect(resultImage.rect(), Qt::white);
+			QTextOption option;
+			option.setAlignment(Qt::AlignCenter);
+			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter.drawText(resultImage.rect(), QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10), option);
 			painter.end();
 			
 			//toothList[toothButtonIndex]->setStyleSheet(path);

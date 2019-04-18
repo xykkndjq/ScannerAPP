@@ -117,14 +117,14 @@ public:
 	//splitright
 	QButtonGroup *toothRadioButtonGroup;
 	
-	QRadioButton *totalCrownButton;//全冠
-	QRadioButton *toothCrownButton;//牙冠
-	QRadioButton *lossToothButton;//缺失牙
-	QRadioButton *inlayButton;//嵌体
-	QRadioButton *facingButton;//贴面
-	QRadioButton *waxTypeButton;//蜡型
-	QRadioButton *implantButton;//种植体
-	QRadioButton *jawToothButton;//对颌牙
+	QCheckBox *totalCrownButton;//全冠
+	QCheckBox*toothCrownButton;//牙冠
+	QCheckBox *lossToothButton;//缺失牙
+	QCheckBox *inlayButton;//嵌体
+	QCheckBox *facingButton;//贴面
+	QCheckBox *waxTypeButton;//蜡型
+	QCheckBox *implantButton;//种植体
+	QCheckBox *jawToothButton;//对颌牙
 
 	QList<QPushButton*> totalCrownList;
 	QList<QPushButton*> toothCrownList;
