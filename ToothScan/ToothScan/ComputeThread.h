@@ -13,6 +13,7 @@
 #include "octree.hpp"
 #include "ConTrolThread.h"
 #include "3DScan_cuda.h"
+#include "registration.h"
 #include "GPA.h"
 #include <pcl/io/ply_io.h>
 #include <Windows.h>
