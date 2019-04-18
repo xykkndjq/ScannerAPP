@@ -189,7 +189,9 @@ namespace orth
 
 			pMesh->mVertices = new aiVector3D[mm->P.size()];
 			pMesh->mNormals = new aiVector3D[mm->N.size()];
+			pMesh->mColors[0] = new aiColor4D[mm->C.size()];
 			pMesh->mNumVertices = mm->P.size();
+			pMesh->mNumFaces = mm->F.size();
 
 			//pMesh->mTextureCoords[0] = new aiVector3D[vVertices.size()];
 			//pMesh->mNumUVComponents[0] = vVertices.size();
@@ -201,10 +203,20 @@ namespace orth
 			//	pMesh->mTextureCoords[0][itr - vVertices.begin()] = aiVector3D(uvs[j].x, uvs[j].y, 0);
 			//	j++;
 			//}
+
 			for (int point_index = 0; point_index < mm->P.size(); point_index++)
 			{
 				pMesh->mVertices[point_index] = aiVector3D(mm->P[point_index].x, mm->P[point_index].y, mm->P[point_index].z);
 				pMesh->mNormals[point_index] = aiVector3D(mm->N[point_index].x, mm->N[point_index].y, mm->N[point_index].z);
+				pMesh->mColors[0][point_index].r = mm->C[point_index].x / 255.0;
+				pMesh->mColors[0][point_index].g = mm->C[point_index].y / 255.0;
+				pMesh->mColors[0][point_index].b = mm->C[point_index].z / 255.0;
+				pMesh->mColors[0][point_index].a = 1.0f;
+				//color.r = mm->C[point_index].x / 255.0;
+				//color.g = mm->C[point_index].y / 255.0;
+				//color.b = mm->C[point_index].z / 255.0;
+				//color.a = 1;
+
 			}
 
 			pMesh->mFaces = new aiFace[mm->F.size()];
@@ -222,7 +234,7 @@ namespace orth
 			}
 
 			//mExportFormatDesc->id is "collada"  and mFilePath is "C:/Users/kevin/Desktop/myColladaFile.dae"
-			
+
 			exporter.Export(scene, Format, path);
 
 		}
@@ -296,12 +308,23 @@ namespace orth
 				mm.N.swap(pointsnormal);
 			}
 
-			//for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-			//{
-			//	pointsnormal[i].x = mesh->mNormals[i].x;
-			//	pointsnormal[i].y = mesh->mNormals[i].y;
-			//	pointsnormal[i].z = mesh->mNormals[i].z;
-			//}
+
+			if (mesh->HasVertexColors(0))
+			{
+				orth::PointColor pointcolors(mesh->mNumVertices);
+
+				for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+				{
+					aiColor4D color = mesh->mColors[0][i];
+					pointcolors[i].x = color.r*255.0;
+					pointcolors[i].y = color.g*255.0;
+					pointcolors[i].z = color.b*255.0;
+
+				}
+				mm.C.swap(pointcolors);
+			}
+
+
 
 			return;
 		}
