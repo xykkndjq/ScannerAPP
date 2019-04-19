@@ -68,6 +68,7 @@
 #include "AxisModel.h"
 #include "TeethModel.h"
 #include "trackball.h"
+#include "BackGroundObject.h"
 using std::cout;
 using std::endl;
 
@@ -162,6 +163,7 @@ private:
 
 	bool m_bkGroundShow;
 	void makeGroundObject();
+	void makeBackGround();
 	QVector4D m_bkGroundColor;
 	//bkgroundmodel
 	//Axis
@@ -247,6 +249,7 @@ private:
 	QMatrix4x4 m_projection, m_view, m_model;
 	orth::PointLabel m_Selected;
 	pCGroundObject m_groundModel;
+	pCBackGroundObject m_backgroundModel;
 	pCAxisModel m_axisMode;
 	TrackBall m_trackBall;
 

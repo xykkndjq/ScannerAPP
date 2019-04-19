@@ -366,6 +366,7 @@ void GLWidget::initializeGL()
 // 	m_bkGroundProgram->addShader(bgvshader);
 // 	m_bkGroundProgram->addShader(bgfshader);
 	makeGroundObject();
+	makeBackGround();
 	// 	m_bkGroundProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
 	// 	m_bkGroundProgram->link();
 
@@ -1405,10 +1406,30 @@ void GLWidget::makeGroundObject()
 	{ 50.0f,0.0f,50.0f,50.0f,0.0f,-50.0f,-50.0f,0.0f,-50.0f,-50.0f,0.0f,50.0f };
 	// 	pQOpenGLBuffer bkgroundvbo;
 	// 	bkgroundvbo = make_shared<QOpenGLBuffer>();
+
+
 	m_groundModel = make_shared<CGroundObject>("./bgGround.vs", "./bgGround.fs", this);
 	m_groundModel->makeObject(vertData, 4);
 	m_groundModel->Set_Visible(false);
 	m_ToolsModelsVt.push_back(m_groundModel);
+	this->update();
+}
+
+void GLWidget::makeBackGround()
+{
+	QVector<GLfloat> vertData =
+	{ 
+		1.0f,1.0f,-1.0f,    1.0f,1.0f,
+		1.0f,-1.0f,-1.0f,   1.0f,0.0f,
+		-1.0f,-1.0f,-1.0f,  0.0f,0.0f,
+		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
+	};
+	m_backgroundModel = make_shared<CBackGroundObject>("./background.vs", "./background.fs", this);
+	QString name_ = "./background-grey3.jpg";
+	m_backgroundModel->readPicture(name_);
+	m_backgroundModel->makeObject(vertData, 4);
+	m_backgroundModel->Set_Visible(true);
+	m_ToolsModelsVt.push_back(m_backgroundModel);
 	this->update();
 }
 
