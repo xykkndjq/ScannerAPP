@@ -7,17 +7,6 @@
 #include "device_launch_parameters.h"  
 #include <thrust/sort.h>
 
-extern "C" void newTakeDimCaller(double *CloudSet_src, int CloudsPointsSize, double *XDim_dst, double *YDim_dst, double *ZDim_dst, double *MinMax_p);
-//ClosestPoint
-extern "C" void newCloudHashCaller(double *CloudSet_src, int CloudsPointsSize, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int SIZE);
-extern "C" void newClosestSearchCaller(double *CloudSet_src, int *CloudSize_src, int *CloudSize_p, int *StartIndex_src, char *CellSize_src, double *MinMax_src, int CloudsPointsSize, int CloudNum, double *ClosestPointMatrixV_dst, int *IndexValue_dst, const int SIZE);
-
-extern "C" int divUp(int total, int grain);
-
-__global__ void newTakeDimKernel(double *CloudSet_src, double *XDim_dst, double *YDim_dst, double *ZDim_dst, int CloudsPointsSize);
-//ClosestPoint
-__global__ void newCloudHashKernel(double *CloudSet_src, int CloudsPointsSize, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int SIZE);
-__global__ void newClosestSearchKernel(double *CloudSet_src, int *CloudSize_src, int *StartIndex_src, char *CellSize_src, double *MinMax_src, int CloudsPointsSize, int CloudMark, int CloudNum, double *ClosestPointMatrixV_dst, int *IndexValue_dst, int sourcebias, const int SIZE);
 
 class GPUNNS {
 public:

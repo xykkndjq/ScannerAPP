@@ -189,7 +189,7 @@ namespace orth
 
 			pMesh->mVertices = new aiVector3D[mm->P.size()];
 			pMesh->mNormals = new aiVector3D[mm->N.size()];
-			pMesh->mColors[0] = new aiColor4D[mm->C.size()];
+			//pMesh->mColors[0] = new aiColor4D[mm->C.size()];
 			pMesh->mNumVertices = mm->P.size();
 			pMesh->mNumFaces = mm->F.size();
 
@@ -208,14 +208,14 @@ namespace orth
 			{
 				pMesh->mVertices[point_index] = aiVector3D(mm->P[point_index].x, mm->P[point_index].y, mm->P[point_index].z);
 				pMesh->mNormals[point_index] = aiVector3D(mm->N[point_index].x, mm->N[point_index].y, mm->N[point_index].z);
-				pMesh->mColors[0][point_index].r = mm->C[point_index].x / 255.0;
-				pMesh->mColors[0][point_index].g = mm->C[point_index].y / 255.0;
-				pMesh->mColors[0][point_index].b = mm->C[point_index].z / 255.0;
-				pMesh->mColors[0][point_index].a = 1.0f;
-				//color.r = mm->C[point_index].x / 255.0;
-				//color.g = mm->C[point_index].y / 255.0;
-				//color.b = mm->C[point_index].z / 255.0;
-				//color.a = 1;
+// 				pMesh->mColors[0][point_index].r = mm->C[point_index].x / 255.0;
+// 				pMesh->mColors[0][point_index].g = mm->C[point_index].y / 255.0;
+// 				pMesh->mColors[0][point_index].b = mm->C[point_index].z / 255.0;
+// 				pMesh->mColors[0][point_index].a = 1.0f;
+// 				//color.r = mm->C[point_index].x / 255.0;
+// 				//color.g = mm->C[point_index].y / 255.0;
+// 				//color.b = mm->C[point_index].z / 255.0;
+// 				//color.a = 1;
 
 			}
 

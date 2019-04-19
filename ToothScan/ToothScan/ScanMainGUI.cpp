@@ -589,6 +589,7 @@ void ScanMainGUI::showScanJawGroup(bool bBack) {
 		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
 		//str.sprintf("%s",pCurrentTask->Get_TaskName());
 		ui.ScanJawTips->setText(str);
+		glWidget->m_ModelsVt.clear();
 		if (bBack&&isModelFileExit(pCurrentTask)) {
 			if (QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
 				//加载模型

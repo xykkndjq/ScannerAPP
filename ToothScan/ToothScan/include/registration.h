@@ -13,9 +13,9 @@ namespace scan
 	{
 	public:
 		//初始化配准参数
-		__declspec (dllexport)Registration(const float MaxCorrespondenceDistance_, const float RANSACOutlier_,const int MaxIteration_);
-		__declspec (dllexport)Registration();
-		~Registration();
+		__declspec (dllexport) Registration(const float MaxCorrespondenceDistance_, const float RANSACOutlier_,const int MaxIteration_);
+		__declspec (dllexport) Registration();
+		__declspec (dllexport) ~Registration();
 
 		//将模型加入配准队列进行配准，配准成功后模型被矫正到准确位置，返回是否配准成功
 		bool __declspec (dllexport) PushIn(orth::MeshModel &add_model);
@@ -25,6 +25,9 @@ namespace scan
 
 		//设定配准误差阈值
 		void __declspec (dllexport) SetRegistError(const float mesh_regist_error_);
+
+		//设定查找深度
+		void __declspec (dllexport) SetSearchDepth(const int serach_depth_);
 
 	private:
 
@@ -37,6 +40,8 @@ namespace scan
 		float MaxCorrespondenceDistance = 1.0;
 		float RANSACOutlier = 10.0;
 		int MaxIteration = 50;
+		int search_depth = 50;
+
 
 	};
 

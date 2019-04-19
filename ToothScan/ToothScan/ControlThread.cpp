@@ -675,7 +675,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 	}
-	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_x, l_bcali, imgL_set, imgR_set);
+	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_y, l_bcali, imgL_set, imgR_set);
 
 	//3、关闭DLP
 	l_usbStream.ClosedDLPFunction();//电机失能

@@ -128,7 +128,7 @@ public slots:
 	void taskTeethSititSignal();
 public:
 	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp,
-		int scan_index, pCScanTask pScanTask);
+		int scan_index, scan::Registration & reg, pCScanTask pScanTask);
 
 	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, 
 		vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, pCScanTask pScanTask);

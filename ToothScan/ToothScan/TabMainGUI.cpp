@@ -925,23 +925,24 @@ void TabMainGUI::PatientInformationSave()
 		pCGroupScan pupperJawTotalCrownGroupScan = nullptr, plowJawTotalCrownGroupScan = nullptr;
 		for (int j = 0; j < 32; j++) {
 			eScanType l_eScanType = m_pTeethScanTaskArray[j]->Get_ScanType();
-			if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {
-				if (lowerJawScanTask == nullptr) {
-					lowerJawScanTask = make_shared<CScanTask>();
-					lowerJawScanTask->Set_ScanType(eLowerJawScan);
-					lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
-					lowerJawScanTask->Set_TaskType(eScan);
-				}
-			}
-			else {
-				if (upperScanTask == nullptr) {
-					upperScanTask = make_shared<CScanTask>();
-					upperScanTask->Set_ScanType(eUpperJawScan);
-					upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
-					upperScanTask->Set_TaskType(eScan);
-				}
-			}
+
 			if (l_eScanType != eScanNULL) {
+				if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {
+					if (lowerJawScanTask == nullptr) {
+						lowerJawScanTask = make_shared<CScanTask>();
+						lowerJawScanTask->Set_ScanType(eLowerJawScan);
+						lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+						lowerJawScanTask->Set_TaskType(eScan);
+					}
+				}
+				else {
+					if (upperScanTask == nullptr) {
+						upperScanTask = make_shared<CScanTask>();
+						upperScanTask->Set_ScanType(eUpperJawScan);
+						upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+						upperScanTask->Set_TaskType(eScan);
+					}
+				}
 				switch (l_eScanType) {
 				case etotalCrown:
 					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//ÏÂò¢
@@ -1250,7 +1251,7 @@ QList<QPushButton*> TabMainGUI::judgeToothList(int id)
 void TabMainGUI::ToothGroupClicked(int id)
 {
 	chooseID = id;
-	m_eScanType = (eScanType)id;
+	m_eScanType = (eScanType)(id -1);
 	switch (id)
 	{
 	case 1:
