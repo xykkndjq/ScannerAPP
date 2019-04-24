@@ -200,17 +200,24 @@ private:
 	void stitchingLowerJawBtnClick();
 	void stitchingFNextBtnClick();
 	void OralSubstitutePanelNextBtnClick();
-	void saveModelFile(pCScanTask &pTask);
+	void teethStitchingPanelNextBtnClick();
+	void saveModelFile(pCScanTask pTask);
 	bool isModelFileExit(pCScanTask &pTask);
 	void loadModelFile(pCScanTask &pTask);
 	void hideAllPanel();
 	void showScanJawGroup(bool bBack = false);
 	void showcompensationScanPanel(bool bBack = false);
 	void showCutJawPanel(bool bBack = false);
+	void showOralSubstitutePanel(bool bBack = false);
+	void showStitchingFinishPanel(bool bBack = false);
+
+	void movecutHeightSpinBoxSlot();//调整切割水平面
+	void movecutHeightSliderSlot();
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();
 	void StitchFinishSlot();
+	void taskTeethSititFinishSlot();
 	
 };
 

@@ -278,9 +278,7 @@ namespace orth
 	public:
 		MeshModel();
 		~MeshModel();
-		void resize(int s);
 
-		void Clear();
 
 		inline int size() { return size_; }
 
@@ -309,25 +307,40 @@ namespace orth
 
 		Box box;
 
-		bool HaveData();
 
-		///void DateDownload(Eigen::MatrixXd &Verts, Eigen::MatrixXi &Faces);
+
+		//void DateDownload(Eigen::MatrixXd &Verts, Eigen::MatrixXi &Faces);
 
 		void PointRot(double *rt_matrix, Point3d *point);
 
 		void PointRot(double *rt_matrix, Point3f *point);
 
+		void resize(int s);
+
+		void Clear();
+
+		bool HaveData();
+
+		//计算Model法相；
 		bool NormalUpdate();
 
-		///PSTypeChoes : 计算类型串行或并行
+		//法相平滑计算，输入平滑迭代次数；
+		void NormalSmooth(const int iter_times);
+
+		//PSTypeChoes : 计算类型串行或并行
 		bool EdgeUpdate(const bool PSTypeChoes = 1);
 
-		///模型分割函数，对当前模型进行分解，不连续的mesh被分为独立的个体并用Label进行标记
+		//模型分割函数，对当前模型进行分解，不连续的mesh被分为独立的个体并用Label进行标记；
 		bool ModelSplit(vector<orth::MeshModel> &models);
 
-		///计算采样点
-		///rate : 采样率，最终采样后剩余数量
+		//计算采样点
+		//rate : 采样率，最终采样后剩余数量；
 		void ModelSample(const int rate);
+
+		//将model划分成小区域，对小区域进行筛选，点数小于阈值的被筛掉，输入筛选用阈值；
+		bool SmallModelFilter(const int point_number_threshold);
+
+
 	private:
 		int size_ = 0;
 
@@ -569,12 +582,20 @@ namespace orth
 				{
 					break;
 				}
-				for (size_t x_index = temp_x - cycle_index; x_index <= temp_x + cycle_index; ++x_index)
+
+				int x_start = temp_x - cycle_index > 0 ? temp_x - cycle_index : 0;
+				int y_start = temp_y - cycle_index > 0 ? temp_y - cycle_index : 0;
+				int z_start = temp_z - cycle_index > 0 ? temp_z - cycle_index : 0;
+				int x_end = temp_x + cycle_index < size ? temp_x + cycle_index : size - 1;
+				int y_end = temp_y + cycle_index < size ? temp_y + cycle_index : size - 1;
+				int z_end = temp_z + cycle_index < size ? temp_z + cycle_index : size - 1;
+
+				for (size_t x_index = x_start; x_index <= x_end; ++x_index)
 				{
-					for (size_t y_index = temp_y - cycle_index; y_index <= temp_y + cycle_index; ++y_index)
+					for (size_t y_index = y_start; y_index <= y_end; ++y_index)
 					{
 
-						for (size_t z_index = temp_z - cycle_index; z_index <= temp_z + cycle_index; ++z_index)
+						for (size_t z_index = z_start; z_index <= z_end; ++z_index)
 						{
 							if (target_key_sort[x_index * (int)size*(int)size + y_index * (int)size + z_index].size() > 0)
 							{
@@ -607,9 +628,9 @@ namespace orth
 	}
 
 	//模型合并
-	inline bool MergeModels(vector<orth::MeshModel> &mm_group_input,orth::MeshModel &mm_output)
+	inline bool MergeModels(vector<orth::MeshModel> &mm_group_input, orth::MeshModel &mm_output)
 	{
-		if (mm_group_input.size()<=0)
+		if (mm_group_input.size() <= 0)
 		{
 			return false;
 		}
@@ -624,8 +645,8 @@ namespace orth
 
 				mm_output.P.push_back(mm_group_input[group_index].P[point_index]);
 				mm_output.N.push_back(mm_group_input[group_index].N[point_index]);
-				mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
-				mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
+//				mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
+//				mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
 				//models[L[point_index]].Cur.push_back(Cur[point_index]);
 				new_point_index[point_index] = (mm_output.P.size() - 1);
 			}
@@ -637,15 +658,12 @@ namespace orth
 				Index_ui l_point3 = mm_group_input[group_index].F[face_index].z;
 				orth::Face l_face(new_point_index[l_point1], new_point_index[l_point2], new_point_index[l_point3]);
 				mm_output.F.push_back(l_face);
-				mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
+				//mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
 			}
 		}
 
 		return true;
 	}
-
-
-
 
 	// teeth model
 	class Teeth :public MeshModel
@@ -733,7 +751,6 @@ namespace orth
 	private:
 
 	};
-
 
 }
 

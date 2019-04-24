@@ -31,34 +31,34 @@ public:
 
 	void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 	{
-		if (element == CE_TabBarTab) {
-			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
-				if (widget->parent()->objectName() == "selftabControl") {
-					QRect allRect = tab->rect;
-					if (tab->state & QStyle::State_Selected) {
-						painter->save();
-						painter->setPen(QColor(255, 255, 255, 0));
-						painter->setBrush(QBrush(QColor(255, 255, 255)));
-						painter->drawRect(allRect);
-						painter->setPen(0x89cfff);
-						painter->setBrush(QBrush(0x89cfff));
-						painter->drawRect(allRect.adjusted(0, allRect.height() - 5, 0, 0));
-						painter->restore();
-					}
-					QTextOption option;
-					option.setAlignment(Qt::AlignCenter);
-					if (tab->state & QStyle::State_Selected) {
-						painter->setPen(QColor(128, 128, 128));
-					}
-					else {
-						painter->setPen(QColor(128, 128, 128));
-					}
-
-					painter->drawText(allRect, tab->text, option);
-					return;
-				}
-			}
-		}
+// 		if (element == CE_TabBarTab) {
+// 			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+// 				if (widget->parent()->objectName() == "selftabControl") {
+// 					QRect allRect = tab->rect;
+// 					if (tab->state & QStyle::State_Selected) {
+// 						painter->save();
+// 						painter->setPen(QColor(255, 255, 255, 0));
+// 						painter->setBrush(QBrush(QColor(255, 255, 255)));
+// 						painter->drawRect(allRect);
+// 						painter->setPen(0x89cfff);
+// 						painter->setBrush(QBrush(0x89cfff));
+// 						painter->drawRect(allRect.adjusted(0, allRect.height() - 5, 0, 0));
+// 						painter->restore();
+// 					}
+// 					QTextOption option;
+// 					option.setAlignment(Qt::AlignCenter);
+// 					if (tab->state & QStyle::State_Selected) {
+// 						painter->setPen(QColor(128, 128, 128));
+// 					}
+// 					else {
+// 						painter->setPen(QColor(128, 128, 128));
+// 					}
+// 
+// 					painter->drawText(allRect, tab->text, option);
+// 					return;
+// 				}
+// 			}
+// 		}
 		if (element == CE_TabBarTabLabel) {
 			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
 				if (widget->parent()->objectName() == "selftabControl") {
@@ -125,6 +125,7 @@ public:
 	}
 };
 void styleControl(QObject *obj) {
+	return;
 	QObjectList list = obj->children();
 	qDebug() << list.length() << endl;
 	QWidget *b;
@@ -356,17 +357,19 @@ void TabMainGUI::initVariable()
 	toothRadioButtonGroup = new QButtonGroup();
 	toothRadioButtonGroup->setExclusive(true);
 
-	totalCrownButton = new QCheckBox(QStringLiteral("全冠"));
+	//totalCrownButton = new CSplitModelBtn(QColor(255,0,0,100),"./Resources/images/facing.png",QStringLiteral("牙冠"));
+	totalCrownButton = new QCheckBox(QStringLiteral("牙冠"));
 	totalCrownButton->setFixedSize(150, 30);
 	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	toothCrownButton = new QCheckBox(QStringLiteral("              牙冠"));
+	//totalCrownButton->setCheckable(true);
+	toothCrownButton = new QCheckBox(QStringLiteral("嵌体"));
 	toothCrownButton->setFixedSize(150, 30);
 	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	lossToothButton = new QCheckBox(QStringLiteral("          缺失牙"));
+	lossToothButton = new QCheckBox(QStringLiteral("缺失牙"));
 	lossToothButton->setFixedSize(150, 30);
-	lossToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	lossToothButton->setStyleSheet("border-width: 2px;border-style: Zsolid;border-color: rgb(128, 128, 128);");
 	lossToothButton->setIcon(QIcon(":/MainWidget/Resources/images/loseTooth.png"));
-	inlayButton = new QCheckBox(QStringLiteral("           嵌体"));
+	inlayButton = new QCheckBox(QStringLiteral("种植牙"));
 	inlayButton->setFixedSize(150, 30);
 	inlayButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 	inlayButton->setIcon(QIcon(":/MainWidget/Resources/images/inlay.png"));
@@ -424,6 +427,13 @@ void TabMainGUI::initVariable()
 	scanDataPathEdit = new QLineEdit(this);
 	scanDataPathEdit->setText("./ScanData");
 	choosePathButton = new QPushButton(QStringLiteral("选择路径"), this);
+
+	{
+		facingButton->setVisible(false);
+		waxTypeButton->setVisible(false);
+		implantButton->setVisible(false);
+		jawToothButton->setVisible(false);
+	}
 }
 
 void TabMainGUI::constructIHM()
@@ -471,8 +481,8 @@ void TabMainGUI::constructIHM()
 	leftHLayout->addStretch();
 	//rightWidget
 	QTabWidget *rightTabWidget = new QTabWidget();
-	rightTabWidget->setStyleSheet("border:0px");
-	rightTabWidget->setStyle(new CustomTabStyle);
+//	rightTabWidget->setStyleSheet("border:0px");
+//	rightTabWidget->setStyle(new CustomTabStyle);
 	//未分模
 	QWidget *rightTotalModelVWidget = new QWidget();
 	QVBoxLayout *rightTotalModelVLayout = new QVBoxLayout(rightTotalModelVWidget);
@@ -611,7 +621,7 @@ void TabMainGUI::constructIHM()
 	rightTabWidget->addTab(middleSplitModelWidget, QStringLiteral("分模"));
 	rightTabWidget->addTab(rightMoulageHWidget, QStringLiteral("印模"));
 	rightTabWidget->setObjectName("selftabControl");
-	rightTotalModelHWidget->setStyleSheet("border:0px");
+//	rightTotalModelHWidget->setStyleSheet("border:0px");
 
 	QWidget *bottomWidget = new QWidget();
 	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
@@ -781,7 +791,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 						//fwrite << "splitModel" << 1;
 						for (int i = 0; i < totalCrownList.size(); i++)
 						{
-							fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
+							//fwrite << "totalCrown" << totalCrownList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -793,7 +803,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 						//fwrite << "splitModel" << 2;
 						for (int i = 0; i < toothCrownList.size(); i++)
 						{
-							fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
+							//fwrite << "toothCrown" << toothCrownList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -908,7 +918,6 @@ bool TabMainGUI::judgePatientSaveFlag()
 
 void TabMainGUI::PatientInformationSave()
 {
-
 	std::cout << "storage a order information..." << std::endl;
 	orderDate = dateLineEdit->text();
 	orderNumber = orderLineEdit->text();
@@ -919,9 +928,10 @@ void TabMainGUI::PatientInformationSave()
 
 	if (splitModelFlag)//分模
 	{
+		//CTaskManager::getInstance()->DelAllTasks();
 		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
 		//pCOralSubstituteScan upperJawOralScanTask, lowJawOralScanTask;
-		pCScanTask einlayScanTask = nullptr;
+		pCGroupScan einlayScanTask = nullptr;
 		pCGroupScan pupperJawTotalCrownGroupScan = nullptr, plowJawTotalCrownGroupScan = nullptr;
 		for (int j = 0; j < 32; j++) {
 			eScanType l_eScanType = m_pTeethScanTaskArray[j]->Get_ScanType();
@@ -944,7 +954,7 @@ void TabMainGUI::PatientInformationSave()
 					}
 				}
 				switch (l_eScanType) {
-				case etotalCrown:
+				case etoothCrown:
 					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
 						if (plowJawTotalCrownGroupScan == nullptr || plowJawTotalCrownGroupScan->m_vtTeeth.size() > 8) {
 							plowJawTotalCrownGroupScan = make_shared<CGroupScan>();
@@ -955,6 +965,8 @@ void TabMainGUI::PatientInformationSave()
 							pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
 							pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
 							pStitchingTask->Set_TaskType(eLowerTeethStit);
+							pStitchingTask->m_pDstTask = lowerJawScanTask;
+							pStitchingTask->m_pSrcTask = plowJawTotalCrownGroupScan;
 							CTaskManager::getInstance()->AddTask(pStitchingTask);
 						}
 						plowJawTotalCrownGroupScan->m_vtTeeth.push_back(m_pTeethScanTaskArray[j]->Get_TeethId());
@@ -970,14 +982,23 @@ void TabMainGUI::PatientInformationSave()
 							pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
 							pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
 							pStitchingTask->Set_TaskType(eUpperTeethStit);
+							pStitchingTask->m_pDstTask = upperScanTask;
+							pStitchingTask->m_pSrcTask = pupperJawTotalCrownGroupScan;
 							CTaskManager::getInstance()->AddTask(pStitchingTask);
 						}
 						pupperJawTotalCrownGroupScan->m_vtTeeth.push_back(m_pTeethScanTaskArray[j]->Get_TeethId());
 					}
 					break;
-				case etoothCrown:
-					break;
 				case elossToothScan:
+
+				{
+					pCScanTask plossToothScanTask = make_shared<CScanTask>();
+					plossToothScanTask->Set_ScanType(l_eScanType);
+					plossToothScanTask->Set_TaskName((g_strScanName[l_eScanType]));
+					plossToothScanTask->Set_TaskType(eScan);
+					plossToothScanTask->Set_TeethId(j);
+					CTaskManager::getInstance()->AddTask(plossToothScanTask);
+				}
 					break;
 				case einlayScan:		//嵌体
 					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
@@ -986,13 +1007,15 @@ void TabMainGUI::PatientInformationSave()
 						einlayScanTask->Set_ScanType(l_eScanType);
 						einlayScanTask->Set_TaskName((g_strScanName[l_eScanType]));
 						einlayScanTask->Set_TaskType(eScan);
+						einlayScanTask->Set_TeethId(j);
 						CTaskManager::getInstance()->AddTask(einlayScanTask);
 						pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
 						pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
 						pStitchingTask->Set_TaskType(eLowerTeethStit);
-						pStitchingTask->m_pSrcTask = lowerJawScanTask;
-						pStitchingTask->m_pDstTask = upperScanTask;
+						pStitchingTask->m_pSrcTask = einlayScanTask;
+						pStitchingTask->m_pDstTask = lowerJawScanTask;
 						CTaskManager::getInstance()->AddTask(pStitchingTask);
+						einlayScanTask->m_vtTeeth.push_back(j);
 					}
 					else //上颌
 					{
@@ -1000,13 +1023,15 @@ void TabMainGUI::PatientInformationSave()
 						einlayScanTask->Set_ScanType(l_eScanType);
 						einlayScanTask->Set_TaskName((g_strScanName[l_eScanType]));
 						einlayScanTask->Set_TaskType(eScan);
+						einlayScanTask->Set_TeethId(j);
 						CTaskManager::getInstance()->AddTask(einlayScanTask);
 						pCStitchingTask pStitchingTask = make_shared<CStitchingTask>();
 						pStitchingTask->Set_TaskName(g_strScanName[l_eScanType]);
 						pStitchingTask->Set_TaskType(eUpperTeethStit);
-						pStitchingTask->m_pSrcTask = lowerJawScanTask;
-						pStitchingTask->m_pDstTask = einlayScanTask;
+						pStitchingTask->m_pSrcTask = einlayScanTask;
+						pStitchingTask->m_pDstTask = upperScanTask;
 						CTaskManager::getInstance()->AddTask(pStitchingTask);
+						einlayScanTask->m_vtTeeth.push_back(j);
 					}
 					break;
 				}
@@ -1020,14 +1045,14 @@ void TabMainGUI::PatientInformationSave()
 				pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
 				pUpperStitcing->Set_TaskType(eUpperStitching);
 				pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
-				pUpperStitcing->m_pSrcTask = allJawScanTask;
-				pUpperStitcing->m_pDstTask = upperScanTask;
+				pUpperStitcing->m_pSrcTask = upperScanTask;
+				pUpperStitcing->m_pDstTask = allJawScanTask;
 				CTaskManager::getInstance()->AddTask(pUpperStitcing, true);
 				pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
 				pLowerSitcing->Set_TaskType(eLowerStitching);
 				pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
-				pLowerSitcing->m_pSrcTask = allJawScanTask;
-				pLowerSitcing->m_pDstTask = lowerJawScanTask;
+				pLowerSitcing->m_pSrcTask = lowerJawScanTask;
+				pLowerSitcing->m_pDstTask = allJawScanTask;
 				CTaskManager::getInstance()->AddTask(pLowerSitcing, true);
 				//CTaskManager::getInstance()->AddTask(allJawScanTask, true);
 			}
@@ -1469,8 +1494,8 @@ void TabMainGUI::ToothButtonListPress()
 			resultImage = QImage(sourceImage.size(), QImage::Format_ARGB32_Premultiplied);
 			QPainter painter(&resultImage);
 			painter.setCompositionMode(QPainter::CompositionMode_Source);
-			painter.fillRect(resultImage.rect(), Qt::transparent);
-			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter.fillRect(resultImage.rect(),QColor(255,255,255,100));
+			painter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
 			painter.drawImage(QRect(0, 0, resultImage.width(),resultImage.height()),destinationImage);
 			painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
 			painter.drawImage(0, 0, sourceImage);
@@ -1726,6 +1751,7 @@ void TabMainGUI::readFileStorage(QString fPath)
 
 	}
 	if (bsplitModelFlag) {
+		CTaskManager::getInstance()->DelAllTasks();
 		QFile file2(fPath + ".json");
 		if (!file2.open(QIODevice::ReadOnly))
 		{
@@ -1741,7 +1767,8 @@ void TabMainGUI::readFileStorage(QString fPath)
 		}
 		if (jsonDoc.isArray()) {
 			QJsonArray jsonArray = jsonDoc.array();
-			pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
+			pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr,
+				pCrownGroupScan = nullptr;
 			for (int i = 0; i < jsonArray.size(); i++) {
 				QJsonObject simp_ayjson = jsonArray[i].toObject();
 				QString strClassName = simp_ayjson.value("class").toString(),
@@ -1752,6 +1779,9 @@ void TabMainGUI::readFileStorage(QString fPath)
 				}
 				else if (strClassName == "CStitchingTask") {
 					pScanTask = make_shared<CStitchingTask>();
+				}
+				else if (strClassName == "CGroupScan") {
+					pScanTask = make_shared<CGroupScan>();
 				}
 				QByteArray byteArray = QByteArray::fromBase64(strData.toLatin1());
 				datastream kdata(byteArray.data(), byteArray.size());
@@ -1766,25 +1796,42 @@ void TabMainGUI::readFileStorage(QString fPath)
 				case eUpperJawScan:
 					upperScanTask = pScanTask;
 					break;
+				case etoothCrown:
+				case einlayScan:
+					pCrownGroupScan = pScanTask;
+					break;
 				}
 				switch (pScanTask->Get_TaskType())
 				{
 				case eUpperStitching: {
 					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
-					pTask->m_pSrcTask = allJawScanTask;
-					pTask->m_pDstTask = upperScanTask;
+					pTask->m_pSrcTask = upperScanTask;
+					pTask->m_pDstTask = allJawScanTask;
 				}
 									  break;
 				case eLowerStitching: {
 					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
-					pTask->m_pSrcTask = allJawScanTask;
-					pTask->m_pDstTask = lowerJawScanTask;
+					pTask->m_pSrcTask = lowerJawScanTask;
+					pTask->m_pDstTask = allJawScanTask;
 				}
 									  break;
+				case eUpperTeethStit: {
+					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
+					pTask->m_pSrcTask = pCrownGroupScan;
+					pTask->m_pDstTask = upperScanTask;
+					break;
+				}
+				case eLowerTeethStit: {
+					pCStitchingTask pTask = static_pointer_cast<CStitchingTask>(pScanTask);
+					pTask->m_pSrcTask = pCrownGroupScan;
+					pTask->m_pDstTask = lowerJawScanTask;
+					break;
+				}
 				default:
 					break;
 				}
 				CTaskManager::getInstance()->AddTask(pScanTask);
+				splitModelFlag = true;
 			}
 		}
 	}
@@ -1803,7 +1850,7 @@ void TabMainGUI::openFileDialogSlot()
 			return;
 		}
 		readFileStorage(path);
-
+		CTaskManager::getInstance()->getCurrentTask();
 	}
 	else {
 		QMessageBox::warning(this, QStringLiteral("路径"), QStringLiteral("您未选择任何路径。"));

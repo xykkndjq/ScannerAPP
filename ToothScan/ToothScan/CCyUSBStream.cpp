@@ -822,12 +822,6 @@ namespace Communication
 				break;
 			}
 		}
-		char *totalBuffersChar = new char[(m_validTotalBuffersSize + 1)*m_endptInLength];
-		memcpy(totalBuffersChar, m_totalCalibImageBuffers, m_validTotalBuffersSize*m_endptInLength * sizeof(UCHAR));
-		string totalBufferPath = "D:\\save\\calib_data.txt";
-		std::ofstream ofWrite(totalBufferPath, std::ios::out | std::ios::binary);
-		ofWrite.write(totalBuffersChar, m_validTotalBuffersSize*m_endptInLength * sizeof(char));
-		ofWrite.close();
 
 		TakeValidCalibInfo(l_itotalBuffersBias);
 		
@@ -921,18 +915,7 @@ namespace Communication
 				break;
 			}
 		}
-		char *totalBuffersChar = new char[(m_validTotalBuffersSize + 1)*m_endptInLength];
-		memcpy(totalBuffersChar, m_totalScanImageBuffers, m_validTotalBuffersSize*m_endptInLength * sizeof(UCHAR));
-		//char *newtotalBuffersChar = new char[(m_validTotalBuffersSize + 1)*m_endptInLength/2];
-		for (int i = 0; i <  m_validTotalBuffersSize*m_endptInLength; i+=2 )
-		{
-			totalBuffersChar[i] = 0;
-		}
-
-		string totalBufferPath = "D:\\save\\scan_data.txt";
-		std::ofstream ofWrite(totalBufferPath, std::ios::out | std::ios::binary);
-		ofWrite.write(totalBuffersChar, m_validTotalBuffersSize*m_endptInLength * sizeof(char));
-		ofWrite.close();
+		
 		TakeValidScanInfo(l_itotalBuffersBias);
 		long len = m_EndPtIn->MaxPktSize * SCALE;
 		for (int j = 0; j< QueueSize; j++)

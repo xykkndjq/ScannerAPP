@@ -54,10 +54,15 @@ void BaseModel::OnPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInter
 
 void BaseModel::makeObject(QVector<GLfloat> v_vertData, int nFaceNum)
 {
-	m_vbo->create();
-	m_vbo->bind();
-	m_vbo->allocate(v_vertData.data(), v_vertData.size() * sizeof(GLfloat));
-	m_totalFaceNum = nFaceNum;
+	m_vbo->destroy();
+
+	if(m_vbo->create()){
+
+		if(m_vbo->bind()){
+			m_vbo->allocate(v_vertData.data(), v_vertData.size() * sizeof(GLfloat));
+			m_totalFaceNum = nFaceNum;
+		}
+	}
 }
 
 void BaseModel::translate(QVector3D qvTranslate)

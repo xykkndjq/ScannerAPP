@@ -21,9 +21,9 @@
 #include "TaskManager.h"
 
 
-#define SCAN_ROTATE_POS_CNT2 10    //定义扫描过程的位置数 11
-#define IMG_ROW 1024
-#define IMG_COL 1280
+//#define SCAN_ROTATE_POS_CNT2 18    //定义扫描过程的位置数 11
+// #define IMG_ROW 1024
+// #define IMG_COL 1280
 
 class ComputeThread : public QObject
 {
@@ -84,11 +84,7 @@ public:
 	void InitParameters();
 	void setFlage(bool flag = true);  //设置标志位，何时关闭子线程
 
-	int  argc;
-	char *argv[9];
-	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel* mm);
-	Dllfun poissonRecon;
-	HINSTANCE hdll;
+
 	
 public:
 	inline double  ToRad(const double &a) { return M_PI*a / 180.0; }
@@ -114,6 +110,7 @@ signals:
 	void showTaskModel();
 	void meshFinish();
 	void StitchFinish();
+	void taskTeethSititFinish();
 public slots:
 	void controlComputeScan(int chooseJawIndex);
 	void compensationComputeScan(int chooseJawIndex);
@@ -125,13 +122,13 @@ public slots:
 	void GPAMeshing();//全局配准和Meshing
 
 	void Stitching();
-	void taskTeethSititSignal();
+	void taskTeethSitit();
 public:
 	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp,
 		int scan_index, scan::Registration & reg, pCScanTask pScanTask);
 
 	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, 
-		vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, pCScanTask pScanTask);
+		vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, scan::Registration & reg, pCScanTask pScanTask);
 };
 
 #endif // ComputeThread_H

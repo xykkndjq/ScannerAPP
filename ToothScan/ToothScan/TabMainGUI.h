@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QDockWidget>
 #include "TaskManager.h"
+#include "SplitModelBtn.h"
 
 #define TOOTHNUM 32
 

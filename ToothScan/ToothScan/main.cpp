@@ -1,10 +1,13 @@
 #include "mainwidget.h"
 #include <QtWidgets/QApplication>
 #include <vector>
-
+#include "minidmp.h"
 using namespace Communication;
 int main(int argc, char *argv[])
 {
+	QApplication::addLibraryPath("./plugins");
+	//RunCrashHandler();
+	SetUnhandledExceptionFilter(ExceptionFilter);
 	QApplication a(argc, argv);
 	QFont f("Î¢ÈíÑÅºÚ", 14);
 	f.setBold(true);

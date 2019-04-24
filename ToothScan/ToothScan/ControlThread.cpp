@@ -1,8 +1,8 @@
 #include "ControlThread.h"
-
-extern int DataSize = SCAN_ROTATE_POS_CNT2-1;
+#define bufferSize 30
+extern int DataSize = bufferSize;
 //extern int BufferSize = 5;
-extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc((SCAN_ROTATE_POS_CNT2-1) * 34 * 1280 * 1024 * sizeof(unsigned char));
+extern unsigned char *totalNormalScanImageBuffer = (unsigned char *)malloc(bufferSize * 34 * 1280 * 1024 * sizeof(unsigned char));
 
 extern cv::Mat rt_r = cv::Mat::eye(4, 4, CV_64FC1);
 extern std::vector<cv::Mat> scanner_rt(9, rt_r);

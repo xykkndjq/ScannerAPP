@@ -37,7 +37,6 @@ void ScanTipWidget::setConnection()
 	connect(timer, SIGNAL(timeout()), this, SLOT(updatePage()));
 	timer->start(1000);
 }
-
 void ScanTipWidget::InitVariable()
 {
 	timer = new QTimer(this);
@@ -55,7 +54,9 @@ void ScanTipWidget::InitVariable()
 	imageTipLabel = new QLabel(this);
 	
 	compensationButton = new QPushButton(QStringLiteral("增加扫描"), this);//增加补扫
+	compensationButton->setToolTip(QStringLiteral("增加扫描"));
 	discardButton = new QPushButton(QStringLiteral("撤销增扫"), this);//丢弃补扫
+	discardButton->setToolTip(QStringLiteral("撤销增扫"));
 	rotationLabel = new QLabel(QStringLiteral("旋转角度:"), this);
 	rotationLineEdit = new QLineEdit(this);//旋转角度
 	rotationLineEdit->setFixedSize(50, 20);
@@ -72,8 +73,11 @@ void ScanTipWidget::InitVariable()
 	spinCutBox->setFixedWidth(18);
 	sliderCut = new QSlider(Qt::Horizontal);
 	cutHeightButton = new QPushButton(QStringLiteral("切割模型"), this);//切割高度应用
+	cutHeightButton->setToolTip(QStringLiteral("切割模型"));
 	discardCutHeightButton = new QPushButton(QStringLiteral("撤销切割"), this);//丢弃切割高度应用
+	discardCutHeightButton->setToolTip(QStringLiteral("撤销切割"));
 	saveCutHeightButton = new QPushButton(QStringLiteral("保存为默认切割高度"), this);//保存当前切割高度
+	saveCutHeightButton->setToolTip(QStringLiteral("保存为默认切割高度"));
 
 	upperShowButton = new QPushButton(this);
 	lowerShowButton = new QPushButton(this);
@@ -741,6 +745,7 @@ void ScanTipWidget::allPlaceConstructIHM1()
 	imageTipLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/alljaw.png"));
 	backStepButton->setVisible(false);
 	forwardStepButton->setText(QStringLiteral("扫  描"));
+	forwardStepButton->setToolTip(QStringLiteral("扫  描"));
 
 	placeConstruct1();
 }
@@ -754,8 +759,9 @@ void ScanTipWidget::allCompenConstructIHM2()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -770,7 +776,9 @@ void ScanTipWidget::allCutConstructIHM3()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 
 	cutConstruct2();
 }
@@ -786,8 +794,9 @@ void ScanTipWidget::allPlaceConstructIHM4()
 	imageTipLabel->setFixedSize(200, 130);
 	imageTipLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/lowerjaw.png"));
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("扫  描"));
-	
+	forwardStepButton->setToolTip(QStringLiteral("扫  描"));
 	placeConstruct1();
 }
 
@@ -800,8 +809,9 @@ void ScanTipWidget::allCompenConstructIHM5()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-	
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -816,8 +826,9 @@ void ScanTipWidget::allCutConstructIHM6()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	cutConstruct2();
 }
 
@@ -832,8 +843,9 @@ void ScanTipWidget::allPlaceConstructIHM7()
 	imageTipLabel->setFixedSize(200, 130);
 	imageTipLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/upperjaw.png"));
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("扫  描"));
-	
+	forwardStepButton->setToolTip(QStringLiteral("扫  描"));
 	placeConstruct1();
 }
 
@@ -846,8 +858,9 @@ void ScanTipWidget::allCompenConstructIHM8()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-	
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -862,8 +875,9 @@ void ScanTipWidget::allCutConstructIHM9()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	cutConstruct2();
 }
 
@@ -880,8 +894,9 @@ void ScanTipWidget::allFinishConstructIHM10()
 	lowerShowButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}"
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
-
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 	allFinishConstruct3();
 }
 
@@ -895,7 +910,7 @@ void ScanTipWidget::upperPlaceConstructIHM1()
 	imageTipLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/upperjaw.png"));
 	backStepButton->setVisible(false);
 	forwardStepButton->setText(QStringLiteral("扫  描"));
-
+	forwardStepButton->setToolTip(QStringLiteral("扫  描"));
 	placeConstruct1();
 }
 
@@ -910,8 +925,9 @@ void ScanTipWidget::upperCompenConstructIHM2()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -926,8 +942,9 @@ void ScanTipWidget::upperCutConstructIHM3()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	cutConstruct2();
 }
 
@@ -942,8 +959,9 @@ void ScanTipWidget::upperFinishConstructIHM4()
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
 	lowerShowButton->setVisible(false);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
-
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 	upperFinishConstruct3();
 }
 
@@ -957,7 +975,7 @@ void ScanTipWidget::lowerPlaceConstructIHM1()
 	imageTipLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/lowerjaw.png"));
 	backStepButton->setVisible(false);
 	forwardStepButton->setText(QStringLiteral("扫  描"));
-
+	forwardStepButton->setToolTip(QStringLiteral("扫  描"));
 	placeConstruct1();
 }
 
@@ -972,7 +990,9 @@ void ScanTipWidget::lowerCompenConstructIHM2()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -987,8 +1007,9 @@ void ScanTipWidget::lowerCutConstructIHM3()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	cutConstruct2();
 }
 
@@ -1003,8 +1024,9 @@ void ScanTipWidget::lowerFinishConstructIHM4()
 	lowerShowButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}"
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
-
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 	lowerFinishConstruct3();
 }
 
@@ -1017,8 +1039,9 @@ void ScanTipWidget::upperSplitScanConstructIHM5()
 	primaryTipLabel->setWordWrap(true);
 	secondTipLabel->setVisible(false);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	splitScanConstruct1();
 }
 
@@ -1030,8 +1053,9 @@ void ScanTipWidget::upperSplitRemoveConstructIHM6()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -1046,8 +1070,9 @@ void ScanTipWidget::upperSplitFinishConstructIHM7()
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
 	lowerShowButton->setVisible(false);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
-
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 	upperFinishConstruct3();
 }
 
@@ -1060,8 +1085,9 @@ void ScanTipWidget::lowerSplitScanConstructIHM5()
 	primaryTipLabel->setWordWrap(true);
 	secondTipLabel->setVisible(false);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	
 }
 
@@ -1073,8 +1099,9 @@ void ScanTipWidget::lowerSplitRemoveConstructIHM6()
 	secondTipLabel->adjustSize();
 	secondTipLabel->setWordWrap(true);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("下一步"));
-
+	forwardStepButton->setToolTip(QStringLiteral("下一步"));
 	compenConstruct2();
 }
 
@@ -1088,8 +1115,9 @@ void ScanTipWidget::lowerSplitFinishConstructIHM7()
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 	upperShowButton->setVisible(false);
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
-
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 	lowerFinishConstruct3();
 }
 
@@ -1105,7 +1133,9 @@ void ScanTipWidget::allSplitFinishConstructIHM8()
 	lowerShowButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}"
 		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 	backStepButton->setText(QStringLiteral("后  退"));
+	backStepButton->setToolTip(QStringLiteral("后  退"));
 	forwardStepButton->setText(QStringLiteral("完  成"));
+	forwardStepButton->setToolTip(QStringLiteral("完  成"));
 
 	allFinishConstruct3();
 }

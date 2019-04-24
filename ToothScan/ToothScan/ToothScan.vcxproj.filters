@@ -140,6 +140,18 @@
     <ClCompile Include="CCyUSBStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BackGroundObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitModelBtn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SplitModelBtn.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SplitModelBtn.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -179,6 +191,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="HLogHelper.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SplitModelBtn.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -229,6 +244,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCyUSBStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGroundObject.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="minidmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

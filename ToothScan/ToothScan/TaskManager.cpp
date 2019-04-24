@@ -1,8 +1,8 @@
 #include "TaskManager.h"
 #include "commonFun.h"
 
-extern const char *g_strScanName[7] = { { "全冠" },{ "牙冠" },{ "缺失牙" } ,
-{ "嵌体" },
+extern const char *g_strScanName[7] = { { "牙冠" },{ "嵌体" },{ "缺失牙" } ,
+{ "种植牙" },
 { "上颌模型" },{ "下颌模型" },{ "全颌模型" } };
 
 CTaskManager::CTaskManager()
@@ -40,16 +40,16 @@ CTaskManager * CTaskManager::m_pInstance = nullptr;
 void CScanTask::StreamValue(datastream& kData, bool bSend)
 {
 	Stream_VALUE(m_strTaskName);
-	qDebug() << QString::fromLocal8Bit(m_strTaskName.c_str())<<endl;
+	//qDebug() << QString::fromLocal8Bit(m_strTaskName.c_str())<<endl;
 	Stream_VALUE(m_strModelFileName);
 	Stream_VALUEEx(int, m_eScanType);
-	qDebug() << m_eScanType << endl;
+	//qDebug() << m_eScanType << endl;
 	Stream_VALUE(m_iTeethId);
-	qDebug() << m_iTeethId << endl;
+	//qDebug() << m_iTeethId << endl;
 	Stream_VALUEEx(int, m_eTaskPro);
-	qDebug() << m_eTaskPro << endl;
+	//qDebug() << m_eTaskPro << endl;
 	Stream_VALUEEx(int, m_eTaskType);
-	qDebug() << m_eTaskType << endl;
+//	qDebug() << m_eTaskType << endl;
 }
 
 void COralSubstituteScan::StreamValue(datastream& kData, bool bSend)

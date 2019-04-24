@@ -6,17 +6,12 @@
 
 /** @brief Template class for 3D points specified by its coordinates `x`, `y` and `z`.
 
-An instance of the class is interchangeable with the C structure CvPoint2D32f . Similarly to
-Point_ , the coordinates of 3D points can be converted to another type. The vector arithmetic and
-comparison operations are also supported.
-
 The following Point3_\<\> aliases are available:
 @code
-    typedef Point3_<int> Point3i;
-    typedef Point3_<float> Point3f;
-    typedef Point3_<double> Point3d;
+typedef Point3_<int> Point3i;
+typedef Point3_<float> Point3f;
+typedef Point3_<double> Point3d;
 @endcode
-@see cv::Point3i, cv::Point3f and cv::Point3d
 */
 
 namespace orth
@@ -47,9 +42,13 @@ namespace orth
 		_Tp x; //!< x coordinate of the 3D point
 		_Tp y; //!< y coordinate of the 3D point
 		_Tp z; //!< z coordinate of the 3D point
-		//_Tp* data = &x;
+			   //_Tp* data = &x;
 
+			   //data buffer's address
 		_Tp* data();
+
+		//normalization current vector
+		void normalize();
 
 		//template<typename _Tp> static inline
 		//	Point3_<_Tp> operator - (const Point3_<_Tp>& a, const Point3_<_Tp>& b);
@@ -71,6 +70,20 @@ namespace orth
 		_Tp* Point3_<_Tp>::data()
 	{
 		return &x;
+	}
+
+	template<typename _Tp> inline
+		void Point3_<_Tp>::normalize()
+	{
+		double length = sqrt(x*x + y*y + z*z);
+		if (length == 0)
+		{
+			std::cout << " zero value in normalization " << std::endl;
+			return;
+		}
+		x = (_Tp)(x / length);
+		y = (_Tp)(y / length);
+		z = (_Tp)(z / length);
 	}
 
 	template<typename _Tp> static inline
@@ -274,7 +287,7 @@ namespace orth
 	template<typename _Tp> static inline
 		Point3_<_Tp> operator * (double a, const Point3_<_Tp>& b)
 	{
-		return Point3_<_Tp>((b.x * a), (b.y * a),(b.z * a));
+		return Point3_<_Tp>((b.x * a), (b.y * a), (b.z * a));
 	}
 
 

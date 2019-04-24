@@ -16,14 +16,13 @@ enum eTaskType {
 };
 enum eScanType {
 	eScanNULL = -1,
-	etotalCrown,
 	etoothCrown,
-	elossToothScan,
 	einlayScan,
+	elossToothScan,
+	eDentalImplantScan,
 	eUpperJawScan,
 	eLowerJawScan,
 	eAllJawScan,
-
 };
 extern const char *g_strScanName[7];
 
@@ -107,6 +106,7 @@ public:
 	vector<int> m_vtTeeth;
 
 	virtual void StreamValue(datastream& kData, bool bSend);
+	virtual char * getClassName() { return "CGroupScan"; };
 };
 SharedPtr(CGroupScan);
 
@@ -142,14 +142,17 @@ public:
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
 		for (; iter != m_vtBaseTask.end(); iter++) {
 			if ((*iter) == m_pCurrentTask) {
-				if (++iter != m_vtBaseTask.end()) {
-					m_pCurrentTask = (*iter);
+				if((*iter)->Get_ScanType() != elossToothScan){
+					if (++iter != m_vtBaseTask.end()) {
+						m_pCurrentTask = (*iter);
+						return m_pCurrentTask;
+					}
+					else
+						m_pCurrentTask = nullptr;
 				}
-				else
-					m_pCurrentTask = nullptr;
 			}
 		}
-		return m_pCurrentTask;
+		return nullptr;
 	}
 	pCScanTask getLastTask() {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
@@ -173,6 +176,9 @@ public:
 	}
 	list<pCScanTask> &getTasks() {
 		return m_vtBaseTask;
+	}
+	void DelAllTasks() {
+		m_vtBaseTask.clear();
 	}
 	static CTaskManager * m_pInstance;
 	static CTaskManager * getInstance() {

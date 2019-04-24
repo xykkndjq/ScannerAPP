@@ -2,20 +2,27 @@
 //#include "include/PoissonRecon.h"
 //#include "VTK_render.h"
 #include "HLogHelper.h"
-#include "NearestNeighborSearches.h"
-#include <pcl/visualization/cloud_viewer.h>
-#include <vtkRenderWindow.h>
-#include <vtkRendererCollection.h>
-#include <vtkCamera.h>
+#include "plyio.h"
+
+// #include "NearestNeighborSearches.h"
+// #include <pcl/visualization/cloud_viewer.h>
+// #include <vtkRenderWindow.h>
+// #include <vtkRendererCollection.h>
+// #include <vtkCamera.h>
 
 typedef void(*Dllfun2)(orth::MeshModel &mm_target, orth::MeshModel &mm_source, cv::Mat &Rt_matrix, const float MaxCorrespondenceDistance, const float RANSACOutlier, const int MaxIteration);
 Dllfun2 g_icp = NULL;
 HINSTANCE g_hdll = NULL;
-scan::Unwarp g_unwarp;
-ComputeThread::ComputeThread(QObject *parent)
-	: QObject(parent)
+
+
+void poissonRecon(orth::MeshModel& totalMeshModel)
 {
-	argc = 9;
+	int  argc;
+	char *argv[9];
+	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
+	Dllfun pRecon;
+	HINSTANCE hdll;
+	argc = 7;
 
 	argv[0] = "111";
 	argv[1] = "--in";
@@ -24,18 +31,30 @@ ComputeThread::ComputeThread(QObject *parent)
 	argv[4] = "123.ply";
 	argv[5] = "--depth";
 	argv[6] = "9";
-	argv[7] = "--bType";
-	argv[8] = "1";
-	hdll = LoadLibrary(L"SSDRecon.dll");
+// 	argv[7] = "--bType";
+// 	argv[8] = "1";
+	hdll = LoadLibrary(L"PoissonRecon.dll");
 	if (hdll == NULL)
 	{
 		FreeLibrary(hdll);
 	}
-	poissonRecon = (Dllfun)GetProcAddress(hdll, "reconstruction_ssd");
-	if (poissonRecon == NULL)
+	pRecon = (Dllfun)GetProcAddress(hdll, "reconstruction");
+	if (pRecon == NULL)
 	{
 		FreeLibrary(hdll);
 	}
+
+	pRecon(argc, argv, totalMeshModel);
+
+
+	FreeLibrary(hdll);
+}
+
+scan::Unwarp g_unwarp;
+ComputeThread::ComputeThread(QObject *parent)
+	: QObject(parent)
+{
+
 	if (!g_hdll) {
 		g_hdll = LoadLibrary(L"regist.dll");
 		//hdll = LoadLibrary("PoissonRecon.dll");
@@ -61,7 +80,7 @@ ComputeThread::ComputeThread(QObject *parent)
 
 ComputeThread::~ComputeThread()
 {
-	FreeLibrary(hdll);
+	
 }
 
 void ComputeThread::InitParameters()
@@ -478,8 +497,9 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 	//}
 	//ColoredPoints(pointcloud, 3);
 
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
-
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+	 mModel.SmallModelFilter(300);
+	mModel.NormalSmooth(1);
 
 	if (chooseJawIndex == 1)
 	{
@@ -625,7 +645,13 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 	cout << rt_curr << endl;
 	cout << "*******************************" << endl;
 
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+	mModel.SmallModelFilter(300);
+	mModel.S.clear();
+	mModel.NormalSmooth(1);
+
+	//tinyply::plyio io;
+	//io.write_ply_example(QString::number(index).toStdString(), mModel, false);
 
 	{
 		int scan_index = pScanTask->m_mModel.size();
@@ -634,6 +660,10 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 		cv::Mat cloudrot = rt_curr;
 		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+		orth::ModelIO finish_model_io(&mModel);
+		std::string modelNameStr = QString::number(index).toStdString() + ".stl";
+		cout << "pathname: " << modelNameStr << endl;
+		finish_model_io.writeModel(modelNameStr, "stlb");
 		//pointcloudrotation(points_2, cloudrot);
 // 		if (pScanTask->m_points_cloud_globle.size())
 // 		{
@@ -662,7 +692,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 // 
 // 		cloudrot = rt_icp;
 // 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-		if (reg.PushIn(mModel))
+		if (reg.NearRegist(pScanTask->m_mModel,mModel))
 		{
 
 			pScanTask->m_mModel.push_back(mModel);
@@ -842,7 +872,7 @@ image_rgb.push_back(imgr);
  	int bufferBias = 0;
  	scan::Unwarp *unwarp = new scan::Unwarp();
  
- 	for (int scan_index = 0; scan_index < DataSize; scan_index++)
+ 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
  	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -894,7 +924,7 @@ image_rgb.push_back(imgr);
  		bufferBias++;
  		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
  		freeSpace.release();
- 		if (scan_index == (DataSize - 1))
+ 		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 2))
  		{
  			//for (int i = 0; i < 9; i++)
  			//{
@@ -949,7 +979,9 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	cout << "c_scan_x	" << c_scan_x << endl;
 	cout << "c_scan_y	" << c_scan_y << endl;
 	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+	 mModel.SmallModelFilter(300);
+	mModel.NormalSmooth(1);
 
 	if (chooseJawIndex == 1)
 	{
@@ -1075,7 +1107,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	return true;
 }
 
-bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, pCScanTask pScanTask)
+bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, scan::Registration & reg, pCScanTask pScanTask)
 {
 	vector<double> points_2;
 
@@ -1083,8 +1115,9 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	cv::Mat rt_curr;
 	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
 	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 0.5, mModel, 4000, points_2);
-
+	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+	 mModel.SmallModelFilter(300);
+	mModel.NormalSmooth(1);
 	//	if (chooseJawIndex == 1)
 	{
 		int scan_index = pScanTask->m_mModel.size();
@@ -1103,21 +1136,30 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 // 				return false;
 // 			}
 // 		}
-		if (pScanTask->m_mModel.size())
+// 		if (pScanTask->m_mModel.size())
+// 		{
+// 			//if (!pointcloudICP(pScanTask->m_points_cloud_end, points_2, 1, 1, rt_icp))
+// 			g_icp(pScanTask->m_mModel[0], mModel, rt_icp, 1.0, 10.0, 50);
+// 			// 			{
+// 			// 				//return false;
+// 			// 			}
+// 		}
+		if (reg.NearRegist(pScanTask->m_mModel,mModel))
 		{
-			//if (!pointcloudICP(pScanTask->m_points_cloud_end, points_2, 1, 1, rt_icp))
-			g_icp(pScanTask->m_mModel[0], mModel, rt_icp, 1.0, 10.0, 50);
-			// 			{
-			// 				//return false;
-			// 			}
+
+			pScanTask->m_mModel.push_back(mModel);
+		}
+		else
+		{
+			cout << " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		}
 
-		pScanTask->m_mModel.push_back(mModel);
+		//pScanTask->m_mModel.push_back(mModel);
 		pScanTask->m_nAddModel++;
 		cloudrot = rt_icp;
-		g_unwarp.MeshRot((double*)cloudrot.data, &pScanTask->m_mModel[scan_index]);
+		//g_unwarp.MeshRot((double*)cloudrot.data, &pScanTask->m_mModel[scan_index]);
 		//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
-		pointcloudrotation(points_2, cloudrot);
+		//pointcloudrotation(points_2, cloudrot);
 		pScanTask->m_points_cloud_globle.push_back(points_2);
 		pScanTask->m_points_cloud_end.insert(pScanTask->m_points_cloud_end.end(), points_2.begin(), points_2.end());
 		pScanTask->m_points_cloud_end_addSize.push_back(points_2.size());
@@ -1219,9 +1261,9 @@ void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud
 		p.y = RT.at<double>(1, 0)*x + RT.at<double>(1, 1)*y + RT.at<double>(1, 2)*z + RT.at<double>(1, 3);
 		p.z = RT.at<double>(2, 0)*x + RT.at<double>(2, 1)*y + RT.at<double>(2, 2)*z + RT.at<double>(2, 3);
 
-		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz + RT.at<double>(0, 3);
-		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz + RT.at<double>(1, 3);
-		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz + RT.at<double>(2, 3);
+		n.x = RT.at<double>(0, 0)*nx + RT.at<double>(0, 1)*ny + RT.at<double>(0, 2)*nz;
+		n.y = RT.at<double>(1, 0)*nx + RT.at<double>(1, 1)*ny + RT.at<double>(1, 2)*nz;
+		n.z = RT.at<double>(2, 0)*nx + RT.at<double>(2, 1)*ny + RT.at<double>(2, 2)*nz;
 
 		pointCloud2.push_back(p);
 		pointNormal2.push_back(n);
@@ -1319,7 +1361,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1340,7 +1382,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1375,7 +1417,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1395,7 +1437,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1431,7 +1473,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1451,7 +1493,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1484,7 +1526,7 @@ void ComputeThread::GPAMeshing()
 			cout << "GPA is finished..." << endl;
 
 			orth::MeshModel totalMeshModel;
-			for (int data_index = 0; data_index < pScanTask->m_points_cloud_globle.size(); data_index++)
+			for (int data_index = 0; data_index < pScanTask->m_mModel.size(); data_index++)
 			{
 				pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
 			}
@@ -1493,7 +1535,10 @@ void ComputeThread::GPAMeshing()
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			orth::ModelIO meshio(&totalMeshModel);
+			meshio.writeModel("./totalmesh.stl", "stlb");
+			//MeshRender(totalMeshModel,3);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1512,7 +1557,7 @@ void ComputeThread::GPAMeshing()
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(argc, argv, &totalMeshModel);
+			poissonRecon(totalMeshModel);
 
 			ReductMesh(totalMeshModel_copy, totalMeshModel);
 
@@ -1527,7 +1572,7 @@ void ComputeThread::GPAMeshing()
 }
 //ÑÀ³ÝÅä×¼
 
-void ComputeThread::taskTeethSititSignal()
+void ComputeThread::taskTeethSitit()
 {
 	pCScanTask pScanTask;
 	pScanTask = CTaskManager::getInstance()->getCurrentTask();
@@ -1538,27 +1583,59 @@ void ComputeThread::taskTeethSititSignal()
 		return;
 	pCScanTask pDstTask = pTask->m_pDstTask, pSrcTask = pTask->m_pSrcTask;
 	//1·Ö¸îsrcmodel pCTeethModel pTeethModel;
+	if (!pDstTask || !pSrcTask)
+		return;
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
 	pDstTask->pTeethModel->getMeshModel(l_dstModel);
+	vector<orth::MeshModel> l_vtSucModel;
+	scan::Registration reg(1.0, 15.0, 50);
+	//reg.SetSearchDepth(40);
 	vector<orth::MeshModel> l_vtModel;
 	l_tmpModel.ModelSplit(l_vtModel);
-	//vector<orth::MeshModel>::iterator iter = l_vtModel.begin();
-	//for (; iter != l_vtModel.end(); iter++) {
-	for (int i = 0; i < l_vtModel.size();i++) {
-
-		cv::Mat rt_out;
-		g_icp(l_dstModel,l_vtModel[i] , rt_out, 1.0, 10.0, 50);
-		g_unwarp.MeshRot((double*)rt_out.data, &l_vtModel[i]);
+	
+	for (int i = 0; i < l_vtModel.size(); i++) {
+		if (reg.FarRegist(l_dstModel, l_vtModel[i])) {
+		//reg.FarRegist(l_dstModel, l_tmpModel);
+			l_vtSucModel.push_back(l_vtModel[i]);
+		}
+		else {
+			cout << "The registration of one tooth is failure..." << endl;
+		}
 	}
-	l_vtModel.push_back(l_dstModel);
-	orth::MeshModel dstAllModel;
-	orth::MergeModels(l_vtModel,dstAllModel);
-	pTask->pTeethModel->m_model = dstAllModel;
-	pTask->pTeethModel->makeObject();
-	//emit showModeltoGlSingel(2);
-	//emit computeFinish();
-	emit meshFinish();
+// 	for (int i = 0; i < l_vtModel.size();i++) {
+// 		if(l_vtModel[i].P.size() < 10000)
+// 			continue;
+// 		if (reg.FarRegist(l_dstModel, l_vtModel[i])) {
+// 			l_vtSucModel.push_back(l_vtModel[i]);
+// 		}
+// 	}
+	if (l_vtSucModel.size() > 0) {
+		l_vtSucModel.push_back(l_dstModel);
+		orth::MeshModel dstAllModel;
+		orth::MergeModels(l_vtSucModel, dstAllModel);
+		orth::ModelIO merge_io(&dstAllModel);
+		merge_io.writeModel("merge_models.stl", "stlb");
+		//pTask->pTeethModel->m_model = dstAllModel;
+		pTask->m_mAllModel = dstAllModel;
+		//pTask->pTeethModel->makeObject();
+		pDstTask->pTeethModel->m_model = dstAllModel;
+	}
+	else {
+		pTask->m_mAllModel = l_dstModel;
+	}
+
+	emit taskTeethSititFinish();
+
+// 	//vector<orth::MeshModel>::iterator iter = l_vtModel.begin();
+// 	//for (; iter != l_vtModel.end(); iter++) {
+// 	for (int i = 0; i < l_vtModel.size();i++) {
+// 
+// 		cv::Mat rt_out;
+// 		g_icp(l_dstModel,l_vtModel[i] , rt_out, 1.0, 10.0, 50);
+// 		g_unwarp.MeshRot((double*)rt_out.data, &l_vtModel[i]);
+// 	}
+
 }
 
 void ComputeThread::Stitching()
@@ -1573,23 +1650,35 @@ void ComputeThread::Stitching()
 	pCScanTask pDstTask = pTask->m_pDstTask, pSrcTask = pTask->m_pSrcTask;
 	if (!pDstTask || !pSrcTask)
 		return;
-	if (pDstTask->m_points_cloud_globle.size() && pSrcTask->m_points_cloud_globle.size())
-	{
-		cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
-		//pointcloudICP(points_cloud_globle2[0], points_2, 1, 1, rt_icp);
-// 		if (!pointcloudICP(pSrcTask->m_points_cloud_end, pDstTask->m_points_cloud_end, 1, 1, rt_icp))
-// 		{
-// 			return;
-// 		}
-		orth::MeshModel meshModel;
-		pDstTask->pTeethModel->getMeshModel(meshModel);
-		g_icp(pSrcTask->m_mAllModel, meshModel, rt_icp, 1.0, 10.0, 50);
+	orth::MeshModel l_tmpModel, l_dstModel;
+	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
+	pDstTask->pTeethModel->getMeshModel(l_dstModel);
+	vector<orth::MeshModel> l_vtSucModel;
+	scan::Registration reg(1.0, 15.0, 50);
+	//reg.SetSearchDepth(40);
+	vector<orth::MeshModel> l_vtModel;
+	//	l_tmpModel.ModelSplit(l_vtModel);
 
-		g_unwarp.MeshRot((double*)rt_icp.data, &meshModel);
+	if (reg.FarRegist(l_dstModel, l_tmpModel)) {
+		//reg.FarRegist(l_dstModel, l_tmpModel);
+		l_vtSucModel.push_back(l_tmpModel);
+		pTask->m_mAllModel = l_tmpModel;
 	}
-
-	//emit showModeltoGlSingel(2);
-	//emit computeFinish();
+	else {
+		cout << "The registration of one tooth is failure..." << endl;
+	}
+// 	if (l_vtSucModel.size() > 0) {
+// 		l_vtSucModel.push_back(l_dstModel);
+// 		orth::MeshModel dstAllModel;
+// 		orth::MergeModels(l_vtSucModel, dstAllModel);
+// 		orth::ModelIO merge_io(&dstAllModel);
+// 		merge_io.writeModel("merge_models.stl", "stlb");
+// 		//pTask->pTeethModel->m_model = dstAllModel;
+// 		pTask->m_mAllModel = dstAllModel;
+// 		//pTask->pTeethModel->makeObject();
+// 		pDstTask->pTeethModel->m_model = dstAllModel;
+// 
+// 	}
 	emit StitchFinish();
 }
 
@@ -1693,10 +1782,10 @@ void ComputeThread::normalComputeScan()
 
 	int bufferBias = 0;
 	//scan::Unwarp *unwarp = new scan::Unwarp();
-	scan::Registration reg(1.0, 10.0, 50);
+	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
 	//reg.SetRegistError(0.3);
-	for (int scan_index = 0; scan_index < DataSize; scan_index++)
+	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
 	{
 		usedSpace.acquire();
 
@@ -1731,7 +1820,10 @@ void ComputeThread::normalComputeScan()
 		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
 		HLogHelper::getInstance()->HLogTime("The ComputeThread: %d has finished", scan_index);
 		freeSpace.release();
-		if (scan_index == (DataSize - 1))
+		if (scan_index >= 2) {
+			cout << "aaadd" << endl;
+		}
+		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 2))
 		{
 			//for (int i = 0; i < 9; i++)
 			//{
@@ -1797,8 +1889,9 @@ void ComputeThread::compensationCompute()
 	vector<double> points_2;
 	/*vector<unsigned char> points_color2;
 	vector<uint32_t> faces;*/
-
-	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, pScanTask);
+	scan::Registration reg( 1.0, 15.0, 50);
+	reg.SetSearchDepth(40);
+	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp,reg, pScanTask);
 
 	// 	if (scanFlag == true)
 	// 	{
@@ -1827,10 +1920,10 @@ void ComputeThread::ReductMesh(orth::MeshModel &model_target, orth::MeshModel &m
 {
 	vector<unsigned int> query_index;
 	vector<double> query_distance;
-	NearestNeighborSearches nns;
+	//NearestNeighborSearches nns;
 	//pointcloud_source.ModelSample(90000);
-	nns.NearestPointsSearchGPU(&model_target, &model_source, 60, query_index, query_distance);
-	//orth::NearestPointSearch(model_target, model_source, 8, query_index, query_distance);
+	//nns.NearestPointsSearchGPU(&model_target, &model_source, 60, query_index, query_distance);
+	orth::NearestPointSearch(&model_target, &model_source, 8, query_index, query_distance);
 	model_source.L.resize(model_source.P.size(), 0);
 	for (int point_index = 0; point_index < model_source.P.size(); point_index++)
 	{
