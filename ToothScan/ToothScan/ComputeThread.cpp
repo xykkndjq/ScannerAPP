@@ -86,7 +86,7 @@ ComputeThread::~ComputeThread()
 void ComputeThread::InitParameters()
 {
 	cout << " RasterScan Start!!" << endl;
-	rs->InitRasterScan("D:/dentalimage/dentalimage2/SystemCalibration.yml");
+	rs->InitRasterScan("SystemCalibration.yml");
 
 	//rt_r = cv::Mat::eye(4, 4, CV_64FC1);
 	rt_r.at<double>(0, 0) = rs->Rot_r.at<double>(0, 0);

@@ -1874,10 +1874,12 @@ void ScanMainGUI::updateTaskModel()
 {
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
-		int scan_index = pCurrentTask->m_mModel.size() - 1;
-		glWidget->mm = pCurrentTask->m_mModel[scan_index];
-		glWidget->makeObject();
-		glWidget->update();
+		if(pCurrentTask->m_mModel.size()>0){
+			int scan_index = pCurrentTask->m_mModel.size() - 1;
+			glWidget->mm = pCurrentTask->m_mModel[scan_index];
+			glWidget->makeObject();
+			glWidget->update();
+		}
 	}
 }
 

@@ -523,7 +523,7 @@ void ControlThread::controlCalibrationScan()
 		}
 	}
 	orth::Point3d error;
-	rs->SystemCalibration("D:/dentalimage/dentalimage2/SystemCalibration.yml", error);
+	rs->SystemCalibration("SystemCalibration.yml", error);
 	cout << error << endl;
 	InitParameters();
 }

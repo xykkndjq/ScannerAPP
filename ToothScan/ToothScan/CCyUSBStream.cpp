@@ -559,7 +559,6 @@ namespace Communication
 
 	int CCyUSBStream::InitCyUSBParameter()
 	{
-		return 0;
 		m_USBDevice = new CCyUSBDevice(NULL); //USBÉè±¸  
 		
 		if (!m_USBDevice->Open(0))

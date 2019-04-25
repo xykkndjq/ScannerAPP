@@ -340,5 +340,7 @@
         <file>AxisNode.fs</file>
         <file>bgGround.fs</file>
         <file>bgGround.vs</file>
+        <file>gl2.fs</file>
+        <file>gl2.vs</file>
     </qresource>
 </RCC>

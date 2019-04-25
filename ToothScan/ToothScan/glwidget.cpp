@@ -331,10 +331,10 @@ void GLWidget::initializeGL()
 	//glEnable(GL_CULL_FACE);
 
 	QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-	vshader->compileSourceCode(ReadShader("./gl2.vs"));
+	vshader->compileSourceCode(ReadShader(":/MainWidget/gl2.vs"));
 
 	QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-	fshader->compileSourceCode(ReadShader("./gl2.fs"));
+	fshader->compileSourceCode(ReadShader(":/MainWidget/gl2.fs"));
 
 	program = make_shared<QOpenGLShaderProgram>();
 	program->addShader(vshader);
