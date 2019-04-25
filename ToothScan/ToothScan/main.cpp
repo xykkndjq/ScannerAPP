@@ -5,6 +5,9 @@
 using namespace Communication;
 int main(int argc, char *argv[])
 {
+	std::ofstream log("toothscan.log");
+
+	std::streambuf * oldbuf = std::cout.rdbuf(log.rdbuf());
 	QApplication::addLibraryPath("./plugins");
 	//RunCrashHandler();
 	SetUnhandledExceptionFilter(ExceptionFilter);
