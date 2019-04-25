@@ -50,7 +50,7 @@
 
 #include "glwidget.h"
 #include <QOpenGLShaderProgram>
-#include <QOpenGLTexture>
+//#include <QOpenGLTexture>
 #include <QMouseEvent>
 #include "TeethModel.h"
 #include <QPainter>
@@ -354,7 +354,7 @@ void GLWidget::initializeGL()
 
 	cout << "initialize done !" << endl;
 
-	makeBackGround();
+	//makeBackGround();
 
 	//m_bkGroundProgram = new QOpenGLShaderProgram;
 // 	m_bkGroundProgram = make_shared<QOpenGLShaderProgram>();
@@ -393,8 +393,8 @@ void GLWidget::paintGL()
 	//glClearColor()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //	drawGradient();
-	glUseProgram(0);
-	m_backgroundModel->OnPaint(m_projection,m_view,this);
+	//glUseProgram(0);
+	//m_backgroundModel->OnPaint(m_projection,m_view,this);
 
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -1410,7 +1410,7 @@ void GLWidget::makeGroundObject()
 	// 	bkgroundvbo = make_shared<QOpenGLBuffer>();
 
 
-	m_groundModel = make_shared<CGroundObject>("./bgGround.vs", "./bgGround.fs", this);
+	m_groundModel = make_shared<CGroundObject>(":/MainWidget/bgGround.vs", ":/MainWidget/bgGround.fs", this);
 	m_groundModel->makeObject(vertData, 4);
 	m_groundModel->Set_Visible(false);
 	m_ToolsModelsVt.push_back(m_groundModel);
@@ -1426,8 +1426,8 @@ void GLWidget::makeBackGround()
 		-1.0f,-1.0f,-1.0f,  0.0f,0.0f,
 		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
 	};
-	m_backgroundModel = make_shared<CBackGroundObject>("./background.vs", "./background.fs", this);
-	QString name_ = "./background-grey3.jpg";
+	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
+	QString name_ = ":/MainWidget/background-grey3.jpg";
 	m_backgroundModel->readPicture(name_);
 	m_backgroundModel->makeObject(vertData, 4);
 	m_backgroundModel->Set_Visible(true);
@@ -1450,7 +1450,7 @@ void GLWidget::makeAxisObject()
 	// 	m_AxisNodevbo.create();
 	// 	m_AxisNodevbo.bind();
 	// 	m_AxisNodevbo.allocate(vertData.data(), vertData.size() * sizeof(GLfloat));
-	m_axisMode = make_shared<CAxisModel>("./AxisNode.vs", "./AxisNode.fs", this);
+	m_axisMode = make_shared<CAxisModel>(":/MainWidget/AxisNode.vs", ":/MainWidget/AxisNode.fs", this);
 	m_axisMode->makeObject();
 	m_ToolsModelsVt.push_back(m_axisMode);
 }

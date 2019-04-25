@@ -333,5 +333,12 @@
         <file>Resources/images/SelectRegion.png</file>
         <file>Resources/images/enlarge.png</file>
         <file>Resources/images/shrink.png</file>
+        <file>background-grey3.jpg</file>
+        <file>background.fs</file>
+        <file>background.vs</file>
+        <file>AxisNode.vs</file>
+        <file>AxisNode.fs</file>
+        <file>bgGround.fs</file>
+        <file>bgGround.vs</file>
     </qresource>
 </RCC>

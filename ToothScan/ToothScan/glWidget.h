@@ -61,7 +61,7 @@
 #include <orthio.h>
 #include <QDebug>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLTexture>
+//#include <QOpenGLTexture>
 #include "./include/3DScan.h"
 #include "BaseModel.h"
 #include "GroundObject.h"

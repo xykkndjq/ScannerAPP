@@ -13,6 +13,19 @@ extern float c_scan_y = 0.0;
 extern QSemaphore freeSpace(DataSize);
 extern QSemaphore usedSpace(0);
 extern scan::RasterScan *rs = new scan::RasterScan();
+class CCon {
+public:
+	CCon(QSemaphore &freeSpace, QSemaphore &usedSpace):m_freeSpace(freeSpace), m_usedSpace(usedSpace)
+	{
+		freeSpace.acquire();
+	}
+	~CCon() {
+		usedSpace.release();
+	}
+private:
+	QSemaphore &m_freeSpace;
+	QSemaphore &m_usedSpace;
+};
 
 ControlThread::ControlThread(QObject *parent)
 	: QObject(parent)
@@ -165,7 +178,7 @@ void ControlThread::controlNormalScan()
 		{
 			return;
 		}
-		freeSpace.acquire();
+		
 
 		vector<cv::Mat> imgL_set, imgR_set;
 
@@ -196,7 +209,8 @@ void ControlThread::controlNormalScan()
 		{
 			continue;
 		}
-
+		CCon coc(freeSpace, usedSpace);
+		//freeSpace.acquire();
 		vector<cv::Mat> images_l, images_r;
 		vector<cv::Mat> image_rgb;
 		//unsigned char* im_l = 0;
@@ -244,7 +258,7 @@ void ControlThread::controlNormalScan()
 		}
 		time4 = clock();
 		bufferBias++;
-		usedSpace.release();
+		//usedSpace.release();
 		cout << "The ControlThread: " << scan_index << " has finished." << endl;
 
 		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
@@ -291,7 +305,7 @@ void ControlThread::allJawScan()
 		{
 			return;
 		}
-		freeSpace.acquire();
+		
 
 		vector<cv::Mat> imgL_set, imgR_set;
 
@@ -322,7 +336,8 @@ void ControlThread::allJawScan()
 		{
 			continue;
 		}
-
+		CCon coc(freeSpace, usedSpace);
+		//freeSpace.acquire();
 		vector<cv::Mat> images_l, images_r;
 		vector<cv::Mat> image_rgb;
 		//unsigned char* im_l = 0;
@@ -370,7 +385,7 @@ void ControlThread::allJawScan()
 		}
 		time4 = clock();
 		bufferBias++;
-		usedSpace.release();
+		//usedSpace.release();
 		cout << "The ControlThread: " << scan_index << " has finished." << endl;
 
 		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
@@ -583,7 +598,7 @@ void ControlThread::controlGlobalCaliScan()
 void ControlThread::compensationControlScan()
 {
 	bool l_bcali = false;
-	freeSpace.acquire();
+	
 
 	//l_usbStream.InitCyUSBParameter();//初始化
 	l_usbStream.OpenDLPFunction();//打开光机
@@ -602,7 +617,8 @@ void ControlThread::compensationControlScan()
 	{
 		return;
 	}
-
+	CCon coc(freeSpace, usedSpace);
+	//freeSpace.acquire();
 	cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 
 	vector<cv::Mat> imgL_set, imgR_set;
@@ -681,7 +697,7 @@ void ControlThread::compensationControlScan()
 	l_usbStream.ClosedDLPFunction();//电机失能
 				 //WriteByte(CloseDLP, 5);
 	cout << "关闭DLP。。 " << endl;
-	usedSpace.release();
+	//usedSpace.release();
 }
 
 void ControlThread::normalScan()
@@ -715,7 +731,7 @@ void ControlThread::normalScan()
 		{
 			return;
 		}
-		freeSpace.acquire();
+		
 
 		vector<cv::Mat> imgL_set, imgR_set;
 		//2、电机旋转
@@ -727,7 +743,8 @@ void ControlThread::normalScan()
 		{
 			continue;
 		}
-
+		CCon coc(freeSpace, usedSpace);
+		//freeSpace.acquire();
 		//cout << "开始存图片。。 " << endl;
 
 		vector<cv::Mat> images_l, images_r;
@@ -777,7 +794,7 @@ void ControlThread::normalScan()
 		}
 		time4 = clock();
 		bufferBias++;
-		usedSpace.release();
+		//usedSpace.release();
 		cout << "The ControlThread: " << scan_index << " has finished." << endl;
 
 		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
