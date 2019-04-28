@@ -392,7 +392,7 @@ void ScanMainGUI::setConnections()
 	connect(ui.compensationBtn, SIGNAL(clicked()), this, SLOT(compensationBtnClick()));
 	connect(ui.discardBtn, SIGNAL(clicked()), this, SLOT(discardBtnClick()));
 	connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelNextBtnClick()));
-	connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelBackBtnClick()));
+	connect(ui.compensationScanPanelBackBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelBackBtnClick()));
 
 	connect(ui.cutHeightSlider, &QSlider::valueChanged, ui.cutHeightSpinBox, &QSpinBox::setValue);
 	void (QSpinBox:: *spinBoxSignal2)(int) = &QSpinBox::valueChanged;
@@ -1609,6 +1609,7 @@ void ScanMainGUI::ShowLastScanTask()
 {
 	pCScanTask pScanTask = CTaskManager::getInstance()->getLastScanTask();
 	if (!pScanTask) {
+		showScanJawGroup();
 		return;
 	}
 	if (pScanTask->Get_TaskType() != eScan)
@@ -1701,6 +1702,7 @@ void ScanMainGUI::compensationScanPanelBackBtnClick() {
 // 	hideAllPanel();
 // 	//ui.ScanJawGroup->setVisible(true);
 // 	showScanJawGroup(true);
+	hideAllPanel();
 	ShowLastScanTask();
 }
 void ScanMainGUI::cutModelBtnClick() {
