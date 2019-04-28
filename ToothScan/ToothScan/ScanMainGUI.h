@@ -183,6 +183,7 @@ private:
 
 	void scanJawScanBtnClick();
 	void ScanJawBackStepBtnClick();
+	void ShowLastScanTask();
 	
 	void compensationBtnClick();
 	void discardBtnClick();		//³·Ïú²¹É¨
@@ -200,6 +201,10 @@ private:
 	void stitchingLowerJawBtnClick();
 	void stitchingFNextBtnClick();
 	void OralSubstitutePanelNextBtnClick();
+	void oralSubstitutePanelBackBtnClick();
+	void teethStitchingPanelBackBtnClick();
+	void cutJawFinishPanelBackBtnClick();
+	void stitchingFinishPanelBackBtnClick();	
 	void teethStitchingPanelNextBtnClick();
 	void saveModelFile(pCScanTask pTask);
 	bool isModelFileExit(pCScanTask &pTask);

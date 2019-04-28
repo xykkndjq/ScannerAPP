@@ -152,6 +152,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SplitModelBtn.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="ImageBtn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -250,6 +253,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="minidmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBtn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -392,7 +392,7 @@ void ScanMainGUI::setConnections()
 	connect(ui.compensationBtn, SIGNAL(clicked()), this, SLOT(compensationBtnClick()));
 	connect(ui.discardBtn, SIGNAL(clicked()), this, SLOT(discardBtnClick()));
 	connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelNextBtnClick()));
-	//connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelBackBtnClick()));
+	connect(ui.compensationScanPanelNextBtn, SIGNAL(clicked()), this, SLOT(compensationScanPanelBackBtnClick()));
 
 	connect(ui.cutHeightSlider, &QSlider::valueChanged, ui.cutHeightSpinBox, &QSpinBox::setValue);
 	void (QSpinBox:: *spinBoxSignal2)(int) = &QSpinBox::valueChanged;
@@ -431,16 +431,18 @@ void ScanMainGUI::setConnections()
 	connect(this, SIGNAL(taskSititchingSignal()), ControlComputeThread, SLOT(Stitching()));
 	connect(ui.stitchingPanelBtn, SIGNAL(clicked()), this, SLOT(stitchingPanelBtnClick()));
 
-	//	connect(ui.stitchingBackBtn, SIGNAL(clicked()), this, SLOT(stitchingBackBtnClick()));
+	connect(ui.stitchingBackBtn, SIGNAL(clicked()), this, SLOT(stitchingBackBtnClick()));
 	connect(ui.stitchingUpperJawBtn, SIGNAL(clicked()), this, SLOT(stitchingUpperJawBtnClick()));
 	connect(ui.stitchingLowerJawBtn, SIGNAL(clicked()), this, SLOT(stitchingLowerJawBtnClick()));
 	connect(ui.stitchingFNextBtn, SIGNAL(clicked()), this, SLOT(stitchingFNextBtnClick()));
 	connect(ui.OralSubstitutePanelNextBtn, SIGNAL(clicked()), this, SLOT(OralSubstitutePanelNextBtnClick()));
 	connect(ui.teethStitchingPanelNextBtn, SIGNAL(clicked()), this, SLOT(teethStitchingPanelNextBtnClick()));
-
-
-
-
+	connect(ui.oralSubstitutePanelBackBtn, SIGNAL(clicked()), this, SLOT(oralSubstitutePanelBackBtnClick()));
+	connect(ui.teethStitchingPanelBackBtn, SIGNAL(clicked()), this, SLOT(teethStitchingPanelBackBtnClick()));
+	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(cutJawFinishPanelBackBtnClick()));
+	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(stitchingFinishPanelBackBtnClick()));
+	
+	
 }
 
 void ScanMainGUI::ToothCalibrateSlot()
@@ -1577,30 +1579,57 @@ void ScanMainGUI::scanJawScanBtnClick()
 }
 void ScanMainGUI::ScanJawBackStepBtnClick()
 {
-	pCScanTask pCurrentTask = CTaskManager::getInstance()->getLastTask();
-	if (pCurrentTask) {
-		switch (pCurrentTask->Get_TaskType())
-		{
-		case eScan: {
-			break;
-		}
-		case eUpperStitching: {
-			break;
-		}
-		case eLowerStitching: {
-			break;
-		}
-		case eUpperTeethStit: {
-			break;
-		}
-		case eLowerTeethStit: {
-			break;
-		}
-		default:
-			break;
-		}
+	ShowLastScanTask();
+// 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getLastTask();
+// 	if (pCurrentTask) {
+// 		switch (pCurrentTask->Get_TaskType())
+// 		{
+// 		case eScan: {
+// 			break;
+// 		}
+// 		case eUpperStitching: {
+// 			break;
+// 		}
+// 		case eLowerStitching: {
+// 			break;
+// 		}
+// 		case eUpperTeethStit: {
+// 			break;
+// 		}
+// 		case eLowerTeethStit: {
+// 			break;
+// 		}
+// 		default:
+// 			break;
+// 		}
+// 	}
+}
+
+void ScanMainGUI::ShowLastScanTask()
+{
+	pCScanTask pScanTask = CTaskManager::getInstance()->getLastScanTask();
+	if (!pScanTask) {
+		return;
+	}
+	if (pScanTask->Get_TaskType() != eScan)
+		return;
+	hideAllPanel();
+	switch (pScanTask->Get_ScanType()) 
+	{
+	case etoothCrown:
+	case einlayScan:
+		showOralSubstitutePanel();
+		break;
+	case eUpperJawScan:
+	case eLowerJawScan:
+	case eAllJawScan:
+		showScanJawGroup();
+		break;
+	default:
+		break;
 	}
 }
+
 void ScanMainGUI::compensationBtnClick()
 {
 	ui.discardBtn->setEnabled(true);
@@ -1669,9 +1698,10 @@ void ScanMainGUI::compensationScanPanelBackBtnClick() {
 	// 	if (pCurrentTask) {
 	// 		emit gpaTaskMeshSignal();
 	// 	}
-	hideAllPanel();
-	//ui.ScanJawGroup->setVisible(true);
-	showScanJawGroup(true);
+// 	hideAllPanel();
+// 	//ui.ScanJawGroup->setVisible(true);
+// 	showScanJawGroup(true);
+	ShowLastScanTask();
 }
 void ScanMainGUI::cutModelBtnClick() {
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
@@ -1703,7 +1733,24 @@ void ScanMainGUI::saveCutHeightCutBtnClick() {
 
 }
 void ScanMainGUI::cutPanelBackBtnClick() {
-	showcompensationScanPanel(true);
+	//showcompensationScanPanel(true);
+	ShowLastScanTask();
+}
+void ScanMainGUI::oralSubstitutePanelBackBtnClick() {
+	//showcompensationScanPanel(true);
+	ShowLastScanTask();
+}
+void ScanMainGUI::teethStitchingPanelBackBtnClick() {
+	//showcompensationScanPanel(true);
+	ShowLastScanTask();
+}
+void ScanMainGUI::cutJawFinishPanelBackBtnClick() {
+	//showcompensationScanPanel(true);
+	ShowLastScanTask();
+}
+void ScanMainGUI::stitchingFinishPanelBackBtnClick() {
+	//showcompensationScanPanel(true);
+	ShowLastScanTask();
 }
 void ScanMainGUI::cutPaneNextStepBtnClick() {
 #ifdef UITEST
@@ -1750,7 +1797,7 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 	}
 }
 void ScanMainGUI::stitchingBackBtnClick() {
-
+	ShowLastScanTask();
 }
 void ScanMainGUI::stitchingPanelBtnClick() {
 #ifdef UITEST

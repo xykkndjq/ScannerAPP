@@ -247,6 +247,7 @@
     <ClCompile Include="glwidget.cpp" />
     <ClCompile Include="GroundObject.cpp" />
     <ClCompile Include="HLogHelper.cpp" />
+    <ClCompile Include="ImageBtn.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwidget.cpp" />
     <ClCompile Include="ControlThread.cpp" />
@@ -323,6 +324,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets"</Command>
     </CustomBuild>
+    <ClInclude Include="ImageBtn.h" />
     <ClInclude Include="minidmp.h" />
     <CustomBuild Include="SplitModelBtn.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

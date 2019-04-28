@@ -76,7 +76,7 @@ public:
     QGroupBox *OralSubstitutePanel;
     QLabel *CutJawFinishPanelTips_4;
     QPushButton *OralSubstitutePanelNextBtn;
-    QPushButton *CutJawFinishPanelBackBtn_4;
+    QPushButton *oralSubstitutePanelBackBtn;
     QLabel *OralSubstitutePanel_2;
     QLabel *label;
     QLabel *teethNoLabel5;
@@ -97,7 +97,7 @@ public:
     QGroupBox *TeethStitchingPanel;
     QLabel *CutJawFinishPanelTips_8;
     QPushButton *teethStitchingPanelNextBtn;
-    QPushButton *CutJawFinishPanelBackBtn_8;
+    QPushButton *teethStitchingPanelBackBtn;
     QLabel *StitchingPanelTips_4;
 
     void setupUi(QWidget *ScanMainGUI)
@@ -490,17 +490,6 @@ public:
         saveCutHeightCutBtn->setGeometry(QRect(30, 450, 221, 40));
         saveCutHeightCutBtn->setFont(font);
         saveCutHeightCutBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
-        label_5->raise();
-        cutPaneNextStepBtn->raise();
-        cutPanelBackBtn->raise();
-        CutJawPanelTipsLabel->raise();
-        label_6->raise();
-        cutHeightSlider->raise();
-        cutHeightSpinBox->raise();
-        cutModelBtn->raise();
-        unDoCutBtn->raise();
-        saveCutHeightCutBtn->raise();
-        compensationScanPanel->raise();
         CutJawFinishPanel = new QGroupBox(ScanMainGUI);
         CutJawFinishPanel->setObjectName(QStringLiteral("CutJawFinishPanel"));
         CutJawFinishPanel->setEnabled(true);
@@ -833,13 +822,6 @@ public:
         stitchingLowerJawBtn->setFont(font);
         stitchingLowerJawBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         stitchingLowerJawBtn->setCheckable(true);
-        CutJawFinishPanelTips_5->raise();
-        stitchingFNextBtn->raise();
-        CutJawFinishPanelBackBtn_5->raise();
-        StitchingPanelTips_3->raise();
-        stitchingUpperJawBtn->raise();
-        stitchingLowerJawBtn->raise();
-        compensationScanPanel->raise();
         OralSubstitutePanel = new QGroupBox(ScanMainGUI);
         OralSubstitutePanel->setObjectName(QStringLiteral("OralSubstitutePanel"));
         OralSubstitutePanel->setEnabled(true);
@@ -940,9 +922,9 @@ public:
         OralSubstitutePanelNextBtn->setFont(font);
         OralSubstitutePanelNextBtn->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
 ""));
-        CutJawFinishPanelBackBtn_4 = new QPushButton(OralSubstitutePanel);
-        CutJawFinishPanelBackBtn_4->setObjectName(QStringLiteral("CutJawFinishPanelBackBtn_4"));
-        CutJawFinishPanelBackBtn_4->setGeometry(QRect(30, 470, 221, 40));
+        oralSubstitutePanelBackBtn = new QPushButton(OralSubstitutePanel);
+        oralSubstitutePanelBackBtn->setObjectName(QStringLiteral("oralSubstitutePanelBackBtn"));
+        oralSubstitutePanelBackBtn->setGeometry(QRect(30, 470, 221, 40));
         QPalette palette21;
         palette21.setBrush(QPalette::Active, QPalette::WindowText, brush10);
         palette21.setBrush(QPalette::Active, QPalette::Button, brush6);
@@ -962,9 +944,9 @@ public:
         palette21.setBrush(QPalette::Disabled, QPalette::ButtonText, brush10);
         palette21.setBrush(QPalette::Disabled, QPalette::Base, brush6);
         palette21.setBrush(QPalette::Disabled, QPalette::Window, brush6);
-        CutJawFinishPanelBackBtn_4->setPalette(palette21);
-        CutJawFinishPanelBackBtn_4->setFont(font);
-        CutJawFinishPanelBackBtn_4->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
+        oralSubstitutePanelBackBtn->setPalette(palette21);
+        oralSubstitutePanelBackBtn->setFont(font);
+        oralSubstitutePanelBackBtn->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
 ""));
         OralSubstitutePanel_2 = new QLabel(OralSubstitutePanel);
         OralSubstitutePanel_2->setObjectName(QStringLiteral("OralSubstitutePanel_2"));
@@ -1111,11 +1093,11 @@ public:
         teethStitchingPanelNextBtn->setGeometry(QRect(30, 450, 221, 40));
         teethStitchingPanelNextBtn->setFont(font);
         teethStitchingPanelNextBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
-        CutJawFinishPanelBackBtn_8 = new QPushButton(TeethStitchingPanel);
-        CutJawFinishPanelBackBtn_8->setObjectName(QStringLiteral("CutJawFinishPanelBackBtn_8"));
-        CutJawFinishPanelBackBtn_8->setGeometry(QRect(30, 320, 221, 40));
-        CutJawFinishPanelBackBtn_8->setFont(font);
-        CutJawFinishPanelBackBtn_8->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        teethStitchingPanelBackBtn = new QPushButton(TeethStitchingPanel);
+        teethStitchingPanelBackBtn->setObjectName(QStringLiteral("teethStitchingPanelBackBtn"));
+        teethStitchingPanelBackBtn->setGeometry(QRect(30, 320, 221, 40));
+        teethStitchingPanelBackBtn->setFont(font);
+        teethStitchingPanelBackBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         StitchingPanelTips_4 = new QLabel(TeethStitchingPanel);
         StitchingPanelTips_4->setObjectName(QStringLiteral("StitchingPanelTips_4"));
         StitchingPanelTips_4->setGeometry(QRect(10, 10, 251, 61));
@@ -1264,9 +1246,9 @@ public:
 #endif // QT_NO_TOOLTIP
         OralSubstitutePanelNextBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\344\270\200\346\255\245", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_4->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
+        oralSubstitutePanelBackBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_4->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
+        oralSubstitutePanelBackBtn->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
         OralSubstitutePanel_2->setText(QApplication::translate("ScanMainGUI", "\350\257\267\346\217\222\345\205\245\344\273\243\345\236\213\347\233\230", Q_NULLPTR));
         label->setText(QApplication::translate("ScanMainGUI", "5", Q_NULLPTR));
         teethNoLabel5->setText(QApplication::translate("ScanMainGUI", "17", Q_NULLPTR));
@@ -1291,9 +1273,9 @@ public:
 #endif // QT_NO_TOOLTIP
         teethStitchingPanelNextBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\344\270\200\346\255\245", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_8->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
+        teethStitchingPanelBackBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_8->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
+        teethStitchingPanelBackBtn->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
         StitchingPanelTips_4->setText(QApplication::translate("ScanMainGUI", "\346\211\213\345\212\250\346\213\274\346\216\245", Q_NULLPTR));
     } // retranslateUi
 
