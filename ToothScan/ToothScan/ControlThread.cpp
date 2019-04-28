@@ -225,13 +225,13 @@ void ControlThread::controlNormalScan()
 			ostringstream filename_L;
 			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
-			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
 			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
-			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 			if (image_index == 0)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
@@ -352,13 +352,13 @@ void ControlThread::allJawScan()
 			ostringstream filename_L;
 			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
-			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
 			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
-			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 			if (image_index == 0)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
@@ -479,7 +479,7 @@ void ControlThread::controlCalibrationScan()
 			
 			ostringstream filename_L;
 			filename_L << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "L" << ".png";
-			cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
+			//cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
 		}
 		for (size_t j = 0; j < 31; j++)
 		{
@@ -492,7 +492,7 @@ void ControlThread::controlCalibrationScan()
 			}
 			ostringstream filename_R;
 			filename_R << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "R" << ".png";
-			cv::imwrite(filename_R.str().c_str(), imgR_set[j]);
+			//cv::imwrite(filename_R.str().c_str(), imgR_set[j]);
 		}
 		image_groups.push_back(group);
 		//4¡¢±£´æÍ¼Æ¬
@@ -574,13 +574,13 @@ void ControlThread::controlGlobalCaliScan()
 		image_groups_left.push_back(imgL_set[0]);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
-		cv::imwrite(filename_L.str().c_str(), imgL_set[0]);
+		//cv::imwrite(filename_L.str().c_str(), imgL_set[0]);
 		
 		cv::flip(imgR_set[0], imgR_set[0], -1);
 		image_groups_right.push_back(imgR_set[0]);
 		ostringstream filename_R;
 		filename_R << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "R" << ".png";
-		cv::imwrite(filename_R.str().c_str(), imgR_set[0]);
+		//cv::imwrite(filename_R.str().c_str(), imgR_set[0]);
 
 		//4¡¢±£´æÍ¼Æ¬
 		cout << "±ê¶¨Í¼Æ¬´æ´¢Íê±Ï¡£¡£ " << endl;
@@ -660,12 +660,12 @@ void ControlThread::compensationControlScan()
 		cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "L" << ".png";
-		cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+		//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 		cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 		ostringstream filename_R;
 		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "R" << ".png";
-		cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+		//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 
 		if (image_index == 0)
 		{
@@ -761,13 +761,13 @@ void ControlThread::normalScan()
 			ostringstream filename_L;
 			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
-			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
 			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
-			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 			if (image_index == 0)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));

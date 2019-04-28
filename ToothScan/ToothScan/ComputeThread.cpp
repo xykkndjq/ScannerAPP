@@ -1760,6 +1760,86 @@ void ComputeThread::allJawComputeScan()
 	}
 }
 
+//void ComputeThread::normalComputeScan()
+//{
+//	pCScanTask pScanTask;
+//	pScanTask = CTaskManager::getInstance()->getCurrentTask();
+//	if (!pScanTask)
+//		return;
+//	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+//	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+//	int imageSize = IMG_ROW * IMG_COL;
+//	vector<double> dis_;
+//	unsigned char* im_l = 0;
+//	unsigned char* im_r = 0;
+//	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+//	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+//
+//	vector<cv::Mat> image_rgb;
+//	cv::Mat imageMat;
+//	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
+//	image_rgb.resize(3, imageMat);
+//
+//	int bufferBias = 0;
+//	//scan::Unwarp *unwarp = new scan::Unwarp();
+//	scan::Registration reg(1.0, 15.0, 50);
+//	reg.SetSearchDepth(40);
+//	//reg.SetRegistError(0.3);
+//	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
+//	{
+//		usedSpace.acquire();
+//
+//		int image_bias = 0;
+//		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//		image_bias++;
+//		for (int j = 0; j < 15; j++)
+//		{
+//			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//			image_bias++;
+//
+//			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//			image_bias++;
+//		}
+//		if (image_bias > 30)
+//		{
+//			for (int i = 0; i < 3; i++)
+//			{
+//				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//				image_bias++;
+//			}
+//		}
+//		cout << "scan_index:" << scan_index << endl;
+//		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
+//		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+//		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
+//		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index, reg,pScanTask);
+//		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
+//		emit showTaskModel();
+//		emit cameraShowSignal();
+//		bufferBias++;
+//		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
+//		HLogHelper::getInstance()->HLogTime("The ComputeThread: %d has finished", scan_index);
+//		freeSpace.release();
+//		if (scan_index >= 2) {
+//			cout << "aaadd" << endl;
+//		}
+//		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 2))
+//		{
+//			//for (int i = 0; i < 9; i++)
+//			//{
+//			//	string modelNameStr = std::to_string(i) + ".ply";
+//			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
+//			//	cout << "pathname: " << modelNameStr << endl;
+//			//	finish_model_io.writeModel(modelNameStr, "stl");
+//			//	//writefile(upper_mModel[i], name);
+//			//}
+//
+//			emit computeFinish();
+//		}
+//	}
+//}
+
+
 void ComputeThread::normalComputeScan()
 {
 	pCScanTask pScanTask;
@@ -1789,30 +1869,70 @@ void ComputeThread::normalComputeScan()
 	{
 		usedSpace.acquire();
 
-		int image_bias = 0;
-		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
-		for (int j = 0; j < 15; j++)
-		{
-			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
+		//int image_bias = 0;
+		//memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		//image_bias++;
+		//for (int j = 0; j < 15; j++)
+		//{
+		//	memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		//	image_bias++;
 
-			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
-		}
-		if (image_bias > 30)
+		//	memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		//	image_bias++;
+		//}
+		//if (image_bias > 30)
+		//{
+		//	for (int i = 0; i < 3; i++)
+		//	{
+		//		memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		//		image_bias++;
+		//	}
+		//}
+
+		vector<cv::Mat> images_l, images_r;
+		for (int image_index = 0; image_index < 19; image_index++)
 		{
-			for (int i = 0; i < 3; i++)
+			stringstream ss1;
+			string index;
+			ss1 << image_index;
+			ss1 >> index;
+			QString strfilename;
+			strfilename.sprintf("./dentalimage/dentalimage2/ScanPic/%d_%d_L.png", scan_index, image_index);
+			//Mat imgl = cv::imread("./ScanPic/0_" + j + "_L.png", 0);
+			Mat imgl = cv::imread(strfilename.toStdString().c_str(), 0);
+			strfilename.sprintf("./dentalimage/dentalimage2/ScanPic/%d_%d_R.png", scan_index, image_index);
+			Mat imgr = cv::imread(strfilename.toStdString().c_str(), 0);
+
+			if (image_index > 0 && image_index < 16)
 			{
-				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-				image_bias++;
+				memcpy(im_l + (image_index - 1) * 1280 * 1024, (unsigned char*)imgl.data, 1280 * 1024 * sizeof(unsigned char));
+				memcpy(im_r + (image_index - 1) * 1280 * 1024, (unsigned char*)imgr.data, 1280 * 1024 * sizeof(unsigned char));
+				images_l.push_back(imgl);
+				images_r.push_back(imgr);
+			}
+
+			if (image_index >= 16)
+			{
+				image_rgb.push_back(imgr);
 			}
 		}
+
+
 		cout << "scan_index:" << scan_index << endl;
 		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
+
+		//cv::Mat image_input(IMG_ROW, IMG_COL, CV_8UC1);
+		//memcpy(image_input.data, im_l, IMG_ROW*IMG_COL * sizeof(unsigned char));
+		//cv::imshow("0", image_input);
+		//cv::waitKey(0);
+		//cv::imwrite("./ScanData/" + QString(scan_index).toStdString() + ".png", image_input);
 		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		//cv::imshow("", matched_pixel_image);
+		//cv::waitKey();
+		cout << "pointcloud calculate done" << endl;
+
 		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
-		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index, reg,pScanTask);
+		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index, reg, pScanTask);
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
 		emit showTaskModel();
 		emit cameraShowSignal();
