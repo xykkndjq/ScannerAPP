@@ -4,6 +4,7 @@ namespace Communication
 {
 	CCyUSBStream::CCyUSBStream()
 	{
+		m_USBDevice = nullptr;
 	}
 
 	CCyUSBStream::~CCyUSBStream()
@@ -33,6 +34,7 @@ namespace Communication
 		//delete[] m_contexts;
 	}
 
+
 	bool CCyUSBStream::TakeInitFlag(byte *inBuf, long length, int &statPosition)
 	{
 		for (int i = 1; i < length; i += 2)
@@ -42,6 +44,7 @@ namespace Communication
 				m_startSave = true;
 				int bias = i % 4;
 				statPosition = i - bias;
+
 				return true;
 			}
 		}
@@ -557,19 +560,31 @@ namespace Communication
 		delete[] m_totalScanImageBuffers;
 		delete[] m_USBDevice;
 	}
+	 
+	int CCyUSBStream::OpenUSB() {
+		if(m_USBDevice)
+			delete m_USBDevice;
 
-	int CCyUSBStream::InitCyUSBParameter()
-	{
 		m_USBDevice = new CCyUSBDevice(NULL); //USB设备  
-		
+
 		if (!m_USBDevice->Open(0))
 		{
 			cout << " The connection of USB is failed!" << endl;
 		}//打开0号设备
 
-		
+
 		m_EndPtIn = m_USBDevice->EndPointOf(0X81); //使用端点1，in传输
 		m_EndPtOut = m_USBDevice->EndPointOf(0X01); //使用端点2，out传输
+		m_endptInLength = m_EndPtIn->MaxPktSize* SCALE;
+
+		m_EndPtIn->SetXferSize(m_endptInLength);
+		return 0;
+	}
+
+	int CCyUSBStream::InitCyUSBParameter()
+	{
+		OpenUSB();
+
 		/*Sleep(1000);
 		if (!m_USBDevice->ReConnect())
 		{
@@ -581,9 +596,7 @@ namespace Communication
 		m_buffers = new PUCHAR[QueueSize];
 		m_isoPktInfos = new CCyIsoPktInfo*[QueueSize];
 		m_contexts = new PUCHAR[QueueSize];
-		m_endptInLength = m_EndPtIn->MaxPktSize* SCALE;
 
-		m_EndPtIn->SetXferSize(m_endptInLength);
 
 		for (int i = 0; i < QueueSize; i++)
 		{
@@ -604,8 +617,10 @@ namespace Communication
 		ZeroMemory(m_totalRealTimeBuffers, sizeof(m_totalRealTimeBuffers));
 		ZeroMemory(m_totalCalibImageBuffers, sizeof(m_totalCalibImageBuffers));
 		ZeroMemory(m_totalScanImageBuffers, sizeof(m_totalScanImageBuffers));
+
 		return 0;
 	}
+
 
 	bool CCyUSBStream::OpenDLPFunction()
 	{
@@ -728,6 +743,7 @@ namespace Communication
 			int l_istartPosition = 0;
 			if (m_startSave == false)
 			{
+
 				bool validDataFlag = TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
 				//l_initSize = l_istartPosition;
 			}
@@ -907,6 +923,7 @@ namespace Communication
 			int l_istartPosition = 0;
 			if (m_startSave == false)
 			{
+
 				bool validDataFlag = TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
 				//l_initSize = l_istartPosition;
 			}
@@ -938,7 +955,6 @@ namespace Communication
 				break;
 			}
 		}
-		
 		{
 			//保存接收到的数据
 			char *totalBuffersChar = new char[(m_validTotalBuffersSize + 1)*m_endptInLength];

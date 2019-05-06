@@ -52,6 +52,8 @@ namespace Communication
 			 CCyUSBDevice *m_USBDevice;
 
 			 int InitCyUSBParameter();//初始化USB
+			 int OpenUSB();
+			 int InitCyParameter();//初始化USB
 
 			 bool OpenDLPFunction();//打开光机
 			 bool ClosedDLPFunction();//关闭光机
@@ -61,13 +63,13 @@ namespace Communication
 			 bool SetMidDLPLight();//设置光机中等
 			 bool SetMinDLPLight();//设置光机最弱
 			 bool SetScanDLPLight();//设置光机扫描亮度
-			//实时显示
+									//实时显示
 			 bool RealModeFuction();//实时获取数据
 			 bool initRealTimeParameter();//实时初始化
 			 bool realTimeImageStream(cv::Mat &v_img_L, cv::Mat &v_img_R);//获取左右相机各一张图像
 			 void clearRealTimeStream();//清理实时数据流
 
-			 //trigger模式取一个角度数据
+										//trigger模式取一个角度数据
 			 bool TriggerModeFunction();//改为trigger模式获取数据
 			 bool SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
 			//控制电机旋转
@@ -126,7 +128,7 @@ namespace Communication
 			void TakeValidScanInfo(long length);
 			bool TakeInitFlag(byte *inBuf, long length, int &statPosition);
 			void TakeValidImage(Mat &PerImage, vector<cv::Mat> &img_set);
-			
+
 			void TakeValidImage(Mat &PerImage, Mat &image_raw);
 	};
 }

@@ -37,7 +37,7 @@ void CBackGroundObject::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IPar
 	m_program->enableAttributeArray(PROGRAM_TEXCOORD_ATTRIBUTE);
 	m_program->setAttributeBuffer(PROGRAM_VERTEX_ATTRIBUTE, GL_FLOAT, 0, 3, 5 * sizeof(GLfloat));
 	m_program->setAttributeBuffer(PROGRAM_TEXCOORD_ATTRIBUTE, GL_FLOAT, 3 * sizeof(GLfloat), 2, 5 * sizeof(GLfloat));
-	
+
 	textures->bind();
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 

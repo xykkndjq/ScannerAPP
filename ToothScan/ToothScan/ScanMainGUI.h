@@ -122,6 +122,7 @@ private:
 	QToolButton *backWatchButton;
 	QToolButton *enlargeButton;
 	QToolButton *shrinkButton;
+	CTeethImgBtn * m_closeBtn;
 	//底部模型操作栏
 	bool bSelected = false;
 	QToolButton *selectRegionButton;
@@ -135,7 +136,7 @@ private:
 	QSlider *sliderCamera;
 	bool m_bsplitModelFlag;	//分模
 	private slots:
-
+	void closeBtnClicked();
 	//标定
 	void ToothCalibrateSlot();
 	void GlobalCalibrateSlot();
@@ -146,7 +147,7 @@ private:
 	void updateModelsVtSlot();
 	void updateCamera();
 	void updateRegMeshSlot();
-	
+
 	//完成后，显示或隐藏模型按钮
 	void ShowHideUpperModel();//显示或者隐藏上颌
 	void ShowHideLowerModel();//显示或者隐藏下颌
@@ -230,7 +231,7 @@ private:
 	void meshFinishSlot();
 	void StitchFinishSlot();
 	void taskTeethSititFinishSlot();
-	
+	void recallWindow();
 };
 
 #endif

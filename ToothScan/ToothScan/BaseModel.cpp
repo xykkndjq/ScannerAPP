@@ -55,6 +55,7 @@ void BaseModel::OnPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInter
 void BaseModel::makeObject(QVector<GLfloat> v_vertData, int nFaceNum)
 {
 	m_vbo->destroy();
+	m_vbo->release();
 
 	if(m_vbo->create()){
 

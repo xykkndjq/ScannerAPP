@@ -31,34 +31,34 @@ public:
 
 	void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 	{
-// 		if (element == CE_TabBarTab) {
-// 			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
-// 				if (widget->parent()->objectName() == "selftabControl") {
-// 					QRect allRect = tab->rect;
-// 					if (tab->state & QStyle::State_Selected) {
-// 						painter->save();
-// 						painter->setPen(QColor(255, 255, 255, 0));
-// 						painter->setBrush(QBrush(QColor(255, 255, 255)));
-// 						painter->drawRect(allRect);
-// 						painter->setPen(0x89cfff);
-// 						painter->setBrush(QBrush(0x89cfff));
-// 						painter->drawRect(allRect.adjusted(0, allRect.height() - 5, 0, 0));
-// 						painter->restore();
-// 					}
-// 					QTextOption option;
-// 					option.setAlignment(Qt::AlignCenter);
-// 					if (tab->state & QStyle::State_Selected) {
-// 						painter->setPen(QColor(128, 128, 128));
-// 					}
-// 					else {
-// 						painter->setPen(QColor(128, 128, 128));
-// 					}
-// 
-// 					painter->drawText(allRect, tab->text, option);
-// 					return;
-// 				}
-// 			}
-// 		}
+		if (element == CE_TabBarTab) {
+			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+				if (widget->parent()->objectName() == "selftabControl") {
+					QRect allRect = tab->rect;
+					if (tab->state & QStyle::State_Selected) {
+						painter->save();
+						painter->setPen(QColor(255, 255, 255, 0));
+						painter->setBrush(QBrush(QColor(255, 255, 255)));
+						painter->drawRect(allRect);
+						painter->setPen(0x89cfff);
+						painter->setBrush(QBrush(0x89cfff));
+						painter->drawRect(allRect.adjusted(0, allRect.height() - 5, 0, 0));
+						painter->restore();
+					}
+					QTextOption option;
+					option.setAlignment(Qt::AlignCenter);
+					if (tab->state & QStyle::State_Selected) {
+						painter->setPen(QColor(128, 128, 128));
+					}
+					else {
+						painter->setPen(QColor(128, 128, 128));
+					}
+
+					painter->drawText(allRect, tab->text, option);
+					return;
+				}
+			}
+		}
 		if (element == CE_TabBarTabLabel) {
 			if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option)) {
 				if (widget->parent()->objectName() == "selftabControl") {
@@ -125,7 +125,7 @@ public:
 	}
 };
 void styleControl(QObject *obj) {
-	return;
+	//return;
 	QObjectList list = obj->children();
 	qDebug() << list.length() << endl;
 	QWidget *b;
@@ -184,6 +184,7 @@ void TabMainGUI::setConnections()
 
 	//±£´æ
 	connect(saveScanButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
+	connect(m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	connect(this, SIGNAL(scanSignal()), this, SLOT(ScanDataPackagePress()));//É¨Ãè°´Å¥Á¬½Ó
 	//Î´·ÖÄ£
 	connect(upperJawButton, SIGNAL(clicked()), this, SLOT(UpperJawPress()));
@@ -236,6 +237,9 @@ void TabMainGUI::initVariable()
 	saveScanButton = new QPushButton(QStringLiteral("±£´æ²¢É¨Ãè"), this);
 	saveScanButton->setFixedSize(180, 30);
 
+	m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png","",this);
+	m_closeBtn->setFixedSize(30, 30);
+
 	//leftbutton
 	dateLineEdit = new QDateTimeEdit(this);
 	QDateTime currentDateTime = QDateTime::currentDateTime();
@@ -278,36 +282,36 @@ void TabMainGUI::initVariable()
 	//splitleft
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
-		QPushButton *toothPushButton = new QPushButton();
-		toothPushButton->setFixedSize(40, 40);
-		toothPushButton->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
-		toothList.append(toothPushButton);
 		int row = i / 8;
 		int col = i % 8;
 		int value = (row + 1) * 10 + col + 1;
 		QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
 		//cout <<"i="<<i<<" num = " <<nNum << endl;
-		path = "QPushButton{background-image: url(./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1,10) + ".png);}";
+		path = "QPushButton{background-image: url(./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png);}";
 		//toothList[i]->setStyleSheet(path);
-		toothList[i]->setObjectName(QString::number(i, 10));
 		path = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";
-		QImage img(path);
-		cout << "img.width()" << img.width() << "img.height()" << img.height() << endl;
-		toothList[i]->setFixedSize(img.width(), img.height());
-		QImage resultImage;
-		resultImage = QImage(img.size(), QImage::Format_ARGB32_Premultiplied);
-		QPainter painter(&resultImage);
-		painter.setCompositionMode(QPainter::CompositionMode_Source);
- 		painter.fillRect(resultImage.rect(), Qt::transparent);
- 		painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-		painter.drawImage(0, 0, img);
-		QTextOption option;
-		option.setAlignment(Qt::AlignCenter);
-		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10), option);
-		painter.end();
-		toothList[i]->setIcon(QPixmap::fromImage(resultImage));
-		toothList[i]->setStyleSheet("border:0px");
-		toothList[i]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
+		CTeethImgBtn *toothPushButton = new CTeethImgBtn(path, QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10));
+// 		toothPushButton->setFixedSize(40, 40);
+// 		toothPushButton->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
+		toothList.append(toothPushButton);
+		toothList[i]->setObjectName(QString::number(i, 10));
+// 		QImage img(path);
+// 		//cout << "img.width()" << img.width() << "img.height()" << img.height() << endl;
+// 		toothList[i]->setFixedSize(img.width(), img.height());
+// 		QImage resultImage;
+// 		resultImage = QImage(img.size(), QImage::Format_ARGB32_Premultiplied);
+// 		QPainter painter(&resultImage);
+// 		painter.setCompositionMode(QPainter::CompositionMode_Source);
+//  		painter.fillRect(resultImage.rect(), Qt::transparent);
+//  		painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+// 		painter.drawImage(0, 0, img);
+// 		QTextOption option;
+// 		option.setAlignment(Qt::AlignCenter);
+// 		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10), option);
+// 		painter.end();
+// 		toothList[i]->setIcon(QPixmap::fromImage(resultImage));
+// 		toothList[i]->setStyleSheet("border:0px");
+// 		toothList[i]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
 
 		toothFlagList.append(false);
 		toothID.append(0);
@@ -357,22 +361,32 @@ void TabMainGUI::initVariable()
 	toothRadioButtonGroup = new QButtonGroup();
 	toothRadioButtonGroup->setExclusive(true);
 
-	//totalCrownButton = new CSplitModelBtn(QColor(255,0,0,100),"./Resources/images/facing.png",QStringLiteral("ÑÀ¹Ú"));
-	totalCrownButton = new QCheckBox(QStringLiteral("ÑÀ¹Ú"));
-	totalCrownButton->setFixedSize(150, 30);
-	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	//totalCrownButton->setCheckable(true);
-	toothCrownButton = new QCheckBox(QStringLiteral("Ç¶Ìå"));
-	toothCrownButton->setFixedSize(150, 30);
-	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	lossToothButton = new QCheckBox(QStringLiteral("È±Ê§ÑÀ"));
-	lossToothButton->setFixedSize(150, 30);
-	lossToothButton->setStyleSheet("border-width: 2px;border-style: Zsolid;border-color: rgb(128, 128, 128);");
-	lossToothButton->setIcon(QIcon(":/MainWidget/Resources/images/loseTooth.png"));
-	inlayButton = new QCheckBox(QStringLiteral("ÖÖÖ²ÑÀ"));
-	inlayButton->setFixedSize(150, 30);
-	inlayButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	inlayButton->setIcon(QIcon(":/MainWidget/Resources/images/inlay.png"));
+	totalCrownButton = new CImageBtn("./Resources/images/facing.png",QColor(255,0,0,100),QStringLiteral("ÑÀ¹Ú"));
+// 	totalCrownButton = new QCheckBox(QStringLiteral("ÑÀ¹Ú"));
+// 	totalCrownButton->setFixedSize(150, 30);
+// 	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	totalCrownButton->setCheckable(true);
+
+	toothCrownButton = new CImageBtn("./Resources/images/facing.png", QColor(126, 90, 34, 100), QStringLiteral("Ç¶Ìå"));
+	toothCrownButton->setCheckable(true);
+
+	lossToothButton = new CImageBtn("./Resources/images/loseTooth.png", QColor(0, 255, 0, 100), QStringLiteral("È±Ê§ÑÀ"));
+	lossToothButton->setCheckable(true);
+
+	inlayButton = new CImageBtn("./Resources/images/inlay.png", QColor(0, 0, 255, 100), QStringLiteral("ÖÖÖ²ÑÀ"));
+	inlayButton->setCheckable(true);
+
+// 	toothCrownButton = new QCheckBox(QStringLiteral("Ç¶Ìå"));
+// 	toothCrownButton->setFixedSize(150, 30);
+// 	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+// 	lossToothButton = new QCheckBox(QStringLiteral("È±Ê§ÑÀ"));
+// 	lossToothButton->setFixedSize(150, 30);
+// 	lossToothButton->setStyleSheet("border-width: 2px;border-style: Zsolid;border-color: rgb(128, 128, 128);");
+// 	lossToothButton->setIcon(QIcon(":/MainWidget/Resources/images/loseTooth.png"));
+// 	inlayButton = new QCheckBox(QStringLiteral("ÖÖÖ²ÑÀ"));
+// 	inlayButton->setFixedSize(150, 30);
+// 	inlayButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+// 	inlayButton->setIcon(QIcon(":/MainWidget/Resources/images/inlay.png"));
 	facingButton = new QCheckBox(QStringLiteral("           ÌùÃæ"));
 	facingButton->setFixedSize(150, 30);
 	facingButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
@@ -454,8 +468,10 @@ void TabMainGUI::constructIHM()
 	topHLayout->addWidget(exportButton);
 	//topHLayout->addWidget(saveButton);
 	topHLayout->addWidget(watchButton);
-	topHLayout->addStretch(8);
+	topHLayout->addStretch(6);
 	topHLayout->addWidget(saveScanButton);
+	topHLayout->addStretch(8);
+	topHLayout->addWidget(m_closeBtn);
 
 	//leftwidget
 	QWidget *leftTopWidget = new QWidget();
@@ -481,8 +497,8 @@ void TabMainGUI::constructIHM()
 	leftHLayout->addStretch();
 	//rightWidget
 	QTabWidget *rightTabWidget = new QTabWidget();
-//	rightTabWidget->setStyleSheet("border:0px");
-//	rightTabWidget->setStyle(new CustomTabStyle);
+	rightTabWidget->setStyleSheet("border:0px");
+	rightTabWidget->setStyle(new CustomTabStyle);
 	//Î´·ÖÄ£
 	QWidget *rightTotalModelVWidget = new QWidget();
 	QVBoxLayout *rightTotalModelVLayout = new QVBoxLayout(rightTotalModelVWidget);
@@ -503,45 +519,46 @@ void TabMainGUI::constructIHM()
 	{
 		toothList[i]->setParent(middleSplitModelWidget);
 	}
-	toothList[0]->setGeometry(200, 50, 40, 40);
-	toothList[1]->setGeometry(180, 91, 40, 40);
-	toothList[2]->setGeometry(160, 132, 40, 40);
-	toothList[3]->setGeometry(140, 173, 40, 40);
-	toothList[4]->setGeometry(120, 214, 40, 40);
-	toothList[5]->setGeometry(100, 255, 40, 40);
-	toothList[6]->setGeometry(80, 296, 40, 40);
-	toothList[7]->setGeometry(60, 337, 40, 40);
-
-	toothList[8]->setGeometry(250, 50, 40, 40);
-	toothList[9]->setGeometry(270, 91, 40, 40);
-	toothList[10]->setGeometry(290, 132, 40, 40);
-	toothList[11]->setGeometry(310, 173, 40, 40);
-	toothList[12]->setGeometry(330, 214, 40, 40);
-	toothList[13]->setGeometry(350, 255, 40, 40);
-	toothList[14]->setGeometry(370, 296, 40, 40);
-	toothList[15]->setGeometry(390, 337, 40, 40);
-
-
 	clearAllButton->setParent(middleSplitModelWidget);
 	clearAllButton->setGeometry(220, 390, 60, 20);
-
-	toothList[23]->setGeometry(390, 437, 40, 40);
-	toothList[22]->setGeometry(370, 478, 40, 40);
-	toothList[21]->setGeometry(350, 519, 40, 40);
-	toothList[20]->setGeometry(330, 560, 40, 40);
-	toothList[19]->setGeometry(310, 601, 40, 40);
-	toothList[18]->setGeometry(290, 642, 40, 40);
-	toothList[17]->setGeometry(270, 683, 40, 40);
-	toothList[16]->setGeometry(250, 724, 40, 40);
-
-	toothList[31]->setGeometry(60, 437, 40, 40);
-	toothList[30]->setGeometry(80, 478, 40, 40);
-	toothList[29]->setGeometry(100, 519, 40, 40);
-	toothList[28]->setGeometry(120, 560, 40, 40);
-	toothList[27]->setGeometry(140, 601, 40, 40);
-	toothList[26]->setGeometry(160, 642, 40, 40);
-	toothList[25]->setGeometry(180, 683, 40, 40);
-	toothList[24]->setGeometry(200, 724, 40, 40);
+// 	toothList[0]->setGeometry(200, 50, 40, 40);
+// 	toothList[1]->setGeometry(180, 91, 40, 40);
+// 	toothList[2]->setGeometry(160, 132, 40, 40);
+// 	toothList[3]->setGeometry(140, 173, 40, 40);
+// 	toothList[4]->setGeometry(120, 214, 40, 40);
+// 	toothList[5]->setGeometry(100, 255, 40, 40);
+// 	toothList[6]->setGeometry(80, 296, 40, 40);
+// 	toothList[7]->setGeometry(60, 337, 40, 40);
+// 
+// 	toothList[8]->setGeometry(250, 50, 40, 40);
+// 	toothList[9]->setGeometry(270, 91, 40, 40);
+// 	toothList[10]->setGeometry(290, 132, 40, 40);
+// 	toothList[11]->setGeometry(310, 173, 40, 40);
+// 	toothList[12]->setGeometry(330, 214, 40, 40);
+// 	toothList[13]->setGeometry(350, 255, 40, 40);
+// 	toothList[14]->setGeometry(370, 296, 40, 40);
+// 	toothList[15]->setGeometry(390, 337, 40, 40);
+// 
+// 
+// 
+// 
+// 	toothList[23]->setGeometry(390, 437, 40, 40);
+// 	toothList[22]->setGeometry(370, 478, 40, 40);
+// 	toothList[21]->setGeometry(350, 519, 40, 40);
+// 	toothList[20]->setGeometry(330, 560, 40, 40);
+// 	toothList[19]->setGeometry(310, 601, 40, 40);
+// 	toothList[18]->setGeometry(290, 642, 40, 40);
+// 	toothList[17]->setGeometry(270, 683, 40, 40);
+// 	toothList[16]->setGeometry(250, 724, 40, 40);
+// 
+// 	toothList[31]->setGeometry(60, 437, 40, 40);
+// 	toothList[30]->setGeometry(80, 478, 40, 40);
+// 	toothList[29]->setGeometry(100, 519, 40, 40);
+// 	toothList[28]->setGeometry(120, 560, 40, 40);
+// 	toothList[27]->setGeometry(140, 601, 40, 40);
+// 	toothList[26]->setGeometry(160, 642, 40, 40);
+// 	toothList[25]->setGeometry(180, 683, 40, 40);
+// 	toothList[24]->setGeometry(200, 724, 40, 40);
 
 	toothList[0]->move(195, 27);
 	toothList[1]->move(144, 43);
@@ -594,10 +611,10 @@ void TabMainGUI::constructIHM()
 	implantButton->setParent(middleSplitModelWidget);
 	jawToothButton->setParent(middleSplitModelWidget);
 
-	totalCrownButton->setGeometry(550, 100, 150, 30);
-	toothCrownButton->setGeometry(550, 150, 150, 30);
-	lossToothButton->setGeometry(550, 200, 150, 30);
-	inlayButton->setGeometry(550, 250, 150, 30);
+	totalCrownButton->setGeometry(550, 100, 200, 50);
+	toothCrownButton->setGeometry(550, 180, 200, 50);
+	lossToothButton->setGeometry(550, 260, 200, 50);
+	inlayButton->setGeometry(550, 340, 200, 50);
 	facingButton->setGeometry(550, 300, 150, 30);
 	waxTypeButton->setGeometry(550, 350, 150, 30);
 	implantButton->setGeometry(550, 400, 150, 30);
@@ -915,7 +932,10 @@ bool TabMainGUI::judgePatientSaveFlag()
 		return false;
 	}
 }
-
+void TabMainGUI::closeBtnClicked() {
+	QApplication* app;
+	app->quit();
+}
 void TabMainGUI::PatientInformationSave()
 {
 	std::cout << "storage a order information..." << std::endl;
@@ -1506,8 +1526,9 @@ void TabMainGUI::ToothButtonListPress()
 			painter.end();
 			
 			//toothList[toothButtonIndex]->setStyleSheet(path);
-			toothList[toothButtonIndex]->setIcon(QPixmap::fromImage(resultImage));
-			toothList[toothButtonIndex]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
+			//toothList[toothButtonIndex]->setIcon(QPixmap::fromImage(resultImage));
+			//toothList[toothButtonIndex]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
+			toothList[toothButtonIndex]->SetImage(resultImage);
 			addToothList(chooseID, toothButtonIndex);
 			qDebug() << totalCrownList.size();
 			toothFlagList[toothButtonIndex] = true;
@@ -1531,15 +1552,38 @@ void TabMainGUI::ToothButtonListPress()
 		}
 		else if (toothFlagList[toothButtonIndex] == true && chooseID == toothID[toothButtonIndex])
 		{
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + "0.png);}";
-			toothList[toothButtonIndex]->setStyleSheet(path);
+			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + "0.png);}";
+			//toothList[toothButtonIndex]->setStyleSheet(path);
+			toothList[toothButtonIndex]->SetImage(QString("./Resources/images/teeth/"+ toothList[toothButtonIndex]->text() + ".png"));
 			removeToothList(chooseID, toothButtonIndex);
 			toothFlagList[toothButtonIndex] = false;
 		}
 		else if (toothFlagList[toothButtonIndex] == true && chooseID != toothID[0])
 		{
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png);}";
-			toothList[toothButtonIndex]->setStyleSheet(path);
+			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + QString::number(chooseID, 10) + ".png",
+				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
+
+			QImage resultImage, destinationImage, sourceImage;
+			destinationImage.load(dstpath);
+			sourceImage.load(srcPath);
+			resultImage = QImage(sourceImage.size(), QImage::Format_ARGB32_Premultiplied);
+			QPainter painter(&resultImage);
+			painter.setCompositionMode(QPainter::CompositionMode_Source);
+			painter.fillRect(resultImage.rect(), QColor(255, 255, 255, 100));
+			painter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+			painter.drawImage(QRect(0, 0, resultImage.width(), resultImage.height()), destinationImage);
+			painter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+			painter.drawImage(0, 0, sourceImage);
+			QTextOption option;
+			option.setAlignment(Qt::AlignCenter);
+			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter.drawText(resultImage.rect(), QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10), option);
+			painter.end();
+
+			//toothList[toothButtonIndex]->setStyleSheet(path);
+			//toothList[toothButtonIndex]->setIcon(QPixmap::fromImage(resultImage));
+			//toothList[toothButtonIndex]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
+			toothList[toothButtonIndex]->SetImage(resultImage);
 			addToothList(chooseID, toothButtonIndex);
 			removeToothList(toothID[toothButtonIndex], toothButtonIndex);
 			toothID[toothButtonIndex] = chooseID;
@@ -1648,14 +1692,16 @@ void TabMainGUI::clearAllButtonPress()
 {
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
+		m_pTeethScanTaskArray[i]->Set_ScanType(eScanNULL);
 		if (toothFlagList[i] == true)
-		{
+		{			
 			toothFlagList[i] = false;
 			int row = i / 8;
 			int col = i % 8;
 			int value = (row + 1) * 10 + col + 1;
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
-			toothList[i]->setStyleSheet(path);
+			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
+			//toothList[i]->setStyleSheet(path);
+			toothList[i]->SetImage(QString("./Resources/images/teeth/" + toothList[i]->text() + ".png"));
 			QList<QPushButton *> toothPushButtonList = judgeToothList(toothID[i]);
 			toothPushButtonList.removeOne(toothList[i]);
 		}

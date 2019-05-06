@@ -354,7 +354,7 @@ void GLWidget::initializeGL()
 
 	cout << "initialize done !" << endl;
 
-	//makeBackGround();
+	makeBackGround();
 
 	//m_bkGroundProgram = new QOpenGLShaderProgram;
 // 	m_bkGroundProgram = make_shared<QOpenGLShaderProgram>();
@@ -393,8 +393,8 @@ void GLWidget::paintGL()
 	//glClearColor()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //	drawGradient();
-	//glUseProgram(0);
-	//m_backgroundModel->OnPaint(m_projection,m_view,this);
+	glUseProgram(0);
+	m_backgroundModel->OnPaint(m_projection,m_view,this);
 
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -1427,7 +1427,7 @@ void GLWidget::makeBackGround()
 		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
 	};
 	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
-	QString name_ = ":/MainWidget/background-grey3.jpg";
+	QString name_ = "./Resources/images/background-grey3.png";
 	m_backgroundModel->readPicture(name_);
 	m_backgroundModel->makeObject(vertData, 4);
 	m_backgroundModel->Set_Visible(true);

@@ -3,6 +3,7 @@
 //#include "VTK_render.h"
 #include "HLogHelper.h"
 #include "plyio.h"
+#include "commonFun.h"
 
 // #include "NearestNeighborSearches.h"
 // #include <pcl/visualization/cloud_viewer.h>
@@ -505,8 +506,8 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 	//ColoredPoints(pointcloud, 3);
 
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	mModel.SmallModelFilter(300);
-	mModel.S.clear();
+	 mModel.SmallModelFilter(300);
+	 mModel.S.clear();
 	mModel.NormalSmooth(1);
 
 	if (chooseJawIndex == 1)
@@ -522,7 +523,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		std::string modelNameStr = QString::number(index).toStdString() + "_upper.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stlb");
-		
+
 		if (reg.NearRegist(upper_mModel, mModel))
 		{
 
@@ -618,7 +619,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 	mModel.SmallModelFilter(300);
 	mModel.S.clear();
 	mModel.NormalSmooth(1);
-
+	cout << "mModel size" << mModel.size()<< endl;
 	//tinyply::plyio io;
 	//io.write_ply_example(QString::number(index).toStdString(), mModel, false);
 
@@ -823,28 +824,30 @@ image_rgb.push_back(imgr);
 // 	}
 // }
 
- void ComputeThread::normalComputeScan(int chooseJawIndex)
+void ComputeThread::normalComputeScan(int chooseJawIndex)
  {
 
  	int imageSize = IMG_ROW * IMG_COL;
  	vector<double> dis_;
  	unsigned char* im_l = 0;
  	unsigned char* im_r = 0;
- 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
- 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+//  	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+//  	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
  
  	vector<cv::Mat> image_rgb;
  	cv::Mat imageMat;
  	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
  	image_rgb.resize(3, imageMat);
  
- 	int bufferBias = 0;
- 
+	int bufferBias = 0;
+
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
 
- 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
- 	{
+	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
+	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
  		usedSpace.acquire();
@@ -868,30 +871,30 @@ image_rgb.push_back(imgr);
  				image_bias++;
  			}
  		}
- 		cout << "scan_index:" << scan_index << endl;
+		cout << "scan_index:" << scan_index << endl;
 		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
- 
- 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
- 		if (scanFlag == true)
- 		{
- 			if (oldJawIndex == 0)
- 			{
- 				oldJawIndex = chooseJawIndex;
- 				emit showModeltoGlSingel(1);
- 			}
- 			else if (oldJawIndex != 0)
- 			{
- 				if (oldJawIndex == chooseJawIndex)
- 				{
- 					emit showModeltoGlSingel(0);
- 				}
- 				else if (oldJawIndex != chooseJawIndex)
- 				{
+
+		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
+		if (scanFlag == true)
+		{
+			if (oldJawIndex == 0)
+			{
+				oldJawIndex = chooseJawIndex;
+				emit showModeltoGlSingel(1);
+			}
+			else if (oldJawIndex != 0)
+			{
+				if (oldJawIndex == chooseJawIndex)
+				{
+					emit showModeltoGlSingel(0);
+				}
+				else if (oldJawIndex != chooseJawIndex)
+				{
 					oldJawIndex = chooseJawIndex;
- 					emit showModeltoGlSingel(1);
- 				}
- 			}
- 		}
+					emit showModeltoGlSingel(1);
+				}
+			}
+		}
  		emit cameraShowSignal();
  		bufferBias++;
  		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
@@ -910,94 +913,94 @@ image_rgb.push_back(imgr);
  			emit computeFinish();
  		}
  	}
- }
+}
 
- void ComputeThread::normalAllJawComputeScan()
- {
-	 int imageSize = IMG_ROW * IMG_COL;
-	 vector<double> dis_;
-	 unsigned char* im_l = 0;
-	 unsigned char* im_r = 0;
-	 im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	 im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+void ComputeThread::normalAllJawComputeScan()
+{
+	int imageSize = IMG_ROW * IMG_COL;
+	vector<double> dis_;
+	unsigned char* im_l = 0;
+	unsigned char* im_r = 0;
+	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
-	 vector<cv::Mat> image_rgb;
-	 cv::Mat imageMat;
-	 imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
-	 image_rgb.resize(3, imageMat);
+	vector<cv::Mat> image_rgb;
+	cv::Mat imageMat;
+	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
+	image_rgb.resize(3, imageMat);
 
-	 int bufferBias = 0;
-	 int chooseJawIndex = 3;
-	 scan::Registration reg(1.0, 15.0, 50);
-	 reg.SetSearchDepth(40);
+	int bufferBias = 0;
+	int chooseJawIndex = 3;
+	scan::Registration reg(1.0, 15.0, 50);
+	reg.SetSearchDepth(40);
 
-	 for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
-	 {
-		 cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		 cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		 usedSpace.acquire();
+	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
+	{
+		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+		usedSpace.acquire();
 
-		 int image_bias = 0;
-		 memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		 image_bias++;
-		 for (int j = 0; j < 15; j++)
-		 {
-			 memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			 image_bias++;
+		int image_bias = 0;
+		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+		image_bias++;
+		for (int j = 0; j < 15; j++)
+		{
+			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+			image_bias++;
 
-			 memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			 image_bias++;
-		 }
-		 if (image_bias > 30)
-		 {
-			 for (int i = 0; i < 3; i++)
-			 {
-				 memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-				 image_bias++;
-			 }
-		 }
-		 cout << "scan_index:" << scan_index << endl;
-		 g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+			image_bias++;
+		}
+		if (image_bias > 30)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+				image_bias++;
+			}
+		}
+		cout << "scan_index:" << scan_index << endl;
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
 
-		 bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
-		 if (scanFlag == true)
-		 {
-			 if (oldJawIndex == 0)
-			 {
-				 oldJawIndex = chooseJawIndex;
-				 emit showModeltoGlSingel(1);
-			 }
-			 else if (oldJawIndex != 0)
-			 {
-				 if (oldJawIndex == chooseJawIndex)
-				 {
-					 emit showModeltoGlSingel(0);
-				 }
-				 else if (oldJawIndex != chooseJawIndex)
-				 {
-					 emit showModeltoGlSingel(1);
-				 }
-			 }
-		 }
-		 emit cameraShowSignal();
-		 bufferBias++;
-		 cout << "The ComputeThread: " << scan_index << " has finished." << endl;
-		 freeSpace.release();
-		 if (scan_index == (SCAN_ALLJAW_POS - 2))
-		 {
-			 //for (int i = 0; i < 9; i++)
-			 //{
-			 //	string modelNameStr = std::to_string(i) + ".ply";
-			 //	orth::ModelIO finish_model_io(&upper_mModel[i]);
-			 //	cout << "pathname: " << modelNameStr << endl;
-			 //	finish_model_io.writeModel(modelNameStr, "stl");
-			 //	//writefile(upper_mModel[i], name);
-			 //}
+		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
+		if (scanFlag == true)
+		{
+			if (oldJawIndex == 0)
+			{
+				oldJawIndex = chooseJawIndex;
+				emit showModeltoGlSingel(1);
+			}
+			else if (oldJawIndex != 0)
+			{
+				if (oldJawIndex == chooseJawIndex)
+				{
+					emit showModeltoGlSingel(0);
+				}
+				else if (oldJawIndex != chooseJawIndex)
+				{
+					emit showModeltoGlSingel(1);
+				}
+			}
+		}
+		emit cameraShowSignal();
+		bufferBias++;
+		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
+		freeSpace.release();
+		if (scan_index == (SCAN_ALLJAW_POS - 2))
+		{
+			//for (int i = 0; i < 9; i++)
+			//{
+			//	string modelNameStr = std::to_string(i) + ".ply";
+			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
+			//	cout << "pathname: " << modelNameStr << endl;
+			//	finish_model_io.writeModel(modelNameStr, "stl");
+			//	//writefile(upper_mModel[i], name);
+			//}
 
-			 emit computeFinish();
-		 }
-	 }
- }
+			emit computeFinish();
+		}
+	}
+}
 
 void ComputeThread::Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot)
 {
@@ -1047,7 +1050,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		time1 = clock();
 		cv::Mat cloudrot = rt_curr;
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-		
+
 		orth::MeshModel totalUpperModel;
 		orth::MergeModels(upper_mModel, totalUpperModel);
 
@@ -1060,7 +1063,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		{
 			cout << "Compensiation Registration is failure" << endl;
 		}
-		
+
 		time2 = clock();
 
 		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
@@ -1171,7 +1174,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 		{
 			cout << "Compensiation Registration is failure" << endl;
 		}
-		
+
 		time2 = clock();
 		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
 	}
@@ -1190,8 +1193,10 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+// 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+// 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
@@ -1717,8 +1722,10 @@ void ComputeThread::allJawComputeScan()
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+// 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+// 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
@@ -1869,14 +1876,18 @@ void ComputeThread::normalComputeScan()
 	pScanTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pScanTask)
 		return;
+
+	pScanTask->m_mModel.clear();
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+	//im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	//im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
@@ -1994,8 +2005,10 @@ void ComputeThread::compensationCompute()
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+// 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+// 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
@@ -2178,6 +2191,7 @@ void ComputeThread::FarRegistrationSlot()
 	{
 		orth::MergeModels(allRegModelV, allRegModel);
 	}
-	
+
 	emit finishFarRegSignal();
 }
+

@@ -30,7 +30,7 @@
 #include <QFileDialog>
 #include <QDockWidget>
 #include "TaskManager.h"
-#include "SplitModelBtn.h"
+#include "ImageBtn.h"
 
 #define TOOTHNUM 32
 
@@ -91,6 +91,7 @@ public:
 	//QPushButton *saveButton;
 	QPushButton *watchButton;
 	QPushButton *saveScanButton;
+	CTeethImgBtn * m_closeBtn;
 	
 	QDateTimeEdit *dateLineEdit;
 	QLineEdit *orderLineEdit;
@@ -110,7 +111,7 @@ public:
 	bool splitModelFlag = false;
 	QList<bool> toothFlagList;
 	int chooseID = -1;
-	QList<QPushButton *> toothList;
+	QList<CTeethImgBtn *> toothList;
 	
 	
 	QList<int> toothID;
@@ -118,10 +119,10 @@ public:
 	//splitright
 	QButtonGroup *toothRadioButtonGroup;
 	
-	QCheckBox *totalCrownButton;//全冠
-	QCheckBox*toothCrownButton;//牙冠
-	QCheckBox *lossToothButton;//缺失牙
-	QCheckBox *inlayButton;//嵌体
+	CImageBtn *totalCrownButton;//全冠
+	CImageBtn*toothCrownButton;//牙冠
+	CImageBtn *lossToothButton;//缺失牙
+	CImageBtn *inlayButton;//嵌体
 	QCheckBox *facingButton;//贴面
 	QCheckBox *waxTypeButton;//蜡型
 	QCheckBox *implantButton;//种植体
@@ -189,7 +190,7 @@ signals:
 public slots:
 	//订单管理信息槽
 	void PatientInformationSave();
-
+	void closeBtnClicked();
 	//打开文件
 	void openFileDialogSlot();
 

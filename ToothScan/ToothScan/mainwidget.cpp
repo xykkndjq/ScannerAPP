@@ -34,3 +34,9 @@ void MainWidget::setConnections()
 {
 }
 
+void MainWidget::recallWindow()
+{
+	if (scanMainPage)
+		scanMainPage->recallWindow();
+}
+

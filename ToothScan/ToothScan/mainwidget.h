@@ -10,8 +10,9 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include "ScanMainGUI.h"
+#include "SingleApplication.h"
 
-class MainWidget : public QWidget
+class MainWidget : public QWidget, public IQWidegetsInterface
 {
 	Q_OBJECT
 
@@ -26,7 +27,7 @@ private:
 	QVBoxLayout *totalVlayout;
 	
 	ScanMainGUI *scanMainPage;
-
+	virtual void recallWindow();
 
 };
 
