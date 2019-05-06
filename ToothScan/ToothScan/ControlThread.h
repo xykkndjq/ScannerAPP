@@ -44,6 +44,7 @@ extern float c_scan_y;
 
 extern QSemaphore freeSpace;
 extern QSemaphore usedSpace;
+extern QSemaphore g_event;
 
 //static int SMX_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 45, -90, 45, 45, -90, 45, 45, -90, 45, 45, 135, 135, 45 };
 //static int SMY_CALI_ROTATE_DEGREE[CALI_ROTATE_POS_CNT] = { 0,  0,  45,  0,  0,  45,  0,  0,  -60, 0,  0,  0,  -30 };

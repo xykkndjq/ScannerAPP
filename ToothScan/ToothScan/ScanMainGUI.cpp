@@ -210,6 +210,9 @@ void ScanMainGUI::initVariable()
 	//bottomtoolButtons
 	selectRegionButton = new QToolButton();
 	deleteModelButton = new QToolButton();
+	m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png", "", this);
+	m_closeBtn->setFixedSize(30, 30);
+	m_closeBtn->move(1880,20);
 }
 
 void ScanMainGUI::constructIHM()
@@ -305,6 +308,7 @@ void ScanMainGUI::constructIHM()
 	topHLayout->addWidget(enlargeButton);
 	topHLayout->addWidget(shrinkButton);
 	topHLayout->addStretch();
+	topHLayout->addWidget(m_closeBtn);
 	topWidget->setGeometry(0, 10, 1920, 100);
 
 	//底部工具栏
@@ -314,7 +318,7 @@ void ScanMainGUI::constructIHM()
 	bottomHLayout->addWidget(selectRegionButton);
 	bottomHLayout->addWidget(deleteModelButton);
 	bottomHLayout->addStretch();
-
+	
 	bottomWidget->setGeometry(0, 900, 1920, 100);
 
 	//提示窗口
@@ -452,8 +456,15 @@ void ScanMainGUI::setConnections()
 	connect(ui.teethStitchingPanelBackBtn, SIGNAL(clicked()), this, SLOT(teethStitchingPanelBackBtnClick()));
 	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(cutJawFinishPanelBackBtnClick()));
 	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(stitchingFinishPanelBackBtnClick()));
+	connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	
-	
+}
+
+void ScanMainGUI::closeBtnClicked()
+{
+	tabMainPage->show();
+	tabMainPage->showMaximized();
+	this->hide();
 }
 
 void ScanMainGUI::ToothCalibrateSlot()
@@ -509,7 +520,7 @@ void ScanMainGUI::CalculatePointCloud()
 		return;
 	}
 
-	
+
 	emit startControlNormalScan(chooseJawIndex);
 }
 
@@ -746,9 +757,11 @@ void ScanMainGUI::showCutJawPanel(bool bBack) {
 	if (pCurrentTask) {
 		glWidget->m_ModelsVt.clear();
 		glWidget->mm = pCurrentTask->m_mAllModel;
+		pCurrentTask->m_mModel.clear();
 		pCurrentTask->pTeethModel = glWidget->makeObject();
 		glWidget->update();
 		pCurrentTask->Set_TaskPro(eProgressMesh);
+		cout << "showCutJawPanel meshmodel size" << pCurrentTask->m_mAllModel.size() << endl;
 		ui.compensationScanPanel->setVisible(false);
 		ui.CutJawPanel->setVisible(true);
 		QString str;
@@ -803,7 +816,7 @@ void ScanMainGUI::judgeForwardStep()
 	else if (forwardIndex == 4)
 	{
 		emit saveModeltoFileSignal();
-		scanTipWidget->setVisible(false);	
+		scanTipWidget->setVisible(false);
 	}
 	else if (forwardIndex == 5)
 	{
@@ -814,6 +827,8 @@ void ScanMainGUI::judgeForwardStep()
 
 void ScanMainGUI::JawScan()
 {
+	glWidget->m_ModelsVt.clear();
+	return;
 	if (m_bsplitModelFlag) {		//分模
 		showcompensationScanPanel();
 	}
@@ -1619,9 +1634,10 @@ void ScanMainGUI::scanJawScanBtnClick()
 #endif
 
 	ui.ScanJawGroup->setVisible(false);
-
+	glWidget->m_ModelsVt.clear();
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
+		pCurrentTask->m_mModel.clear();
 		if (isModelFileExit(pCurrentTask) && QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
 			//加载模型
 			loadModelFile(pCurrentTask);
@@ -2075,6 +2091,20 @@ void ScanMainGUI::taskTeethSititFinishSlot()
 	}
 }
 
+void ScanMainGUI::recallWindow()
+{
+	if (this->isVisible()) {
+		raise();
+		activateWindow();
+		//setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+	}
+	else if (tabMainPage->isVisible()){
+		tabMainPage->raise();
+		tabMainPage->activateWindow();
+		//tabMainPage->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+	}
+}
+
 void ScanMainGUI::calibImageCameraSlot(int endFlag)
 {
 	static int nnum = 0;
@@ -2139,7 +2169,7 @@ void ScanMainGUI::updateRegMeshSlot()
 		box.exec();
 		glWidget->update();
 	}
-	
+
 	this->showMaximized();
 }
 
@@ -2179,7 +2209,7 @@ void ScanMainGUI::ShowHideUpperModel()
 			glWidget->makeObject();
 		}
 	}
-	
+
 	this->showMaximized();
 }
 
@@ -2220,6 +2250,6 @@ void ScanMainGUI::ShowHideLowerModel()
 		}
 	}
 
-	
+
 	this->showMaximized();
 }

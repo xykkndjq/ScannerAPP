@@ -21,7 +21,7 @@
 #include "TaskManager.h"
 
 
-//#define SCAN_ROTATE_POS_CNT2 18   //?????????? 11
+//#define SCAN_ROTATE_POS_CNT2 18    //定义扫描过程的位置数 11
 // #define IMG_ROW 1024
 // #define IMG_COL 1280
 

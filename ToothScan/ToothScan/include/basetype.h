@@ -5,6 +5,8 @@
 #include <vector>
 #include "Point.hpp"
 #include <iomanip> 
+#include <iostream>
+using namespace std;
 
 using std::vector;
 
@@ -280,7 +282,57 @@ namespace orth
 		~MeshModel();
 
 
-		inline int size() { return size_; }
+		inline int size() { /*return size_;*/
+			if (P.size() > 0)
+				size_ += P.size() * sizeof(P[0]);
+			int nsize = P.size() * sizeof(P[0]);
+			cout << "size P" << nsize << endl;
+			if (N.size() > 0)
+				size_ += N.size() * sizeof(N[0]);
+			nsize = N.size() * sizeof(N[0]);
+			cout << "size N" << nsize << endl;
+			if (C.size() > 0)
+				size_ += C.size() * sizeof(C[0]);
+			nsize = C.size() * sizeof(C[0]);
+			cout << "size C" << nsize << endl;
+			if(F.size()>0)
+				size_ += F.size() * sizeof(F[0]);
+			nsize = F.size() * sizeof(F[0]);
+			cout << "size F" << nsize << endl;
+			if (FN.size() > 0)
+				size_ += FN.size() * sizeof(FN[0]);
+			nsize = FN.size() * sizeof(FN[0]);
+			cout << "size FN" << nsize << endl;
+			if (L.size() > 0)
+				size_ += L.size() * sizeof(L[0]);
+			nsize = L.size() * sizeof(L[0]);
+			cout << "size L" << nsize << endl;
+			if (S.size() > 0)
+				size_ += S.size() * sizeof(S[0]);
+			nsize = S.size() * sizeof(S[0]);
+			cout << "size S" << nsize << endl;
+			if (Cur.size() > 0)
+				size_ += Cur.size() * sizeof(Cur[0]);
+			nsize = Cur.size() * sizeof(Cur[0]);
+			cout << "size Cur" << nsize << endl;
+			if (Selected.size() > 0)
+				size_ += Selected.size() * sizeof(Selected[0]);
+			nsize = Selected.size() * sizeof(Selected[0]);
+			cout << "size Selected" << nsize << endl;
+			if (Edge_P.size() > 0)
+				size_ += Edge_P.size() * sizeof(Edge_P[0]);
+			nsize = Edge_P.size() * sizeof(Edge_P[0]);
+			cout << "size Edge_P" << nsize << endl;
+			if (Edge_S.size() > 0)
+				size_ += Edge_S.size() * sizeof(Edge_S[0]);
+			nsize = Edge_S.size() * sizeof(Edge_S[0]);
+			cout << "size Edge_S" << nsize << endl;
+			if (P2Edge.size() > 0)
+				size_ += P2Edge.size() * sizeof(P2Edge[0]);
+			nsize = P2Edge.size() * sizeof(P2Edge[0]);
+			cout << "size P2Edge" << nsize << endl;
+			return size_;
+		}
 
 		PointCloudD P;
 		PointNormal N;
