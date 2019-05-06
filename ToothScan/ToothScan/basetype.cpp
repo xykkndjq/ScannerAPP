@@ -112,7 +112,7 @@ namespace orth
 					Edge_P[face_index * 3 + point_].CurrentPoint = point_index[point_];
 					Edge_P[face_index * 3 + point_].EndPoint = point_index[point_ + 1];
 					Edge_P[face_index * 3 + point_].CurrentFace = face_index;
-					if (point_ == 3)
+					if (point_ == 2)
 					{
 						Edge_P[face_index * 3 + point_].NextEdge = face_index * 3;
 
@@ -270,8 +270,8 @@ namespace orth
 			}
 			models[L[point_index]].P.push_back(P[point_index]);
 			models[L[point_index]].N.push_back(N[point_index]);
-		//	models[L[point_index]].C.push_back(C[point_index]);
-		//	models[L[point_index]].L.push_back(L[point_index]);
+			models[L[point_index]].C.push_back(C[point_index]);
+			models[L[point_index]].L.push_back(L[point_index]);
 			//models[L[point_index]].Cur.push_back(Cur[point_index]);
 			new_point_index[point_index] = (models[L[point_index]].P.size() - 1);
 		}
@@ -286,6 +286,10 @@ namespace orth
 			models[l_label].F.push_back(l_face);
 			models[l_label].FN.push_back(FN[face_index]);
 		}
+
+
+		P2Edge.clear();
+		Edge_P.clear();
 
 		return true;
 
@@ -424,6 +428,7 @@ namespace orth
 		}
 		FN.swap(new_face_normal);
 		L.clear();
+
 		P2Edge.clear();
 		Edge_P.clear();
 
@@ -453,6 +458,9 @@ namespace orth
 			N.swap(new_normal);
 			new_normal.clear();
 		}
+
+		P2Edge.clear();
+		Edge_P.clear();
 	}
 
 	void MeshModel::ModelSample(const int rate)

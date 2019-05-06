@@ -152,9 +152,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SplitModelBtn.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="ImageBtn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
