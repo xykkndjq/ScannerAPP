@@ -6,7 +6,7 @@ ScanTipWidget::ScanTipWidget(QWidget *parent)
 	ui.setupUi(this);
 	this->InitVariable();
 	this->setConnection();
-	this->setStyleSheet("background-color:rgb(199,215,235);");
+	this->setStyleSheet("background-color:rgb(246,246,246);");
 	//this->upperFinishConstructIHM4();
 	//this->lowerSplitScanConstructIHM5();
 	//this->upperPlaceConstructIHM1();
@@ -52,6 +52,7 @@ void ScanTipWidget::InitVariable()
 
 	//middle
 	imageTipLabel = new QLabel(this);
+	imageTipLabel->setScaledContents(true);
 	
 	compensationButton = new QPushButton(QStringLiteral("增加扫描"), this);//增加补扫
 	compensationButton->setToolTip(QStringLiteral("增加扫描"));
@@ -156,8 +157,8 @@ void ScanTipWidget::placeConstruct1()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	
 	this->setLayout(totalVLayout);
 	
@@ -227,8 +228,8 @@ void ScanTipWidget::compenConstruct2()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 	
 }
@@ -306,8 +307,8 @@ void ScanTipWidget::cutConstruct2()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 
 }
@@ -368,8 +369,8 @@ void ScanTipWidget::upperFinishConstruct3()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 	
 }
@@ -430,8 +431,8 @@ void ScanTipWidget::lowerFinishConstruct3()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 
 }
@@ -493,8 +494,8 @@ void ScanTipWidget::allFinishConstruct3()
 	centerLayout->setSpacing(0);
 
 	totalVLayout->addWidget(centerWidget);
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 
 }
@@ -561,8 +562,8 @@ void ScanTipWidget::splitScanConstruct1()
 
 	totalVLayout->addWidget(centerWidget);
 
-	centerWidget->setObjectName("TipWidget");
-	centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
+	//centerWidget->setObjectName("TipWidget");
+	//centerWidget->setStyleSheet("QWidget#TipWidget{border-width: 2px;border-style: solid;border-color: rgb(20,20,20)}");
 	this->setLayout(totalVLayout);
 }
 
