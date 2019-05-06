@@ -74,7 +74,7 @@ static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30, 
 // static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0, -20,  -20,  -20,  -20,  -20,  -20, -20, -20, -40,  -40, -40, -40, -40,-40, -40,-40,0};
 
 
-static int ALLJAWY_SCAN_ROTATE_DEGREE2[SCAN_ALLJAW_POS] = {   0,-45,-90, 90, 45,  0,-45,-90, 90, 45,0 };
+static int ALLJAWY_SCAN_ROTATE_DEGREE2[SCAN_ALLJAW_POS] = {   0,-45,-90, 45, 90,  0,-45,-90, 45, 90,0 };
 static int ALLJAWX_SCAN_ROTATE_DEGREE2[SCAN_ALLJAW_POS] = { -40,-40,-40,-40,-40,-60,-60,-60,-60,-60,0 };
 //
 //static int SM_SCAN_BRIGHTNESS2[SCAN_ROTATE_POS_CNT2] = { 2,/*  2,   2,   2,   2,   2,   2,*/   3,   3,   3,    3,   3,   3,   3,  3, 2 }; //亮度等级，3最亮，1为默认
@@ -118,12 +118,13 @@ public:
 signals:
 	void calibImageSignal(int endFlag);
 public slots:
-	void controlNormalScan();
-	void allJawScan();
+	void normalControlScan();
+	void normalAllJawControlScan();
 	void controlCalibrationScan();
-	void controlGlobalCaliScan();
 	void compensationControlScan();
+	void controlGlobalCaliScan();
 
+	void allJawScan();
 	void normalScan();
 private:
 	//double m_ddeg_x = 0.0;

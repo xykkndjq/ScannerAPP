@@ -320,9 +320,6 @@
         <file>Resources/images/tooth486.png</file>
         <file>Resources/images/tooth487.png</file>
         <file>Resources/images/tooth488.png</file>
-        <file>Resources/images/alljaw.png</file>
-        <file>Resources/images/lowerjaw.png</file>
-        <file>Resources/images/upperjaw.png</file>
         <file>Resources/images/BottomView.png</file>
         <file>Resources/images/LeftView.png</file>
         <file>Resources/images/RightView.png</file>
@@ -342,5 +339,8 @@
         <file>bgGround.vs</file>
         <file>gl2.fs</file>
         <file>gl2.vs</file>
+        <file>Resources/images/alljaw.png</file>
+        <file>Resources/images/lowerjaw.png</file>
+        <file>Resources/images/upperjaw.png</file>
     </qresource>
 </RCC>

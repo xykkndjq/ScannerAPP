@@ -33,7 +33,7 @@ namespace Communication
 		//delete[] m_contexts;
 	}
 
-	void CCyUSBStream::TakeInitFlag(byte *inBuf, long length, int &statPosition)
+	bool CCyUSBStream::TakeInitFlag(byte *inBuf, long length, int &statPosition)
 	{
 		for (int i = 1; i < length; i += 2)
 		{
@@ -42,9 +42,10 @@ namespace Communication
 				m_startSave = true;
 				int bias = i % 4;
 				statPosition = i - bias;
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	void CCyUSBStream::TakeValidRealTimeInfo(long length)
@@ -600,73 +601,94 @@ namespace Communication
 		m_totalRealTimeBuffers = new UCHAR[5 * m_endptInLength];
 		m_totalCalibImageBuffers = new UCHAR[81 * m_endptInLength];
 		m_totalScanImageBuffers = new UCHAR[81 * m_endptInLength];
-
+		ZeroMemory(m_totalRealTimeBuffers, sizeof(m_totalRealTimeBuffers));
+		ZeroMemory(m_totalCalibImageBuffers, sizeof(m_totalCalibImageBuffers));
+		ZeroMemory(m_totalScanImageBuffers, sizeof(m_totalScanImageBuffers));
 		return 0;
 	}
 
-	void CCyUSBStream::OpenDLPFunction()
+	bool CCyUSBStream::OpenDLPFunction()
 	{
 		LONG length = 4;
-		bool flag  = m_EndPtOut->XferData(OpenDLP, length);
-		cout << "flag1 = " << flag << endl;
+		bool OpenDLPFlag = m_EndPtOut->XferData(OpenDLP, length);
+		cout << "OpenDLPFlag = " << OpenDLPFlag << endl;
+		return OpenDLPFlag;
 	}
 
-	void CCyUSBStream::ClosedDLPFunction()
+	bool CCyUSBStream::ClosedDLPFunction()
 	{
 		LONG length = 4;
-		m_EndPtOut->XferData(CloseDLP, length);
+		bool closeDLPFlag = m_EndPtOut->XferData(CloseDLP, length);
+		cout << "closeDLPFlag = " << closeDLPFlag << endl;
+		return closeDLPFlag;
 	}
 
-	void CCyUSBStream::ResetDLPFunction()
+	bool CCyUSBStream::ResetDLPFunction()
 	{
 		LONG length = 4;
-		m_EndPtOut->XferData(SMReset, length);
+		bool resetDLPFlag = m_EndPtOut->XferData(SMReset, length);
+		cout << "resetDLPFlag = " << resetDLPFlag << endl;
+		return resetDLPFlag;
 	}
 
-	void CCyUSBStream::TestDLPFunction()
+	bool CCyUSBStream::TestDLPFunction()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(OpenLight, length);
+		bool openLightFlag = m_EndPtOut->XferData(OpenLight, length);
+		cout << "openLightFlag = " << openLightFlag << endl;
+		return openLightFlag;
 	}
 
-	void CCyUSBStream::RealModeFuction()
+	bool CCyUSBStream::RealModeFuction()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(RealMode, length);
+		bool realModelFlag = m_EndPtOut->XferData(RealMode, length);
+		cout << "realModelFlag = " << realModelFlag << endl;
+		return realModelFlag;
 	}
 
-	void CCyUSBStream::TriggerModeFunction()
+	bool CCyUSBStream::TriggerModeFunction()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(TrigerMode, length);
+		bool triggerModelFlag = m_EndPtOut->XferData(TrigerMode, length);
+		cout << "triggerModelFlag = " << triggerModelFlag << endl;
+		return triggerModelFlag;
 	}
 
-	void CCyUSBStream::SetMaxDLPLight()
+	bool CCyUSBStream::SetMaxDLPLight()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(MaxDLPLight, length);
+		bool maxDLPFlag = m_EndPtOut->XferData(MaxDLPLight, length);
 		_sleep(100);
+		cout << "maxDLPFlag = " << maxDLPFlag << endl;
+		return maxDLPFlag;
 	}
 
-	void CCyUSBStream::SetMidDLPLight()
+	bool CCyUSBStream::SetMidDLPLight()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(MidDLPLight, length);
+		bool midDLPFlag = m_EndPtOut->XferData(MidDLPLight, length);
 		_sleep(1000);
+		cout << "midDLPFlag = " << midDLPFlag << endl;
+		return midDLPFlag;
 	}
 
-	void CCyUSBStream::SetMinDLPLight()
+	bool CCyUSBStream::SetMinDLPLight()
 	{
 		LONG length = 5;
-		m_EndPtOut->XferData(MinDLPLight, length);
+		bool minDLPFlag = m_EndPtOut->XferData(MinDLPLight, length);
 		_sleep(1000);
+		cout << "minDLPFlag = " << minDLPFlag << endl;
+		return minDLPFlag;
 	}
 
-	void CCyUSBStream::SetScanDLPLight()
+	bool CCyUSBStream::SetScanDLPLight()
 	{
 		LONG length = 11;
-		m_EndPtOut->XferData(ScanDLPLight, length);
+		bool adjustDLPFlag = m_EndPtOut->XferData(ScanDLPLight, length);
 		_sleep(1000);
+		cout << "adjustDLPFlag = " << adjustDLPFlag << endl;
+		return adjustDLPFlag;
 	}
 
 	bool CCyUSBStream::initRealTimeParameter()
@@ -706,7 +728,7 @@ namespace Communication
 			int l_istartPosition = 0;
 			if (m_startSave == false)
 			{
-				TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
+				bool validDataFlag = TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
 				//l_initSize = l_istartPosition;
 			}
 
@@ -851,6 +873,7 @@ namespace Communication
 	{
 		int l_iQNum = 0;
 		int l_itotalBuffersBias = 0;
+		int l_ierrorBuffersBias = 0;
 		//int l_initSize = 0;
 		m_validTotalBuffersSize = 80;
 
@@ -867,8 +890,8 @@ namespace Communication
 		}
 
 		LONG length = 9;
-		bool flag = m_EndPtOut->XferData(SMRotOneDeg, length);
-		cout << "flag = " << flag << endl;
+		bool rotationflag = m_EndPtOut->XferData(SMRotOneDeg, length);
+		cout << "rotationflag = " << rotationflag << endl;
 		cout << endl;
 		while (true)
 		{
@@ -884,7 +907,7 @@ namespace Communication
 			int l_istartPosition = 0;
 			if (m_startSave == false)
 			{
-				TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
+				bool validDataFlag = TakeInitFlag(m_buffers[l_iQNum], m_endptInLength, l_istartPosition);
 				//l_initSize = l_istartPosition;
 			}
 
@@ -916,7 +939,23 @@ namespace Communication
 			}
 		}
 		
+		{
+			//保存接收到的数据
+			char *totalBuffersChar = new char[(m_validTotalBuffersSize + 1)*m_endptInLength];
+			memcpy(totalBuffersChar, m_totalScanImageBuffers, m_validTotalBuffersSize*m_endptInLength * sizeof(UCHAR));
+
+			for (int i = 0; i < m_validTotalBuffersSize*m_endptInLength; i += 2)
+			{
+				totalBuffersChar[i] = 0;
+			}
+			string totalBufferPath = "scan_data.txt";
+			std::ofstream ofWrite(totalBufferPath, std::ios::out | std::ios::binary);
+			ofWrite.write(totalBuffersChar, m_validTotalBuffersSize*m_endptInLength * sizeof(char));
+			ofWrite.close();
+			delete[]totalBuffersChar;
+		}
 		TakeValidScanInfo(l_itotalBuffersBias);
+		m_startSave = false;
 		long len = m_EndPtIn->MaxPktSize * SCALE;
 		for (int j = 0; j< QueueSize; j++)
 		{

@@ -17,8 +17,11 @@ namespace scan
 		__declspec (dllexport) Registration();
 		__declspec (dllexport) ~Registration();
 
-		//将模型加入配准队列进行配准，配准成功后模型被矫正到准确位置，返回是否配准成功
+		//正常扫描：将模型加入配准队列进行配准，配准成功后模型被矫正到准确位置，返回是否配准成功
 		bool __declspec (dllexport) NearRegist(std::vector<orth::MeshModel> &v_M_Models, orth::MeshModel &add_model);
+
+		//补扫配准函数：将模型加入配准队列进行配准，配准成功后模型被矫正到准确位置，返回是否配准成功
+		bool __declspec (dllexport) CompenNearRegist(orth::MeshModel &v_M_Model, orth::MeshModel &add_model);
 
 		//上下颌与全颌配准 或 带型与上下颌配准时采用的配准方式，返回是否配准成功
 		bool __declspec (dllexport) FarRegist(orth::MeshModel &model_target, orth::MeshModel &model_source);

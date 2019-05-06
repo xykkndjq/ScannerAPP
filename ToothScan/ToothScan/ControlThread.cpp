@@ -144,7 +144,7 @@ void ControlThread::setFlage(bool flag)
 //	m_bcali = v_bcali;
 //}
 
-void ControlThread::controlNormalScan()
+void ControlThread::normalControlScan()
 {
 	bool l_bcali = false;
 	//vector<cv::Mat> image_groups_left, image_groups_right;
@@ -152,12 +152,17 @@ void ControlThread::controlNormalScan()
 	int bufferBias = 0;
 	
 	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.ClosedDLPFunction();
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(300);
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(8000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
+
 
 	l_usbStream.SetScanDLPLight();
 	clock_t time1, time2, time3, time4;
@@ -186,29 +191,17 @@ void ControlThread::controlNormalScan()
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y,  l_bcali, imgL_set, imgR_set);
 		time2 = clock();
 
-		bool flag = true;
-		while (flag)
-		{
-			if (imgL_set.size() < 19 || imgR_set.size() < 19)
-			{
-				cout << "USB is reconnected." << endl;
-				l_usbStream.m_USBDevice->ReConnect();
-				Sleep(5000);
-				l_usbStream.AbortXferLoop();
-				l_usbStream.InitCyUSBParameter();
-				Sleep(2000);
-				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
-			}
-			else
-			{
-				flag = false;
-			}
-		}
-
-		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
+	if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
 			continue;
 		}
+
+		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		{
+			cout << "USB has a problem, because of insufficient data..." << endl;
+			return;
+		}		
+		
 		CCon coc(freeSpace, usedSpace);
 		//freeSpace.acquire();
 		vector<cv::Mat> images_l, images_r;
@@ -271,6 +264,126 @@ void ControlThread::controlNormalScan()
 	cout << "关闭DLP。。 " << endl;
 }
 
+void ControlThread::normalAllJawControlScan()
+{
+	bool l_bcali = false;
+	//vector<cv::Mat> image_groups_left, image_groups_right;
+	int imageSize = IMG_ROW * IMG_COL;
+	int bufferBias = 0;
+
+	//l_usbStream.InitCyUSBParameter();//初始化
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
+	_sleep(300);
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
+	cout << "初始化光机，等待5秒。。。 " << endl;
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
+
+	l_usbStream.SetScanDLPLight();//设置光机亮度
+
+	clock_t time1, time2, time3, time4;
+	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS; scan_index++)
+	{
+		double d_scan_x = 0.0;
+		double d_scan_y = 0.0;
+		c_scan_x = ALLJAWX_SCAN_ROTATE_DEGREE2[scan_index];
+		c_scan_y = ALLJAWY_SCAN_ROTATE_DEGREE2[scan_index];
+
+		d_scan_x = (c_scan_x - l_scan_x);
+		d_scan_y = (c_scan_y - l_scan_y);
+
+		l_scan_x = c_scan_x;
+		l_scan_y = c_scan_y;
+
+		if (c_scan_x < -90 || c_scan_x > 90)
+		{
+			return;
+		}
+
+
+		vector<cv::Mat> imgL_set, imgR_set;
+
+		time1 = clock();
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+		time2 = clock();
+
+		if (scan_index == SCAN_ALLJAW_POS - 1)
+		{
+			continue;
+		}
+
+		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		{
+			cout << "USB has a problem, because of insufficient data..." << endl;
+			return;
+		}
+
+		CCon coc(freeSpace, usedSpace);
+		//freeSpace.acquire();
+		vector<cv::Mat> images_l, images_r;
+		vector<cv::Mat> image_rgb;
+		//unsigned char* im_l = 0;
+		//unsigned char* im_r = 0;
+		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+		int imageBias = 0;
+		time3 = clock();
+		for (int image_index = 0; image_index < 19; image_index++)
+		{
+
+			ostringstream filename_L;
+			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
+			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+
+
+			ostringstream filename_R;
+			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
+			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			if (image_index == 0)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+
+			if (image_index>0 && image_index<16)
+			{
+				//images_l.push_back(imgL_set[image_index]);
+				//images_r.push_back(imgR_set[image_index]);
+				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+
+			}
+			else if (image_index >= 16)
+			{
+				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+				imageBias++;
+			}
+		}
+		time4 = clock();
+		bufferBias++;
+		//usedSpace.release();
+		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+
+		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+	}
+
+	//3、关闭DLP
+	l_usbStream.ClosedDLPFunction();
+	//l_usbStream.AbortXferLoop();
+	cout << "关闭DLP。。 " << endl;
+}
+
 void ControlThread::allJawScan()
 {
 	bool l_bcali = false;
@@ -279,12 +392,16 @@ void ControlThread::allJawScan()
 	int bufferBias = 0;
 
 	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.ClosedDLPFunction();
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(300);
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(8000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	l_usbStream.SetScanDLPLight();
 	clock_t time1, time2, time3, time4;
@@ -313,29 +430,17 @@ void ControlThread::allJawScan()
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 		time2 = clock();
 
-		bool flag = true;
-		while (flag)
-		{
-			if (imgL_set.size() < 19 || imgR_set.size() < 19)
-			{
-				cout << "USB is reconnected." << endl;
-				l_usbStream.m_USBDevice->ReConnect();
-				Sleep(5000);
-				l_usbStream.AbortXferLoop();
-				l_usbStream.InitCyUSBParameter();
-				Sleep(2000);
-				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
-			}
-			else
-			{
-				flag = false;
-			}
-		}
-
 		if (scan_index == SCAN_ALLJAW_POS - 1)
 		{
 			continue;
 		}
+
+		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		{
+			cout << "USB has a problem, because of insufficient data..." << endl;
+			return;
+		}
+
 		CCon coc(freeSpace, usedSpace);
 		//freeSpace.acquire();
 		vector<cv::Mat> images_l, images_r;
@@ -402,12 +507,17 @@ void ControlThread::controlCalibrationScan()
 {
 	bool l_bcali = true;
 	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.ClosedDLPFunction();
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(300);
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(8000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
+
 	l_usbStream.SetMidDLPLight();
 	vector<vector<cv::Mat>> image_groups;
 	for (int scan_index = 0; scan_index < CALI_ROTATE_POS_CNT2; scan_index++)
@@ -433,31 +543,15 @@ void ControlThread::controlCalibrationScan()
 		//SMRotDegAnalysis(d_scan_x, d_scan_y, true);
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 
-		bool flag = true;
-		while (flag)
-		{
-			if (imgL_set.size() < 31 || imgR_set.size() < 31)
-			{
-				cout << "USB is reconnected." << endl;
-				l_usbStream.m_USBDevice->ReConnect();
-				Sleep(5000);
-				l_usbStream.AbortXferLoop();
-				l_usbStream.InitCyUSBParameter();
-				Sleep(2000);
-				l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
-			}
-			else
-			{
-				flag = false;
-			}
-		}
-
-
 		if (scan_index == CALI_ROTATE_POS_CNT2 - 1)
 		{
 			continue;
 		}
-
+		if (imgL_set.size() < 31 || imgR_set.size() < 31)
+		{
+			cout << "USB has a problem, because of insufficient data..." << endl;
+			return;
+		}
 		vector<cv::Mat> images_l, images_r;
 		vector<cv::Mat> image_rgb;
 		//unsigned char* im_l = 0;
@@ -528,15 +622,23 @@ void ControlThread::controlCalibrationScan()
 	InitParameters();
 }
 
+
 void ControlThread::controlGlobalCaliScan()
 {
 	bool l_bcali = true;
 	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
+	_sleep(300);
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(8000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
+	l_usbStream.SetScanDLPLight();//设置光机亮度
 	vector<Mat> image_groups_left, image_groups_right;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
 	{
@@ -599,12 +701,17 @@ void ControlThread::compensationControlScan()
 {
 	bool l_bcali = false;
 	
-
 	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
+	_sleep(300);
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(5000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	int imageSize = IMG_ROW * IMG_COL;
 	double d_scan_x = (c_scan_x - l_scan_x);
@@ -628,23 +735,10 @@ void ControlThread::compensationControlScan()
 	///**************************************扫描过程*****************************************/
 	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
 	
-	bool flag = true;
-	while (flag)
+	if (imgL_set.size() < 19 || imgR_set.size() < 19)
 	{
-		if (imgL_set.size() < 19 || imgR_set.size() < 19)
-		{
-			cout << "USB is reconnected." << endl;
-			l_usbStream.m_USBDevice->ReConnect();
-			Sleep(5000);
-			l_usbStream.AbortXferLoop();
-			l_usbStream.InitCyUSBParameter();
-			Sleep(2000);
-			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set); //控制电机旋转
-		}
-		else
-		{
-			flag = false;
-		}
+		cout << "USB has a problem, because of insufficient data..." << endl;
+		return;
 	}
 
 	//存进总数组
@@ -707,11 +801,18 @@ void ControlThread::normalScan()
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
 	
-	//l_usbStream.InitCyUSBParameter();//初始化
-	l_usbStream.OpenDLPFunction();//打开光机
-
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
+	_sleep(300);
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(5000);
+	_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
+
+	l_usbStream.SetScanDLPLight();//设置光机亮度
 
 	clock_t time1, time2, time3, time4, time5, time6;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
@@ -742,6 +843,11 @@ void ControlThread::normalScan()
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
 			continue;
+		}
+		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		{
+			cout << "USB has a problem, because of insufficient data..." << endl;
+			return;
 		}
 		CCon coc(freeSpace, usedSpace);
 		//freeSpace.acquire();

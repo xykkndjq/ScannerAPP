@@ -53,24 +53,22 @@ namespace Communication
 
 			 int InitCyUSBParameter();//初始化USB
 
-			 int InitCyParameter();//初始化USB
-
-			 void OpenDLPFunction();//打开光机
-			 void ClosedDLPFunction();//关闭光机
-			 void ResetDLPFunction();//电机归位
-			 void TestDLPFunction();//电机
-			 void SetMaxDLPLight();//设置光机最亮
-			 void SetMidDLPLight();//设置光机中等
-			 void SetMinDLPLight();//设置光机最弱
-			 void SetScanDLPLight();//设置光机扫描亮度
+			 bool OpenDLPFunction();//打开光机
+			 bool ClosedDLPFunction();//关闭光机
+			 bool ResetDLPFunction();//电机归位
+			 bool TestDLPFunction();//电机
+			 bool SetMaxDLPLight();//设置光机最亮
+			 bool SetMidDLPLight();//设置光机中等
+			 bool SetMinDLPLight();//设置光机最弱
+			 bool SetScanDLPLight();//设置光机扫描亮度
 			//实时显示
-			 void RealModeFuction();//实时获取数据
+			 bool RealModeFuction();//实时获取数据
 			 bool initRealTimeParameter();//实时初始化
 			 bool realTimeImageStream(cv::Mat &v_img_L, cv::Mat &v_img_R);//获取左右相机各一张图像
 			 void clearRealTimeStream();//清理实时数据流
 
 			 //trigger模式取一个角度数据
-			 void TriggerModeFunction();//改为trigger模式获取数据
+			 bool TriggerModeFunction();//改为trigger模式获取数据
 			 bool SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
 			//控制电机旋转
 			//v_ddeg_x：大电机旋转角度； v_bpositiveOrien_x：大电机是否正转（true为正转，false为反转）；
@@ -126,8 +124,9 @@ namespace Communication
 			void TakeValidRealTimeInfo(long length);
 			void TakeValidCalibInfo(long length);
 			void TakeValidScanInfo(long length);
-			void TakeInitFlag(byte *inBuf, long length, int &statPosition);
+			bool TakeInitFlag(byte *inBuf, long length, int &statPosition);
 			void TakeValidImage(Mat &PerImage, vector<cv::Mat> &img_set);
+			
 			void TakeValidImage(Mat &PerImage, Mat &image_raw);
 	};
 }

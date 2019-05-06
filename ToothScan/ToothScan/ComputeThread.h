@@ -21,7 +21,7 @@
 #include "TaskManager.h"
 
 
-//#define SCAN_ROTATE_POS_CNT2 18    //定义扫描过程的位置数 11
+//#define SCAN_ROTATE_POS_CNT2 18   //?????????? 11
 // #define IMG_ROW 1024
 // #define IMG_COL 1280
 
@@ -33,25 +33,36 @@ public:
 	ComputeThread(QObject *parent = 0);
 	~ComputeThread();
 
+	//???,????????
+	bool showUpperModelFlag = false;
+	bool showLowerModelFlag = false;
+	//????????????????
+	bool regUpperModelFlag = false;
+	bool regLowerModelFlag = false;
 	GPA gpa;
 
-	//增加补扫数量
+	//??????
 	int addUpperCompensationNum = 0;
 	int addLowerCompensationNum = 0;
 	int addAllCompensationNum = 0;
 
 	int oldJawIndex = 0;
-	vector<orth::MeshModel> all_mModel;//全颌
-	vector<vector<double>> all_points_cloud_globle2;
-	vector<double> all_points_cloud_end2;
-	vector<orth::MeshModel> upper_mModel;//上颌
-	vector<vector<double>> upper_points_cloud_globle2;
-	vector<double> upper_points_cloud_end2;
-	vector<orth::MeshModel> lower_mModel;//下颌
-	vector<vector<double>> lower_points_cloud_globle2;
-	vector<double> lower_points_cloud_end2;
+	vector<orth::MeshModel> all_mModel;//??
+	//vector<vector<double>> all_points_cloud_globle2;
+	//vector<double> all_points_cloud_end2;
+	vector<orth::MeshModel> upper_mModel;//??
+	//vector<vector<double>> upper_points_cloud_globle2;
+	//vector<double> upper_points_cloud_end2;
+	vector<orth::MeshModel> lower_mModel;//??
+	//vector<vector<double>> lower_points_cloud_globle2;
+	//vector<double> lower_points_cloud_end2;
 	
-	cv::Mat camera_image;//相机上图像
+	//??????
+	//orth::MeshModel upperRegModel;
+	//orth::MeshModel lowerRegModel;
+	orth::MeshModel allRegModel;
+
+	cv::Mat camera_image;//?????
 
 	/*vector<vector<double>> all_points_cloud_globle;
 	vector<vector<double>> all_points_cloud_globle2;
@@ -82,7 +93,8 @@ public:
 	int	current_pointcloud_count = 0;
 
 	void InitParameters();
-	void setFlage(bool flag = true);  //设置标志位，何时关闭子线程
+	void setFlage(bool flag = true);  //?????,???????
+
 
 
 	
@@ -97,8 +109,9 @@ public:
 	bool pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt);
 	void NormalCalculate(vector<double> &pointcloud, vector<float> &pointnormal, cv::Mat &rt);
 	void Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot);
-	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index);
-	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex);
+	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index, scan::Registration & reg);
+	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg);
+	
 	void writefile(orth::MeshModel totalMeshModel, string name);
 	void writefile(vector<double> cloud, string name);
 	void ReductMesh(orth::MeshModel &model_target, orth::MeshModel &model_source);
@@ -111,8 +124,11 @@ signals:
 	void meshFinish();
 	void StitchFinish();
 	void taskTeethSititFinish();
+	void finishFarRegSignal();//???????????
 public slots:
-	void controlComputeScan(int chooseJawIndex);
+	void FarRegistrationSlot();//??????????
+	void normalComputeScan(int chooseJawIndex);//??????
+	void normalAllJawComputeScan();
 	void compensationComputeScan(int chooseJawIndex);
 	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 

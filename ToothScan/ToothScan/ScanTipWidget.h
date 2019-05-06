@@ -45,9 +45,10 @@ public:
 	QPushButton *cutHeightButton;//切割高度应用
 	QPushButton *discardCutHeightButton;//丢弃切割高度应用
 	QPushButton *saveCutHeightButton;//保存当前切割高度
+//完成
+	QPushButton *upperShowButton;//显示或隐藏上颌数据
+	QPushButton *lowerShowButton;//显示或隐藏下颌数据
 
-	QPushButton *upperShowButton;//完成
-	QPushButton *lowerShowButton;
 
 	//bottom
 	QPushButton *backStepButton;

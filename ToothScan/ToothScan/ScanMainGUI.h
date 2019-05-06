@@ -89,6 +89,7 @@ public:
 	void resetValue();
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
+	void startAllJawNormalScan();
 	void startControlCalibrationSignal();//开始标定信号
 	void compensationSignal(int chooseJawIndex);//补充扫描信号
 	void doScanSignal();
@@ -96,6 +97,7 @@ signals:
 
 	void gpaMeshSignal(int chooseJawIndex);
 	void saveCutModelSignal();//保存切割后的模型
+	void farRegistrationSignal();
 
 	void updateMeshModelSingel(int refreshIndex);//刷新模型显示信号
 	void updateModelsVtSingle();
@@ -143,6 +145,11 @@ private:
 	void updateMeshModel(int refreshIndex);
 	void updateModelsVtSlot();
 	void updateCamera();
+	void updateRegMeshSlot();
+	
+	//完成后，显示或隐藏模型按钮
+	void ShowHideUpperModel();//显示或者隐藏上颌
+	void ShowHideLowerModel();//显示或者隐藏下颌
 
 	void doScanDialogSlot(QJsonObject scanObj);
 

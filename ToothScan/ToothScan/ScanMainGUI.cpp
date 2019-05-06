@@ -350,11 +350,22 @@ void ScanMainGUI::setConnections()
 	//保存所有模型到文件
 	connect(this, SIGNAL(saveModeltoFileSignal()), this, SLOT(saveModeltoFileSlot()));
 
+	//远距离配准，将上颌、下颌以及全颌进行配准
+	connect(this, SIGNAL(farRegistrationSignal()), ControlComputeThread, SLOT(FarRegistrationSlot()));
+	connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(updateRegMeshSlot()));
+	connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(JawScan()));
+	//完成配准后，显示或者隐藏模型连接																		   
+	connect(scanTipWidget->upperShowButton, SIGNAL(clicked()), this, SLOT(ShowHideUpperModel()));//显示或隐藏上颌模型
+	connect(scanTipWidget->lowerShowButton, SIGNAL(clicked()), this, SLOT(ShowHideLowerModel()));//显示或隐藏上颌模型
+
 	//扫描控制和计算
 	connect(this, SIGNAL(compensationSignal(int)), ControlScanThread, SLOT(compensationControlScan()));
 	connect(this, SIGNAL(compensationSignal(int)), ControlComputeThread, SLOT(compensationComputeScan(int)));
-	connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(controlNormalScan()));
-	connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(controlComputeScan(int)));
+	connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(normalControlScan()));
+	connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(normalComputeScan(int)));
+	connect(this, SIGNAL(startAllJawNormalScan()), ControlScanThread, SLOT(normalAllJawControlScan()));
+	connect(this, SIGNAL(startAllJawNormalScan()), ControlComputeThread, SLOT(normalAllJawComputeScan()));
+
 	connect(this, SIGNAL(startControlCalibrationSignal()), ControlScanThread, SLOT(controlCalibrationScan()));
 	connect(ControlComputeThread, SIGNAL(computeFinish()), this, SLOT(JawScan()));
 	//展示模型
@@ -467,8 +478,16 @@ void ScanMainGUI::GlobalCalibrateSlot()
 
 void ScanMainGUI::CalculatePointCloud()
 {
+	cout <<"controlScanQThread->isRunning() = "<< controlScanQThread->isRunning() << endl;
+	cout << "controlComputeQThread->isRunning() = " << controlComputeQThread->isRunning() << endl;
+	cout <<"chooseJawIndex" <<chooseJawIndex << endl;
 	if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
 	{
+		if (chooseJawIndex == 3)
+		{
+			emit startAllJawNormalScan();
+			return;
+		}
 		emit startControlNormalScan(chooseJawIndex);
 		return;
 	}
@@ -484,6 +503,13 @@ void ScanMainGUI::CalculatePointCloud()
 		controlComputeQThread->start();
 		ControlComputeThread->setFlage(false);
 	}
+	if (chooseJawIndex == 3)
+	{
+		emit startAllJawNormalScan();
+		return;
+	}
+
+	
 	emit startControlNormalScan(chooseJawIndex);
 }
 
@@ -519,7 +545,7 @@ void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
 
 void ScanMainGUI::updateMeshModel(int refreshIndex)
 {
-	if (refreshIndex == 1)
+	if (refreshIndex == 1)//清空之前窗口上所有的模型
 	{
 		glWidget->m_ModelsVt.clear();
 	}
@@ -777,7 +803,12 @@ void ScanMainGUI::judgeForwardStep()
 	else if (forwardIndex == 4)
 	{
 		emit saveModeltoFileSignal();
-		scanTipWidget->setVisible(false);
+		scanTipWidget->setVisible(false);	
+	}
+	else if (forwardIndex == 5)
+	{
+		emit farRegistrationSignal();
+		//JawScan();
 	}
 }
 
@@ -809,6 +840,8 @@ void ScanMainGUI::JawScan()
 			}
 			else if (upperJawIndex == 3)
 			{
+				ControlComputeThread->showUpperModelFlag = true;
+				ControlComputeThread->regUpperModelFlag = true;
 				scanTipWidget->upperFinishConstructIHM4();
 				forwardIndex = 4;
 				emit cutSurfaceSignal(false);
@@ -836,6 +869,8 @@ void ScanMainGUI::JawScan()
 			}
 			else if (lowerJawIndex == 3)
 			{
+				ControlComputeThread->showLowerModelFlag = true;
+				ControlComputeThread->regLowerModelFlag = true;
 				scanTipWidget->lowerFinishConstructIHM4();
 				forwardIndex = 4;
 				emit cutSurfaceSignal(false);
@@ -852,6 +887,7 @@ void ScanMainGUI::JawScan()
 			{
 				scanTipWidget->allCompenConstructIHM2();
 				forwardIndex = 2;
+				cout <<"forwardIndex = " << forwardIndex <<endl;
 				compensationFlag = false;
 			}
 			else if (allJawIndex == 2)
@@ -895,13 +931,14 @@ void ScanMainGUI::JawScan()
 			else if (allJawIndex == 8)
 			{
 				scanTipWidget->allCutConstructIHM9();
-				forwardIndex = 3;
+				forwardIndex = 5;
 				emit cutSurfaceSignal(true);
 			}
 			else if (allJawIndex == 9)
 			{
 				scanTipWidget->allFinishConstructIHM10();
 				forwardIndex = 4;
+				chooseJawIndex = 3;
 				emit cutSurfaceSignal(false);
 			}
 			allJawIndex++;
@@ -967,8 +1004,8 @@ void ScanMainGUI::judgeBackStep()
 			forwardIndex = 1;
 			chooseJawIndex = 1;
 			ControlComputeThread->upper_mModel.clear();
-			ControlComputeThread->upper_points_cloud_end2.clear();
-			ControlComputeThread->upper_points_cloud_globle2.clear();
+			//ControlComputeThread->upper_points_cloud_end2.clear();
+			//ControlComputeThread->upper_points_cloud_globle2.clear();
 			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
@@ -1001,8 +1038,8 @@ void ScanMainGUI::judgeBackStep()
 			forwardIndex = 1;
 			chooseJawIndex = 2;
 			ControlComputeThread->lower_mModel.clear();
-			ControlComputeThread->lower_points_cloud_end2.clear();
-			ControlComputeThread->lower_points_cloud_globle2.clear();
+			//ControlComputeThread->lower_points_cloud_end2.clear();
+			//ControlComputeThread->lower_points_cloud_globle2.clear();
 			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
@@ -1035,8 +1072,8 @@ void ScanMainGUI::judgeBackStep()
 			forwardIndex = 1;
 			chooseJawIndex = 3;
 			ControlComputeThread->all_mModel.clear();
-			ControlComputeThread->all_points_cloud_end2.clear();
-			ControlComputeThread->all_points_cloud_globle2.clear();
+			//ControlComputeThread->all_points_cloud_end2.clear();
+			//ControlComputeThread->all_points_cloud_globle2.clear();
 			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
 			emit updateMeshModelSingel(1);
 		}
@@ -1064,8 +1101,8 @@ void ScanMainGUI::judgeBackStep()
 			forwardIndex = 1;
 			chooseJawIndex = 2;
 			ControlComputeThread->lower_mModel.clear();
-			ControlComputeThread->lower_points_cloud_end2.clear();
-			ControlComputeThread->lower_points_cloud_globle2.clear();
+			//ControlComputeThread->lower_points_cloud_end2.clear();
+			//ControlComputeThread->lower_points_cloud_globle2.clear();
 			emit cutSurfaceSignal(false);
 			emit updateMeshModelSingel(1);
 		}
@@ -1093,8 +1130,8 @@ void ScanMainGUI::judgeBackStep()
 			forwardIndex = 1;
 			chooseJawIndex = 1;
 			ControlComputeThread->upper_mModel.clear();
-			ControlComputeThread->upper_points_cloud_end2.clear();
-			ControlComputeThread->upper_points_cloud_globle2.clear();
+			//ControlComputeThread->upper_points_cloud_end2.clear();
+			//ControlComputeThread->upper_points_cloud_globle2.clear();
 			emit cutSurfaceSignal(false);
 			emit updateMeshModelSingel(1);
 		}
@@ -1363,6 +1400,11 @@ void ScanMainGUI::setRotationWaverSlot()
 		}
 	}
 
+	ax = round(ax * 10);
+	ax = ax / 10;
+
+	ay = round(ay * 10);
+	ay = ay / 10;
 	scanTipWidget->rotationLineEdit->setText(QString("%1").arg(ay));
 	scanTipWidget->waverLineEdit->setText(QString("%1").arg(ax));
 
@@ -1544,11 +1586,28 @@ void ScanMainGUI::saveModeltoFileSlot()
 			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_AllJaw_" + std::to_string(index) + ".stl";
 			model_io.writeModel(fileStr, "stl");
 		}*/
-		orth::ModelIO finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
+		orth::ModelIO all_finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
 		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
+		all_finish_model_io.writeModel(modelNameStr, "stlb");
+
+		mModelVSize = ControlComputeThread->upper_mModel.size();
+		orth::ModelIO upper_finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
+		modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
+		upper_finish_model_io.writeModel(modelNameStr, "stlb");
+
+		mModelVSize = ControlComputeThread->lower_mModel.size();
+		orth::ModelIO lower_finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
+		modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+		cout << "pathname: " << modelNameStr << endl;
+		lower_finish_model_io.writeModel(modelNameStr, "stlb");
 	}
+	glWidget->m_ModelsVt.clear();
+	glWidget->update();
+
+	this->setVisible(false);
+	tabMainPage->showMaximized();
 }
 
 void ScanMainGUI::scanJawScanBtnClick()
@@ -2050,4 +2109,117 @@ void ScanMainGUI::calibImageCameraSlot(int endFlag)
 		box.exec();
 	}
 	tabMainPage->showMaximized();
+}
+void ScanMainGUI::updateRegMeshSlot()
+{
+	glWidget->m_ModelsVt.clear();
+
+	if (ControlComputeThread->showUpperModelFlag == true && ControlComputeThread->showLowerModelFlag == true)
+	{
+		glWidget->mm = ControlComputeThread->allRegModel;
+		glWidget->makeObject();
+	}
+	else if(ControlComputeThread->showUpperModelFlag == true)
+	{
+		int size = ControlComputeThread->upper_mModel.size();
+		glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
+		glWidget->makeObject();
+	}
+	else if (ControlComputeThread->showLowerModelFlag == true)
+	{
+		int size = ControlComputeThread->lower_mModel.size();
+		glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
+		glWidget->makeObject();
+	}
+	else
+	{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("拼接失败!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+		glWidget->update();
+	}
+	
+	this->showMaximized();
+}
+
+void ScanMainGUI::ShowHideUpperModel()
+{
+	if (ControlComputeThread->regUpperModelFlag == false)
+	{
+		return;
+	}
+	glWidget->m_ModelsVt.clear();
+	if (ControlComputeThread->showUpperModelFlag == true)
+	{
+		ControlComputeThread->showUpperModelFlag = false;
+		if (ControlComputeThread->showLowerModelFlag == true)
+		{
+			int size = ControlComputeThread->lower_mModel.size();
+			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
+			glWidget->makeObject();
+		}
+		else
+		{
+			glWidget->update();
+		}
+	}
+	else
+	{
+		ControlComputeThread->showUpperModelFlag = true;
+		if (ControlComputeThread->showLowerModelFlag == true)
+		{
+			glWidget->mm = ControlComputeThread->allRegModel;
+			glWidget->makeObject();
+		}
+		else
+		{
+			int size = ControlComputeThread->upper_mModel.size();
+			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
+			glWidget->makeObject();
+		}
+	}
+	
+	this->showMaximized();
+}
+
+void ScanMainGUI::ShowHideLowerModel()
+{
+	if (ControlComputeThread->regLowerModelFlag == false)
+	{
+		return;
+	}
+	glWidget->m_ModelsVt.clear();
+	if (ControlComputeThread->showLowerModelFlag == true)
+	{
+		ControlComputeThread->showLowerModelFlag = false;
+		if (ControlComputeThread->showUpperModelFlag == true)
+		{
+			int size = ControlComputeThread->upper_mModel.size();
+			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
+			glWidget->makeObject();
+		}
+		else
+		{
+			glWidget->update();
+		}
+	}
+	else
+	{
+		ControlComputeThread->showLowerModelFlag = true;
+		if (ControlComputeThread->showUpperModelFlag == true)
+		{
+			glWidget->mm = ControlComputeThread->allRegModel;
+			glWidget->makeObject();
+		}
+		else
+		{
+			int size = ControlComputeThread->lower_mModel.size();
+			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
+			glWidget->makeObject();
+		}
+	}
+
+	
+	this->showMaximized();
 }
