@@ -5,12 +5,9 @@
 #include <pcl/registration/icp.h>
 #include <pcl/registration/icp_nl.h>
 #include <pcl/registration/incremental_registration.h>
-#include <pcl/gpu/containers/initialization.h>
 #include <pcl/common/common.h>
 #include <pcl/search/search.h>
 #include <pcl/features/normal_3d.h>
-#include "features.hpp"
-#include "octree.hpp"
 #include "ConTrolThread.h"
 #include "3DScan_cuda.h"
 #include "registration.h"
@@ -105,9 +102,6 @@ public:
 	void pointcloudrotation(orth::PointCloudD &pointcloud, orth::PointNormal &PointNormal, cv::Mat &RT);
 	void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, orth::PointColor &pointColor, cv::Mat &RT, orth::MeshModel &totalMeshModel);
 	void pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT);
-	double MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2);
-	bool pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt);
-	void NormalCalculate(vector<double> &pointcloud, vector<float> &pointnormal, cv::Mat &rt);
 	void Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot);
 	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index, scan::Registration & reg);
 	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg);

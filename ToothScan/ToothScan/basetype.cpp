@@ -147,31 +147,33 @@ namespace orth
 		}
 		else
 		{
+			//P2Edge.clear();
+			//Edge_S.reset(new HalfEdge_Serial);
 			//P2Edge.resize(P.size());
-			//Edge_S.resize(this->F.size() * 3);
+
 			////HalfEdge_Parallel edge_current;
 
 			//for (size_t face_index = 0; face_index < F.size(); face_index++)
 			//{
-			//	//vector<Index_ui> point_index(4);
-			//	//point_index[0] = F[face_index].x;
-			//	//point_index[1] = F[face_index].y;
-			//	//point_index[2] = F[face_index].z;
-			//	//point_index[3] = F[face_index].x;
+			//	vector<Index_ui> point_index(4);
+			//	point_index[0] = F[face_index].x;
+			//	point_index[1] = F[face_index].y;
+			//	point_index[2] = F[face_index].z;
+			//	point_index[3] = F[face_index].x;
 
 			//	for (size_t point_ = 0; point_ < 3; point_++)
 			//	{
-			//		Edge_P[face_index * 3 + point_].CurrentPoint = point_index[point_];
-			//		Edge_P[face_index * 3 + point_].EndPoint = point_index[point_ + 1];
-			//		Edge_P[face_index * 3 + point_].CurrentFace = face_index;
-			//		if (point_ == 3)
+			//		*Edge_S[face_index * 3 + point_].CurrentPoint = P[point_index[point_]];
+			//		*Edge_S[face_index * 3 + point_].EndPoint = P[point_index[point_ + 1]];
+			//		*Edge_S[face_index * 3 + point_].CurrentFace = F[face_index];
+			//		if (point_ == 2)
 			//		{
-			//			Edge_P[face_index * 3 + point_].NextEdge = face_index * 3;
+			//			Edge_S[face_index * 3 + point_].NextEdge = face_index * 3;
 
 			//		}
 			//		else
 			//		{
-			//			Edge_P[face_index * 3 + point_].NextEdge = face_index * 3 + point_ + 1;
+			//			Edge_S[face_index * 3 + point_].NextEdge = face_index * 3 + point_ + 1;
 
 			//		}
 
@@ -179,19 +181,21 @@ namespace orth
 			//	}
 			//}
 
-			//for (size_t edge_index = 0; edge_index < Edge_P.size(); edge_index++)
+			//for (size_t edge_index = 0; edge_index < Edge_S.size(); edge_index++)
 			//{
-			//	Index_ui current_point_index = Edge_P[edge_index].CurrentPoint;
-			//	Index_ui End_point_index = Edge_P[edge_index].EndPoint;
+			//	Edge_S[edge_index].OppoEdge = -1;
+			//	Index_ui current_point_index = Edge_S[edge_index].CurrentPoint;
+			//	Index_ui End_point_index = Edge_S[edge_index].EndPoint;
 			//	for (size_t p2edge_index = 0; p2edge_index < P2Edge[End_point_index].size(); p2edge_index++)
 			//	{
 
-			//		if (Edge_P[P2Edge[End_point_index][p2edge_index]].EndPoint == current_point_index)
+			//		if (Edge_S[P2Edge[End_point_index][p2edge_index]].EndPoint == current_point_index)
 			//		{
-			//			Edge_P[edge_index].OppoEdge = P2Edge[End_point_index][p2edge_index];
+			//			Edge_S[edge_index].OppoEdge = P2Edge[End_point_index][p2edge_index];
 			//			break;
 			//		}
 			//	}
+
 			//}
 		}
 
@@ -447,10 +451,16 @@ namespace orth
 			orth::PointNormal new_normal;
 			for (int point_index = 0; point_index < P.size(); point_index++)
 			{
-				orth::Normal L_normal;
+				orth::Normal sum_normal(0, 0, 0);
+				orth::Normal L_normal = N[point_index];
 				for (int neighbour_index = 0; neighbour_index < P2Edge[point_index].size(); neighbour_index++)
 				{
-					L_normal += N[Edge_P[P2Edge[point_index][neighbour_index]].EndPoint];
+					orth::Normal C_normal = N[Edge_P[P2Edge[point_index][neighbour_index]].EndPoint];
+					if (L_normal.dot(C_normal) > 0)
+						sum_normal += C_normal;
+					else
+						sum_normal -= C_normal;
+					//L_normal += N[Edge_P[P2Edge[point_index][neighbour_index]].EndPoint];
 				}
 				L_normal.normalize();
 				new_normal.push_back(L_normal);

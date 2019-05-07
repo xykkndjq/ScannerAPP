@@ -243,229 +243,6 @@ void ComputeThread::pointcloudrotation(orth::PointCloudD &pointCloud, orth::Poin
 	pointNormal2.swap(pointNormal);
 }
 
-double ComputeThread::MatchCalculate(pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud1, pcl::PointCloud<pcl::PointXYZ>::Ptr &pointcloud2)
-{
-
-	pcl::gpu::Octree::PointCloud cloud_device;
-	cloud_device.upload(pointcloud1->points);
-
-	pcl::gpu::Octree octree_device;
-	octree_device.setCloud(cloud_device);
-	octree_device.build();
-
-	pcl::gpu::Octree::Queries queries_device;
-	queries_device.upload(pointcloud2->points);
-
-	std::vector<float> radius;
-	radius.push_back(5);
-	radius.push_back(5);
-	radius.push_back(5);
-
-	pcl::gpu::Octree::Radiuses radiuses_device;
-	radiuses_device.upload(radius);
-
-	const int max_answers = 2;
-
-	// Output buffer on the device
-	//pcl::gpu::NeighborIndices result_device(queries_device.size(), max_answers);
-	pcl::gpu::NeighborIndices result_device(queries_device.size(), max_answers);
-
-	// Do the actual search
-	//octree_device.radiusSearch(queries_device, radiuses_device, max_answers, result_device);
-	octree_device.nearestKSearchBatch(queries_device, 1, result_device);
-
-	std::vector<int> sizes, data;
-	result_device.sizes.download(sizes);
-	result_device.data.download(data);
-
-	std::cout << "INFO: Data generated" << std::endl;
-	std::cout << "INFO: found : " << data.size() << " data.size" << std::endl;
-	std::cout << "INFO: found : " << sizes.size() << " sizes.size" << std::endl;
-
-	int dis_sum = 0;
-	for (size_t i = 0; i < sizes.size(); ++i)
-	{
-		//std::cout << "INFO: sizes : " << i << " size " << sizes[i] << std::endl;
-		if (sizes[i] != 0)
-		{
-			double dis = pcl::distances::l2Sqr(pointcloud1->points[data[i]].getVector4fMap(), pointcloud2->points[i].getVector4fMap());
-
-			if (dis < 1)
-			{
-				dis_sum++;
-			}
-
-		}
-	}
-	std::cout << "			INFO: sum distance " << dis_sum << std::endl;
-	double aa = (double)dis_sum / (pointcloud2->size());
-	std::cout << "			INFO: mean distance " << aa << std::endl;
-	return aa;
-
-}
-
-bool ComputeThread::pointcloudICP(vector<double> &cloud1, vector<double> &cloud2, int sample_number1, int sample_number2, cv::Mat &Rt)
-{
-	typedef pcl::PointXYZ PointType;
-	typedef pcl::PointCloud<PointType> Cloud;
-	typedef Cloud::ConstPtr CloudConstPtr;
-	typedef Cloud::Ptr CloudPtr;
-
-	double dist = 1;
-	double rans = 10;
-	int iter = 200;
-	bool nonLinear = true;
-
-	std::vector<int> pcd_indices;
-
-	pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>::Ptr icp;
-	if (nonLinear)
-	{
-		//std::cout << "Using IterativeClosestPointNonLinear" << std::endl;
-		icp.reset(new pcl::IterativeClosestPointNonLinear<pcl::PointXYZ, pcl::PointXYZ>());
-	}
-	else
-	{
-		//std::cout << "Using IterativeClosestPoint" << std::endl;
-		icp.reset(new pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>());
-	}
-
-	icp->setMaximumIterations(iter);
-	icp->setMaxCorrespondenceDistance(dist);
-	icp->setRANSACOutlierRejectionThreshold(rans);
-
-	pcl::registration::IncrementalRegistration<pcl::PointXYZ> iicp;
-	iicp.setRegistration(icp);
-
-	CloudPtr data(new Cloud);
-	for (int i = 0; i < cloud1.size() / 3; i += sample_number1)
-	{
-		pcl::PointXYZ point(cloud1[i * 3 + 0], cloud1[i * 3 + 1], cloud1[i * 3 + 2]);
-		data->push_back(point);
-	}
-
-	if (!iicp.registerCloud(data))
-	{
-		//std::cout << "Registration failed. Resetting transform" << std::endl;
-		iicp.reset();
-		iicp.registerCloud(data);
-	};
-	//cout << "data 1 = " << data->points.size() << endl;
-	//pcl::io::savePLYFileBinary("111.ply", *data);
-	CloudPtr data2(new Cloud);
-	for (int i = 0; i < cloud2.size() / 3; i += sample_number2)
-	{
-		pcl::PointXYZ point(cloud2[i * 3 + 0], cloud2[i * 3 + 1], cloud2[i * 3 + 2]);
-		data2->push_back(point);
-	}
-
-	//cout << "data 2 = " << data2->points.size() << endl;
-	//pcl::io::savePLYFileBinary("222.ply", *data2);
-	clock_t start, finish;
-	double  duration;
-	start = clock();
-
-	if (!iicp.registerCloud(data2))
-	{
-		//std::cout << "Registration failed. Resetting transform" << std::endl;
-		iicp.reset();
-		iicp.registerCloud(data2);
-	};
-
-	finish = clock();
-	duration = (double)(finish - start) / CLOCKS_PER_SEC;
-	std::cout << "&&& regisitration calculate time is " << duration << " second " << std::endl;
-
-	CloudPtr tmp(new Cloud);
-	pcl::transformPointCloud(*data2, *tmp, iicp.getAbsoluteTransform());
-	double meandis = MatchCalculate(data, tmp);
-
-	if (meandis < 0.5)
-	{
-		return false;
-	}
-
-	Eigen::Matrix4f rt = iicp.getAbsoluteTransform();
-	std::cout << iicp.getAbsoluteTransform() << std::endl;
-	Rt = cv::Mat::eye(4, 4, CV_64FC1);
-	Rt.at<double>(0, 0) = rt(0, 0); Rt.at<double>(0, 1) = rt(0, 1); Rt.at<double>(0, 2) = rt(0, 2); Rt.at<double>(0, 3) = rt(0, 3);
-	Rt.at<double>(1, 0) = rt(1, 0); Rt.at<double>(1, 1) = rt(1, 1); Rt.at<double>(1, 2) = rt(1, 2); Rt.at<double>(1, 3) = rt(1, 3);
-	Rt.at<double>(2, 0) = rt(2, 0); Rt.at<double>(2, 1) = rt(2, 1); Rt.at<double>(2, 2) = rt(2, 2); Rt.at<double>(2, 3) = rt(2, 3);
-	Rt.at<double>(3, 0) = rt(3, 0); Rt.at<double>(3, 1) = rt(3, 1); Rt.at<double>(3, 2) = rt(3, 2); Rt.at<double>(3, 3) = rt(3, 3);
-
-	return true;
-}
-
-void ComputeThread::NormalCalculate(vector<double> &pointcloud, vector<float> &pointnormal, cv::Mat &rt)
-{
-
-	string abc = pcl::gpu::getDeviceName(0);
-	cout << abc << endl;
-	pcl::gpu::setDevice(0);
-	pcl::gpu::printShortCudaDeviceInfo(0);
-
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_1(new pcl::PointCloud<pcl::PointXYZ>);
-
-	//double* asbs = (double*)(cloud_1->points.data());
-
-	for (int point_index = 0; point_index < pointcloud.size() / 3; point_index++)
-	{
-		pcl::PointXYZ xyz;
-		xyz.x = pointcloud[point_index * 3 + 0];
-		xyz.y = pointcloud[point_index * 3 + 1];
-		xyz.z = pointcloud[point_index * 3 + 2];
-		cloud_1->push_back(xyz);
-	}
-
-	pcl::PointCloud<pcl::PointXYZ>::Ptr normal(new pcl::PointCloud<pcl::PointXYZ>);
-
-	cout << cloud_1->points.size() << endl;
-
-	pcl::PointXYZ minp, maxp;
-	pcl::getMinMax3D(*cloud_1, minp, maxp);
-	float sz = (maxp.x - minp.x + maxp.y - minp.y + maxp.z - minp.z) / 3;
-	float radius = sz / 30;
-
-
-	pcl::gpu::NormalEstimation::PointCloud cloud_device;
-	cloud_device.upload(cloud_1->points);
-
-	pcl::gpu::Octree octree_;
-
-	octree_.setCloud(cloud_device);
-	octree_.build();
-
-	pcl::gpu::NeighborIndices nn_indices_;
-
-	octree_.radiusSearch(cloud_device, radius, 50, nn_indices_);
-
-	pcl::gpu::NormalEstimation ne_device;
-	ne_device.setInputCloud(cloud_device);
-	ne_device.setRadiusSearch(radius, 50);
-
-	pcl::gpu::NormalEstimation::Normals normals_device;
-
-	//-4.9391095901076270e+01, -3.6521765552486102e+01,2.0971747648573330e+02
-	ne_device.setViewPoint(rt.at<double>(0), rt.at<double>(1), rt.at<double>(2));
-	//cout << rt_inv.at<double>(0, 3) << " ;" << rt_inv.at<double>(1, 3) << " ;" << rt_inv.at<double>(2, 3) << " ;" << endl;
-	//cout << rt_inv.at<double>(0) << " ;" << rt_inv.at<double>(1) << " ;" << rt_inv.at<double>(2) << " ;" << endl;
-	//ne_device.setViewPoint(-4.9391095901076270e+01, -3.6521765552486102e+01, 2.0971747648573330e+02);
-	ne_device.compute(normals_device);
-
-	vector<pcl::PointXYZ> downloaded;
-	normals_device.download(downloaded);
-
-	for (int normal_index = 0; normal_index < downloaded.size(); normal_index++)
-	{
-		pointnormal.push_back(downloaded[normal_index].x);
-		pointnormal.push_back(downloaded[normal_index].y);
-		pointnormal.push_back(downloaded[normal_index].z);
-	}
-
-	//vector<float> normal_current(downloaded.size() * 4);
-	//memcpy(normal_current.data(), downloaded.data(), sizeof(pcl::PointXYZ)*downloaded.size());
-}
-
 bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int index, scan::Registration & reg)
 {
 	vector<double> points_2;
@@ -506,8 +283,8 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 	//ColoredPoints(pointcloud, 3);
 
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	 mModel.SmallModelFilter(300);
-	 mModel.S.clear();
+	 //mModel.SmallModelFilter(300);
+	 //mModel.S.clear();
 	mModel.NormalSmooth(1);
 
 	if (chooseJawIndex == 1)
@@ -616,8 +393,8 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 	cout << "*******************************" << endl;
 
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	mModel.SmallModelFilter(300);
-	mModel.S.clear();
+	//mModel.SmallModelFilter(300);
+	//mModel.S.clear();
 	mModel.NormalSmooth(1);
 	cout << "mModel size" << mModel.size()<< endl;
 	//tinyply::plyio io;
@@ -850,6 +627,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+		cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
  		usedSpace.acquire();
  
  		int image_bias = 0;
@@ -872,7 +650,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
  			}
  		}
 		cout << "scan_index:" << scan_index << endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
 		if (scanFlag == true)
@@ -938,6 +716,7 @@ void ComputeThread::normalAllJawComputeScan()
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+		cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
 		usedSpace.acquire();
 
 		int image_bias = 0;
@@ -960,7 +739,7 @@ void ComputeThread::normalAllJawComputeScan()
 			}
 		}
 		cout << "scan_index:" << scan_index << endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
 		if (scanFlag == true)
@@ -1040,7 +819,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 
 	orth::MeshModel mModel;
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	mModel.SmallModelFilter(300);
+	//mModel.SmallModelFilter(300);
 	mModel.NormalSmooth(1);
 
 	if (chooseJawIndex == 1)
@@ -1128,7 +907,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
 	orth::MeshModel mModel;
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	 mModel.SmallModelFilter(300);
+	 //mModel.SmallModelFilter(300);
 	mModel.NormalSmooth(1);
 	//	if (chooseJawIndex == 1)
 	{
@@ -1189,6 +968,8 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	}
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
+
 	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
@@ -1224,7 +1005,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 		}
 	}
 
-	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 
 	/*vector<double> points_;
 	vector<float> normal;
@@ -1718,6 +1499,7 @@ void ComputeThread::allJawComputeScan()
 		return;
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
 	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
@@ -1764,7 +1546,7 @@ void ComputeThread::allJawComputeScan()
 		}
 		cout << "scan_index:" << scan_index << endl;
 		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index,reg, pScanTask);
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
@@ -1880,6 +1662,7 @@ void ComputeThread::normalComputeScan()
 	pScanTask->m_mModel.clear();
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
 	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
@@ -1960,7 +1743,7 @@ void ComputeThread::normalComputeScan()
 		//cv::imshow("0", image_input);
 		//cv::waitKey(0);
 		//cv::imwrite("./ScanData/" + QString(scan_index).toStdString() + ".png", image_input);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 		//cv::imshow("", matched_pixel_image);
 		//cv::waitKey();
 		cout << "pointcloud calculate done" << endl;
@@ -2001,6 +1784,7 @@ void ComputeThread::compensationCompute()
 		return;
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
 	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
@@ -2037,7 +1821,7 @@ void ComputeThread::compensationCompute()
 		}
 	}
 
-	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, 1000.0);
+	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 
 	/*vector<double> points_;
 	vector<float> normal;

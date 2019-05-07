@@ -42,12 +42,15 @@ namespace scan
 		__declspec (dllexport) TSDF();
 		__declspec (dllexport) ~TSDF();
 
-		cudaError_t __declspec (dllexport) MeshCalculateCuda2(double* depth_image, int image_height, int image_width, double *rot, int& vertex_number, int& face_number, float* vertex_out, int*vertex_index_out);
+		cudaError_t __declspec (dllexport) MeshCalculateCuda2(double* depth_image, int image_height, int image_width, double *rot, int& vertex_number, int& face_number, float* vertex_out, float* normal_out, int*vertex_index_out);
 
 
 		//cudaError_t __declspec (dllexport) MeshCalculateCuda2(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, float* TSDF_, double dis_threshold, int* face_number, float* vertex_out, int*vertex_index_out);
 
 		cudaError_t __declspec (dllexport) MeshInit(int resolution_x_, int resolution_y_, int resolution_z_, float size_x_, float size_y_, float size_z_, float threshold_, double *camera_Matrix_r_, double *g_c_Matrix_);
+
+		float *host_TSDF;
+		unsigned short *host_TSDF_wight;
 
 	private:
 
