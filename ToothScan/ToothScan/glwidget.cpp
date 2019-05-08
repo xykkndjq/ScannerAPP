@@ -761,7 +761,7 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 {
-	cout << "release done !" << endl;
+	//cout << "release done !" << endl;
 	//vertices_in.clear();
 	//ChosePoints(0, 0, 500, 500, 1920, 1080, model1, view1, project1, mm);
 	//makeObject();

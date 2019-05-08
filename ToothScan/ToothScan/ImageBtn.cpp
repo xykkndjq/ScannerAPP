@@ -40,6 +40,8 @@ void CImageBtn::paintEvent(QPaintEvent * qEvent)
 		pPainter.setBrush(QBrush(QColor(255,255,255,0)));
 		pPainter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
 		pPainter.drawRect(rtBtn);
+		pPainter.setBrush(QBrush(m_clBgColor));
+		pPainter.drawEllipse(rtBtn.width() - 50, rtBtn.height() / 2 - 20, 40, 40);//»­Ô²
 	}
 	else {
 	}

@@ -697,8 +697,8 @@ namespace orth
 
 				mm_output.P.push_back(mm_group_input[group_index].P[point_index]);
 				mm_output.N.push_back(mm_group_input[group_index].N[point_index]);
-				mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
-				mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
+				//mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
+				//mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
 				//models[L[point_index]].Cur.push_back(Cur[point_index]);
 				new_point_index[point_index] = (mm_output.P.size() - 1);
 			}
@@ -710,7 +710,7 @@ namespace orth
 				Index_ui l_point3 = mm_group_input[group_index].F[face_index].z;
 				orth::Face l_face(new_point_index[l_point1], new_point_index[l_point2], new_point_index[l_point3]);
 				mm_output.F.push_back(l_face);
-				mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
+				//mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
 			}
 		}
 

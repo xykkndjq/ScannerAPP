@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ScanMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.2
+** Created by: Qt User Interface Compiler version 5.9.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -69,7 +69,7 @@ public:
     QGroupBox *StitchingFinishPanel;
     QLabel *CutJawFinishPanelTips_5;
     QPushButton *stitchingFNextBtn;
-    QPushButton *CutJawFinishPanelBackBtn_5;
+    QPushButton *StitchingFinishPanelBackBtn;
     QLabel *StitchingPanelTips_3;
     QPushButton *stitchingUpperJawBtn;
     QPushButton *stitchingLowerJawBtn;
@@ -182,7 +182,7 @@ public:
         ScanJawGroupTipImage = new QLabel(ScanJawGroup);
         ScanJawGroupTipImage->setObjectName(QStringLiteral("ScanJawGroupTipImage"));
         ScanJawGroupTipImage->setGeometry(QRect(0, 180, 300, 102));
-        ScanJawGroupTipImage->setPixmap(QPixmap(QString::fromUtf8("Resources/images/lowerjaw_yes.png")));
+        ScanJawGroupTipImage->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/lowerjaw_yes.png")));
         ScanJawGroupTipImage->setScaledContents(true);
         ScanJawScanBtn = new QPushButton(ScanJawGroup);
         ScanJawScanBtn->setObjectName(QStringLiteral("ScanJawScanBtn"));
@@ -594,7 +594,7 @@ public:
         CutJawFinishPanelTipImage = new QLabel(CutJawFinishPanel);
         CutJawFinishPanelTipImage->setObjectName(QStringLiteral("CutJawFinishPanelTipImage"));
         CutJawFinishPanelTipImage->setGeometry(QRect(10, 150, 271, 291));
-        CutJawFinishPanelTipImage->setPixmap(QPixmap(QString::fromUtf8("Resources/images/alljaw.png")));
+        CutJawFinishPanelTipImage->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/alljaw.png")));
         CutJawFinishPanelTipImage->setScaledContents(true);
         StitchingPanel = new QGroupBox(ScanMainGUI);
         StitchingPanel->setObjectName(QStringLiteral("StitchingPanel"));
@@ -784,11 +784,11 @@ public:
         stitchingFNextBtn->setGeometry(QRect(50, 620, 221, 40));
         stitchingFNextBtn->setFont(font);
         stitchingFNextBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
-        CutJawFinishPanelBackBtn_5 = new QPushButton(StitchingFinishPanel);
-        CutJawFinishPanelBackBtn_5->setObjectName(QStringLiteral("CutJawFinishPanelBackBtn_5"));
-        CutJawFinishPanelBackBtn_5->setGeometry(QRect(50, 530, 221, 40));
-        CutJawFinishPanelBackBtn_5->setFont(font);
-        CutJawFinishPanelBackBtn_5->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        StitchingFinishPanelBackBtn = new QPushButton(StitchingFinishPanel);
+        StitchingFinishPanelBackBtn->setObjectName(QStringLiteral("StitchingFinishPanelBackBtn"));
+        StitchingFinishPanelBackBtn->setGeometry(QRect(50, 530, 221, 40));
+        StitchingFinishPanelBackBtn->setFont(font);
+        StitchingFinishPanelBackBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         StitchingPanelTips_3 = new QLabel(StitchingFinishPanel);
         StitchingPanelTips_3->setObjectName(QStringLiteral("StitchingPanelTips_3"));
         StitchingPanelTips_3->setGeometry(QRect(10, 10, 281, 61));
@@ -1227,9 +1227,9 @@ public:
 #endif // QT_NO_TOOLTIP
         stitchingFNextBtn->setText(QApplication::translate("ScanMainGUI", "\345\256\214     \346\210\220", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_5->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
+        StitchingFinishPanelBackBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        CutJawFinishPanelBackBtn_5->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
+        StitchingFinishPanelBackBtn->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
         StitchingPanelTips_3->setText(QApplication::translate("ScanMainGUI", "\345\256\214\346\210\220", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         stitchingUpperJawBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214", Q_NULLPTR));

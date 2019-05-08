@@ -49,13 +49,17 @@ public:
 	orth::MeshModel m_mAllModel;		//总模型
 	vector<orth::MeshModel> m_mCutModel;	//剪切了几次模型 剪切后的模型
 	pCTeethModel pTeethModel;
+	void SetMoldeFileName();
+	string m_strModelFileName;
+	//PARAMDEFINE(string, str, ModelFileName);
+	string Get_ModelFileName();
 private:
 	PARAMDEFINE(string, str, TaskName);
 	PARAMDEFINE(eScanType, e, ScanType);
 	PARAMDEFINE(int, i, TeethId);
 	PARAMDEFINE(eTaskProgress, e, TaskPro);
 	PARAMDEFINE(eTaskType, e, TaskType);
-	PARAMDEFINE(string, str, ModelFileName);
+	
 
 
 public:
@@ -138,6 +142,9 @@ public:
 		}
 		return m_pCurrentTask;
 	}
+	void resetCurrentTask() {
+		m_pCurrentTask = nullptr;
+	}
 	pCScanTask getNextTask() {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
 		for (; iter != m_vtBaseTask.end(); iter++) {
@@ -174,23 +181,21 @@ public:
 		}
 		return nullptr;
 	}
-	pCScanTask getLastScanTask() {
+	pCScanTask getLastScanTask(bool bCurrentSame = false) {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
 		pCScanTask pLastScanTask = nullptr;
 		for (; iter != m_vtBaseTask.end(); iter++) {
-			if ((*iter)->Get_TaskType() == eScan) {
-				pLastScanTask = (*iter);
-			}
-			if (pLastScanTask == m_pCurrentTask){
-				pLastScanTask = nullptr;
+			if ((*iter)->Get_TaskType() == eScan ) {
+				if((*iter) != m_pCurrentTask
+					||(bCurrentSame== true&&(*iter) == m_pCurrentTask))
+					pLastScanTask = (*iter);
 			}
 			if ((*iter) == m_pCurrentTask) {
 				break;
 			}
-			if (pLastScanTask) {
-				m_pCurrentTask = pLastScanTask;
-			}
 		}
+		if (pLastScanTask)
+			m_pCurrentTask = pLastScanTask;
 		return pLastScanTask;
 	}
 	list<pCScanTask> &getTasks() {

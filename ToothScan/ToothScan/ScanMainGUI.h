@@ -191,7 +191,7 @@ private:
 
 	void scanJawScanBtnClick();
 	void ScanJawBackStepBtnClick();
-	void ShowLastScanTask();
+	void ShowLastScanTask(bool bCurrentTaskSame = false);
 	
 	void compensationBtnClick();
 	void discardBtnClick();		//³·Ïú²¹É¨

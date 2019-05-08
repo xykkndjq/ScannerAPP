@@ -1558,7 +1558,7 @@ void TabMainGUI::ToothButtonListPress()
 			removeToothList(chooseID, toothButtonIndex);
 			toothFlagList[toothButtonIndex] = false;
 		}
-		else if (toothFlagList[toothButtonIndex] == true && chooseID != toothID[0])
+		else if (toothFlagList[toothButtonIndex] == true && chooseID != toothID[toothButtonIndex])
 		{
 			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + QString::number(chooseID, 10) + ".png",
 				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
@@ -1833,18 +1833,31 @@ void TabMainGUI::readFileStorage(QString fPath)
 				datastream kdata(byteArray.data(), byteArray.size());
 				pScanTask->StreamValue(kdata, false);
 				switch (pScanTask->Get_ScanType()) {
-				case eAllJawScan:
-					allJawScanTask = pScanTask;
+				case etoothCrown:{
+					pCGroupScan pGroupScanTask = static_pointer_cast<CGroupScan>(pScanTask);
+					chooseID = pScanTask->Get_ScanType() + 1;
+					if(pScanTask){
+						m_eScanType = pScanTask->Get_ScanType();
+						for (int i = 0; i < pGroupScanTask->m_vtTeeth.size();i++) {
+							toothList[pGroupScanTask->m_vtTeeth[i]]->clicked();
+						}
+					}
+				}
 					break;
-				case eLowerJawScan:
-					lowerJawScanTask = pScanTask;
-					break;
-				case eUpperJawScan:
-					upperScanTask = pScanTask;
-					break;
-				case etoothCrown:
 				case einlayScan:
-					pCrownGroupScan = pScanTask;
+					chooseID = pScanTask->Get_ScanType() + 1;
+					m_eScanType = pScanTask->Get_ScanType();
+					toothList[pScanTask->Get_TeethId()]->clicked();
+					break;
+				case elossToothScan:
+					chooseID = pScanTask->Get_ScanType() + 1;
+					m_eScanType = pScanTask->Get_ScanType();
+					toothList[pScanTask->Get_TeethId()]->clicked();
+					break;
+				case eDentalImplantScan:
+					chooseID = pScanTask->Get_ScanType() + 1;
+					m_eScanType = pScanTask->Get_ScanType();
+					toothList[pScanTask->Get_TeethId()]->clicked();
 					break;
 				}
 				switch (pScanTask->Get_TaskType())
@@ -1876,7 +1889,6 @@ void TabMainGUI::readFileStorage(QString fPath)
 				default:
 					break;
 				}
-				CTaskManager::getInstance()->AddTask(pScanTask);
 				splitModelFlag = true;
 			}
 		}

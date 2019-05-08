@@ -28,6 +28,37 @@ CScanTask::~CScanTask()
 {
 }
 
+string CScanTask::Get_ModelFileName()
+{
+	m_strModelFileName = "";
+	switch (Get_ScanType()) {
+	case etoothCrown: {
+		CGroupScan *pGroupScanTask = static_cast<CGroupScan*>(this);
+		m_strModelFileName = "toothCrown";
+		for (int i = 0; i < pGroupScanTask->m_vtTeeth.size();i++) {
+			m_strModelFileName += "_"+QString::number(pGroupScanTask->m_vtTeeth[i],10).toStdString();
+		}
+	}
+		break;
+	case einlayScan:
+		m_strModelFileName += "toothInlay" + QString::number(Get_TeethId(), 10).toStdString();
+		break;
+	case eDentalImplantScan:
+		m_strModelFileName += "toothDentalImplant" + QString::number(Get_TeethId(), 10).toStdString();
+		break;
+	case eUpperJawScan:
+		m_strModelFileName += "toothUpperJaw";
+		break;
+	case eLowerJawScan:
+		m_strModelFileName += "toothLowerJaw";
+		break;
+	case eAllJawScan:
+		m_strModelFileName += "toothAllJaw";
+		break;
+	}
+	return m_strModelFileName;
+}
+
 CTaskManager * CTaskManager::m_pInstance = nullptr;
 
 /* ostream & operator<<(ostream & os, const CScanTask & c)

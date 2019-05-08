@@ -455,7 +455,7 @@ void ScanMainGUI::setConnections()
 	connect(ui.oralSubstitutePanelBackBtn, SIGNAL(clicked()), this, SLOT(oralSubstitutePanelBackBtnClick()));
 	connect(ui.teethStitchingPanelBackBtn, SIGNAL(clicked()), this, SLOT(teethStitchingPanelBackBtnClick()));
 	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(cutJawFinishPanelBackBtnClick()));
-	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(stitchingFinishPanelBackBtnClick()));
+	connect(ui.StitchingFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(stitchingFinishPanelBackBtnClick()));
 	connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	
 }
@@ -674,6 +674,7 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	else if (scanObj.value("caseType").toInt() == 2)
 	{
 		m_bsplitModelFlag = true;
+		CTaskManager::getInstance()->resetCurrentTask();
 		showScanJawGroup();
 	}
 	tabMainPage->hide();
@@ -827,8 +828,6 @@ void ScanMainGUI::judgeForwardStep()
 
 void ScanMainGUI::JawScan()
 {
-	glWidget->m_ModelsVt.clear();
-	return;
 	if (m_bsplitModelFlag) {		//·ÖÄ£
 		showcompensationScanPanel();
 	}
@@ -1680,9 +1679,11 @@ void ScanMainGUI::ScanJawBackStepBtnClick()
 // 	}
 }
 
-void ScanMainGUI::ShowLastScanTask()
+void ScanMainGUI::ShowLastScanTask(bool bCurrentTaskSame)
 {
-	pCScanTask pScanTask = CTaskManager::getInstance()->getLastScanTask();
+	hideAllPanel();
+	glWidget->showBkGround(false);
+	pCScanTask pScanTask = CTaskManager::getInstance()->getLastScanTask(bCurrentTaskSame);
 	if (!pScanTask) {
 		showScanJawGroup();
 		return;
@@ -1778,7 +1779,7 @@ void ScanMainGUI::compensationScanPanelBackBtnClick() {
 // 	//ui.ScanJawGroup->setVisible(true);
 // 	showScanJawGroup(true);
 	hideAllPanel();
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::cutModelBtnClick() {
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
@@ -1811,7 +1812,7 @@ void ScanMainGUI::saveCutHeightCutBtnClick() {
 }
 void ScanMainGUI::cutPanelBackBtnClick() {
 	//showcompensationScanPanel(true);
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::oralSubstitutePanelBackBtnClick() {
 	//showcompensationScanPanel(true);
@@ -1819,15 +1820,15 @@ void ScanMainGUI::oralSubstitutePanelBackBtnClick() {
 }
 void ScanMainGUI::teethStitchingPanelBackBtnClick() {
 	//showcompensationScanPanel(true);
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::cutJawFinishPanelBackBtnClick() {
 	//showcompensationScanPanel(true);
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::stitchingFinishPanelBackBtnClick() {
 	//showcompensationScanPanel(true);
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::cutPaneNextStepBtnClick() {
 #ifdef UITEST
@@ -1874,7 +1875,7 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 	}
 }
 void ScanMainGUI::stitchingBackBtnClick() {
-	ShowLastScanTask();
+	ShowLastScanTask(true);
 }
 void ScanMainGUI::stitchingPanelBtnClick() {
 #ifdef UITEST

@@ -964,10 +964,10 @@ namespace Communication
 			{
 				totalBuffersChar[i] = 0;
 			}
-			string totalBufferPath = "scan_data.txt";
-			std::ofstream ofWrite(totalBufferPath, std::ios::out | std::ios::binary);
-			ofWrite.write(totalBuffersChar, m_validTotalBuffersSize*m_endptInLength * sizeof(char));
-			ofWrite.close();
+// 			string totalBufferPath = "scan_data.txt";
+// 			std::ofstream ofWrite(totalBufferPath, std::ios::out | std::ios::binary);
+// 			ofWrite.write(totalBuffersChar, m_validTotalBuffersSize*m_endptInLength * sizeof(char));
+// 			ofWrite.close();
 			delete[]totalBuffersChar;
 		}
 		TakeValidScanInfo(l_itotalBuffersBias);
