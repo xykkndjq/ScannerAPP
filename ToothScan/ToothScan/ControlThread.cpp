@@ -582,7 +582,7 @@ void ControlThread::controlCalibrationScan()
 			{
 				calibImageCamera.push_back(imgL_set[j]);
 			}
-			
+
 			ostringstream filename_L;
 			filename_L << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "L" << ".png";
 
@@ -694,7 +694,7 @@ void ControlThread::controlGlobalCaliScan()
 		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
 
 		//cv::imwrite(filename_L.str().c_str(), imgL_set[0]);
-		
+
 		cv::flip(imgR_set[0], imgR_set[0], -1);
 		image_groups_right.push_back(imgR_set[0]);
 		ostringstream filename_R;
@@ -753,7 +753,7 @@ void ControlThread::compensationControlScan()
 
 	///**************************************扫描过程*****************************************/
 	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-	
+
 	if (imgL_set.size() < 19 || imgR_set.size() < 19)
 	{
 
@@ -811,7 +811,7 @@ void ControlThread::compensationControlScan()
 
 	//3、关闭DLP
 	l_usbStream.ClosedDLPFunction();//电机失能
-				 //WriteByte(CloseDLP, 5);
+									//WriteByte(CloseDLP, 5);
 	cout << "关闭DLP。。 " << endl;
 	//usedSpace.release();
 }
@@ -822,7 +822,7 @@ void ControlThread::normalScan()
 	vector<cv::Mat> image_groups_left, image_groups_right;
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
-	
+
 
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
@@ -848,7 +848,7 @@ void ControlThread::normalScan()
 
 		d_scan_x = (c_scan_x - l_scan_x);
 		d_scan_y = (c_scan_y - l_scan_y);
-		//double d_scan_z = (c_scan_z - l_scan_z);
+
 		l_scan_x = c_scan_x;
 		l_scan_y = c_scan_y;
 
@@ -856,8 +856,8 @@ void ControlThread::normalScan()
 		{
 			return;
 		}
-		
-		
+
+
 		vector<cv::Mat> imgL_set, imgR_set;
 		//2、电机旋转
 		time1 = clock();
