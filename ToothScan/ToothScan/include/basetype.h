@@ -5,8 +5,7 @@
 #include <vector>
 #include "Point.hpp"
 #include <iomanip> 
-#include <iostream>
-using namespace std;
+#include <memory>
 
 using std::vector;
 
@@ -44,7 +43,8 @@ namespace orth
 		Vectord* EndPoint;
 		HalfEdge_Serial* OppoEdge;
 		Face* CurrentFace;
-		HalfEdge_Serial* NextEdge;
+		//HalfEdge_Serial* NextEdge;
+		std::shared_ptr<HalfEdge_Serial> NextEdge;
 		bool SearchLabel;
 	};
 
@@ -59,8 +59,9 @@ namespace orth
 	typedef vector<Index_ui> SamplePoints;
 	typedef vector<Curvature> PointCurs;
 	typedef vector<HalfEdge_Parallel> HalfEdgeCloud_P;
-	typedef vector<HalfEdge_Serial> HalfEdgeCloud_S;
+	typedef std::shared_ptr<HalfEdge_Serial> HalfEdgeCloud_S;
 	typedef vector<Point2Edge> HalfPointCloud_P;
+	typedef vector<Point2Edge> HalfPointCloud_S;
 
 	//外接包围盒
 	struct Box {
@@ -282,57 +283,7 @@ namespace orth
 		~MeshModel();
 
 
-		inline int size() { /*return size_;*/
-			if (P.size() > 0)
-				size_ += P.size() * sizeof(P[0]);
-			int nsize = P.size() * sizeof(P[0]);
-			cout << "size P" << nsize << endl;
-			if (N.size() > 0)
-				size_ += N.size() * sizeof(N[0]);
-			nsize = N.size() * sizeof(N[0]);
-			cout << "size N" << nsize << endl;
-			if (C.size() > 0)
-				size_ += C.size() * sizeof(C[0]);
-			nsize = C.size() * sizeof(C[0]);
-			cout << "size C" << nsize << endl;
-			if(F.size()>0)
-				size_ += F.size() * sizeof(F[0]);
-			nsize = F.size() * sizeof(F[0]);
-			cout << "size F" << nsize << endl;
-			if (FN.size() > 0)
-				size_ += FN.size() * sizeof(FN[0]);
-			nsize = FN.size() * sizeof(FN[0]);
-			cout << "size FN" << nsize << endl;
-			if (L.size() > 0)
-				size_ += L.size() * sizeof(L[0]);
-			nsize = L.size() * sizeof(L[0]);
-			cout << "size L" << nsize << endl;
-			if (S.size() > 0)
-				size_ += S.size() * sizeof(S[0]);
-			nsize = S.size() * sizeof(S[0]);
-			cout << "size S" << nsize << endl;
-			if (Cur.size() > 0)
-				size_ += Cur.size() * sizeof(Cur[0]);
-			nsize = Cur.size() * sizeof(Cur[0]);
-			cout << "size Cur" << nsize << endl;
-			if (Selected.size() > 0)
-				size_ += Selected.size() * sizeof(Selected[0]);
-			nsize = Selected.size() * sizeof(Selected[0]);
-			cout << "size Selected" << nsize << endl;
-			if (Edge_P.size() > 0)
-				size_ += Edge_P.size() * sizeof(Edge_P[0]);
-			nsize = Edge_P.size() * sizeof(Edge_P[0]);
-			cout << "size Edge_P" << nsize << endl;
-			if (Edge_S.size() > 0)
-				size_ += Edge_S.size() * sizeof(Edge_S[0]);
-			nsize = Edge_S.size() * sizeof(Edge_S[0]);
-			cout << "size Edge_S" << nsize << endl;
-			if (P2Edge.size() > 0)
-				size_ += P2Edge.size() * sizeof(P2Edge[0]);
-			nsize = P2Edge.size() * sizeof(P2Edge[0]);
-			cout << "size P2Edge" << nsize << endl;
-			return size_;
-		}
+		inline int size() { return size_; }
 
 		PointCloudD P;
 		PointNormal N;
@@ -383,7 +334,7 @@ namespace orth
 		bool EdgeUpdate(const bool PSTypeChoes = 1);
 
 		//模型分割函数，对当前模型进行分解，不连续的mesh被分为独立的个体并用Label进行标记；
-		bool ModelSplit(vector<orth::MeshModel> &models);
+		bool ModelSplit(vector<orth::MeshModel> &models, const int small_mesh_filter);
 
 		//计算采样点
 		//rate : 采样率，最终采样后剩余数量；
@@ -692,16 +643,31 @@ namespace orth
 		for (size_t group_index = 0; group_index < mm_group_input.size(); group_index++)
 		{
 			vector<Index_ui> new_point_index(mm_group_input[group_index].P.size());
-			for (size_t point_index = 0; point_index < mm_group_input[group_index].P.size(); point_index++)
+			if (mm_group_input[group_index].C.size()>0)
 			{
-
-				mm_output.P.push_back(mm_group_input[group_index].P[point_index]);
-				mm_output.N.push_back(mm_group_input[group_index].N[point_index]);
-				mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
-				mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
-				//models[L[point_index]].Cur.push_back(Cur[point_index]);
-				new_point_index[point_index] = (mm_output.P.size() - 1);
+				for (size_t point_index = 0; point_index < mm_group_input[group_index].P.size(); point_index++)
+				{
+					mm_output.P.push_back(mm_group_input[group_index].P[point_index]);
+					mm_output.N.push_back(mm_group_input[group_index].N[point_index]);
+					mm_output.C.push_back(mm_group_input[group_index].C[point_index]);
+					//mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
+					//models[L[point_index]].Cur.push_back(Cur[point_index]);
+					new_point_index[point_index] = (mm_output.P.size() - 1);
+				}
 			}
+			else
+			{
+				for (size_t point_index = 0; point_index < mm_group_input[group_index].P.size(); point_index++)
+				{
+					mm_output.P.push_back(mm_group_input[group_index].P[point_index]);
+					mm_output.N.push_back(mm_group_input[group_index].N[point_index]);
+					mm_output.C.push_back(orth::Color(128, 128, 128));
+					//mm_output.L.push_back(mm_group_input[group_index].L[point_index]);
+					//models[L[point_index]].Cur.push_back(Cur[point_index]);
+					new_point_index[point_index] = (mm_output.P.size() - 1);
+				}
+			}
+
 			for (size_t face_index = 0; face_index < (mm_group_input[group_index].F.size()); face_index++)
 			{
 
@@ -710,9 +676,11 @@ namespace orth
 				Index_ui l_point3 = mm_group_input[group_index].F[face_index].z;
 				orth::Face l_face(new_point_index[l_point1], new_point_index[l_point2], new_point_index[l_point3]);
 				mm_output.F.push_back(l_face);
-				mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
+				//mm_output.FN.push_back(mm_group_input[group_index].FN[face_index]);
 			}
 		}
+
+
 
 		return true;
 	}
