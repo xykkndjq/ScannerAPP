@@ -21,7 +21,7 @@ public:
 	void delSelPoints();
 	void cutModelUnderBg(QVector3D bgGroundModelPos);
 	void getMeshModel(orth::MeshModel &meshModel);
-	orth::MeshModel &m_model;
+	orth::MeshModel m_model;
 private:
 	QPoint m_drawRectClickPosition;
 	QPoint m_drawRectEndPosition;

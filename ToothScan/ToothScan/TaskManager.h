@@ -7,6 +7,11 @@
 #include "TeethModel.h"
 #include "datastream.h"
 using namespace std;
+enum eOrderType {
+	eunMoulage,			//为分模
+	esplitModel,		//分模
+	eMoulage			//印模
+};
 enum eTaskType {
 	eScan,
 	eUpperStitching,
@@ -48,6 +53,7 @@ public:
 	int m_nAddModel;			//补扫了几次
 	orth::MeshModel m_mAllModel;		//总模型
 	vector<orth::MeshModel> m_mCutModel;	//剪切了几次模型 剪切后的模型
+	vector<orth::MeshModel> m_mRegistrationModels;		//配准的model的全体 为上一步做准备
 	pCTeethModel pTeethModel;
 	void SetMoldeFileName();
 	string m_strModelFileName;
@@ -124,6 +130,15 @@ public:
 			m_vtBaseTask.push_front(baseTask);
 		else
 			m_vtBaseTask.push_back(baseTask);
+	}
+	pCScanTask getTask(eScanType scanType) {
+		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
+		for (; iter != m_vtBaseTask.end(); iter++) {
+			if ((*iter)->Get_ScanType() == scanType) {
+				return (*iter);
+			}
+		}
+		return nullptr;
 	}
 	pCScanTask getTask(string v_strTaskName) {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
@@ -217,3 +232,22 @@ private:
 	pCScanTask m_pCurrentTask;
 };
 
+
+class COrderInfo {
+public:
+	COrderInfo() {
+	}
+	~COrderInfo() {
+	}
+
+	eOrderType eorderType;
+	eScanType eTeethScanType[32];
+	string strUpperJawModelName;
+	string strLowerJawModelName;
+	string strPatientName;
+	string strDoctorName;
+	string strOrderNumber;
+	string strOrderAddition;
+	string strFilePath;
+};
+Q_DECLARE_METATYPE(COrderInfo);

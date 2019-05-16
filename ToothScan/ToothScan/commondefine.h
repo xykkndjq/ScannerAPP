@@ -8,3 +8,25 @@
 										type Get_##prarm_name(){return m_##prefix##prarm_name;}
 
 #define SharedPtr(ClassName) typedef shared_ptr<ClassName> p##ClassName;
+
+
+#define DECLARE_SINGLEINSTANCE(ClassName) \
+    private:\
+        static ClassName* singleInstance;\
+    public:\
+        static ClassName* shareInstance()\
+        {\
+            if(NULL == singleInstance) singleInstance = new ClassName();\
+            return singleInstance;\
+        }\
+    private:\
+        class CGarbo\
+        {\
+            public:\
+            ~CGarbo()\
+            {if( ClassName::singleInstance )delete ClassName::singleInstance;}\
+        };\
+        static CGarbo Garbo;
+//
+#define DEFINITION_SINGLEINSTANCE(ClassName)\
+    ClassName* ClassName::singleInstance = NULL;

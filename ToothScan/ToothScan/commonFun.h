@@ -1,4 +1,7 @@
 #pragma once
+#include "time.h"
+#include <iostream>
+using namespace std;
 const char* newGUID();
 
 template <class T>
@@ -23,4 +26,19 @@ public:
 private:
 	T *m_pTr;
 	int m_len;
+};
+
+class coTimeCout {
+public:
+	coTimeCout() {
+		m_time = clock();
+	}
+	~coTimeCout() {
+	}
+	void Print(char * strText) {
+		cout << strText << "time = " << (double)(clock() - m_time) / CLOCKS_PER_SEC << endl;
+		m_time = clock();
+	}
+private:
+	clock_t m_time;
 };

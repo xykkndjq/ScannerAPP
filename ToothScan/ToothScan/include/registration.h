@@ -3,7 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <3DScan_cuda.h>
-#include <orthio.h>
+#include <basetype.h>
 #include <iostream>
 
 namespace scan
@@ -25,6 +25,9 @@ namespace scan
 
 		//上下颌与全颌配准 或 带型与上下颌配准时采用的配准方式，返回是否配准成功
 		bool __declspec (dllexport) FarRegist(orth::MeshModel &model_target, orth::MeshModel &model_source);
+
+		//单颗牙与上下颌配准时采用的配准方式，返回是否配准成功
+		bool __declspec (dllexport) ToothFarRegist(orth::MeshModel &model_target, orth::MeshModel &model_source);
 
 		//设定配准误差阈值
 		void __declspec (dllexport) SetRegistError(const float mesh_regist_error_);

@@ -109,6 +109,7 @@ signals:
 	void taskSititchingSignal();
 	void taskTeethSititSignal();
 	void startAllJawScan();//控制正常扫描信号signals
+	void showOrderInfoSignal(COrderInfo);
 private:
 	Ui::ScanMainGUI ui;
 
@@ -232,6 +233,10 @@ private:
 	void StitchFinishSlot();
 	void taskTeethSititFinishSlot();
 	void recallWindow();
+
+	void showOrderInfo(COrderInfo orderInfo);
+	void upperJawBtnBtnClick();
+	void lowJawBtnClick();
 };
 
 #endif

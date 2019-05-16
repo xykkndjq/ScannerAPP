@@ -66,6 +66,20 @@ void BaseModel::makeObject(QVector<GLfloat> v_vertData, int nFaceNum)
 	}
 }
 
+void BaseModel::makeObject(QVector<GLdouble> v_vertData, int nFaceNum)
+{
+	m_vbo->destroy();
+	m_vbo->release();
+
+	if (m_vbo->create()) {
+
+		if (m_vbo->bind()) {
+			m_vbo->allocate(v_vertData.data(), v_vertData.size() * sizeof(GLfloat));
+			m_totalFaceNum = nFaceNum;
+		}
+	}
+}
+
 void BaseModel::translate(QVector3D qvTranslate)
 {
 	m_qvTranslate = qvTranslate;

@@ -30,6 +30,7 @@ public:
 	void OnPaint(QMatrix4x4 v_Projection , QMatrix4x4 v_View, IParentInterface *pParent);
 	virtual void doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInterface *pParent) = 0;
 	virtual void makeObject(QVector<GLfloat> v_vertData ,int nFaceNum);
+	virtual void makeObject(QVector<GLdouble> v_vertData, int nFaceNum);
 	virtual void translate(QVector3D qvTranslate);
 	virtual void rotate(float xRot,	float yRot,	float zRot);
 	virtual void rotate(QQuaternion m);

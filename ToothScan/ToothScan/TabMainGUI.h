@@ -161,12 +161,14 @@ public:
 	QPushButton *globalCaliPushButton;
 	QLabel *leftCameraLable;
 	QLabel *rightCameraLable;
+	QTabWidget *rightTabWidget;
 
 	//设置子页面
 	QButtonGroup *settingButtonGroup;
 	QCheckBox *textureCheckBox;
 	QCheckBox *ACheckBox;
 	QCheckBox *BCheckBox;
+	QCheckBox *saveSpliteModelCheckBox;
 	QLabel *scanDataPathLabel;
 	QLineEdit *scanDataPathEdit;
 	QPushButton *choosePathButton;
@@ -175,6 +177,7 @@ public:
 
 signals:
 	void scanDataSignal(QJsonObject scanObj);
+	void showOrderInfoSignal(COrderInfo orderInfo);
 	void scanSignal();
 	//导入上颌
 	void exportUpperJawSignal();
@@ -190,12 +193,15 @@ signals:
 public slots:
 	//订单管理信息槽
 	void PatientInformationSave();
+	void OrderPreview();
 	void closeBtnClicked();
 	//打开文件
 	void openFileDialogSlot();
 
 	//打开路径
 	void openDirectoryDialogSlot();
+
+	void newButtonClickedSlot();
 
     //未分模
 	void UpperJawPress();
@@ -215,5 +221,7 @@ public slots:
 
 	//
 	void settingButtonClicked(QAbstractButton *button);
+
+	void saveSpliteModelCheckBoxClicked(int);
 };
 #endif

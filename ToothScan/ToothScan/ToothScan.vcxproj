@@ -66,7 +66,8 @@
     <Import Project="..\..\a_property_release\QHULL_RELEASE.props" />
     <Import Project="..\..\a_property_release\QT_RELEASE.props" />
     <Import Project="..\..\a_property_release\VTK_RELEASE.props" />
-    <Import Project="..\..\a_property_release\BOOST_RELEASE.props" />  </ImportGroup>
+    <Import Project="..\..\a_property_release\BOOST_RELEASE.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
@@ -146,11 +147,11 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GPA.lib;3DScan_cuda.lib;3DScan.lib;assimp.lib;assimp-vc140-mt.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;opengl32.lib;GPUNearestNeighborSearches.lib;Registration.lib;plyio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GPA.lib;3DScan_cuda.lib;3DScan.lib;assimp.lib;assimp-vc140-mt.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Registration.lib;Qt5Widgets.lib;opengl32.lib;GPUNearestNeighborSearches.lib;plyio.lib;PoissonRecon.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -262,6 +263,7 @@
     <ClCompile Include="ScanTipWidget.cpp" />
     <ClCompile Include="SingleApplication.cpp" />
     <ClCompile Include="SplitModelBtn.cpp" />
+    <ClCompile Include="SystemConfig.cpp" />
     <ClCompile Include="TabMainGUI.cpp" />
     <ClCompile Include="TaskManager.cpp" />
     <ClCompile Include="TeethModel.cpp" />
@@ -370,6 +372,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-IC:\Program Files (x86)\Visual Leak Detector\include"</Command>
     </CustomBuild>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SystemConfig.h" />
     <ClInclude Include="TaskManager.h" />
     <ClInclude Include="TeethModel.h" />
     <ClInclude Include="trackball.h" />
@@ -573,6 +577,9 @@
   <ItemGroup>
     <None Include="gl2.fs" />
     <None Include="gl2.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

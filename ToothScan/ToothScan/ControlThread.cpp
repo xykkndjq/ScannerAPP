@@ -156,14 +156,14 @@ void ControlThread::normalControlScan()
 	//l_usbStream.InitCyUSBParameter();//初始化
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 
 	l_usbStream.SetScanDLPLight();
@@ -218,7 +218,7 @@ void ControlThread::normalControlScan()
 		{
 			
 			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
@@ -276,14 +276,14 @@ void ControlThread::normalAllJawControlScan()
 	//l_usbStream.InitCyUSBParameter();//初始化
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 
@@ -338,7 +338,7 @@ void ControlThread::normalAllJawControlScan()
 		{
 
 			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
@@ -396,14 +396,14 @@ void ControlThread::allJawScan()
 	//l_usbStream.InitCyUSBParameter();//初始化
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	l_usbStream.SetScanDLPLight();
 	clock_t time1, time2, time3, time4;
@@ -461,17 +461,17 @@ void ControlThread::allJawScan()
 		{
 
 			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 
-			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
 			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
 
-			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 			if (image_index == 0)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
@@ -518,15 +518,15 @@ void ControlThread::controlCalibrationScan()
 
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 
 	l_usbStream.SetMidDLPLight();
@@ -576,7 +576,7 @@ void ControlThread::controlCalibrationScan()
 		vector<cv::Mat> group;
 		for (size_t j = 0; j < 31; j++)
 		{
-			cv::flip(imgL_set[j], imgL_set[j], -1);
+			//cv::flip(imgL_set[j], imgL_set[j], -1);
 			group.push_back(imgL_set[j]);
 			if (j == 0)
 			{
@@ -644,15 +644,15 @@ void ControlThread::controlGlobalCaliScan()
 
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 	vector<Mat> image_groups_left, image_groups_right;
@@ -688,7 +688,7 @@ void ControlThread::controlGlobalCaliScan()
 
 		cout << "开始存图片。。 " << endl;
 
-		cv::flip(imgL_set[0], imgL_set[0], -1);
+		//cv::flip(imgL_set[0], imgL_set[0], -1);
 		image_groups_left.push_back(imgL_set[0]);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
@@ -723,14 +723,14 @@ void ControlThread::compensationControlScan()
 
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	int imageSize = IMG_ROW * IMG_COL;
 	double d_scan_x = (c_scan_x - l_scan_x);
@@ -771,7 +771,7 @@ void ControlThread::compensationControlScan()
 	int imageBias = 0;
 	for (int image_index = 0; image_index < 19; image_index++)
 	{
-		cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+		//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "L" << ".png";
 
@@ -826,15 +826,15 @@ void ControlThread::normalScan()
 
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(300);
+	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 
 	_sleep(4000);
-	//bool resetFlag = l_usbStream.ResetDLPFunction();
-	//cout << "resetFlag = " << closedFlag << endl;
-	//_sleep(4000);
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << closedFlag << endl;
+	_sleep(4000);
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 
@@ -889,7 +889,7 @@ void ControlThread::normalScan()
 
 			ostringstream filename_L;
 
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 
 			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);

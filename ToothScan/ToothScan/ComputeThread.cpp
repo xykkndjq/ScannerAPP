@@ -4,6 +4,8 @@
 #include "HLogHelper.h"
 #include "plyio.h"
 #include "commonFun.h"
+#include "PoissonRecon.h"
+#include "SystemConfig.h"
 
 // #include "NearestNeighborSearches.h"
 // #include <pcl/visualization/cloud_viewer.h>
@@ -14,54 +16,42 @@
 typedef void(*Dllfun2)(orth::MeshModel &mm_target, orth::MeshModel &mm_source, cv::Mat &Rt_matrix, const float MaxCorrespondenceDistance, const float RANSACOutlier, const int MaxIteration);
 Dllfun2 g_icp = NULL;
 HINSTANCE g_hdll = NULL;
-class coTimeCout {
-public:
-	coTimeCout() {
-		m_time = clock();
-	}
-	~coTimeCout() {
-	}
-	void Print(char * strText) {
-		cout << strText << "time = " << (double)(clock() - m_time) / CLOCKS_PER_SEC << endl;
-		m_time = clock();
-	}
-private:
-	clock_t m_time;
-};
 
 void poissonRecon(orth::MeshModel& totalMeshModel)
 {
-	int  argc;
-	char *argv[9];
-	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
-	Dllfun pRecon;
-	HINSTANCE hdll;
-	argc = 7;
-
-	argv[0] = "111";
-	argv[1] = "--in";
-	argv[2] = "12.ply";
-	argv[3] = "--out";
-	argv[4] = "123.ply";
-	argv[5] = "--depth";
-	argv[6] = "9";
-// 	argv[7] = "--bType";
-// 	argv[8] = "1";
-	hdll = LoadLibrary(L"PoissonRecon.dll");
-	if (hdll == NULL)
-	{
-		FreeLibrary(hdll);
-	}
-	pRecon = (Dllfun)GetProcAddress(hdll, "reconstruction");
-	if (pRecon == NULL)
-	{
-		FreeLibrary(hdll);
-	}
-
-	pRecon(argc, argv, totalMeshModel);
-
-
-	FreeLibrary(hdll);
+	PoissonReconstruction fsp;
+	fsp.run(totalMeshModel, 10);
+// 	int  argc;
+// 	char *argv[9];
+// 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
+// 	Dllfun pRecon;
+// 	HINSTANCE hdll;
+// 	argc = 7;
+// 
+// 	argv[0] = "111";
+// 	argv[1] = "--in";
+// 	argv[2] = "12.ply";
+// 	argv[3] = "--out";
+// 	argv[4] = "123.ply";
+// 	argv[5] = "--depth";
+// 	argv[6] = "9";
+// // 	argv[7] = "--bType";
+// // 	argv[8] = "1";
+// 	hdll = LoadLibrary(L"PoissonRecon.dll");
+// 	if (hdll == NULL)
+// 	{
+// 		FreeLibrary(hdll);
+// 	}
+// 	pRecon = (Dllfun)GetProcAddress(hdll, "reconstruction");
+// 	if (pRecon == NULL)
+// 	{
+// 		FreeLibrary(hdll);
+// 	}
+// 
+// 	pRecon(argc, argv, totalMeshModel);
+// 
+// 
+// 	FreeLibrary(hdll);
 }
 
 scan::Unwarp g_unwarp;
@@ -152,7 +142,7 @@ void ComputeThread::InitParameters()
 	//pre_pitch.at<double>(3, 0) = 0; pre_pitch.at<double>(3, 1) = 0; pre_pitch.at<double>(3, 2) = 0; pre_pitch.at<double>(3, 3) = 1;
 
 	//----------------------------------------- init scan ---------------------------------------
-	cv::FileStorage fs_g("D:/dentalimage/dentalimage2/external_parameter.yml", cv::FileStorage::READ);  //read the cameras file£ºexternal_parameter.yml
+	cv::FileStorage fs_g("./external_parameter.yml", cv::FileStorage::READ);  //read the cameras file£ºexternal_parameter.yml
 	for (int image_index = 0; image_index < 9; image_index++)
 	{
 		stringstream ss;
@@ -308,10 +298,12 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		cv::Mat cloudrot = rt_curr;
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
 
-		orth::ModelIO finish_model_io(&mModel);
-		std::string modelNameStr = QString::number(index).toStdString() + "_upper.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
+		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+			orth::ModelIO finish_model_io(&mModel);
+			std::string modelNameStr = QString::number(index).toStdString() + "_upper.stl";
+			cout << "pathname: " << modelNameStr << endl;
+			finish_model_io.writeModel(modelNameStr, "stlb");
+		}
 
 		if (reg.NearRegist(upper_mModel, mModel))
 		{
@@ -333,11 +325,12 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 
 		cv::Mat cloudrot = rt_curr;
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		orth::ModelIO finish_model_io(&mModel);
-		std::string modelNameStr = QString::number(index).toStdString() + "_lower.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
+		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+			orth::ModelIO finish_model_io(&mModel);
+			std::string modelNameStr = QString::number(index).toStdString() + "_lower.stl";
+			cout << "pathname: " << modelNameStr << endl;
+			finish_model_io.writeModel(modelNameStr, "stlb");
+		}
 
 		if (reg.NearRegist(lower_mModel, mModel))
 		{
@@ -360,10 +353,12 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat>
 		cv::Mat cloudrot = rt_curr;
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
 
-		orth::ModelIO finish_model_io(&mModel);
-		std::string modelNameStr = QString::number(index).toStdString() + "_all.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
+		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+			orth::ModelIO finish_model_io(&mModel);
+			std::string modelNameStr = QString::number(index).toStdString() + "_all.stl";
+			cout << "pathname: " << modelNameStr << endl;
+			finish_model_io.writeModel(modelNameStr, "stlb");
+		}
 
 		if (reg.NearRegist(all_mModel, mModel))
 		{
@@ -399,6 +394,7 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 	else {
 		//Motor2Rot(ALLJAWX_SCAN_ROTATE_DEGREE2[index], ALLJAWY_SCAN_ROTATE_DEGREE2[index], rt_curr);
 		Motor2Rot(SMX_SCAN_ROTATE_DEGREE2[index], SMY_SCAN_ROTATE_DEGREE2[index], rt_curr);
+		//rt_curr = scanner_rt[index];
 	}
 	
 	cout << "********************************" << endl;
@@ -424,10 +420,12 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
 		timeTest.Print("unwarp->MeshRot finish");
-// 		orth::ModelIO finish_model_io(&mModel);
-// 		std::string modelNameStr = QString::number(index).toStdString() + ".stl";
-// 		cout << "pathname: " << modelNameStr << endl;
-// 		finish_model_io.writeModel(modelNameStr, "stlb");
+		if(CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true"){
+			orth::ModelIO finish_model_io(&mModel);
+			std::string modelNameStr = QString::number(index).toStdString() + ".stl";
+			cout << "pathname: " << modelNameStr << endl;
+			finish_model_io.writeModel(modelNameStr, "stlb");
+		}
 		//pointcloudrotation(points_2, cloudrot);
 // 		if (pScanTask->m_points_cloud_globle.size())
 // 		{
@@ -668,7 +666,8 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
  			}
  		}
 		cout << "scan_index:" << scan_index << endl;
-g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
 		if (scanFlag == true)
 		{
@@ -757,7 +756,8 @@ void ComputeThread::normalAllJawComputeScan()
 			}
 		}
 		cout << "scan_index:" << scan_index << endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
 		if (scanFlag == true)
 		{
@@ -837,7 +837,8 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	orth::MeshModel mModel;
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
 	//mModel.SmallModelFilter(300);
-	//mModel.NormalSmooth(1);
+	mModel.NormalSmooth(1);
+
 	if (chooseJawIndex == 1)
 	{
 		//int scan_index = upper_mModel.size();
@@ -924,7 +925,8 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	orth::MeshModel mModel;
 	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
 	 //mModel.SmallModelFilter(300);
-	//mModel.NormalSmooth(1);	//	if (chooseJawIndex == 1)
+	mModel.NormalSmooth(1);
+	//	if (chooseJawIndex == 1)
 	{
 		int scan_index = pScanTask->m_mModel.size();
 		clock_t time1, time2;
@@ -983,7 +985,9 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	}
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);	int imageSize = IMG_ROW * IMG_COL;
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
+
+	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
@@ -1132,48 +1136,62 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 	{
 		if (upper_mModel.size() > 1)
 		{
+
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
+
+			//cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
+			//vector<cv::Mat> rt_matrixs(upper_mModel.size(),rteye);
+			/*-------------------------------------------------------------------------------------------------------*/
 			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
 
 
-
-			orth::MeshModel totalMeshModel;
-			for (int data_index = 0; data_index < upper_mModel.size(); data_index++)
+			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
 			{
-				pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, upper_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
 			}
 
-			/*for (int i = 0; i < points_target.size(); i++)
-			{
-				string name1 = std::to_string(i) + "_rotation.ply";
-				writefile(points_target[i], name1);
+			orth::MeshModel totalMeshModel;
+			PoissonReconstruction fsp;
+			fsp.run(upper_mModel, totalMeshModel, 9);
+			//ReductMesh(totalMeshModel, totalMeshModel);
+			//orth::MeshModel totalMeshModel;
+			//for (int data_index = 0; data_index < upper_mModel.size(); data_index++)
+			//{
+			//	pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, upper_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+			//}
 
-				string name2 = std::to_string(i) + "_totalpoint.ply";
-				writefile(upper_mModel[i], name2);
-			}*/
-			/*string name = "totalMeshModel.ply";
-			cout << name << endl;
-			writefile(totalMeshModel, name);*/
+			///*for (int i = 0; i < points_target.size(); i++)
+			//{
+			//	string name1 = std::to_string(i) + "_rotation.ply";
+			//	writefile(points_target[i], name1);
 
-			/*string modelNameStr = "totalMeshModel.stl";
-			orth::ModelIO finish_model_io(&totalMeshModel);
-			cout << "pathname: " << modelNameStr << endl;
-			finish_model_io.writeModel(modelNameStr, "stlb");*/
+			//	string name2 = std::to_string(i) + "_totalpoint.ply";
+			//	writefile(upper_mModel[i], name2);
+			//}*/
+			///*string name = "totalMeshModel.ply";
+			//cout << name << endl;
+			//writefile(totalMeshModel, name);*/
 
-			time3 = clock();
-			//pr.Execute(totalMeshModel);
+			///*string modelNameStr = "totalMeshModel.stl";
+			//orth::ModelIO finish_model_io(&totalMeshModel);
+			//cout << "pathname: " << modelNameStr << endl;
+			//finish_model_io.writeModel(modelNameStr, "stlb");*/
 
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+			//time3 = clock();
+			////pr.Execute(totalMeshModel);
 
-			poissonRecon(totalMeshModel);
+			//orth::MeshModel totalMeshModel_copy;
+			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
+			//poissonRecon(totalMeshModel);
+
+			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+			/*--------------------------------------------------------------------------------------------------------------------------*/
 
 			orth::ModelIO meshio(&totalMeshModel);
 			meshio.writeModel("./uppertotalmesh.stl", "stlb");
@@ -1217,23 +1235,40 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
 
-			orth::MeshModel totalMeshModel;
-			for (int data_index = 0; data_index < lower_mModel.size(); data_index++)
+			/*------------------------------------------------------------------------------------------------------------*/
+			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
+			time2 = clock();
+			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "GPA is finished..." << endl;
+
+
+			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
 			{
-				pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, lower_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
 			}
-			//cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
-			//writefile(totalMeshModel);
-			//recon::PoissonRec pr;
-			time3 = clock();
-			//pr.Execute(totalMeshModel);
 
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+			orth::MeshModel totalMeshModel;
+			PoissonReconstruction fsp;
+			fsp.run(upper_mModel, totalMeshModel, 10);
+			//ReductMesh(totalMeshModel, totalMeshModel);
+			//orth::MeshModel totalMeshModel;
+			//for (int data_index = 0; data_index < lower_mModel.size(); data_index++)
+			//{
+			//	pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, lower_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+			//}
+			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+			////writefile(totalMeshModel);
+			////recon::PoissonRec pr;
+			//time3 = clock();
+			////pr.Execute(totalMeshModel);
 
-			poissonRecon(totalMeshModel);
+			//orth::MeshModel totalMeshModel_copy;
+			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
+			//poissonRecon(totalMeshModel);
+
+			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+			/*----------------------------------------------------------------------------------------------------*/
 
 			orth::ModelIO meshio(&totalMeshModel);
 			meshio.writeModel("./lowertotalmesh.stl", "stlb");
@@ -1277,23 +1312,40 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
 
-			orth::MeshModel totalMeshModel;
-			for (int data_index = 0; data_index < all_mModel.size(); data_index++)
+			/*----------------------------------------------------------------------------------------------------*/
+			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
+			time2 = clock();
+			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			cout << "GPA is finished..." << endl;
+
+
+			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
 			{
-				pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, all_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
 			}
-			//cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
-			//writefile(totalMeshModel);
-			//recon::PoissonRec pr;
 
-			time3 = clock();
+			orth::MeshModel totalMeshModel;
+			PoissonReconstruction fsp;
+			fsp.run(upper_mModel, totalMeshModel, 10);
+			//ReductMesh(totalMeshModel, totalMeshModel);
+			//orth::MeshModel totalMeshModel;
+			//for (int data_index = 0; data_index < all_mModel.size(); data_index++)
+			//{
+			//	pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, all_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+			//}
+			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+			////writefile(totalMeshModel);
+			////recon::PoissonRec pr;
 
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+			//time3 = clock();
 
-			poissonRecon(totalMeshModel);
+			//orth::MeshModel totalMeshModel_copy;
+			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
+			//poissonRecon(totalMeshModel);
+
+			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+			/*------------------------------------------------------------------------------------------------------------------------*/
 
 			orth::ModelIO meshio(&totalMeshModel);
 			meshio.writeModel("./alltotalmesh.stl", "stlb");
@@ -1342,28 +1394,41 @@ void ComputeThread::GPAMeshing()
 			vector<cv::Mat> rt_matrixs;
 			clock_t time1, time2, time3, time4;
 			time1 = clock();
+
+			//cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
+			//vector<cv::Mat> rt_matrixs(pScanTask->m_mModel.size(), rteye);
 			gpa.GpaRegistrationGPU(pScanTask->m_mModel, rt_matrixs, TotalIterNum);
 			time2 = clock();
 			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "GPA is finished..." << endl;
 
-			orth::MeshModel totalMeshModel;
-			for (int data_index = 0; data_index < pScanTask->m_mModel.size(); data_index++)
+			/*------------------------------------------------------ reconstruction change ---------------------------------------------------*/
+			for (int mesh_index = 0; mesh_index < pScanTask->m_mModel.size(); mesh_index++)
 			{
-				pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &pScanTask->m_mModel[mesh_index]);
 			}
-			time3 = clock();
 
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+			orth::MeshModel totalMeshModel, totalMeshModel_copy;
+			PoissonReconstruction fsp;
+			fsp.run(pScanTask->m_mModel, totalMeshModel, 9);
+			//ReductMesh(totalMeshModel, totalMeshModel);
+			/*--------------------------------------------------- old -----------------------------------------------*/
+			//orth::MeshModel totalMeshModel;
+			//for (int data_index = 0; data_index < pScanTask->m_mModel.size(); data_index++)
+			//{
+			//	pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+			//}
+			//time3 = clock();
 
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./totalmesh.stl", "stlb");
-			//MeshRender(totalMeshModel,3);
-			poissonRecon(totalMeshModel);
+			//orth::MeshModel totalMeshModel_copy;
+			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
-
+			//orth::ModelIO meshio(&totalMeshModel);
+			//meshio.writeModel("./totalmesh.stl", "stlb");
+			////MeshRender(totalMeshModel,3);
+			//poissonRecon(totalMeshModel);
+			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+			/*--------------------------------------------------------------------------------------------------------------------------------*/
 			time4 = clock();
 			pScanTask->m_mAllModel = totalMeshModel;
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1409,15 +1474,22 @@ void ComputeThread::taskTeethSitit()
 		return;
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
-	pDstTask->pTeethModel->getMeshModel(l_dstModel);
+	if (pDstTask->m_mRegistrationModels.size() == 0)
+		pDstTask->pTeethModel->getMeshModel(l_dstModel);
+	else
+		l_dstModel = pDstTask->m_mRegistrationModels.back();
 	vector<orth::MeshModel> l_vtSucModel;
 	scan::Registration reg(1.0, 15.0, 50);
 	//reg.SetSearchDepth(40);
 	vector<orth::MeshModel> l_vtModel;
-	l_tmpModel.ModelSplit(l_vtModel);
+	l_tmpModel.ModelSplit(l_vtModel,5000);
 	
 	for (int i = 0; i < l_vtModel.size(); i++) {
-		if (reg.FarRegist(l_dstModel, l_vtModel[i])) {
+		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+		orth::ModelIO merge_io(&l_vtModel[i]);
+		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
+		merge_io.writeModel(strModelname.toStdString(), "stlb");
+		if (reg.ToothFarRegist(l_dstModel, l_vtModel[i])) {
 		//reg.FarRegist(l_dstModel, l_tmpModel);
 			l_vtSucModel.push_back(l_vtModel[i]);
 		}
@@ -1436,15 +1508,19 @@ void ComputeThread::taskTeethSitit()
 		l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
 		orth::MergeModels(l_vtSucModel, dstAllModel);
-		orth::ModelIO merge_io(&dstAllModel);
-		merge_io.writeModel("merge_models.stl", "stlb");
+		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+// 		orth::ModelIO merge_io(&dstAllModel);
+// 		merge_io.writeModel("merge_models.stl", "stlb");
+		//}
 		//pTask->pTeethModel->m_model = dstAllModel;
-		pTask->m_mAllModel = dstAllModel;
+		pDstTask->m_mRegistrationModels.push_back(dstAllModel);
+		//pDstTask->m_mAllModel = dstAllModel;
 		//pTask->pTeethModel->makeObject();
-		pDstTask->pTeethModel->m_model = dstAllModel;
+		//pDstTask->pTeethModel->m_model = dstAllModel;
 	}
 	else {
-		pTask->m_mAllModel = l_dstModel;
+		//pDstTask->m_mAllModel = l_dstModel;
+		pDstTask->m_mRegistrationModels.push_back(l_dstModel);
 	}
 
 	emit taskTeethSititFinish();
@@ -1478,13 +1554,13 @@ void ComputeThread::Stitching()
 	vector<orth::MeshModel> l_vtSucModel;
 	scan::Registration reg(1.0, 15.0, 50);
 	//reg.SetSearchDepth(40);
-	vector<orth::MeshModel> l_vtModel;
-	l_tmpModel.ModelSplit(l_vtModel);
+// 	vector<orth::MeshModel> l_vtModel;
+// 	l_tmpModel.ModelSplit(l_vtModel,5000);
 
 	if (reg.FarRegist(l_dstModel, l_tmpModel)) {
 		//reg.FarRegist(l_dstModel, l_tmpModel);
 		l_vtSucModel.push_back(l_tmpModel);
-		pTask->m_mAllModel = l_tmpModel;
+		pSrcTask->m_mAllModel = l_tmpModel;
 	}
 	else {
 		cout << "The registration of one Jaw is failure..." << endl;
@@ -1512,7 +1588,8 @@ void ComputeThread::allJawComputeScan()
 		return;
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);	int imageSize = IMG_ROW * IMG_COL;
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);	
+	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
@@ -1558,7 +1635,10 @@ void ComputeThread::allJawComputeScan()
 		}
 		cout << "scan_index:" << scan_index << endl;
 		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);		
+		cv::Mat l_tmpimage = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
+		memcpy(l_tmpimage.data, im_l+(14*imageSize),imageSize);
+		cout << l_tmpimage.size()<<endl;
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
 		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index,reg, pScanTask);
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
@@ -1666,6 +1746,7 @@ void ComputeThread::allJawComputeScan()
 
 void ComputeThread::normalComputeScan()
 {
+
 	pCScanTask pScanTask;
 	pScanTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pScanTask)
@@ -1727,7 +1808,8 @@ void ComputeThread::normalComputeScan()
 		//cv::imshow("0", image_input);
 		//cv::waitKey(0);
 		//cv::imwrite("./ScanData/" + QString(scan_index).toStdString() + ".png", image_input);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);		//cv::imshow("", matched_pixel_image);
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+		//cv::imshow("", matched_pixel_image);
 		//cv::waitKey();
 		cout << "pointcloud calculate done" << endl;
 		HLogHelper::getInstance()->HLogTime("scan_index %d", scan_index);
@@ -1765,7 +1847,8 @@ void ComputeThread::compensationCompute()
 		return;
 	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);	int imageSize = IMG_ROW * IMG_COL;
+	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
+	int imageSize = IMG_ROW * IMG_COL;
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
@@ -1801,7 +1884,8 @@ void ComputeThread::compensationCompute()
 		}
 	}
 
-g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+
 	/*vector<double> points_;
 	vector<float> normal;
 	vector<unsigned char> points_color;*/

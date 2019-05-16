@@ -12,8 +12,15 @@
 using namespace Communication;
 int main(int argc, char *argv[])
 {
-	
-	std::ofstream log("toothscan.log");
+	QDateTime       m_DateTime;
+	QString logPath = "log";
+	QDir dir(logPath);
+
+	if (false == dir.exists())
+	{
+		dir.mkpath(logPath);
+	}
+	std::ofstream log(logPath.toStdString() + QString("/toothscan.log").toStdString()+ m_DateTime.currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz").toStdString());
 
 	std::streambuf * oldbuf = std::cout.rdbuf(log.rdbuf());
 	QApplication::addLibraryPath("./plugins");

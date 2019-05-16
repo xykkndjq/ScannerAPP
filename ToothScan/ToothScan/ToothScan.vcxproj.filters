@@ -164,6 +164,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SingleApplication.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="SystemConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -270,6 +273,12 @@
     <ClInclude Include="ImageBtn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SystemConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="gl2.fs">
@@ -278,5 +287,8 @@
     <None Include="gl2.vs">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
 </Project>
