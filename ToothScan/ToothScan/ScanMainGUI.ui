@@ -2375,8 +2375,8 @@ background-color:rgb(248,250,250);</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>680</y>
+     <x>580</x>
+     <y>790</y>
      <width>300</width>
      <height>700</height>
     </rect>
@@ -6850,7 +6850,7 @@ background-color:rgb(248,250,250);</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>650</x>
+     <x>657</x>
      <y>0</y>
      <width>300</width>
      <height>801</height>
@@ -7359,710 +7359,6 @@ background-color:rgb(248,250,250);</string>
      <string>医生姓名：</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_12">
-    <property name="geometry">
-     <rect>
-      <x>77</x>
-      <y>152</y>
-      <width>34</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/12.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_13">
-    <property name="geometry">
-     <rect>
-      <x>54</x>
-      <y>168</y>
-      <width>38</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/13.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_14">
-    <property name="geometry">
-     <rect>
-      <x>34</x>
-      <y>194</y>
-      <width>46</width>
-      <height>38</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/14.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_15">
-    <property name="geometry">
-     <rect>
-      <x>19</x>
-      <y>223</y>
-      <width>44</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/15.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_16">
-    <property name="geometry">
-     <rect>
-      <x>16</x>
-      <y>256</y>
-      <width>38</width>
-      <height>42</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/16.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_17">
-    <property name="geometry">
-     <rect>
-      <x>14</x>
-      <y>290</y>
-      <width>38</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/17.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_18">
-    <property name="geometry">
-     <rect>
-      <x>12</x>
-      <y>323</y>
-      <width>40</width>
-      <height>42</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/18.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_21">
-    <property name="geometry">
-     <rect>
-      <x>145</x>
-      <y>140</y>
-      <width>40</width>
-      <height>36</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/21.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_22">
-    <property name="geometry">
-     <rect>
-      <x>177</x>
-      <y>148</y>
-      <width>34</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/22.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_23">
-    <property name="geometry">
-     <rect>
-      <x>197</x>
-      <y>167</y>
-      <width>36</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/23.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_24">
-    <property name="geometry">
-     <rect>
-      <x>212</x>
-      <y>192</y>
-      <width>42</width>
-      <height>38</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/24.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_25">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>222</y>
-      <width>44</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/25.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_26">
-    <property name="geometry">
-     <rect>
-      <x>238</x>
-      <y>255</y>
-      <width>40</width>
-      <height>42</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/26.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_27">
-    <property name="geometry">
-     <rect>
-      <x>243</x>
-      <y>291</y>
-      <width>34</width>
-      <height>36</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/27.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_28">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>324</y>
-      <width>40</width>
-      <height>42</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/28.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_31">
-    <property name="geometry">
-     <rect>
-      <x>106</x>
-      <y>614</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/31.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_32">
-    <property name="geometry">
-     <rect>
-      <x>77</x>
-      <y>604</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/32.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_33">
-    <property name="geometry">
-     <rect>
-      <x>54</x>
-      <y>584</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/33.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_34">
-    <property name="geometry">
-     <rect>
-      <x>39</x>
-      <y>563</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/34.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_35">
-    <property name="geometry">
-     <rect>
-      <x>26</x>
-      <y>533</y>
-      <width>40</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/35.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_36">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>490</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/36.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_37">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>440</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/37.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_38">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>390</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/38.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_41">
-    <property name="geometry">
-     <rect>
-      <x>139</x>
-      <y>617</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/41.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_42">
-    <property name="geometry">
-     <rect>
-      <x>171</x>
-      <y>607</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/42.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_43">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>589</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/43.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_44">
-    <property name="geometry">
-     <rect>
-      <x>215</x>
-      <y>565</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/44.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_45">
-    <property name="geometry">
-     <rect>
-      <x>223</x>
-      <y>537</y>
-      <width>40</width>
-      <height>34</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/45.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_46">
-    <property name="geometry">
-     <rect>
-      <x>232</x>
-      <y>493</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/46.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_47">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>443</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/47.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_48">
-    <property name="geometry">
-     <rect>
-      <x>241</x>
-      <y>394</y>
-      <width>44</width>
-      <height>52</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/48.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>105</x>
-      <y>140</y>
-      <width>40</width>
-      <height>36</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background:transparent</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Resources/images/teeth/11.png</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="upperJawBtn">
     <property name="geometry">
      <rect>
@@ -8095,18 +7391,795 @@ background-color:rgb(248,250,250);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QGroupBox" name="teethGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>130</y>
+      <width>301</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="label_48">
+     <property name="geometry">
+      <rect>
+       <x>244</x>
+       <y>276</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/48.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_36">
+     <property name="geometry">
+      <rect>
+       <x>18</x>
+       <y>372</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/36.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_26">
+     <property name="geometry">
+      <rect>
+       <x>241</x>
+       <y>137</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/26.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_33">
+     <property name="geometry">
+      <rect>
+       <x>57</x>
+       <y>466</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/33.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>37</x>
+       <y>76</y>
+       <width>46</width>
+       <height>38</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/14.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>108</x>
+       <y>22</y>
+       <width>40</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/11.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_32">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>486</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/32.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_44">
+     <property name="geometry">
+      <rect>
+       <x>218</x>
+       <y>447</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/44.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_42">
+     <property name="geometry">
+      <rect>
+       <x>174</x>
+       <y>489</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/42.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_24">
+     <property name="geometry">
+      <rect>
+       <x>215</x>
+       <y>74</y>
+       <width>42</width>
+       <height>38</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/24.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_28">
+     <property name="geometry">
+      <rect>
+       <x>243</x>
+       <y>206</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/28.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_35">
+     <property name="geometry">
+      <rect>
+       <x>29</x>
+       <y>415</y>
+       <width>40</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/35.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_22">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>30</y>
+       <width>34</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/22.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_41">
+     <property name="geometry">
+      <rect>
+       <x>142</x>
+       <y>499</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/41.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>22</x>
+       <y>105</y>
+       <width>44</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/15.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>17</x>
+       <y>172</y>
+       <width>38</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/17.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_43">
+     <property name="geometry">
+      <rect>
+       <x>203</x>
+       <y>471</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/43.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>19</x>
+       <y>138</y>
+       <width>38</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/16.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_45">
+     <property name="geometry">
+      <rect>
+       <x>226</x>
+       <y>419</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/45.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_27">
+     <property name="geometry">
+      <rect>
+       <x>246</x>
+       <y>173</y>
+       <width>34</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/27.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>205</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/18.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_37">
+     <property name="geometry">
+      <rect>
+       <x>14</x>
+       <y>322</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/37.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_46">
+     <property name="geometry">
+      <rect>
+       <x>235</x>
+       <y>375</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/46.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_31">
+     <property name="geometry">
+      <rect>
+       <x>109</x>
+       <y>496</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/31.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>49</y>
+       <width>36</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/23.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_38">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>272</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/38.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>34</y>
+       <width>34</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/12.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_47">
+     <property name="geometry">
+      <rect>
+       <x>243</x>
+       <y>325</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/47.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>148</x>
+       <y>22</y>
+       <width>40</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/21.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_25">
+     <property name="geometry">
+      <rect>
+       <x>233</x>
+       <y>104</y>
+       <width>44</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/25.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_34">
+     <property name="geometry">
+      <rect>
+       <x>42</x>
+       <y>445</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/34.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>57</x>
+       <y>50</y>
+       <width>38</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/13.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="jawGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>130</y>
+      <width>301</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="jawImage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>200</y>
+       <width>300</width>
+       <height>102</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>C:/Users/CAMNODE06/.designer/backup/Resources/images/lowerjaw_yes.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <zorder>teethGroupBox</zorder>
+   <zorder>label</zorder>
+   <zorder>orderNoLabel</zorder>
+   <zorder>patientNameLabel</zorder>
+   <zorder>i</zorder>
+   <zorder>doctorNameLabel</zorder>
+   <zorder>i_2</zorder>
+   <zorder>upperJawBtn</zorder>
+   <zorder>lowJawBtn</zorder>
+   <zorder>jawGroupBox</zorder>
   </widget>
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
     <rect>
-     <x>930</x>
+     <x>722</x>
      <y>960</y>
-     <width>118</width>
-     <height>23</height>
+     <width>400</width>
+     <height>30</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QProgressBar{
+        border: none;
+        color: white;
+        text-align: center;
+        background: rgb(68, 69, 73);
+}
+QProgressBar::chunk {
+        border: none;
+        background: rgb(0, 160, 230);
+}</string>
+   </property>
    <property name="value">
-    <number>24</number>
+    <number>0</number>
    </property>
   </widget>
   <zorder>compensationScanPanel</zorder>

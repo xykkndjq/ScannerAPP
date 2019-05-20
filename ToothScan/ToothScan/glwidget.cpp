@@ -712,7 +712,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 			rotateBy(dy, dx, 0);
 		}
 		else if (event->buttons() & Qt::RightButton) {
-			translateBy(dx, dy, 0);
+			//translateBy(dx, dy, 0);
 		}
 		if (event->buttons() & Qt::LeftButton) {
 			float xRot = 0, yRot = 0;

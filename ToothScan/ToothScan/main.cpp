@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	QApplication::addLibraryPath("./plugins");
 	//RunCrashHandler();
 	SetUnhandledExceptionFilter(ExceptionFilter);
-	QApplication a(argc, argv);
+	SingleApplication a(argc, argv);
 	QFont f("微软雅黑", 14);
 	f.setBold(true);
 // 	widget->setStyleSheet("border:0px groove gray;border-radius:10px;padding:2px 4px;\
@@ -39,14 +39,14 @@ int main(int argc, char *argv[])
 	a.setPalette(p);
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("gbk"));
 	a.setQuitOnLastWindowClosed(true);
-	SingleApplication abc(argc, argv);
+//	SingleApplication abc(argc, argv);
 	int nresult = 0;
-	if (!abc.isRunning())
+	if (!a.isRunning())
 	{
 		MainWidget w;
 		//传入一个要激活程序的窗口，当多开时会激活已有进程的窗口，且多开失败
-		abc.mainWindow = static_cast<IQWidegetsInterface *>(&w);
-		//w.show();
+		a.mainWindow = static_cast<IQWidegetsInterface *>(&w);
+		//w.show();.
 		nresult = a.exec();
 	}
 	CTaskManager::getInstance()->DelAllTasks();

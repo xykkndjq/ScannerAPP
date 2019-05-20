@@ -108,9 +108,9 @@ void CTeethModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInt
 	//m_program->setUniformValue("gingivaColor", QVector3D(1.3f, 1.3f, 1.3f));
 	//m_program->setUniformValue("teethColor", QVector3D(1.3f, 1.3f, 1.3f));
 
-	m_program->setUniformValue("material1.ambient", 0.05f, 0.0f, 0.0f);
-	m_program->setUniformValue("material1.diffuse", 0.5f, 0.4f, 0.4f);
-	m_program->setUniformValue("material1.specular", 0.8f, 0.04f, 0.04f);
+	m_program->setUniformValue("material1.ambient", 0.05f, 0.05f, 0.05f);
+	m_program->setUniformValue("material1.diffuse", 0.5f, 0.5f, 0.5f);
+	m_program->setUniformValue("material1.specular", 0.4f, 0.17f, 0.32f);
 	m_program->setUniformValue("material1.shininess", 0.978125f);
 
 	m_program->setUniformValue("material2.ambient", 0.95f, 0.95f, 0.95f);

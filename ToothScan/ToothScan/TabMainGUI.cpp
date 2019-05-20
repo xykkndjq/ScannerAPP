@@ -1147,9 +1147,9 @@ void TabMainGUI::OrderPreview()
 		for (int i = 0; i < 32;i++) {
 			orderInfo.eTeethScanType[i] = m_pTeethScanTaskArray[i]->Get_ScanType();
 		}
-		orderInfo.strUpperJawModelName = "toothUpperJaw";
-		orderInfo.strLowerJawModelName = "toothLowerJaw";
 	}
+	orderInfo.strUpperJawModelName = "toothUpperJaw";
+	orderInfo.strLowerJawModelName = "toothLowerJaw";
 	emit showOrderInfoSignal(orderInfo);
 }
 
@@ -1790,19 +1790,69 @@ void TabMainGUI::ScanDataPackagePress()
 	QJsonObject scanObj;
 	if (unMoulageFlag == true)//未分模
 	{
+		CTaskManager::getInstance()->DelAllTasks();
+		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
 		scanObj.insert("caseType", 1);
 		if (upperJawButtonFlag == true && lowerJawButtonFlag == true)
 		{
+			if (allJawScanTask == nullptr) {
+				allJawScanTask = make_shared<CScanTask>();
+				allJawScanTask->Set_ScanType(eAllJawScan);
+				allJawScanTask->Set_TaskName((g_strScanName[eAllJawScan]));
+			}
+			if (upperScanTask == nullptr) {
+				upperScanTask = make_shared<CScanTask>();
+				upperScanTask->Set_ScanType(eUpperJawScan);
+				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+				upperScanTask->Set_TaskType(eScan);
+			}
+			if (lowerJawScanTask == nullptr) {
+				lowerJawScanTask = make_shared<CScanTask>();
+				lowerJawScanTask->Set_ScanType(eLowerJawScan);
+				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+				lowerJawScanTask->Set_TaskType(eScan);
+			}
 			scanObj.insert("allJaw", 1);
 		}
 		else if (upperJawButtonFlag == true && lowerJawButtonFlag == false)
 		{
+			if (upperScanTask == nullptr) {
+				upperScanTask = make_shared<CScanTask>();
+				upperScanTask->Set_ScanType(eUpperJawScan);
+				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+				upperScanTask->Set_TaskType(eScan);
+			}
 			scanObj.insert("upperJaw", 1);
 		}
 		else if (lowerJawButtonFlag == true && upperJawButtonFlag == false)
 		{
+			if (lowerJawScanTask == nullptr) {
+				lowerJawScanTask = make_shared<CScanTask>();
+				lowerJawScanTask->Set_ScanType(eLowerJawScan);
+				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+				lowerJawScanTask->Set_TaskType(eScan);
+			}
 			scanObj.insert("lowerJaw", 1);
 		}
+		if (upperScanTask)
+			CTaskManager::getInstance()->AddTask(upperScanTask);
+		if (lowerJawScanTask)
+			CTaskManager::getInstance()->AddTask(lowerJawScanTask);
+		if (allJawScanTask) {
+			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
+			pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
+			pUpperStitcing->Set_TaskType(eUpperStitching);
+			pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
+			pUpperStitcing->m_pSrcTask = upperScanTask;
+			pUpperStitcing->m_pDstTask = allJawScanTask;
+			CTaskManager::getInstance()->AddTask(pUpperStitcing);
+			pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
+			pLowerSitcing->Set_TaskType(eLowerStitching);
+			pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
+			pLowerSitcing->m_pSrcTask = lowerJawScanTask;
+			pLowerSitcing->m_pDstTask = allJawScanTask;
+			CTaskManager::getInstance()->AddTask(pLowerSitcing);
+		}		
 	}
 	else if (splitModelFlag == true)//分模
 	{

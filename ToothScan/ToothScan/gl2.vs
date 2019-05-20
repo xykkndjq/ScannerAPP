@@ -22,7 +22,7 @@ void main()
 	sflag = -1;
     //FragPos = vec3(model * vec4(aPos.xyz, 1.0));
 	FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(model))) * aNormal;    
+    Normal = mat3(transpose(inverse(view))) * aNormal;    
 	vec4 p_1 = projection * view * vec4(FragPos, 1.0);    
 	vec4 p_2 = p_1 + vec4(screenPos, 0.0);
 	//if(p_2.x>0)

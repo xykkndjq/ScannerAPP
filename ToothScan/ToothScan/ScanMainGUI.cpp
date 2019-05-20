@@ -129,6 +129,7 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.ScanJawScanBtn->setGraphicsEffect(defaultShadow);
 	setWindowFlags(Qt::FramelessWindowHint);
 	styleControl2(this);
+	ui.progressBar->setVisible(false);
 	// 	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(ui.CutJawPanel);
 	// 	shadow_effect->setOffset(-5, 5);
 	// 	shadow_effect->setColor(Qt::gray);
@@ -453,6 +454,17 @@ void ScanMainGUI::setConnections()
 	connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	connect(ui.upperJawBtn, SIGNAL(clicked()), this, SLOT(upperJawBtnBtnClick()));
 	connect(ui.lowJawBtn, SIGNAL(clicked()), this, SLOT(lowJawBtnClick()));
+	connect(ControlComputeThread, SIGNAL(progressBarResetSignal()), ui.progressBar,SLOT(reset()));
+	connect(ControlComputeThread, SIGNAL(progressBarSetMinSignal(int)), ui.progressBar, SLOT(setMinimum(int)));
+	connect(ControlComputeThread, SIGNAL(progressBarSetMaxSignal(int)), ui.progressBar, SLOT(setMaximum(int)));
+	connect(ControlComputeThread, SIGNAL(progressBarSetValueSignal(int)), ui.progressBar, SLOT(setValue(int)));
+	connect(ControlComputeThread, SIGNAL(progressBarsetOrientation(Qt::Orientation)), ui.progressBar, SLOT(setOrientation(Qt::Orientation)));
+	connect(ControlComputeThread, SIGNAL(progressBarVisibleSignal(bool)), ui.progressBar, SLOT(setVisible(bool)));
+	connect(ControlComputeThread, SIGNAL(progressBarSetSignal(int, int,  bool)), this, SLOT(progressBarSetSlot(int, int, bool)));
+// 	void progressBarSetMinSignal(int min);
+// 	void progressBarSetMaxSignal(int max);
+// 	void progressBarSetValueSignal(int value);
+// 	void progressBarsetOrientation(Qt::Orientation);
 }
 
 void ScanMainGUI::closeBtnClicked()
@@ -645,27 +657,29 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	patientNameQStr = scanObj.value("patientName").toString();
 	if (scanObj.value("caseType").toInt() == 1)
 	{
-		if (scanObj.value("upperJaw").toInt() == 1)
-		{
-			scanTipWidget->upperPlaceConstructIHM1();
-			globalTipIndex = 1;
-			forwardIndex = 1;
-			chooseJawIndex = 1;
-		}
-		else if (scanObj.value("lowerJaw").toInt() == 1)
-		{
-			scanTipWidget->lowerPlaceConstructIHM1();
-			globalTipIndex = 2;
-			forwardIndex = 1;
-			chooseJawIndex = 2;
-		}
-		else if (scanObj.value("allJaw").toInt() == 1)
-		{
-			scanTipWidget->allPlaceConstructIHM1();
-			globalTipIndex = 3;
-			forwardIndex = 1;
-			chooseJawIndex = 3;
-		}
+		CTaskManager::getInstance()->resetCurrentTask();
+		showScanJawGroup();
+// 		if (scanObj.value("upperJaw").toInt() == 1)
+// 		{
+// 			scanTipWidget->upperPlaceConstructIHM1();
+// 			globalTipIndex = 1;
+// 			forwardIndex = 1;
+// 			chooseJawIndex = 1;
+// 		}
+// 		else if (scanObj.value("lowerJaw").toInt() == 1)
+// 		{
+// 			scanTipWidget->lowerPlaceConstructIHM1();
+// 			globalTipIndex = 2;
+// 			forwardIndex = 1;
+// 			chooseJawIndex = 2;
+// 		}
+// 		else if (scanObj.value("allJaw").toInt() == 1)
+// 		{
+// 			scanTipWidget->allPlaceConstructIHM1();
+// 			globalTipIndex = 3;
+// 			forwardIndex = 1;
+// 			chooseJawIndex = 3;
+// 		}
 	}
 	else if (scanObj.value("caseType").toInt() == 2)
 	{
@@ -733,7 +747,7 @@ void ScanMainGUI::showOralSubstitutePanel(bool bBack) {
 		if (plabel) {
 			//cout << QString::number((pGroupScan->m_vtTeeth[i] % 7 + 1) * 10 + pGroupScan->m_vtTeeth[i] + 1).toStdString() << endl;
 			plabel->show();
-			plabel->setText(QString::number((pGroupScan->m_vtTeeth[i] % 7 + 1) * 10 + pGroupScan->m_vtTeeth[i] + 1));
+			plabel->setText(QString::number((pGroupScan->m_vtTeeth[i] / 8 + 1) * 10 + pGroupScan->m_vtTeeth[i]%8 + 1));
 		}
 	}
 }
@@ -835,8 +849,10 @@ void ScanMainGUI::judgeForwardStep()
 
 void ScanMainGUI::JawScan()
 {
+	showcompensationScanPanel();
+	return;
 	if (m_bsplitModelFlag) {		//分模
-		showcompensationScanPanel();
+	
 	}
 	else
 	{
@@ -1867,10 +1883,22 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 
 	if (!pNextTask&&pCurrentTask) {
 		ui.CutJawPanel->setVisible(false);
-		ui.CutJawFinishPanel->setVisible(true);
+		ui.StitchingFinishPanel->setVisible(true);
 		QString str;
-		str = QString::fromLocal8Bit("可以通过工具栏修剪") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("数据");
-		ui.CutJawFinishPanelTips->setText(str);
+		ui.stitchingUpperJawBtn->setVisible(false);
+		ui.stitchingLowerJawBtn->setVisible(false);
+		if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+			m_pupperTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingUpperJawBtn->setChecked(true);
+			ui.stitchingUpperJawBtn->setVisible(true);
+		}
+		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+			m_plowerTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingLowerJawBtn->setChecked(true);
+			ui.stitchingLowerJawBtn->setVisible(true);
+		}
+		//str = QString::fromLocal8Bit("可以通过工具栏修剪") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("数据");
+		//ui.CutJawFinishPanelTips->setText(str);
 	}
 	else if (pNextTask && pCurrentTask) {
 		if (pNextTask->Get_TaskType() == eScan && pNextTask->Get_ScanType() == etoothCrown
@@ -1930,6 +1958,15 @@ void ScanMainGUI::lowJawBtnClick() {
 		m_plowerTeethModel->Set_Visible(ui.lowJawBtn->isChecked());
 		glWidget->update();
 	}
+}
+
+void ScanMainGUI::progressBarSetSlot(int min, int max, bool bVisible)
+{
+	ui.progressBar->reset();
+	ui.progressBar->setMinimum(min);
+	ui.progressBar->setMaximum(max);
+	//ui.progressBar->setOrientation(tation);
+	ui.progressBar->setVisible(bVisible);
 }
 
 void ScanMainGUI::stitchingUpperJawBtnClick() {
@@ -2156,7 +2193,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	ui.doctorNameLabel->setText(QString::fromLocal8Bit(orderInfo.strDoctorName.c_str()));
 	ui.upperJawBtn->setVisible(false);
 	ui.lowJawBtn->setVisible(false);
+	ui.teethGroupBox->setVisible(false);
+	ui.jawGroupBox->setVisible(false);
 	if (orderInfo.eorderType == esplitModel) {//分模
+		ui.teethGroupBox->setVisible(true);
 		int chooseID = -1;
 		for (int i = 0; i < 32;i++) {
 			chooseID = orderInfo.eTeethScanType[i];
@@ -2202,6 +2242,30 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 			if (plabel) {
 				plabel->setPixmap(QPixmap::fromImage(resultImage));
 			}
+		}
+	}
+	else if (orderInfo.eorderType == eunMoulage) {
+		ui.jawGroupBox->setVisible(true);
+		bool bAllJaw = false, bUpperjaw = false, blowerJaw = false;
+		std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName + orderInfo.strUpperJawModelName + ".ply";
+		if (QFile::exists(QString::fromLocal8Bit(strUpperModelNameStr.c_str()))) {
+			bUpperjaw = true;
+		}
+		string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName + orderInfo.strLowerJawModelName + ".ply";
+		if (QFile::exists(QString::fromLocal8Bit(strLowerModelNameStr.c_str()))) {
+			blowerJaw = true;
+		}
+		if (bUpperjaw&&blowerJaw) {		//全口
+			QImage image("./Resources/images/alljaw.png");
+			ui.jawImage->setPixmap(QPixmap::fromImage(image));
+		}
+		else if (blowerJaw) {				//下口
+			QImage image("./Resources/images/lowerjaw_yes.png");
+			ui.jawImage->setPixmap(QPixmap::fromImage(image));
+		}	
+		else if (bUpperjaw) {			//上口
+			QImage image("./Resources/images/upperjaw_yes.png");
+			ui.jawImage->setPixmap(QPixmap::fromImage(image));
 		}
 	}
 	std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName+ orderInfo.strUpperJawModelName + ".ply";

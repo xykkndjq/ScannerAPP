@@ -20,7 +20,7 @@ HINSTANCE g_hdll = NULL;
 void poissonRecon(orth::MeshModel& totalMeshModel)
 {
 	PoissonReconstruction fsp;
-	fsp.run(totalMeshModel, 10);
+	fsp.run(totalMeshModel, 10, 0.4);
 // 	int  argc;
 // 	char *argv[9];
 // 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
@@ -638,7 +638,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
 
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
-
+	emit progressBarSetSignal(0, 0,true);
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -703,7 +703,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
  			//	finish_model_io.writeModel(modelNameStr, "stl");
  			//	//writefile(upper_mModel[i], name);
  			//}
- 
+			emit progressBarVisibleSignal(false);
  			emit computeFinish();
  		}
  	}
@@ -728,7 +728,7 @@ void ComputeThread::normalAllJawComputeScan()
 	int chooseJawIndex = 3;
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
-
+	emit progressBarSetSignal(0, 0, true);
 	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -792,7 +792,7 @@ void ComputeThread::normalAllJawComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
-
+			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
 	}
@@ -995,7 +995,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
 // 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 // 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-
+	emit progressBarSetSignal(0, 0, true);
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
 	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
@@ -1055,6 +1055,7 @@ void ComputeThread::compensationComputeScan(int chooseJawIndex)
 	cout << "补扫一个角度图片计算完成" << endl;
 
 	emit cameraShowSignal();
+	emit progressBarVisibleSignal(false);
 	emit computeFinish();
 }
 
@@ -1129,7 +1130,7 @@ void ComputeThread::writefile(vector<double> cloud, string name)
 
 void ComputeThread::GPAMeshing(int chooseJawIndex)
 {
-
+	emit progressBarSetSignal(0, 0, true);
 	vector<vector<double>> points_target;
 	int TotalIterNum = 82;
 	if (chooseJawIndex == 1)
@@ -1157,7 +1158,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 
 			orth::MeshModel totalMeshModel;
 			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 9);
+			fsp.run(upper_mModel, totalMeshModel, 9, 0.4);
 			//ReductMesh(totalMeshModel, totalMeshModel);
 			//orth::MeshModel totalMeshModel;
 			//for (int data_index = 0; data_index < upper_mModel.size(); data_index++)
@@ -1249,7 +1250,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 
 			orth::MeshModel totalMeshModel;
 			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 10);
+			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
 			//ReductMesh(totalMeshModel, totalMeshModel);
 			//orth::MeshModel totalMeshModel;
 			//for (int data_index = 0; data_index < lower_mModel.size(); data_index++)
@@ -1326,7 +1327,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 
 			orth::MeshModel totalMeshModel;
 			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 10);
+			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
 			//ReductMesh(totalMeshModel, totalMeshModel);
 			//orth::MeshModel totalMeshModel;
 			//for (int data_index = 0; data_index < all_mModel.size(); data_index++)
@@ -1377,6 +1378,7 @@ void ComputeThread::GPAMeshing(int chooseJawIndex)
 		}
 	}
 	emit showModeltoGlSingel(2);
+	emit progressBarVisibleSignal(false);
 	emit computeFinish();
 }
 
@@ -1386,6 +1388,7 @@ void ComputeThread::GPAMeshing()
 	pScanTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pScanTask)
 		return;
+	emit progressBarSetSignal(0, 0,  true);
 	//vector<vector<double>> points_target;
 	int TotalIterNum = 82;
 	{
@@ -1410,7 +1413,7 @@ void ComputeThread::GPAMeshing()
 
 			orth::MeshModel totalMeshModel, totalMeshModel_copy;
 			PoissonReconstruction fsp;
-			fsp.run(pScanTask->m_mModel, totalMeshModel, 9);
+			fsp.run(pScanTask->m_mModel, totalMeshModel, 9,0.4);
 			//ReductMesh(totalMeshModel, totalMeshModel);
 			/*--------------------------------------------------- old -----------------------------------------------*/
 			//orth::MeshModel totalMeshModel;
@@ -1455,6 +1458,7 @@ void ComputeThread::GPAMeshing()
 	}
 	//emit showModeltoGlSingel(2);
 	//emit computeFinish();
+	emit progressBarVisibleSignal(false);
 	emit meshFinish();
 }
 //牙齿配准
@@ -1472,6 +1476,7 @@ void ComputeThread::taskTeethSitit()
 	//1分割srcmodel pCTeethModel pTeethModel;
 	if (!pDstTask || !pSrcTask)
 		return;
+	emit progressBarSetSignal(0, 0,  true);
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
 	if (pDstTask->m_mRegistrationModels.size() == 0)
@@ -1522,7 +1527,7 @@ void ComputeThread::taskTeethSitit()
 		//pDstTask->m_mAllModel = l_dstModel;
 		pDstTask->m_mRegistrationModels.push_back(l_dstModel);
 	}
-
+	emit progressBarVisibleSignal(false);
 	emit taskTeethSititFinish();
 
 // 	//vector<orth::MeshModel>::iterator iter = l_vtModel.begin();
@@ -1548,6 +1553,7 @@ void ComputeThread::Stitching()
 	pCScanTask pDstTask = pTask->m_pDstTask, pSrcTask = pTask->m_pSrcTask;
 	if (!pDstTask || !pSrcTask)
 		return;
+	emit progressBarSetSignal(0, 0,  true);
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
 	pDstTask->pTeethModel->getMeshModel(l_dstModel);
@@ -1577,6 +1583,7 @@ void ComputeThread::Stitching()
 // 		pDstTask->pTeethModel->m_model = dstAllModel;
 // 
 // 	}
+	emit progressBarVisibleSignal(false);
 	emit StitchFinish();
 }
 
@@ -1608,7 +1615,11 @@ void ComputeThread::allJawComputeScan()
 	int l_dataSize = SCAN_ALLJAW_POS - 1;
 	scan::Registration reg(1.0, 10.0, 50);
 	reg.SetSearchDepth(40);
-
+// 	emit progressBarResetSignal();
+// 	emit progressBarSetMinSignal(0);
+// 	emit progressBarSetMaxSignal(l_dataSize - 1);
+// 	emit progressBarSetValueSignal(0);
+	emit progressBarSetSignal(0,0,true);
 	//reg.SetRegistError(0.3);
 	for (int scan_index = 0; scan_index < l_dataSize; scan_index++)
 	{
@@ -1648,6 +1659,7 @@ void ComputeThread::allJawComputeScan()
 		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
 		HLogHelper::getInstance()->HLogTime("The ComputeThread: %d has finished", scan_index);
 		freeSpace.release();
+		emit progressBarSetValueSignal(scan_index);
 		if (scan_index == (l_dataSize - 1))
 		{
 			//for (int i = 0; i < 9; i++)
@@ -1658,7 +1670,7 @@ void ComputeThread::allJawComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
-
+			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
 	}
@@ -1775,6 +1787,7 @@ void ComputeThread::normalComputeScan()
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
 	//reg.SetRegistError(0.3);
+	emit progressBarSetSignal(0, 0, true);
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -1833,7 +1846,7 @@ void ComputeThread::normalComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
-
+			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
 	}
@@ -1856,7 +1869,7 @@ void ComputeThread::compensationCompute()
 	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
 // 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 // 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-
+	emit progressBarSetSignal(0, 0, true);
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
 	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
@@ -1915,6 +1928,7 @@ void ComputeThread::compensationCompute()
 	cout << "补扫一个角度图片计算完成" << endl;
 
 	emit cameraShowSignal();
+	emit progressBarVisibleSignal(false);
 	emit computeFinish();
 }
 

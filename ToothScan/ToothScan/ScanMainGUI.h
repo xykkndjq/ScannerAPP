@@ -237,6 +237,8 @@ private:
 	void showOrderInfo(COrderInfo orderInfo);
 	void upperJawBtnBtnClick();
 	void lowJawBtnClick();
+
+	void progressBarSetSlot(int min, int max, bool bVisible);
 };
 
 #endif

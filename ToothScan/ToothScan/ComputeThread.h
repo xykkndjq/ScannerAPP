@@ -119,6 +119,13 @@ signals:
 	void StitchFinish();
 	void taskTeethSititFinish();
 	void finishFarRegSignal();//???????????
+	void progressBarResetSignal();
+	void progressBarSetMinSignal(int min);
+	void progressBarSetMaxSignal(int max);
+	void progressBarSetValueSignal(int value);
+	void progressBarsetOrientation(Qt::Orientation);
+	void progressBarVisibleSignal(bool visible);
+	void progressBarSetSignal(int min,int max, bool bVisible);
 public slots:
 	void FarRegistrationSlot();//??????????
 	void normalComputeScan(int chooseJawIndex);//??????
