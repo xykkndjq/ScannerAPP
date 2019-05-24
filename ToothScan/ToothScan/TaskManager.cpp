@@ -1,8 +1,8 @@
 #include "TaskManager.h"
 #include "commonFun.h"
 
-extern const char *g_strScanName[7] = { { "牙冠" },{ "嵌体" },{ "缺失牙" } ,
-{ "种植牙" },
+extern const char *g_strScanName[8] = { { "牙冠" },{ "嵌体" },{ "缺失牙" } ,
+{ "种植牙" },{ "对颌牙" },
 { "上颌模型" },{ "下颌模型" },{ "全颌模型" } };
 
 CTaskManager::CTaskManager()
@@ -22,6 +22,9 @@ CScanTask::CScanTask()
 	m_eScanType = eScanNULL;
 	m_iTeethId = 0;
 	m_strModelFileName = newGUID();
+	m_bDentalImplant = false;
+	m_bGingiva = false;
+	m_vtTeeth.clear();
 }
 
 CScanTask::~CScanTask()
@@ -80,6 +83,7 @@ void CScanTask::StreamValue(datastream& kData, bool bSend)
 	Stream_VALUEEx(int, m_eTaskPro);
 	//qDebug() << m_eTaskPro << endl;
 	Stream_VALUEEx(int, m_eTaskType);
+	Stream_VALUE(m_vtTeeth);
 //	qDebug() << m_eTaskType << endl;
 }
 
@@ -90,6 +94,5 @@ void COralSubstituteScan::StreamValue(datastream& kData, bool bSend)
 
 void CGroupScan::StreamValue(datastream& kData, bool bSend)
 {
-	Stream_VALUE(m_vtTeeth);
 	CScanTask::StreamValue(kData, bSend);
 }

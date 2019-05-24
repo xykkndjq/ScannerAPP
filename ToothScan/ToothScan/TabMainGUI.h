@@ -46,7 +46,7 @@ public:
 	void constructIHM();
 	void setConnections();
 
-	QList<QPushButton*> judgeToothList(int id);
+	QList<QPushButton*> *judgeToothList(int id);
 	void setSplitToothFalse();
 
 	//判断文件夹是否存在并创建文件夹
@@ -91,12 +91,14 @@ public:
 	//QPushButton *saveButton;
 	QPushButton *watchButton;
 	QPushButton *saveScanButton;
+	QPushButton *saveButton;
 	CTeethImgBtn * m_closeBtn;
 	
 	QDateTimeEdit *dateLineEdit;
 	QLineEdit *orderLineEdit;
 	QLineEdit *patientLineEdit;
 	QLineEdit *doctorLineEdit;
+	QLineEdit *operatorLineEdit;
 	QTextEdit *additionTextEdit;
 	QLabel *additionLabel;
 	//未分模
@@ -126,7 +128,7 @@ public:
 	QCheckBox *facingButton;//贴面
 	QCheckBox *waxTypeButton;//蜡型
 	QCheckBox *implantButton;//种植体
-	QCheckBox *jawToothButton;//对颌牙
+	CImageBtn *jawToothButton;//对颌牙
 
 	QList<QPushButton*> totalCrownList;
 	QList<QPushButton*> toothCrownList;
@@ -151,6 +153,7 @@ public:
 	QString orderPatientName;
 	QString orderDoctorName;
 	QString orderAddition;
+	QString orderOperatorName;
 	//QString upperjaw;
 	//About关于页面控件
 	QLabel *aboutTextLabel;

@@ -1390,7 +1390,7 @@ void ComputeThread::GPAMeshing()
 		return;
 	emit progressBarSetSignal(0, 0,  true);
 	//vector<vector<double>> points_target;
-	int TotalIterNum = 82;
+	int TotalIterNum = 30;
 	{
 		if (pScanTask->m_mModel.size() > 1)
 		{

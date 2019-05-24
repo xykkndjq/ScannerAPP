@@ -7,23 +7,25 @@ void ScanMainGUI::saveModelFile(pCScanTask pTask) {
 	pTask->pTeethModel->getMeshModel(meshModel);
 	int mModelVSize = meshModel.size();
 	tinyply::plyio io;
-	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
+	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data())+ tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
 	cout << "pathname: " << modelNameStr << endl;
+	//finish_model_io.writeModel(modelNameStr, "stlb");
+	//orth::ModelIO finish_model_io(&meshModel);
 	//finish_model_io.writeModel(modelNameStr, "stlb");
 	io.write_ply_example(modelNameStr, meshModel, true);
 	cout << "saveModelFile finish" << endl;
 }
 bool ScanMainGUI::isModelFileExit(pCScanTask &pTask) {
-	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
+	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
 	return QFile::exists(modelNameStr.c_str());
 }
 void ScanMainGUI::loadModelFile(pCScanTask &pTask) {
-	std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
+	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
 	orth::MeshModel meshModel;
-	// 	orth::ModelIO finish_model_io(&meshModel);
-	// 	finish_model_io.loadModel(modelNameStr);
-	tinyply::plyio io;
-	io.read_ply_file(modelNameStr, meshModel);
+	//orth::ModelIO finish_model_io(&meshModel);
+	//finish_model_io.loadModel(modelNameStr);
+ 	tinyply::plyio io;
+ 	io.read_ply_file(modelNameStr, meshModel);
 	pTask->m_mAllModel = meshModel;
 	glWidget->mm = meshModel;
 	pTask->pTeethModel = glWidget->makeObject();
@@ -41,6 +43,7 @@ void ScanMainGUI::hideAllPanel()
 	ui.OralSubstitutePanel->setVisible(false);
 	ui.TeethStitchingPanel->setVisible(false);
 	ui.orderInfoPanel->setVisible(false);
+	ui.DentalImplantPanel->setVisible(false);
 }
 
 void styleControl2(QObject *obj) {
@@ -646,7 +649,7 @@ void ScanMainGUI::updateMeshModel(int refreshIndex)
 
 void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 {
-
+	cameraWindow->setVisible(true);
 	resetValue();
 	glWidget->m_ModelsVt.clear();
 	scanTipWidget->setVisible(true);
@@ -687,6 +690,7 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 		CTaskManager::getInstance()->resetCurrentTask();
 		showScanJawGroup();
 	}
+	glWidget->m_ModelsVt.clear();
 	tabMainPage->hide();
 	this->showMaximized();
 	scanTipWidget->showMaximized();
@@ -714,11 +718,21 @@ void ScanMainGUI::showScanJawGroup(bool bBack) {
 			break;
 		}
 		ui.ScanJawGroupTipImage->setPixmap(QPixmap(l_strLabelImagePath));
+		ui.noticeTipsLabel->setVisible(false);
 		QString str;
-		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+		if (pCurrentTask->Get_Gingiva() == true) {
+			str = QString::fromLocal8Bit("请插入带牙龈的") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+			ui.noticeTipsLabel->setText(QString::fromLocal8Bit("不要插入扫描杆"));
+			ui.noticeTipsLabel->setVisible(true);
+		}
+		else if (pCurrentTask->Get_Gingiva() == false && pCurrentTask->Get_DentalImplant() == true) {
+			str = QString::fromLocal8Bit("请插入带扫描杆的") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+			ui.noticeTipsLabel->setText(QString::fromLocal8Bit("不要插入牙龈"));
+			ui.noticeTipsLabel->setVisible(true);
+		}else
+			str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
 		//str.sprintf("%s",pCurrentTask->Get_TaskName());
 		ui.ScanJawTips->setText(str);
-		glWidget->m_ModelsVt.clear();
 	}
 }
 void ScanMainGUI::showOralSubstitutePanel(bool bBack) {
@@ -751,6 +765,16 @@ void ScanMainGUI::showOralSubstitutePanel(bool bBack) {
 		}
 	}
 }
+void ScanMainGUI::showSubstitutePanel(bool bBack) {
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (!pCurrentTask) {
+		return;
+	}
+	ui.StitchingPanel->setVisible(true);
+	QString str;
+	str = QString::fromLocal8Bit("拼接") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
+	ui.StitchingPanelTips->setText(str);
+}
 void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 	ui.StitchingFinishPanel->setVisible(true);
 	ui.stitchingUpperJawBtn->setVisible(false);
@@ -760,30 +784,24 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 	if (m_pupperTeethModel) {
 		ui.stitchingUpperJawBtn->setVisible(true);
 		glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
-		pCScanTask ptask= CTaskManager::getInstance()->getTask(eUpperJawScan);
-		if (ptask) {
-			saveModelFile(ptask);
-		}
+// 		pCScanTask ptask= CTaskManager::getInstance()->getTask(eUpperJawScan);
+// 		if (ptask) {
+// 			saveModelFile(ptask);
+// 		}
 	}
 	if (m_plowerTeethModel) {
 		ui.stitchingLowerJawBtn->setVisible(true);
 		glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
-		pCScanTask ptask = CTaskManager::getInstance()->getTask(eLowerJawScan);
-		if (ptask) {
-			saveModelFile(ptask);
-		}
+// 		pCScanTask ptask = CTaskManager::getInstance()->getTask(eLowerJawScan);
+// 		if (ptask) {
+// 			saveModelFile(ptask);
+// 		}
 	}
+	glWidget->update();
 }
 void ScanMainGUI::showCutJawPanel(bool bBack) {
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
-		glWidget->m_ModelsVt.clear();
-		glWidget->mm = pCurrentTask->m_mAllModel;
-		pCurrentTask->m_mModel.clear();
-		pCurrentTask->pTeethModel = glWidget->makeObject();
-		glWidget->update();
-		pCurrentTask->Set_TaskPro(eProgressMesh);
-		cout << "showCutJawPanel meshmodel size" << pCurrentTask->m_mAllModel.size() << endl;
 		ui.compensationScanPanel->setVisible(false);
 		ui.CutJawPanel->setVisible(true);
 		QString str;
@@ -1596,7 +1614,7 @@ void ScanMainGUI::saveModeltoFileSlot()
 			model_io.writeModel(fileStr,"stl");
 		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
-		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stlb");
 	}
@@ -1610,7 +1628,7 @@ void ScanMainGUI::saveModeltoFileSlot()
 			model_io.writeModel(fileStr, "stl");
 		}*/
 		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
-		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		finish_model_io.writeModel(modelNameStr, "stlb");
 	}
@@ -1624,19 +1642,19 @@ void ScanMainGUI::saveModeltoFileSlot()
 			model_io.writeModel(fileStr, "stl");
 		}*/
 		orth::ModelIO all_finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
-		std::string modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
+		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		all_finish_model_io.writeModel(modelNameStr, "stlb");
 
 		mModelVSize = ControlComputeThread->upper_mModel.size();
 		orth::ModelIO upper_finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
-		modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		upper_finish_model_io.writeModel(modelNameStr, "stlb");
 
 		mModelVSize = ControlComputeThread->lower_mModel.size();
 		orth::ModelIO lower_finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
-		modelNameStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
 		cout << "pathname: " << modelNameStr << endl;
 		lower_finish_model_io.writeModel(modelNameStr, "stlb");
 	}
@@ -1781,17 +1799,14 @@ void ScanMainGUI::discardBtnClick() {
 }
 
 //下一步 合并吧
-void ScanMainGUI::compensationScanPanelNextBtnClick() {
+void ScanMainGUI::compensationScanPanelNextBtnClick() {	//下一步切割
 #ifdef UITEST
 	ui.compensationScanPanel->setVisible(false);
 	ui.StitchingPanel->setVisible(true);
 	return;
 #endif
 	hideAllPanel();
-	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
-	if (pCurrentTask) {
-		emit gpaTaskMeshSignal();
-	}
+	showCutJawPanel();
 }
 //上一步
 void ScanMainGUI::compensationScanPanelBackBtnClick() {
@@ -1808,9 +1823,19 @@ void ScanMainGUI::compensationScanPanelBackBtnClick() {
 void ScanMainGUI::cutModelBtnClick() {
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
-		orth::MeshModel meshModel;
-		pCurrentTask->pTeethModel->getMeshModel(meshModel);
-		pCurrentTask->m_mCutModel.push_back(meshModel);
+		vector<orth::MeshModel> tmpMeshModelVt;
+		for (int i = 0; i < glWidget->m_ModelsVt.size(); i++) {
+			orth::MeshModel meshModel;
+			pCTeethModel pTeeth = static_pointer_cast<CTeethModel>(glWidget->m_ModelsVt[i]);
+			if (pTeeth) {
+				pTeeth->getMeshModel(meshModel);
+			}
+			tmpMeshModelVt.push_back(meshModel);
+		}
+		pCurrentTask->m_mCutModel.push_back(tmpMeshModelVt);
+		//orth::MeshModel meshModel;
+		//pCurrentTask->pTeethModel->getMeshModel(meshModel);
+		
 		glWidget->cutModelUnderBg();
 		ui.unDoCutBtn->setEnabled(true);
 	}
@@ -1820,9 +1845,17 @@ void ScanMainGUI::unDoCutBtnClick() {
 	if (pCurrentTask) {
 		if (pCurrentTask->m_mCutModel.size() > 0) {
 			orth::MeshModel meshModel;
-			meshModel = pCurrentTask->m_mCutModel[pCurrentTask->m_mCutModel.size() - 1];
-			pCurrentTask->pTeethModel->m_model = meshModel;
-			pCurrentTask->pTeethModel->makeObject();
+			pCurrentTask->m_mModel = pCurrentTask->m_mCutModel[pCurrentTask->m_mCutModel.size() - 1];
+// 			pCurrentTask->pTeethModel->m_model = meshModel;
+// 			pCurrentTask->pTeethModel->makeObject();
+			for (int i = 0; i < glWidget->m_ModelsVt.size();i++) {
+				pCTeethModel pTeeth = static_pointer_cast<CTeethModel>(glWidget->m_ModelsVt[i]);
+				if (pTeeth){
+					pTeeth->m_model = pCurrentTask->m_mModel[i];
+					pTeeth->makeObject();
+				}
+			}
+			pCurrentTask->m_mCutModel.pop_back();
 			glWidget->update();
 		}
 		else {
@@ -1875,6 +1908,23 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 	hideAllPanel();
 	glWidget->showBkGround(false);
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (pCurrentTask && pCurrentTask->m_mModel.size()>0) {
+		glWidget->cutModelUnderBg();
+		vector<orth::MeshModel> tmpMeshModelVt;
+		for (int i = 0; i < glWidget->m_ModelsVt.size(); i++) {
+			orth::MeshModel meshModel;
+			pCTeethModel pTeeth = static_pointer_cast<CTeethModel>(glWidget->m_ModelsVt[i]);
+			if (pTeeth) {
+				pTeeth->getMeshModel(meshModel);
+			}
+			tmpMeshModelVt.push_back(meshModel);
+		}
+		pCurrentTask->m_mModel = tmpMeshModelVt;
+		pCurrentTask->m_mCutModel.clear();
+		glWidget->update();
+		emit gpaTaskMeshSignal();
+		return;
+	}	
 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
 		m_pallTeethModel = pCurrentTask->pTeethModel;
@@ -1912,12 +1962,14 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 		}
 		else if (pNextTask->Get_TaskType() == eUpperStitching || pNextTask->Get_TaskType() == eLowerStitching) {	//上下颌的合并
 			ui.CutJawPanel->setVisible(false);
-			emit taskSititchingSignal();
+			//emit taskSititchingSignal();
+			showSubstitutePanel();
 		}
 		else if (pNextTask->Get_TaskType() == eUpperTeethStit || pNextTask->Get_TaskType() == eLowerTeethStit) {
 			//牙齿拼接
 			ui.CutJawPanel->setVisible(false);
-			emit taskTeethSititSignal();
+			//emit taskTeethSititSignal();
+			showSubstitutePanel();
 		}
 
 	}
@@ -1933,17 +1985,12 @@ void ScanMainGUI::stitchingPanelBtnClick() {
 #endif
 	hideAllPanel();
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
-	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
-	if (!pNextTask) {
-		showStitchingFinishPanel();
-	}
-	else if (pNextTask->Get_TaskType() == eUpperStitching ||
-		pNextTask->Get_TaskType() == eLowerStitching) {
+	if (pCurrentTask->Get_TaskType() == eUpperStitching ||
+		pCurrentTask->Get_TaskType() == eLowerStitching) {
 		emit taskSititchingSignal();
 	}
-	else if (pNextTask->Get_TaskType() == eScan&& pNextTask->Get_ScanType() == etoothCrown
-		|| pNextTask->Get_ScanType() == einlayScan) {
-		showOralSubstitutePanel();
+	else if (pCurrentTask->Get_TaskType() == eUpperTeethStit|| pCurrentTask->Get_TaskType() == eLowerTeethStit) {
+		emit taskTeethSititSignal();
 	}
 }
 
@@ -2003,9 +2050,22 @@ void ScanMainGUI::stitchingFNextBtnClick() {
 	// // 		ui.ScanJawTips->setText(str);
 	// 		showScanJawGroup();
 	// 	}
+	if (m_pupperTeethModel) {
+		pCScanTask ptask = CTaskManager::getInstance()->getTask(eUpperJawScan);
+		if (ptask) {
+			saveModelFile(ptask);
+		}
+	}
+	if (m_plowerTeethModel) {
+		pCScanTask ptask = CTaskManager::getInstance()->getTask(eLowerJawScan);
+		if (ptask) {
+			saveModelFile(ptask);
+		}
+	}
 	tabMainPage->show();
 	tabMainPage->showMaximized();
 	this->hide();
+
 }
 void ScanMainGUI::OralSubstitutePanelNextBtnClick() {
 #ifdef UITEST
@@ -2064,6 +2124,41 @@ void ScanMainGUI::CutJawFinishPanelNextStepBtnClick() {
 	ui.ScanJawGroup->setVisible(true);
 	return;
 #endif
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
+	if (!pCurrentTask)
+		return;
+	if (pCurrentTask->Get_TaskType() != eUpperStitching &&
+		pCurrentTask->Get_TaskType() != eLowerStitching &&
+		pCurrentTask->Get_TaskType() != eUpperTeethStit &&
+		pCurrentTask->Get_TaskType() != eLowerTeethStit)
+	{
+		return;
+	}
+	pCStitchingTask pTask = std::static_pointer_cast<CStitchingTask>(pCurrentTask);
+	if (!pTask)
+		return;
+	pCScanTask pDstTask = pTask->m_pDstTask, pSrcTask = pTask->m_pSrcTask;
+	if (!pDstTask || !pSrcTask)
+		return;
+	if(pCurrentTask->Get_TaskType() == eUpperTeethStit || pCurrentTask->Get_TaskType() == eLowerTeethStit)
+		saveModelFile(pDstTask);
+	else if (pCurrentTask->Get_TaskType() == eUpperStitching || pCurrentTask->Get_TaskType() == eLowerStitching) {
+		saveModelFile(pSrcTask);
+	}
+	hideAllPanel();
+	if (!pNextTask) {
+		showStitchingFinishPanel();
+	}
+	else if (pNextTask->Get_TaskType() == eUpperStitching ||
+		pNextTask->Get_TaskType() == eLowerStitching) {
+		//emit taskSititchingSignal();
+		showSubstitutePanel();
+	}
+	else if (pNextTask->Get_TaskType() == eScan&& pNextTask->Get_ScanType() == etoothCrown
+		|| pNextTask->Get_ScanType() == einlayScan) {
+		showOralSubstitutePanel();
+	}
 }
 
 void ScanMainGUI::updateTaskModel()
@@ -2082,7 +2177,75 @@ void ScanMainGUI::updateTaskModel()
 void ScanMainGUI::meshFinishSlot()
 {
 	hideAllPanel();
-	showCutJawPanel();
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (!pCurrentTask) {
+		return;
+	}
+
+	glWidget->m_ModelsVt.clear();
+	glWidget->mm = pCurrentTask->m_mAllModel;
+	pCurrentTask->m_mModel.clear();
+	pCurrentTask->pTeethModel = glWidget->makeObject();
+	glWidget->update();
+	pCurrentTask->Set_TaskPro(eProgressMesh);
+
+	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
+		m_pallTeethModel = pCurrentTask->pTeethModel;
+	}
+	saveModelFile(pCurrentTask);
+
+	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
+
+	if (!pNextTask&&pCurrentTask) {
+		ui.CutJawPanel->setVisible(false);
+		ui.StitchingFinishPanel->setVisible(true);
+		QString str;
+		ui.stitchingUpperJawBtn->setVisible(false);
+		ui.stitchingLowerJawBtn->setVisible(false);
+		if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+			m_pupperTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingUpperJawBtn->setChecked(true);
+			ui.stitchingUpperJawBtn->setVisible(true);
+		}
+		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+			m_plowerTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingLowerJawBtn->setChecked(true);
+			ui.stitchingLowerJawBtn->setVisible(true);
+		}
+		//str = QString::fromLocal8Bit("可以通过工具栏修剪") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("数据");
+		//ui.CutJawFinishPanelTips->setText(str);
+	}
+	else if (pNextTask && pCurrentTask) {
+		if (pNextTask->Get_TaskType() == eScan && pNextTask->Get_ScanType() == etoothCrown
+			|| pNextTask->Get_ScanType() == einlayScan) {
+			showOralSubstitutePanel();
+		}
+		else if (pNextTask->Get_TaskType() == eScan) {
+			ui.CutJawPanel->setVisible(false);
+			ui.ScanJawBackStepBtn->setVisible(true);
+			showScanJawGroup();
+		}
+		else if (pNextTask->Get_TaskType() == eUpperStitching || pNextTask->Get_TaskType() == eLowerStitching) {	//上下颌的合并
+			ui.CutJawPanel->setVisible(false);
+			showSubstitutePanel();
+// 			ui.StitchingPanel->setVisible(true);
+// 			QString str;
+// 			str = QString::fromLocal8Bit("拼接") + QString::fromLocal8Bit(pNextTask->Get_TaskName().c_str());
+// 			ui.StitchingPanelTips->setText(str);
+			//emit taskSititchingSignal();
+		}
+		else if (pNextTask->Get_TaskType() == eUpperTeethStit || pNextTask->Get_TaskType() == eLowerTeethStit) {
+			//牙齿拼接
+			ui.CutJawPanel->setVisible(false);
+			showSubstitutePanel();
+// 			ui.StitchingPanel->setVisible(true);
+// 			QString str;
+// 			str = QString::fromLocal8Bit("拼接") + QString::fromLocal8Bit(pNextTask->Get_TaskName().c_str());
+// 			ui.StitchingPanelTips->setText(str);
+			//emit taskTeethSititSignal();
+		}
+
+	}
 }
 void ScanMainGUI::StitchFinishSlot()
 {
@@ -2098,15 +2261,19 @@ void ScanMainGUI::StitchFinishSlot()
 			return;
 
 		if (pCurrentTask->Get_TaskType() == eUpperStitching || pCurrentTask->Get_TaskType() == eLowerStitching) {
-			ui.StitchingPanel->setVisible(true);
+			ui.CutJawFinishPanel->setVisible(true);
 			QString str;
-			str = QString::fromLocal8Bit("拼接") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
-			ui.StitchingPanelTips->setText(str);
+			str = QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str())+QString::fromLocal8Bit("拼接完成");
+			ui.CutJawFinishPanelLabel->setText(str);
 			glWidget->m_ModelsVt.clear();
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 			//if (pTask->m_mAllModel.size() > 0) {
 				glWidget->mm = pSrcTask->m_mAllModel;
 				pSrcTask->pTeethModel = glWidget->makeObject();
+				if(m_pallTeethModel){
+					glWidget->m_ModelsVt.push_back(m_pallTeethModel);
+					m_pallTeethModel->Set_Visible(true);
+				}
 				if (pCurrentTask->Get_TaskType() == eUpperStitching) {		//上颌拼接
 					m_pupperTeethModel = pSrcTask->pTeethModel;//pDstTask->pTeethModel;
 					ui.stitchingUpperJawBtn->setChecked(true);
@@ -2116,7 +2283,7 @@ void ScanMainGUI::StitchFinishSlot()
 					m_plowerTeethModel = pSrcTask->pTeethModel; //pDstTask->pTeethModel;
 					ui.stitchingLowerJawBtn->setChecked(true);
 				}
-				saveModelFile(pSrcTask);
+				//saveModelFile(pSrcTask);
 				glWidget->update();
 			//}
 		}
@@ -2136,10 +2303,10 @@ void ScanMainGUI::taskTeethSititFinishSlot()
 			return;
 
 		if (pCurrentTask->Get_TaskType() == eUpperTeethStit || pCurrentTask->Get_TaskType() == eLowerTeethStit) {
-			ui.TeethStitchingPanel->setVisible(true);
+			ui.CutJawFinishPanel->setVisible(true);
 			QString str;
-			str = QString::fromLocal8Bit("拼接") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
-			ui.StitchingPanelTips->setText(str);
+			str = QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("拼接完成");
+			ui.CutJawFinishPanelLabel->setText(str);
 			glWidget->m_ModelsVt.clear();
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 			glWidget->mm = pDstTask->m_mRegistrationModels.back();
@@ -2186,11 +2353,13 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	m_plowerTeethModel = nullptr;
 	m_pupperTeethModel = nullptr;
 	tabMainPage->hide();
+	cameraWindow->setVisible(false);
 	this->ui.orderInfoPanel->setVisible(true);
 	this->showMaximized();
 	ui.orderNoLabel->setText(QString::fromLocal8Bit(orderInfo.strOrderNumber.c_str()));
 	ui.patientNameLabel->setText(QString::fromLocal8Bit(orderInfo.strPatientName.c_str()));
 	ui.doctorNameLabel->setText(QString::fromLocal8Bit(orderInfo.strDoctorName.c_str()));
+	ui.operatorNameLabel->setText(QString::fromLocal8Bit(orderInfo.strOperatorName.c_str()));
 	ui.upperJawBtn->setVisible(false);
 	ui.lowJawBtn->setVisible(false);
 	ui.teethGroupBox->setVisible(false);
@@ -2247,11 +2416,11 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	else if (orderInfo.eorderType == eunMoulage) {
 		ui.jawGroupBox->setVisible(true);
 		bool bAllJaw = false, bUpperjaw = false, blowerJaw = false;
-		std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName + orderInfo.strUpperJawModelName + ".ply";
+		std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strUpperJawModelName + ".ply";
 		if (QFile::exists(QString::fromLocal8Bit(strUpperModelNameStr.c_str()))) {
 			bUpperjaw = true;
 		}
-		string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName + orderInfo.strLowerJawModelName + ".ply";
+		string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strLowerJawModelName + ".ply";
 		if (QFile::exists(QString::fromLocal8Bit(strLowerModelNameStr.c_str()))) {
 			blowerJaw = true;
 		}
@@ -2268,25 +2437,30 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 			ui.jawImage->setPixmap(QPixmap::fromImage(image));
 		}
 	}
-	std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName+ orderInfo.strUpperJawModelName + ".ply";
+	std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strUpperJawModelName + ".ply";
 	if (QFile::exists(QString::fromLocal8Bit(strUpperModelNameStr.c_str()))) {
 		orth::MeshModel meshModel;
 		// 	orth::ModelIO finish_model_io(&meshModel);
 		// 	finish_model_io.loadModel(modelNameStr);
-		tinyply::plyio io;
-		io.read_ply_file(strUpperModelNameStr, meshModel);
+
+//		orth::ModelIO finish_model_io(&meshModel);
+		//finish_model_io.loadModel(strUpperModelNameStr);
+ 		tinyply::plyio io;
+ 		io.read_ply_file(strUpperModelNameStr, meshModel);
 		glWidget->mm = meshModel;
 		m_pupperTeethModel = glWidget->makeObject();
 		ui.upperJawBtn->setVisible(true);
 		ui.upperJawBtn->setChecked(true);
 	}
-	string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strPatientName + orderInfo.strLowerJawModelName + ".ply";
+	string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strLowerJawModelName + ".ply";
 	if (QFile::exists(QString::fromLocal8Bit(strLowerModelNameStr.c_str()))) {
 		orth::MeshModel meshModel;
 		// 	orth::ModelIO finish_model_io(&meshModel);
 		// 	finish_model_io.loadModel(modelNameStr);
-		tinyply::plyio io;
-		io.read_ply_file(strLowerModelNameStr, meshModel);
+//		orth::ModelIO finish_model_io(&meshModel);
+		//finish_model_io.loadModel(strLowerModelNameStr);
+ 		tinyply::plyio io;
+ 		io.read_ply_file(strLowerModelNameStr, meshModel);
 		glWidget->mm = meshModel;
 		m_plowerTeethModel = glWidget->makeObject();
 		ui.lowJawBtn->setVisible(true);

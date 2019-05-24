@@ -25,11 +25,12 @@ enum eScanType {
 	einlayScan,
 	elossToothScan,
 	eDentalImplantScan,
+	eJawToothScan,
 	eUpperJawScan,
 	eLowerJawScan,
 	eAllJawScan,
 };
-extern const char *g_strScanName[7];
+extern const char *g_strScanName[8];
 
 enum eTaskProgress {
 	eProgressNull = -1,
@@ -52,20 +53,22 @@ public:
 	vector<int> m_points_cloud_end_addSize;//每次补扫后m_points_cloud_end增加的长度
 	int m_nAddModel;			//补扫了几次
 	orth::MeshModel m_mAllModel;		//总模型
-	vector<orth::MeshModel> m_mCutModel;	//剪切了几次模型 剪切后的模型
+	vector<vector<orth::MeshModel>> m_mCutModel;	//剪切了几次模型 剪切后的模型
 	vector<orth::MeshModel> m_mRegistrationModels;		//配准的model的全体 为上一步做准备
 	pCTeethModel pTeethModel;
 	void SetMoldeFileName();
 	string m_strModelFileName;
 	//PARAMDEFINE(string, str, ModelFileName);
 	string Get_ModelFileName();
+	vector<int> m_vtTeeth;
 private:
 	PARAMDEFINE(string, str, TaskName);
 	PARAMDEFINE(eScanType, e, ScanType);
 	PARAMDEFINE(int, i, TeethId);
 	PARAMDEFINE(eTaskProgress, e, TaskPro);
 	PARAMDEFINE(eTaskType, e, TaskType);
-	
+	PARAMDEFINE(bool, b, DentalImplant);		//是否有种植体
+	PARAMDEFINE(bool, b, Gingiva);		//是否有牙龈
 
 
 public:
@@ -111,9 +114,7 @@ SharedPtr(COralSubstituteScan);
 class CGroupScan :public CScanTask {
 public:
 	CGroupScan() {}
-	~CGroupScan() {}
-public:
-	vector<int> m_vtTeeth;
+	~CGroupScan() {}	
 
 	virtual void StreamValue(datastream& kData, bool bSend);
 	virtual char * getClassName() { return "CGroupScan"; };
@@ -162,15 +163,18 @@ public:
 	}
 	pCScanTask getNextTask() {
 		list<pCScanTask>::iterator iter = m_vtBaseTask.begin();
+		bool bFind = false;
 		for (; iter != m_vtBaseTask.end(); iter++) {
 			if ((*iter) == m_pCurrentTask) {
-				if((*iter)->Get_ScanType() != elossToothScan){
-					if (++iter != m_vtBaseTask.end()) {
-						m_pCurrentTask = (*iter);
-						return m_pCurrentTask;
-					}
-					else
-						m_pCurrentTask = nullptr;
+				bFind = true;
+				continue;
+			}
+			if(bFind){
+				if((*iter)->Get_ScanType() == elossToothScan || (*iter)->Get_ScanType() == eJawToothScan)
+					continue;
+				else{
+					m_pCurrentTask = (*iter);
+					return m_pCurrentTask;
 				}
 			}
 		}
@@ -218,6 +222,7 @@ public:
 	}
 	void DelAllTasks() {
 		m_vtBaseTask.clear();
+		m_pCurrentTask = nullptr;
 	}
 	static CTaskManager * m_pInstance;
 	static CTaskManager * getInstance() {
@@ -249,5 +254,7 @@ public:
 	string strOrderNumber;
 	string strOrderAddition;
 	string strFilePath;
+	string strOperatorName;
+	string strOderDate;
 };
 Q_DECLARE_METATYPE(COrderInfo);

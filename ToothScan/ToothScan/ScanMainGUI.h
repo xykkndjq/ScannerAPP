@@ -224,6 +224,7 @@ private:
 	void showCutJawPanel(bool bBack = false);
 	void showOralSubstitutePanel(bool bBack = false);
 	void showStitchingFinishPanel(bool bBack = false);
+	void showSubstitutePanel(bool bBack = false);
 
 	void movecutHeightSpinBoxSlot();//调整切割水平面
 	void movecutHeightSliderSlot();

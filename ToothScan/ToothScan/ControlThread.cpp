@@ -13,6 +13,7 @@ extern float c_scan_y = 0.0;
 extern QSemaphore freeSpace(DataSize);
 extern QSemaphore usedSpace(0);
 extern scan::RasterScan *rs = new scan::RasterScan();
+#define DEPLOY1
 class CCon {
 public:
 	CCon(QSemaphore &freeSpace, QSemaphore &usedSpace):m_freeSpace(freeSpace), m_usedSpace(usedSpace)
@@ -49,6 +50,7 @@ ControlThread::~ControlThread()
 
 void ControlThread::InitParameters()
 {
+	return;
 	cout << " RasterScan Start!!" << endl;
 	rs->InitRasterScan("SystemCalibration.yml");
 
@@ -114,6 +116,12 @@ void ControlThread::InitParameters()
 	fs_g.release();
 
 	l_usbStream.InitCyUSBParameter();//初始化
+	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	cout << "closedFlag = " << closedFlag << endl;
+	_sleep(1000);
+	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	cout << "openFlag = " << closedFlag << endl;
+	cout << "初始化光机，等待5秒。。。 " << endl;
 }
 
 void ControlThread::setFlage(bool flag)
@@ -154,16 +162,19 @@ void ControlThread::normalControlScan()
 	int bufferBias = 0;
 	
 	//l_usbStream.InitCyUSBParameter();//初始化
-	bool closedFlag = l_usbStream.ClosedDLPFunction();
-	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(1000);
-	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
-	cout << "openFlag = " << closedFlag << endl;
-	cout << "初始化光机，等待5秒。。。 " << endl;
+#ifdef DEPLOY
+	 	bool closedFlag = l_usbStream.ClosedDLPFunction();
+	 	cout << "closedFlag = " << closedFlag << endl;
+	 	_sleep(1000);
+	 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	 	cout << "openFlag = " << closedFlag << endl;
+	 	cout << "初始化光机，等待5秒。。。 " << endl;
+	 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#endif
 
 
 	l_usbStream.SetScanDLPLight();
@@ -261,9 +272,11 @@ void ControlThread::normalControlScan()
 	}
 
 	//3、关闭DLP
+#ifdef DEPLOY
 	l_usbStream.ClosedDLPFunction();
+#endif
 	//l_usbStream.AbortXferLoop();
-	cout << "关闭DLP。。 " << endl;
+	//cout << "关闭DLP。。 " << endl;
 }
 
 void ControlThread::normalAllJawControlScan()
@@ -274,6 +287,7 @@ void ControlThread::normalAllJawControlScan()
 	int bufferBias = 0;
 
 	//l_usbStream.InitCyUSBParameter();//初始化
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
@@ -281,9 +295,11 @@ void ControlThread::normalAllJawControlScan()
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 
@@ -381,9 +397,11 @@ void ControlThread::normalAllJawControlScan()
 	}
 
 	//3、关闭DLP
+#ifdef DEPLOY
 	l_usbStream.ClosedDLPFunction();
+#endif
 	//l_usbStream.AbortXferLoop();
-	cout << "关闭DLP。。 " << endl;
+	//cout << "关闭DLP。。 " << endl;
 }
 
 void ControlThread::allJawScan()
@@ -393,7 +411,8 @@ void ControlThread::allJawScan()
 	int imageSize = IMG_ROW * IMG_COL;
 	int bufferBias = 0;
 
-	//l_usbStream.InitCyUSBParameter();//初始化
+	// 	bool closedFlag = l_usbStream.ClosedDLPFunction();
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
@@ -401,9 +420,11 @@ void ControlThread::allJawScan()
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 	l_usbStream.SetScanDLPLight();
 	clock_t time1, time2, time3, time4;
@@ -506,9 +527,12 @@ void ControlThread::allJawScan()
 	}
 
 	//3、关闭DLP
+#ifdef DEPLOY
 	l_usbStream.ClosedDLPFunction();
+#endif
+	//l_usbStream.ClosedDLPFunction();
 	//l_usbStream.AbortXferLoop();
-	cout << "关闭DLP。。 " << endl;
+	//cout << "关闭DLP。。 " << endl;
 }
 
 void ControlThread::controlCalibrationScan()
@@ -516,17 +540,19 @@ void ControlThread::controlCalibrationScan()
 	bool l_bcali = true;
 	//l_usbStream.InitCyUSBParameter();//初始化
 
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
-
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 
 	l_usbStream.SetMidDLPLight();
@@ -608,7 +634,7 @@ void ControlThread::controlCalibrationScan()
 	}
 	cout << "全部标定图片存储完毕。。 " << endl;
 	////3、关闭DLP
-	l_usbStream.ClosedDLPFunction();
+//	l_usbStream.ClosedDLPFunction();
 	//l_usbStream.AbortXferLoop();
 	rs->PreCalibration(1280, 960, 10, image_groups);
 
@@ -642,17 +668,19 @@ void ControlThread::controlGlobalCaliScan()
 	bool l_bcali = true;
 	//l_usbStream.InitCyUSBParameter();//初始化
 
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 	vector<Mat> image_groups_left, image_groups_right;
@@ -707,7 +735,7 @@ void ControlThread::controlGlobalCaliScan()
 	}
 
 	////3、关闭DLP
-	l_usbStream.ClosedDLPFunction();
+	//l_usbStream.ClosedDLPFunction();
 
 	vector<double> mask_points;
 	rs->PlaneRTCalculate(image_groups_left, image_groups_right, "D:/dentalimage/dentalimage2/external_parameter.yml", mask_points);
@@ -721,6 +749,7 @@ void ControlThread::compensationControlScan()
 	
 	//l_usbStream.InitCyUSBParameter();//初始化
 
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
@@ -728,9 +757,11 @@ void ControlThread::compensationControlScan()
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 	int imageSize = IMG_ROW * IMG_COL;
 	double d_scan_x = (c_scan_x - l_scan_x);
@@ -810,9 +841,12 @@ void ControlThread::compensationControlScan()
 	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_y, l_bcali, imgL_set, imgR_set);
 
 	//3、关闭DLP
-	l_usbStream.ClosedDLPFunction();//电机失能
+#ifdef DEPLOY
+	l_usbStream.ClosedDLPFunction();
+#endif
+	//l_usbStream.ClosedDLPFunction();//电机失能
 									//WriteByte(CloseDLP, 5);
-	cout << "关闭DLP。。 " << endl;
+	//cout << "关闭DLP。。 " << endl;
 	//usedSpace.release();
 }
 
@@ -824,17 +858,19 @@ void ControlThread::normalScan()
 	int bufferBias = 0;
 
 
+#ifdef DEPLOY
 	bool closedFlag = l_usbStream.ClosedDLPFunction();
 	cout << "closedFlag = " << closedFlag << endl;
 	_sleep(1000);
 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
 	cout << "openFlag = " << closedFlag << endl;
 	cout << "初始化光机，等待5秒。。。 " << endl;
-
 	_sleep(4000);
- 	bool resetFlag = l_usbStream.ResetDLPFunction();
- 	cout << "resetFlag = " << closedFlag << endl;
- 	_sleep(4000);
+#else
+	bool resetFlag = l_usbStream.ResetDLPFunction();
+	cout << "resetFlag = " << resetFlag << endl;
+	_sleep(4000);
+#endif
 
 	l_usbStream.SetScanDLPLight();//设置光机亮度
 
@@ -936,7 +972,11 @@ void ControlThread::normalScan()
 	}
 
 	//3、关闭DLP
+
+#ifdef DEPLOY
 	l_usbStream.ClosedDLPFunction();
-	cout << "关闭DLP。。 " << endl;
+#endif
+// 	l_usbStream.ClosedDLPFunction();
+// 	cout << "关闭DLP。。 " << endl;
 }
 

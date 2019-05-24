@@ -562,7 +562,6 @@ namespace Communication
 	}
 	 
 	int CCyUSBStream::OpenUSB() {
-		//return 0;
 		if(m_USBDevice)
 			delete m_USBDevice;
 

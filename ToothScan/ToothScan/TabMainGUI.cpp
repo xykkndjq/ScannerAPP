@@ -189,6 +189,7 @@ void TabMainGUI::setConnections()
 
 	//保存
 	connect(saveScanButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
+	connect(saveButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
 	connect(watchButton, SIGNAL(clicked()), this, SLOT(OrderPreview()));
 	connect(m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	connect(this, SIGNAL(scanSignal()), this, SLOT(ScanDataPackagePress()));//扫描按钮连接
@@ -231,9 +232,10 @@ void TabMainGUI::newButtonClickedSlot() {
 	QString curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
 	lastDateTimeStr = curDateTimeStr;
 	orderLineEdit->setText(curDateTimeStr);
-	orderLineEdit->setReadOnly(true);
+	//orderLineEdit->setReadOnly(true);
 	patientLineEdit->setText("");
 	doctorLineEdit->setText("");
+	operatorLineEdit->setText("");
 	additionTextEdit->setText("");
 	CTaskManager::getInstance()->DelAllTasks();
 	clearAllButtonPress();
@@ -260,8 +262,11 @@ void TabMainGUI::initVariable()
 	//saveButton = new QPushButton(QStringLiteral("保存"), this);
 	watchButton = new QPushButton(QStringLiteral("预   览"), this);
 	watchButton->setFixedSize(180, 30);
-	saveScanButton = new QPushButton(QStringLiteral("保存并扫描"), this);
+	saveScanButton = new QPushButton(QStringLiteral("扫描"), this);
 	saveScanButton->setFixedSize(180, 30);
+
+	saveButton = new QPushButton(QStringLiteral("保存"), this);
+	saveButton->setFixedSize(180, 30);
 
 	m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png","",this);
 	m_closeBtn->setFixedSize(30, 30);
@@ -276,11 +281,15 @@ void TabMainGUI::initVariable()
 	QString curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
 	lastDateTimeStr = curDateTimeStr;
 	orderLineEdit->setText(curDateTimeStr);
-	orderLineEdit->setReadOnly(true);
+	QRegExp regx("[0-9]+$");
+	QValidator* validator = new QRegExpValidator(regx, orderLineEdit);
+	orderLineEdit->setValidator(validator);
+	//orderLineEdit->setReadOnly(true);
 
 	patientLineEdit = new QLineEdit(this);
 	doctorLineEdit = new QLineEdit(this);
 	additionTextEdit = new QTextEdit(this);
+	operatorLineEdit = new QLineEdit(this);
 	additionLabel = new QLabel(QStringLiteral("备注："), this);
 	//未分模
 	upperJawButton = new QPushButton(this);
@@ -402,6 +411,13 @@ void TabMainGUI::initVariable()
 	inlayButton = new CImageBtn("./Resources/images/inlay.png", QColor(0, 0, 255, 100), QStringLiteral("种植牙"));
 	inlayButton->setCheckable(true);
 
+// 	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
+// 	jawToothButton->setFixedSize(150, 30);
+// 	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+
+	jawToothButton = new CImageBtn("./Resources/images/inlay.png", QColor(255, 0, 234, 100), QStringLiteral("对颌牙"));
+	jawToothButton->setCheckable(true);
+
 // 	toothCrownButton = new QCheckBox(QStringLiteral("嵌体"));
 // 	toothCrownButton->setFixedSize(150, 30);
 // 	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
@@ -423,9 +439,9 @@ void TabMainGUI::initVariable()
 	implantButton = new QCheckBox(QStringLiteral("             种植体"));
 	implantButton->setFixedSize(150, 30);
 	implantButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
-	jawToothButton->setFixedSize(150, 30);
-	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+// 	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
+// 	jawToothButton->setFixedSize(150, 30);
+// 	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 
 	//关于页面
 	aboutTextLabel = new QLabel(this);
@@ -476,7 +492,7 @@ void TabMainGUI::initVariable()
 		facingButton->setVisible(false);
 		waxTypeButton->setVisible(false);
 		implantButton->setVisible(false);
-		jawToothButton->setVisible(false);
+		//jawToothButton->setVisible(false);
 	}
 }
 
@@ -496,7 +512,7 @@ void TabMainGUI::constructIHM()
 	topHLayout->addWidget(newButton);
 	topHLayout->addStretch(1);
 	topHLayout->addWidget(exportButton);
-	//topHLayout->addWidget(saveButton);
+	topHLayout->addWidget(saveButton);
 	topHLayout->addWidget(watchButton);
 	topHLayout->addStretch(6);
 	topHLayout->addWidget(saveScanButton);
@@ -511,6 +527,7 @@ void TabMainGUI::constructIHM()
 	leftTopFLayout->addRow(QStringLiteral("订单编号:"), orderLineEdit);
 	leftTopFLayout->addRow(QStringLiteral("患者姓名:"), patientLineEdit);
 	leftTopFLayout->addRow(QStringLiteral("医生姓名:"), doctorLineEdit);
+	leftTopFLayout->addRow(QStringLiteral("技师姓名:"), operatorLineEdit);
 
 	QWidget *leftBottomWidget = new QWidget();
 	QGridLayout *leftBottomFLayout = new QGridLayout(leftBottomWidget);
@@ -627,28 +644,29 @@ void TabMainGUI::constructIHM()
 	toothRadioButtonGroup->addButton(toothCrownButton, 2);
 	toothRadioButtonGroup->addButton(lossToothButton, 3);
 	toothRadioButtonGroup->addButton(inlayButton, 4);
-	toothRadioButtonGroup->addButton(facingButton, 5);
-	toothRadioButtonGroup->addButton(waxTypeButton, 6);
-	toothRadioButtonGroup->addButton(implantButton, 7);
-	toothRadioButtonGroup->addButton(jawToothButton, 8);
+	toothRadioButtonGroup->addButton(jawToothButton, 5);
+	//toothRadioButtonGroup->addButton(facingButton, 5);
+	//toothRadioButtonGroup->addButton(waxTypeButton, 6);
+	//toothRadioButtonGroup->addButton(implantButton, 7);
+	//toothRadioButtonGroup->addButton(jawToothButton, 8);
 
 	totalCrownButton->setParent(middleSplitModelWidget);
 	toothCrownButton->setParent(middleSplitModelWidget);
 	lossToothButton->setParent(middleSplitModelWidget);
 	inlayButton->setParent(middleSplitModelWidget);
-	facingButton->setParent(middleSplitModelWidget);
-	waxTypeButton->setParent(middleSplitModelWidget);
-	implantButton->setParent(middleSplitModelWidget);
+// 	facingButton->setParent(middleSplitModelWidget);
+// 	waxTypeButton->setParent(middleSplitModelWidget);
+// 	implantButton->setParent(middleSplitModelWidget);
 	jawToothButton->setParent(middleSplitModelWidget);
 
 	totalCrownButton->setGeometry(550, 100, 200, 50);
 	toothCrownButton->setGeometry(550, 180, 200, 50);
 	lossToothButton->setGeometry(550, 260, 200, 50);
 	inlayButton->setGeometry(550, 340, 200, 50);
-	facingButton->setGeometry(550, 300, 150, 30);
-	waxTypeButton->setGeometry(550, 350, 150, 30);
-	implantButton->setGeometry(550, 400, 150, 30);
-	jawToothButton->setGeometry(550, 450, 150, 30);
+// 	facingButton->setGeometry(550, 300, 150, 30);
+// 	waxTypeButton->setGeometry(550, 350, 150, 30);
+// 	implantButton->setGeometry(550, 400, 150, 30);
+	jawToothButton->setGeometry(550, 420, 200, 50);
 
 	//印模
 	QWidget *rightMoulageVWidget = new QWidget();
@@ -778,22 +796,25 @@ QByteArray TabMainGUI::ToChineseStr(const QString &chineseString)
 bool TabMainGUI::judgePatientSaveFlag()
 {
 	coTimeCout ccTimeout;
-	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL) &&
+	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL&& orderOperatorName != NULL) &&
 		(unMoulageFlag == true || doMoulageFlag == true || splitModelFlag == true))
 	{
-		QString tempFilePath = filePath + "/" + orderNumber;
+		QString tempFilePath = filePath + "/" + orderNumber+"_"+ orderDoctorName+"_"+orderPatientName;
 		std::cout << "tempFilePath is " << tempFilePath.toStdString() << std::endl;
 		bool creatFlag = isDirExist(tempFilePath);
 		fileQStr = tempFilePath + "/";
 		std::cout << "fileQStr is " << fileQStr.toStdString() << std::endl;
-		QByteArray orderPN = ToChineseStr(orderPatientName);
-		std::string filePathStr = fileQStr.toStdString() + orderPN.data() + ".OI";
+		QString strOrderDate = orderDate;
+		strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
+		QByteArray orderPN = ToChineseStr(strOrderDate);
+		std::string filePathStr = Qstring2String(fileQStr)+ orderPN.data() + ".OI";
 		std::cout << "string filepath is " << filePathStr << std::endl;
 		cv::FileStorage fwrite(filePathStr.c_str(), cv::FileStorage::WRITE);
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
-			<< "Patient Name" << orderPN.data()
+			<< "Patient Name" << ToChineseStr(orderPatientName).data()
 			<< "Doctor Name" << ToChineseStr(orderDoctorName).data()
+			<<"Operator Name"<< ToChineseStr(orderOperatorName).data()
 			<< "Addition" << ToChineseStr(orderAddition).data()
 			<< "splitModelFlag" << splitModelFlag;
 
@@ -864,7 +885,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < lossToothList.size(); i++)
 						{
-							fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
+							//fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -886,7 +907,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < facingList.size(); i++)
 						{
-							fwrite << "facing" << facingList[i]->text().toStdString();
+							//fwrite << "facing" << facingList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -897,7 +918,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < waxTypeList.size(); i++)
 						{
-							fwrite << "waxType" << waxTypeList[i]->text().toStdString();
+							//fwrite << "waxType" << waxTypeList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -908,7 +929,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < implantList.size(); i++)
 						{
-							fwrite << "implant" << implantList[i]->text().toStdString();
+							//fwrite << "implant" << implantList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -919,7 +940,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < jawToothList.size(); i++)
 						{
-							fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
+							//fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -979,12 +1000,14 @@ void TabMainGUI::PatientInformationSave()
 	orderPatientName = patientLineEdit->text();
 	orderDoctorName = doctorLineEdit->text();
 	orderAddition = additionTextEdit->toPlainText();
+	orderOperatorName = operatorLineEdit->text();
 	judgeSplitModelFlag();
 	cctimeout.Print("judgeSplitModelFlag");
 	if (splitModelFlag)//分模
 	{
 		CTaskManager::getInstance()->DelAllTasks();
-		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
+		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr,
+			pUpperJawGingvaScanTask = nullptr, pLowerJawGingivaScanTask = nullptr;
 		//pCOralSubstituteScan upperJawOralScanTask, lowJawOralScanTask;
 		pCGroupScan einlayScanTask = nullptr;
 		pCGroupScan pupperJawTotalCrownGroupScan = nullptr, plowJawTotalCrownGroupScan = nullptr;
@@ -1045,7 +1068,7 @@ void TabMainGUI::PatientInformationSave()
 					}
 					break;
 				case elossToothScan:
-
+				case eJawToothScan:
 				{
 					pCScanTask plossToothScanTask = make_shared<CScanTask>();
 					plossToothScanTask->Set_ScanType(l_eScanType);
@@ -1089,7 +1112,48 @@ void TabMainGUI::PatientInformationSave()
 						einlayScanTask->m_vtTeeth.push_back(j);
 					}
 					break;
+				case eDentalImplantScan: 
+				{
+					if (m_pTeethScanTaskArray[j]->Get_TeethId() > 15) {	//下颌
+						if (lowerJawScanTask == nullptr) {
+							lowerJawScanTask = make_shared<CScanTask>();
+							lowerJawScanTask->Set_ScanType(eLowerJawScan);
+							//lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+							lowerJawScanTask->Set_TaskType(eScan);
+						}
+						lowerJawScanTask->Set_DentalImplant(true);
+						lowerJawScanTask->m_vtTeeth.push_back(j);
+						lowerJawScanTask->Set_Gingiva(false);
+						if (pLowerJawGingivaScanTask == nullptr) {
+							pLowerJawGingivaScanTask = make_shared<CScanTask>();
+							pLowerJawGingivaScanTask->Set_ScanType(eLowerJawScan);
+							pLowerJawGingivaScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+							pLowerJawGingivaScanTask->Set_TaskType(eScan);
+							pLowerJawGingivaScanTask->Set_Gingiva(true);//有牙龈
+						}
+					}
+					else {
+						if (upperScanTask == nullptr) {
+							upperScanTask = make_shared<CScanTask>();
+							upperScanTask->Set_ScanType(eUpperJawScan);
+							upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+							upperScanTask->Set_TaskType(eScan);
+						}
+						upperScanTask->Set_DentalImplant(true);
+						upperScanTask->m_vtTeeth.push_back(j);
+						upperScanTask->Set_Gingiva(false);
+						if (pUpperJawGingvaScanTask == nullptr) {
+							pUpperJawGingvaScanTask = make_shared<CScanTask>();
+							pUpperJawGingvaScanTask->Set_ScanType(eUpperJawScan);
+							pUpperJawGingvaScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+							pUpperJawGingvaScanTask->Set_TaskType(eScan);
+							pUpperJawGingvaScanTask->Set_Gingiva(true);		//有牙龈
+						}
+					}
+					break;
 				}
+				}
+
 			}
 		}
 		if (upperScanTask && lowerJawScanTask) {
@@ -1109,18 +1173,103 @@ void TabMainGUI::PatientInformationSave()
 				pLowerSitcing->m_pSrcTask = lowerJawScanTask;
 				pLowerSitcing->m_pDstTask = allJawScanTask;
 				CTaskManager::getInstance()->AddTask(pLowerSitcing, true);
-				//CTaskManager::getInstance()->AddTask(allJawScanTask, true);
+				if (pLowerJawGingivaScanTask) {
+					pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
+					pLowerSitcing->Set_TaskType(eLowerStitching);
+					pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
+					pLowerSitcing->m_pSrcTask = pLowerJawGingivaScanTask;
+					pLowerSitcing->m_pDstTask = allJawScanTask;
+					CTaskManager::getInstance()->AddTask(pLowerSitcing, true);
+				}
+				if (pUpperJawGingvaScanTask) {
+					pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
+					pUpperStitcing->Set_TaskType(eUpperStitching);
+					pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
+					pUpperStitcing->m_pSrcTask = pUpperJawGingvaScanTask;
+					pUpperStitcing->m_pDstTask = allJawScanTask;
+					CTaskManager::getInstance()->AddTask(pUpperStitcing, true);
+				}
 			}
 		}
 		if (upperScanTask)
 			CTaskManager::getInstance()->AddTask(upperScanTask, true);
 		if (lowerJawScanTask)
 			CTaskManager::getInstance()->AddTask(lowerJawScanTask, true);
+		if (pUpperJawGingvaScanTask) {
+			CTaskManager::getInstance()->AddTask(pUpperJawGingvaScanTask, true);
+		}
+		if (pLowerJawGingivaScanTask) {
+			CTaskManager::getInstance()->AddTask(pLowerJawGingivaScanTask, true);
+		}
 		if (allJawScanTask)
 			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
 	}
+	else if (unMoulageFlag) {
+		CTaskManager::getInstance()->DelAllTasks();
+		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
+		if (upperJawButtonFlag == true && lowerJawButtonFlag == true)
+		{
+			if (allJawScanTask == nullptr) {
+				allJawScanTask = make_shared<CScanTask>();
+				allJawScanTask->Set_ScanType(eAllJawScan);
+				allJawScanTask->Set_TaskName((g_strScanName[eAllJawScan]));
+			}
+			if (upperScanTask == nullptr) {
+				upperScanTask = make_shared<CScanTask>();
+				upperScanTask->Set_ScanType(eUpperJawScan);
+				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+				upperScanTask->Set_TaskType(eScan);
+			}
+			if (lowerJawScanTask == nullptr) {
+				lowerJawScanTask = make_shared<CScanTask>();
+				lowerJawScanTask->Set_ScanType(eLowerJawScan);
+				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+				lowerJawScanTask->Set_TaskType(eScan);
+			}
+		}
+		else if (upperJawButtonFlag == true && lowerJawButtonFlag == false)
+		{
+			if (upperScanTask == nullptr) {
+				upperScanTask = make_shared<CScanTask>();
+				upperScanTask->Set_ScanType(eUpperJawScan);
+				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
+				upperScanTask->Set_TaskType(eScan);
+			}
+		}
+		else if (lowerJawButtonFlag == true && upperJawButtonFlag == false)
+		{
+			if (lowerJawScanTask == nullptr) {
+				lowerJawScanTask = make_shared<CScanTask>();
+				lowerJawScanTask->Set_ScanType(eLowerJawScan);
+				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+				lowerJawScanTask->Set_TaskType(eScan);
+			}
+		}
+		if (upperScanTask)
+			CTaskManager::getInstance()->AddTask(upperScanTask);
+		if (lowerJawScanTask)
+			CTaskManager::getInstance()->AddTask(lowerJawScanTask);
+		if (allJawScanTask) {
+			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
+			pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
+			pUpperStitcing->Set_TaskType(eUpperStitching);
+			pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
+			pUpperStitcing->m_pSrcTask = upperScanTask;
+			pUpperStitcing->m_pDstTask = allJawScanTask;
+			CTaskManager::getInstance()->AddTask(pUpperStitcing);
+			pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
+			pLowerSitcing->Set_TaskType(eLowerStitching);
+			pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
+			pLowerSitcing->m_pSrcTask = lowerJawScanTask;
+			pLowerSitcing->m_pDstTask = allJawScanTask;
+			CTaskManager::getInstance()->AddTask(pLowerSitcing);
+		}
+	}
+	QPushButton * pBtn = static_cast<QPushButton *> (sender());
+	if (!pBtn)
+		return;
 	cctimeout.Print("judgePatientSaveFlag");
-	if (judgePatientSaveFlag() == true)
+	if (judgePatientSaveFlag() == true&& pBtn->text() == QStringLiteral("扫描"))
 	{
 		emit scanSignal();
 	}
@@ -1129,12 +1278,18 @@ void TabMainGUI::PatientInformationSave()
 
 void TabMainGUI::OrderPreview()
 {
+	QString strOrderDate = dateLineEdit->text();
+	strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
+	QByteArray orderPN = ToChineseStr(strOrderDate);
+	QString tempFilePath = filePath + "/" + orderNumber + "_" + orderDoctorName + "_" + orderPatientName;
 	COrderInfo orderInfo;
+	orderInfo.strOderDate = orderPN.data();
 	orderInfo.strPatientName = Qstring2String(patientLineEdit->text());
 	orderInfo.strDoctorName = Qstring2String(doctorLineEdit->text());
 	orderInfo.strOrderAddition = Qstring2String(additionTextEdit->toPlainText());
 	orderInfo.strOrderNumber = Qstring2String(orderLineEdit->text());
-	orderInfo.strFilePath = Qstring2String(filePath) + "/" + orderInfo.strOrderNumber+"/";
+	orderInfo.strFilePath = Qstring2String(tempFilePath + "/");
+	orderInfo.strOperatorName = Qstring2String(operatorLineEdit->text());
 	if (splitModelFlag)
 		orderInfo.eorderType = esplitModel;
 	else if (unMoulageFlag) {
@@ -1308,50 +1463,52 @@ void TabMainGUI::MoulagePress3()
 	}
 }
 
-QList<QPushButton*> TabMainGUI::judgeToothList(int id)
+QList<QPushButton*> *TabMainGUI::judgeToothList(int id)
 {
 	switch (id)
 	{
 	case 1:
 	{
-		return totalCrownList;
+		return &totalCrownList;
 		//break;
 	}
 	case 2:
 	{
-		return toothCrownList;
+		return &toothCrownList;
 		//break;
 	}
 	case 3:
 	{
-		return lossToothList;
+		return &lossToothList;
 		break;
 	}
 	case 4:
 	{
-		return inlayList;
+		return &inlayList;
 		break;
 	}
 	case 5:
 	{
-		return facingList;
+		return &facingList;
 		break;
 	}
 	case 6:
 	{
-		return waxTypeList;
+		return &waxTypeList;
 		break;
 	}
 	case 7:
 	{
-		return implantList;
+		return &implantList;
 		break;
 	}
 	case 8:
 	{
-		return jawToothList;
+		return &jawToothList;
 		break;
 	}
+	default:
+		return nullptr;
 	}
 }
 
@@ -1667,9 +1824,12 @@ void TabMainGUI::setSplitToothFalse()
 			int col = i % 8;
 			int value = (row + 1) * 10 + col + 1;
 			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
-			toothList[i]->setStyleSheet(path);
-			QList<QPushButton *> toothPushButtonList = judgeToothList(toothID[i]);
-			toothPushButtonList.removeOne(toothList[i]);
+			path = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";
+			//toothList[i]->setStyleSheet(path);
+			toothList[i]->SetImage(path);
+			QList<QPushButton *> *toothPushButtonList = judgeToothList(toothID[i]);
+			if(toothPushButtonList&& toothPushButtonList->size()>0)
+				toothPushButtonList->removeOne(toothList[i]);
 
 		}
 	}
@@ -1766,8 +1926,9 @@ void TabMainGUI::clearAllButtonPress()
 			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
 			//toothList[i]->setStyleSheet(path);
 			toothList[i]->SetImage(QString("./Resources/images/teeth/" + toothList[i]->text() + ".png"));
-			QList<QPushButton *> toothPushButtonList = judgeToothList(toothID[i]);
-			toothPushButtonList.clear();
+			QList<QPushButton *>* toothPushButtonList = judgeToothList(toothID[i]);
+			if (toothPushButtonList)
+				toothPushButtonList->clear();
 			//toothPushButtonList.removeOne(toothList[i]);
 		}
 	}
@@ -1775,6 +1936,7 @@ void TabMainGUI::clearAllButtonPress()
 
 void TabMainGUI::judgeSplitModelFlag()
 {
+	splitModelFlag = false;
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
 		if (toothFlagList[i] == true)
@@ -1790,69 +1952,19 @@ void TabMainGUI::ScanDataPackagePress()
 	QJsonObject scanObj;
 	if (unMoulageFlag == true)//未分模
 	{
-		CTaskManager::getInstance()->DelAllTasks();
-		pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr;
-		scanObj.insert("caseType", 1);
 		if (upperJawButtonFlag == true && lowerJawButtonFlag == true)
 		{
-			if (allJawScanTask == nullptr) {
-				allJawScanTask = make_shared<CScanTask>();
-				allJawScanTask->Set_ScanType(eAllJawScan);
-				allJawScanTask->Set_TaskName((g_strScanName[eAllJawScan]));
-			}
-			if (upperScanTask == nullptr) {
-				upperScanTask = make_shared<CScanTask>();
-				upperScanTask->Set_ScanType(eUpperJawScan);
-				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
-				upperScanTask->Set_TaskType(eScan);
-			}
-			if (lowerJawScanTask == nullptr) {
-				lowerJawScanTask = make_shared<CScanTask>();
-				lowerJawScanTask->Set_ScanType(eLowerJawScan);
-				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
-				lowerJawScanTask->Set_TaskType(eScan);
-			}
 			scanObj.insert("allJaw", 1);
 		}
 		else if (upperJawButtonFlag == true && lowerJawButtonFlag == false)
 		{
-			if (upperScanTask == nullptr) {
-				upperScanTask = make_shared<CScanTask>();
-				upperScanTask->Set_ScanType(eUpperJawScan);
-				upperScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
-				upperScanTask->Set_TaskType(eScan);
-			}
 			scanObj.insert("upperJaw", 1);
 		}
 		else if (lowerJawButtonFlag == true && upperJawButtonFlag == false)
 		{
-			if (lowerJawScanTask == nullptr) {
-				lowerJawScanTask = make_shared<CScanTask>();
-				lowerJawScanTask->Set_ScanType(eLowerJawScan);
-				lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
-				lowerJawScanTask->Set_TaskType(eScan);
-			}
 			scanObj.insert("lowerJaw", 1);
 		}
-		if (upperScanTask)
-			CTaskManager::getInstance()->AddTask(upperScanTask);
-		if (lowerJawScanTask)
-			CTaskManager::getInstance()->AddTask(lowerJawScanTask);
-		if (allJawScanTask) {
-			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
-			pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
-			pUpperStitcing->Set_TaskType(eUpperStitching);
-			pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
-			pUpperStitcing->m_pSrcTask = upperScanTask;
-			pUpperStitcing->m_pDstTask = allJawScanTask;
-			CTaskManager::getInstance()->AddTask(pUpperStitcing);
-			pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
-			pLowerSitcing->Set_TaskType(eLowerStitching);
-			pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
-			pLowerSitcing->m_pSrcTask = lowerJawScanTask;
-			pLowerSitcing->m_pDstTask = allJawScanTask;
-			CTaskManager::getInstance()->AddTask(pLowerSitcing);
-		}		
+		scanObj.insert("caseType", 1);
 	}
 	else if (splitModelFlag == true)//分模
 	{
@@ -1864,7 +1976,9 @@ void TabMainGUI::ScanDataPackagePress()
 	}
 	/*QString fileQstr = QString::fromStdString(fileStr);*/
 	scanObj.insert("filePath", fileQStr);
-	scanObj.insert("patientName", orderPatientName);
+	QString strOrderDate = orderDate;
+	strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
+	scanObj.insert("patientName", strOrderDate);
 	emit scanDataSignal(scanObj);
 }
 
@@ -1878,11 +1992,14 @@ void TabMainGUI::readFileStorage(QString fPath)
 	orderPatientName = QString::fromLocal8Bit(fRead["Patient Name"].string().c_str());
 	orderDoctorName = QString::fromLocal8Bit(fRead["Doctor Name"].string().c_str());
 	orderAddition = QString::fromLocal8Bit(fRead["Addition"].string().c_str());
+	orderOperatorName = QString::fromLocal8Bit(fRead["Operator Name"].string().c_str());
 	bool bsplitModelFlag = int(fRead["splitModelFlag"]);
+	dateLineEdit->setDateTime(QDateTime::fromString(orderDate, "yyyy/MM/dd hh:mm"));
 	orderLineEdit->setText(orderNumber);
 	patientLineEdit->setText(orderPatientName);
 	doctorLineEdit->setText(orderDoctorName);
 	additionTextEdit->setText(orderAddition);
+	operatorLineEdit->setText(orderOperatorName);
 	if (fRead["scanModel"].real() == 1)
 	{
 		emit exportUpperJawSignal();
@@ -1971,6 +2088,7 @@ void TabMainGUI::readFileStorage(QString fPath)
 					toothList[pScanTask->Get_TeethId()]->clicked();
 					break;
 				case elossToothScan:
+				case eJawToothScan:	//对颌牙
 					chooseID = pScanTask->Get_ScanType() + 1;
 					m_eScanType = pScanTask->Get_ScanType();
 					toothList[pScanTask->Get_TeethId()]->clicked();

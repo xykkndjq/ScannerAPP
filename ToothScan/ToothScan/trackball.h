@@ -73,8 +73,9 @@ public:
     void start(); // starts clock
     void stop(); // stops clock
     QQuaternion rotation() const;
+	QQuaternion m_rotation;
 private:
-    QQuaternion m_rotation;
+    
     QVector3D m_axis;
     float m_angularVelocity;
 

@@ -13,9 +13,9 @@ public:
 
 	__declspec (dllexport) PoissonReconstruction();
 
-	bool __declspec (dllexport) run(orth::MeshModel& mm,const int depth);
+	bool __declspec (dllexport) run(orth::MeshModel& mm,const int depth, const float error_threshold);
 
-	bool __declspec (dllexport) run(vector<orth::MeshModel>& mms, orth::MeshModel& mm, const int depth);
+	bool __declspec (dllexport) run(vector<orth::MeshModel>& mms, orth::MeshModel& mm, const int depth, const float error_threshold);
 };
 
 
