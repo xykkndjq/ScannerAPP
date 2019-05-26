@@ -435,20 +435,17 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 // 			}
 // 		}
 
-		//string index_;
-		//stringstream ss;
-		//ss << index;
-		//ss >> index_;
+		//std::string modelNameStr = "./data/"+QString::number(index).toStdString() + ".ply";
 		//orth::ModelIO l_io_write(&mModel);
-		//l_io_write.writeModel("./data/" + index_ + ".ply", "ply");
-// 		if (pScanTask->m_mModel.size())
-// 		{
-// 			//if (!pointcloudICP(pScanTask->m_points_cloud_end, points_2, 1, 1, rt_icp))
-// 			g_icp(pScanTask->m_mModel[0], mModel, rt_icp, 1.0, 10.0, 50);
-//  			{
-//  				//return false;
-//  			}
-// 		}
+		//l_io_write.writeModel(modelNameStr, "ply");
+ 	//	if (pScanTask->m_mModel.size())
+ 	//	{
+ 	//		//if (!pointcloudICP(pScanTask->m_points_cloud_end, points_2, 1, 1, rt_icp))
+ 	//		g_icp(pScanTask->m_mModel[0], mModel, rt_icp, 1.0, 10.0, 50);
+  //			{
+  //				//return false;
+  //			}
+ 	//	}
 // 
 // 		
 // 

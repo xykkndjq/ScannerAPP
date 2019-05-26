@@ -1,7 +1,7 @@
 #include "ImageBtn.h"
-#include <QPainter>
-#include <QPaintEvent>
-#include <qnamespace.h>
+	#include <QPainter>
+	#include <QPaintEvent>
+	#include <qnamespace.h>
 
 CImageBtn::CImageBtn(QString strIconImg, QColor crBgColor, QString strText, QWidget *parent)
 	:QPushButton(strText,parent)
