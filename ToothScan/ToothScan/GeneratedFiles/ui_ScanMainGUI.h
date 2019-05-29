@@ -117,7 +117,6 @@ public:
     QLabel *label_28;
     QLabel *label_35;
     QLabel *label_22;
-    QLabel *label_41;
     QLabel *label_15;
     QLabel *label_17;
     QLabel *label_43;
@@ -136,6 +135,7 @@ public:
     QLabel *label_25;
     QLabel *label_34;
     QLabel *label_13;
+    QLabel *label_41;
     QGroupBox *jawGroupBox;
     QLabel *jawImage;
     QLabel *i_3;
@@ -145,12 +145,46 @@ public:
     QPushButton *DentalImplantNextBtn;
     QPushButton *DentalImplantPanelBackBtn;
     QLabel *DentalImplantPanelTips;
+    QGroupBox *upperJawGroupBox;
+    QPushButton *teethBtn_11;
+    QPushButton *teethBtn_12;
+    QPushButton *teethBtn_13;
+    QPushButton *teethBtn_14;
+    QPushButton *teethBtn_15;
+    QPushButton *teethBtn_16;
+    QPushButton *teethBtn_17;
+    QPushButton *teethBtn_18;
+    QPushButton *teethBtn_21;
+    QPushButton *teethBtn_22;
+    QPushButton *teethBtn_23;
+    QPushButton *teethBtn_24;
+    QPushButton *teethBtn_25;
+    QPushButton *teethBtn_26;
+    QPushButton *teethBtn_27;
+    QPushButton *teethBtn_28;
+    QGroupBox *lowerJawGroupBox;
+    QPushButton *teethBtn_31;
+    QPushButton *teethBtn_32;
+    QPushButton *teethBtn_33;
+    QPushButton *teethBtn_34;
+    QPushButton *teethBtn_36;
+    QPushButton *teethBtn_37;
+    QPushButton *teethBtn_38;
+    QPushButton *teethBtn_41;
+    QPushButton *teethBtn_42;
+    QPushButton *teethBtn_43;
+    QPushButton *teethBtn_44;
+    QPushButton *teethBtn_45;
+    QPushButton *teethBtn_46;
+    QPushButton *teethBtn_47;
+    QPushButton *teethBtn_48;
+    QPushButton *teethBtn_35;
 
     void setupUi(QWidget *ScanMainGUI)
     {
         if (ScanMainGUI->objectName().isEmpty())
             ScanMainGUI->setObjectName(QStringLiteral("ScanMainGUI"));
-        ScanMainGUI->resize(1844, 1080);
+        ScanMainGUI->resize(1920, 1080);
         ScanMainGUI->setMaximumSize(QSize(1920, 1080));
         ScanJawGroup = new QGroupBox(ScanMainGUI);
         ScanJawGroup->setObjectName(QStringLiteral("ScanJawGroup"));
@@ -1269,13 +1303,13 @@ public:
         teethGroupBox->setStyleSheet(QStringLiteral(""));
         label_48 = new QLabel(teethGroupBox);
         label_48->setObjectName(QStringLiteral("label_48"));
-        label_48->setGeometry(QRect(244, 276, 44, 52));
+        label_48->setGeometry(QRect(8, 272, 44, 52));
         label_48->setStyleSheet(QStringLiteral("background:transparent"));
         label_48->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/48.png")));
         label_48->setScaledContents(true);
         label_36 = new QLabel(teethGroupBox);
         label_36->setObjectName(QStringLiteral("label_36"));
-        label_36->setGeometry(QRect(18, 372, 44, 52));
+        label_36->setGeometry(QRect(235, 375, 44, 52));
         label_36->setStyleSheet(QStringLiteral("background:transparent"));
         label_36->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/36.png")));
         label_36->setScaledContents(true);
@@ -1287,7 +1321,7 @@ public:
         label_26->setScaledContents(true);
         label_33 = new QLabel(teethGroupBox);
         label_33->setObjectName(QStringLiteral("label_33"));
-        label_33->setGeometry(QRect(57, 466, 40, 34));
+        label_33->setGeometry(QRect(205, 474, 40, 34));
         label_33->setStyleSheet(QStringLiteral("background:transparent"));
         label_33->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/33.png")));
         label_33->setScaledContents(true);
@@ -1305,19 +1339,19 @@ public:
         label_11->setScaledContents(true);
         label_32 = new QLabel(teethGroupBox);
         label_32->setObjectName(QStringLiteral("label_32"));
-        label_32->setGeometry(QRect(80, 486, 40, 34));
+        label_32->setGeometry(QRect(176, 490, 40, 34));
         label_32->setStyleSheet(QStringLiteral("background:transparent"));
         label_32->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/32.png")));
         label_32->setScaledContents(true);
         label_44 = new QLabel(teethGroupBox);
         label_44->setObjectName(QStringLiteral("label_44"));
-        label_44->setGeometry(QRect(218, 447, 40, 34));
+        label_44->setGeometry(QRect(38, 443, 40, 34));
         label_44->setStyleSheet(QStringLiteral("background:transparent"));
         label_44->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/44.png")));
         label_44->setScaledContents(true);
         label_42 = new QLabel(teethGroupBox);
         label_42->setObjectName(QStringLiteral("label_42"));
-        label_42->setGeometry(QRect(174, 489, 40, 34));
+        label_42->setGeometry(QRect(76, 487, 40, 34));
         label_42->setStyleSheet(QStringLiteral("background:transparent"));
         label_42->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/42.png")));
         label_42->setScaledContents(true);
@@ -1335,7 +1369,7 @@ public:
         label_28->setScaledContents(true);
         label_35 = new QLabel(teethGroupBox);
         label_35->setObjectName(QStringLiteral("label_35"));
-        label_35->setGeometry(QRect(29, 415, 40, 40));
+        label_35->setGeometry(QRect(230, 420, 40, 40));
         label_35->setStyleSheet(QStringLiteral("background:transparent"));
         label_35->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/35.png")));
         label_35->setScaledContents(true);
@@ -1345,12 +1379,6 @@ public:
         label_22->setStyleSheet(QStringLiteral("background:transparent"));
         label_22->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/22.png")));
         label_22->setScaledContents(true);
-        label_41 = new QLabel(teethGroupBox);
-        label_41->setObjectName(QStringLiteral("label_41"));
-        label_41->setGeometry(QRect(142, 499, 40, 34));
-        label_41->setStyleSheet(QStringLiteral("background:transparent"));
-        label_41->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/41.png")));
-        label_41->setScaledContents(true);
         label_15 = new QLabel(teethGroupBox);
         label_15->setObjectName(QStringLiteral("label_15"));
         label_15->setGeometry(QRect(22, 105, 44, 40));
@@ -1365,7 +1393,7 @@ public:
         label_17->setScaledContents(true);
         label_43 = new QLabel(teethGroupBox);
         label_43->setObjectName(QStringLiteral("label_43"));
-        label_43->setGeometry(QRect(203, 471, 40, 34));
+        label_43->setGeometry(QRect(55, 466, 40, 34));
         label_43->setStyleSheet(QStringLiteral("background:transparent"));
         label_43->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/43.png")));
         label_43->setScaledContents(true);
@@ -1377,7 +1405,7 @@ public:
         label_16->setScaledContents(true);
         label_45 = new QLabel(teethGroupBox);
         label_45->setObjectName(QStringLiteral("label_45"));
-        label_45->setGeometry(QRect(226, 419, 40, 34));
+        label_45->setGeometry(QRect(27, 415, 40, 34));
         label_45->setStyleSheet(QStringLiteral("background:transparent"));
         label_45->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/45.png")));
         label_45->setScaledContents(true);
@@ -1395,19 +1423,19 @@ public:
         label_18->setScaledContents(true);
         label_37 = new QLabel(teethGroupBox);
         label_37->setObjectName(QStringLiteral("label_37"));
-        label_37->setGeometry(QRect(14, 322, 44, 52));
+        label_37->setGeometry(QRect(243, 325, 44, 52));
         label_37->setStyleSheet(QStringLiteral("background:transparent"));
         label_37->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/37.png")));
         label_37->setScaledContents(true);
         label_46 = new QLabel(teethGroupBox);
         label_46->setObjectName(QStringLiteral("label_46"));
-        label_46->setGeometry(QRect(235, 375, 44, 52));
+        label_46->setGeometry(QRect(14, 372, 44, 52));
         label_46->setStyleSheet(QStringLiteral("background:transparent"));
         label_46->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/46.png")));
         label_46->setScaledContents(true);
         label_31 = new QLabel(teethGroupBox);
         label_31->setObjectName(QStringLiteral("label_31"));
-        label_31->setGeometry(QRect(109, 496, 40, 34));
+        label_31->setGeometry(QRect(143, 500, 40, 34));
         label_31->setStyleSheet(QStringLiteral("background:transparent"));
         label_31->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/31.png")));
         label_31->setScaledContents(true);
@@ -1419,7 +1447,7 @@ public:
         label_23->setScaledContents(true);
         label_38 = new QLabel(teethGroupBox);
         label_38->setObjectName(QStringLiteral("label_38"));
-        label_38->setGeometry(QRect(13, 272, 44, 52));
+        label_38->setGeometry(QRect(244, 276, 44, 52));
         label_38->setStyleSheet(QStringLiteral("background:transparent"));
         label_38->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/38.png")));
         label_38->setScaledContents(true);
@@ -1431,7 +1459,7 @@ public:
         label_12->setScaledContents(true);
         label_47 = new QLabel(teethGroupBox);
         label_47->setObjectName(QStringLiteral("label_47"));
-        label_47->setGeometry(QRect(243, 325, 44, 52));
+        label_47->setGeometry(QRect(7, 322, 44, 52));
         label_47->setStyleSheet(QStringLiteral("background:transparent"));
         label_47->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/47.png")));
         label_47->setScaledContents(true);
@@ -1449,7 +1477,7 @@ public:
         label_25->setScaledContents(true);
         label_34 = new QLabel(teethGroupBox);
         label_34->setObjectName(QStringLiteral("label_34"));
-        label_34->setGeometry(QRect(42, 445, 40, 34));
+        label_34->setGeometry(QRect(220, 449, 40, 34));
         label_34->setStyleSheet(QStringLiteral("background:transparent"));
         label_34->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/34.png")));
         label_34->setScaledContents(true);
@@ -1459,6 +1487,12 @@ public:
         label_13->setStyleSheet(QStringLiteral("background:transparent"));
         label_13->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/13.png")));
         label_13->setScaledContents(true);
+        label_41 = new QLabel(teethGroupBox);
+        label_41->setObjectName(QStringLiteral("label_41"));
+        label_41->setGeometry(QRect(109, 499, 40, 34));
+        label_41->setStyleSheet(QStringLiteral("background:transparent"));
+        label_41->setPixmap(QPixmap(QString::fromUtf8("Resources/images/teeth/41.png")));
+        label_41->setScaledContents(true);
         jawGroupBox = new QGroupBox(orderInfoPanel);
         jawGroupBox->setObjectName(QStringLiteral("jawGroupBox"));
         jawGroupBox->setGeometry(QRect(0, 150, 301, 541));
@@ -1474,7 +1508,6 @@ public:
         operatorNameLabel = new QLabel(orderInfoPanel);
         operatorNameLabel->setObjectName(QStringLiteral("operatorNameLabel"));
         operatorNameLabel->setGeometry(QRect(110, 138, 181, 21));
-        teethGroupBox->raise();
         label->raise();
         orderNoLabel->raise();
         patientNameLabel->raise();
@@ -1483,9 +1516,10 @@ public:
         i_2->raise();
         upperJawBtn->raise();
         lowJawBtn->raise();
-        jawGroupBox->raise();
         i_3->raise();
         operatorNameLabel->raise();
+        jawGroupBox->raise();
+        teethGroupBox->raise();
         progressBar = new QProgressBar(ScanMainGUI);
         progressBar->setObjectName(QStringLiteral("progressBar"));
         progressBar->setGeometry(QRect(722, 960, 400, 30));
@@ -1503,7 +1537,7 @@ public:
         DentalImplantPanel = new QGroupBox(ScanMainGUI);
         DentalImplantPanel->setObjectName(QStringLiteral("DentalImplantPanel"));
         DentalImplantPanel->setEnabled(true);
-        DentalImplantPanel->setGeometry(QRect(1560, 260, 300, 700));
+        DentalImplantPanel->setGeometry(QRect(1580, 250, 300, 821));
         QPalette palette28;
         palette28.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette28.setBrush(QPalette::Active, QPalette::Button, brush13);
@@ -1556,12 +1590,12 @@ public:
 "background-color:rgb(248,250,250);"));
         DentalImplantNextBtn = new QPushButton(DentalImplantPanel);
         DentalImplantNextBtn->setObjectName(QStringLiteral("DentalImplantNextBtn"));
-        DentalImplantNextBtn->setGeometry(QRect(50, 620, 221, 40));
+        DentalImplantNextBtn->setGeometry(QRect(50, 740, 221, 40));
         DentalImplantNextBtn->setFont(font);
         DentalImplantNextBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         DentalImplantPanelBackBtn = new QPushButton(DentalImplantPanel);
         DentalImplantPanelBackBtn->setObjectName(QStringLiteral("DentalImplantPanelBackBtn"));
-        DentalImplantPanelBackBtn->setGeometry(QRect(50, 530, 221, 40));
+        DentalImplantPanelBackBtn->setGeometry(QRect(50, 660, 221, 40));
         DentalImplantPanelBackBtn->setFont(font);
         DentalImplantPanelBackBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         DentalImplantPanelTips = new QLabel(DentalImplantPanel);
@@ -1583,6 +1617,241 @@ public:
         DentalImplantPanelTips->setPalette(palette29);
         DentalImplantPanelTips->setFont(font2);
         DentalImplantPanelTips->setWordWrap(true);
+        upperJawGroupBox = new QGroupBox(DentalImplantPanel);
+        upperJawGroupBox->setObjectName(QStringLiteral("upperJawGroupBox"));
+        upperJawGroupBox->setGeometry(QRect(0, 120, 300, 501));
+        teethBtn_11 = new QPushButton(upperJawGroupBox);
+        teethBtn_11->setObjectName(QStringLiteral("teethBtn_11"));
+        teethBtn_11->setGeometry(QRect(100, 10, 40, 36));
+        teethBtn_11->setAutoFillBackground(false);
+        teethBtn_11->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/11.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_11->setCheckable(true);
+        teethBtn_12 = new QPushButton(upperJawGroupBox);
+        teethBtn_12->setObjectName(QStringLiteral("teethBtn_12"));
+        teethBtn_12->setGeometry(QRect(74, 23, 34, 32));
+        teethBtn_12->setAutoFillBackground(false);
+        teethBtn_12->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/12.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_12->setCheckable(true);
+        teethBtn_13 = new QPushButton(upperJawGroupBox);
+        teethBtn_13->setObjectName(QStringLiteral("teethBtn_13"));
+        teethBtn_13->setGeometry(QRect(45, 40, 38, 40));
+        teethBtn_13->setAutoFillBackground(false);
+        teethBtn_13->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/13.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_13->setCheckable(true);
+        teethBtn_14 = new QPushButton(upperJawGroupBox);
+        teethBtn_14->setObjectName(QStringLiteral("teethBtn_14"));
+        teethBtn_14->setGeometry(QRect(20, 70, 46, 38));
+        teethBtn_14->setAutoFillBackground(false);
+        teethBtn_14->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/14.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_14->setCheckable(true);
+        teethBtn_15 = new QPushButton(upperJawGroupBox);
+        teethBtn_15->setObjectName(QStringLiteral("teethBtn_15"));
+        teethBtn_15->setGeometry(QRect(10, 105, 44, 40));
+        teethBtn_15->setAutoFillBackground(false);
+        teethBtn_15->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/15.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_15->setCheckable(true);
+        teethBtn_16 = new QPushButton(upperJawGroupBox);
+        teethBtn_16->setObjectName(QStringLiteral("teethBtn_16"));
+        teethBtn_16->setGeometry(QRect(6, 143, 38, 42));
+        teethBtn_16->setAutoFillBackground(false);
+        teethBtn_16->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/16.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_16->setCheckable(true);
+        teethBtn_17 = new QPushButton(upperJawGroupBox);
+        teethBtn_17->setObjectName(QStringLiteral("teethBtn_17"));
+        teethBtn_17->setGeometry(QRect(5, 183, 38, 40));
+        teethBtn_17->setAutoFillBackground(false);
+        teethBtn_17->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/17.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_17->setCheckable(true);
+        teethBtn_18 = new QPushButton(upperJawGroupBox);
+        teethBtn_18->setObjectName(QStringLiteral("teethBtn_18"));
+        teethBtn_18->setGeometry(QRect(6, 220, 40, 42));
+        teethBtn_18->setAutoFillBackground(false);
+        teethBtn_18->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/18.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_18->setCheckable(true);
+        teethBtn_21 = new QPushButton(upperJawGroupBox);
+        teethBtn_21->setObjectName(QStringLiteral("teethBtn_21"));
+        teethBtn_21->setGeometry(QRect(141, 10, 40, 36));
+        teethBtn_21->setAutoFillBackground(false);
+        teethBtn_21->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/21.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_21->setCheckable(true);
+        teethBtn_22 = new QPushButton(upperJawGroupBox);
+        teethBtn_22->setObjectName(QStringLiteral("teethBtn_22"));
+        teethBtn_22->setGeometry(QRect(182, 20, 34, 32));
+        teethBtn_22->setAutoFillBackground(false);
+        teethBtn_22->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/22.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_22->setCheckable(true);
+        teethBtn_23 = new QPushButton(upperJawGroupBox);
+        teethBtn_23->setObjectName(QStringLiteral("teethBtn_23"));
+        teethBtn_23->setGeometry(QRect(211, 41, 36, 34));
+        teethBtn_23->setAutoFillBackground(false);
+        teethBtn_23->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/23.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_23->setCheckable(true);
+        teethBtn_24 = new QPushButton(upperJawGroupBox);
+        teethBtn_24->setObjectName(QStringLiteral("teethBtn_24"));
+        teethBtn_24->setGeometry(QRect(229, 65, 42, 38));
+        teethBtn_24->setAutoFillBackground(false);
+        teethBtn_24->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/24.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_24->setCheckable(true);
+        teethBtn_25 = new QPushButton(upperJawGroupBox);
+        teethBtn_25->setObjectName(QStringLiteral("teethBtn_25"));
+        teethBtn_25->setGeometry(QRect(242, 100, 44, 40));
+        teethBtn_25->setAutoFillBackground(false);
+        teethBtn_25->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/25.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_25->setCheckable(true);
+        teethBtn_26 = new QPushButton(upperJawGroupBox);
+        teethBtn_26->setObjectName(QStringLiteral("teethBtn_26"));
+        teethBtn_26->setGeometry(QRect(250, 137, 40, 42));
+        teethBtn_26->setAutoFillBackground(false);
+        teethBtn_26->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/26.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_26->setCheckable(true);
+        teethBtn_27 = new QPushButton(upperJawGroupBox);
+        teethBtn_27->setObjectName(QStringLiteral("teethBtn_27"));
+        teethBtn_27->setGeometry(QRect(256, 177, 34, 36));
+        teethBtn_27->setAutoFillBackground(false);
+        teethBtn_27->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/27.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_27->setCheckable(true);
+        teethBtn_28 = new QPushButton(upperJawGroupBox);
+        teethBtn_28->setObjectName(QStringLiteral("teethBtn_28"));
+        teethBtn_28->setGeometry(QRect(257, 213, 40, 42));
+        teethBtn_28->setAutoFillBackground(false);
+        teethBtn_28->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/28.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_28->setCheckable(true);
+        lowerJawGroupBox = new QGroupBox(DentalImplantPanel);
+        lowerJawGroupBox->setObjectName(QStringLiteral("lowerJawGroupBox"));
+        lowerJawGroupBox->setGeometry(QRect(0, 120, 300, 501));
+        teethBtn_31 = new QPushButton(lowerJawGroupBox);
+        teethBtn_31->setObjectName(QStringLiteral("teethBtn_31"));
+        teethBtn_31->setGeometry(QRect(163, 435, 40, 34));
+        teethBtn_31->setAutoFillBackground(false);
+        teethBtn_31->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/31.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_31->setCheckable(true);
+        teethBtn_32 = new QPushButton(lowerJawGroupBox);
+        teethBtn_32->setObjectName(QStringLiteral("teethBtn_32"));
+        teethBtn_32->setGeometry(QRect(192, 420, 40, 34));
+        teethBtn_32->setAutoFillBackground(false);
+        teethBtn_32->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/32.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_32->setCheckable(true);
+        teethBtn_33 = new QPushButton(lowerJawGroupBox);
+        teethBtn_33->setObjectName(QStringLiteral("teethBtn_33"));
+        teethBtn_33->setGeometry(QRect(222, 406, 40, 34));
+        teethBtn_33->setAutoFillBackground(false);
+        teethBtn_33->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/33.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_33->setCheckable(true);
+        teethBtn_34 = new QPushButton(lowerJawGroupBox);
+        teethBtn_34->setObjectName(QStringLiteral("teethBtn_34"));
+        teethBtn_34->setGeometry(QRect(240, 380, 40, 34));
+        teethBtn_34->setAutoFillBackground(false);
+        teethBtn_34->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/34.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_34->setCheckable(true);
+        teethBtn_36 = new QPushButton(lowerJawGroupBox);
+        teethBtn_36->setObjectName(QStringLiteral("teethBtn_36"));
+        teethBtn_36->setGeometry(QRect(256, 294, 44, 52));
+        teethBtn_36->setAutoFillBackground(false);
+        teethBtn_36->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/36.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_36->setCheckable(true);
+        teethBtn_37 = new QPushButton(lowerJawGroupBox);
+        teethBtn_37->setObjectName(QStringLiteral("teethBtn_37"));
+        teethBtn_37->setGeometry(QRect(257, 243, 44, 52));
+        teethBtn_37->setAutoFillBackground(false);
+        teethBtn_37->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/37.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_37->setCheckable(true);
+        teethBtn_38 = new QPushButton(lowerJawGroupBox);
+        teethBtn_38->setObjectName(QStringLiteral("teethBtn_38"));
+        teethBtn_38->setGeometry(QRect(257, 191, 44, 52));
+        teethBtn_38->setAutoFillBackground(false);
+        teethBtn_38->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/38.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_38->setCheckable(true);
+        teethBtn_41 = new QPushButton(lowerJawGroupBox);
+        teethBtn_41->setObjectName(QStringLiteral("teethBtn_41"));
+        teethBtn_41->setGeometry(QRect(123, 434, 40, 34));
+        teethBtn_41->setAutoFillBackground(false);
+        teethBtn_41->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/41.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_41->setCheckable(true);
+        teethBtn_42 = new QPushButton(lowerJawGroupBox);
+        teethBtn_42->setObjectName(QStringLiteral("teethBtn_42"));
+        teethBtn_42->setGeometry(QRect(86, 424, 40, 34));
+        teethBtn_42->setAutoFillBackground(false);
+        teethBtn_42->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/42.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_42->setCheckable(true);
+        teethBtn_43 = new QPushButton(lowerJawGroupBox);
+        teethBtn_43->setObjectName(QStringLiteral("teethBtn_43"));
+        teethBtn_43->setGeometry(QRect(57, 403, 40, 34));
+        teethBtn_43->setAutoFillBackground(false);
+        teethBtn_43->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/43.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_43->setCheckable(true);
+        teethBtn_44 = new QPushButton(lowerJawGroupBox);
+        teethBtn_44->setObjectName(QStringLiteral("teethBtn_44"));
+        teethBtn_44->setGeometry(QRect(39, 379, 40, 34));
+        teethBtn_44->setAutoFillBackground(false);
+        teethBtn_44->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/44.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_44->setCheckable(true);
+        teethBtn_45 = new QPushButton(lowerJawGroupBox);
+        teethBtn_45->setObjectName(QStringLiteral("teethBtn_45"));
+        teethBtn_45->setGeometry(QRect(23, 351, 40, 34));
+        teethBtn_45->setAutoFillBackground(false);
+        teethBtn_45->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/45.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_45->setCheckable(true);
+        teethBtn_46 = new QPushButton(lowerJawGroupBox);
+        teethBtn_46->setObjectName(QStringLiteral("teethBtn_46"));
+        teethBtn_46->setGeometry(QRect(7, 305, 44, 52));
+        teethBtn_46->setAutoFillBackground(false);
+        teethBtn_46->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/46.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_46->setCheckable(true);
+        teethBtn_47 = new QPushButton(lowerJawGroupBox);
+        teethBtn_47->setObjectName(QStringLiteral("teethBtn_47"));
+        teethBtn_47->setGeometry(QRect(3, 251, 44, 52));
+        teethBtn_47->setAutoFillBackground(false);
+        teethBtn_47->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/47.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_47->setCheckable(true);
+        teethBtn_48 = new QPushButton(lowerJawGroupBox);
+        teethBtn_48->setObjectName(QStringLiteral("teethBtn_48"));
+        teethBtn_48->setGeometry(QRect(3, 200, 44, 52));
+        teethBtn_48->setAutoFillBackground(false);
+        teethBtn_48->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/48.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_48->setCheckable(true);
+        teethBtn_35 = new QPushButton(lowerJawGroupBox);
+        teethBtn_35->setObjectName(QStringLiteral("teethBtn_35"));
+        teethBtn_35->setGeometry(QRect(252, 343, 40, 40));
+        teethBtn_35->setAutoFillBackground(false);
+        teethBtn_35->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/teeth/35.png);\n"
+"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_35->setCheckable(true);
+        lowerJawGroupBox->raise();
+        DentalImplantNextBtn->raise();
+        DentalImplantPanelBackBtn->raise();
+        DentalImplantPanelTips->raise();
+        upperJawGroupBox->raise();
         compensationScanPanel->raise();
         ScanJawGroup->raise();
         CutJawFinishPanel->raise();
@@ -1763,7 +2032,6 @@ public:
         label_28->setText(QString());
         label_35->setText(QString());
         label_22->setText(QString());
-        label_41->setText(QString());
         label_15->setText(QString());
         label_17->setText(QString());
         label_43->setText(QString());
@@ -1782,6 +2050,7 @@ public:
         label_25->setText(QString());
         label_34->setText(QString());
         label_13->setText(QString());
+        label_41->setText(QString());
         jawGroupBox->setTitle(QString());
         jawImage->setText(QString());
         i_3->setText(QApplication::translate("ScanMainGUI", "\345\214\273\347\224\237\345\247\223\345\220\215\357\274\232", Q_NULLPTR));
@@ -1796,6 +2065,40 @@ public:
 #endif // QT_NO_TOOLTIP
         DentalImplantPanelBackBtn->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
         DentalImplantPanelTips->setText(QApplication::translate("ScanMainGUI", "\350\257\267\351\200\211\346\213\251\346\211\253\346\217\217\346\235\206", Q_NULLPTR));
+        upperJawGroupBox->setTitle(QString());
+        teethBtn_11->setText(QApplication::translate("ScanMainGUI", "11", Q_NULLPTR));
+        teethBtn_12->setText(QApplication::translate("ScanMainGUI", "12", Q_NULLPTR));
+        teethBtn_13->setText(QApplication::translate("ScanMainGUI", "13", Q_NULLPTR));
+        teethBtn_14->setText(QApplication::translate("ScanMainGUI", "14", Q_NULLPTR));
+        teethBtn_15->setText(QApplication::translate("ScanMainGUI", "15", Q_NULLPTR));
+        teethBtn_16->setText(QApplication::translate("ScanMainGUI", "16", Q_NULLPTR));
+        teethBtn_17->setText(QApplication::translate("ScanMainGUI", "17", Q_NULLPTR));
+        teethBtn_18->setText(QApplication::translate("ScanMainGUI", "18", Q_NULLPTR));
+        teethBtn_21->setText(QApplication::translate("ScanMainGUI", "21", Q_NULLPTR));
+        teethBtn_22->setText(QApplication::translate("ScanMainGUI", "22", Q_NULLPTR));
+        teethBtn_23->setText(QApplication::translate("ScanMainGUI", "23", Q_NULLPTR));
+        teethBtn_24->setText(QApplication::translate("ScanMainGUI", "24", Q_NULLPTR));
+        teethBtn_25->setText(QApplication::translate("ScanMainGUI", "25", Q_NULLPTR));
+        teethBtn_26->setText(QApplication::translate("ScanMainGUI", "26", Q_NULLPTR));
+        teethBtn_27->setText(QApplication::translate("ScanMainGUI", "27", Q_NULLPTR));
+        teethBtn_28->setText(QApplication::translate("ScanMainGUI", "28", Q_NULLPTR));
+        lowerJawGroupBox->setTitle(QString());
+        teethBtn_31->setText(QApplication::translate("ScanMainGUI", "31", Q_NULLPTR));
+        teethBtn_32->setText(QApplication::translate("ScanMainGUI", "32", Q_NULLPTR));
+        teethBtn_33->setText(QApplication::translate("ScanMainGUI", "33", Q_NULLPTR));
+        teethBtn_34->setText(QApplication::translate("ScanMainGUI", "34", Q_NULLPTR));
+        teethBtn_36->setText(QApplication::translate("ScanMainGUI", "36", Q_NULLPTR));
+        teethBtn_37->setText(QApplication::translate("ScanMainGUI", "37", Q_NULLPTR));
+        teethBtn_38->setText(QApplication::translate("ScanMainGUI", "38", Q_NULLPTR));
+        teethBtn_41->setText(QApplication::translate("ScanMainGUI", "41", Q_NULLPTR));
+        teethBtn_42->setText(QApplication::translate("ScanMainGUI", "42", Q_NULLPTR));
+        teethBtn_43->setText(QApplication::translate("ScanMainGUI", "43", Q_NULLPTR));
+        teethBtn_44->setText(QApplication::translate("ScanMainGUI", "44", Q_NULLPTR));
+        teethBtn_45->setText(QApplication::translate("ScanMainGUI", "45", Q_NULLPTR));
+        teethBtn_46->setText(QApplication::translate("ScanMainGUI", "46", Q_NULLPTR));
+        teethBtn_47->setText(QApplication::translate("ScanMainGUI", "47", Q_NULLPTR));
+        teethBtn_48->setText(QApplication::translate("ScanMainGUI", "48", Q_NULLPTR));
+        teethBtn_35->setText(QApplication::translate("ScanMainGUI", "35", Q_NULLPTR));
     } // retranslateUi
 
 };

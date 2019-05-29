@@ -247,17 +247,17 @@ void CTeethModel::ChosePoints(const float point1_x, const float point1_y,
 
 	//cv::Mat model_ = cv::Mat::eye(4, 4, CV_32FC1);
 	//memcpy(model_.data, model_matrix, 16 * sizeof(float));
-	model_matrix = cv::Mat(4, 4, CV_32F, m_ModelMatrix.data()).t();
+	cv::Mat l_model_matrix = cv::Mat(4, 4, CV_32F, m_ModelMatrix.data()).t();
 
 	//cv::Mat view_ = cv::Mat::eye(4, 4, CV_32FC1);
 	//memcpy(view_.data, view_matrix, 16 * sizeof(float));
-	view_matrix = view_matrix.t();
+	cv::Mat l_view_matrix = view_matrix.t();
 
 	//cv::Mat projection_ = cv::Mat::eye(4, 4, CV_32FC1);
 	//memcpy(projection_.data, projection_matrix, 16 * sizeof(float));
-	projection_matrix = projection_matrix.t();
+	cv::Mat l_projection_matrix = projection_matrix.t();
 
-	cv::Mat final_matrix = projection_matrix*view_matrix*model_matrix;
+	cv::Mat final_matrix = l_projection_matrix*l_view_matrix*l_model_matrix;
 
 	int selected_points = 0;
 	for (int point_index = 0; point_index < m_model.P.size(); point_index++)
@@ -307,6 +307,7 @@ void CTeethModel::ChangeModelSelectedColor(QPoint beginPos, QPoint endPoint,IPar
 		y = m_vertData[8 * i + 1] / 1.0;
 		z = m_vertData[8 * i + 2] / 1.0;
 		QVector3D worldPos(x, y, z);
+		m_ModelMatrix.setToIdentity();
 		worldPos = pParent->world2Screen(worldPos,m_ModelMatrix);
 		QRect tmprect(QPoint(beginPos.x(), beginPos.y()), QPoint(endPoint.x(), endPoint.y()));
 		if (tmprect.contains(worldPos.x(), worldPos.y())) {

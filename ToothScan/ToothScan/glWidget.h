@@ -69,6 +69,8 @@
 #include "TeethModel.h"
 #include "trackball.h"
 #include "BackGroundObject.h"
+#include "CutBoxModel.h"
+#include <map>
 using std::cout;
 using std::endl;
 
@@ -108,6 +110,9 @@ public:
 
 	orth::MeshModel mm;
 	vector<shared_ptr<BaseModel>> m_ModelsVt;
+	//vector<shared_ptr<BaseModel>> m_cutBoxesVt;
+	map<int, pCCutBoxObject> m_cutBoxesMap;
+	int m_cutToothIndex;
 
 signals:
     void clicked();
@@ -120,6 +125,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 	void wheelEvent(QWheelEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+	void mouseDoubleClickEvent(QMouseEvent *event);
 	//void keyPressEvent(QKeyEvent *event) override;
 	//void keyReleaseEvent(QKeyEvent *event) override;
 	void glUseProgram(GLuint program);
@@ -164,6 +170,9 @@ private:
 	bool m_bkGroundShow;
 	void makeGroundObject();
 	void makeBackGround();
+	pCCutBoxObject makeCutBoxObject();
+	pCCutBoxObject m_cutboxModel;
+	
 	QVector4D m_bkGroundColor;
 	//bkgroundmodel
 	//Axis
@@ -174,6 +183,7 @@ private:
 	bool m_AxisNodeShow;
 	void makeAxisObject();
 	void DrawAxisObject();
+	QQuaternion EulerAngle2Quaternion(const QVector3D &ea);
 	//Axis
 	
 

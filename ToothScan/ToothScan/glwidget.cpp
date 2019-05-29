@@ -211,6 +211,7 @@ GLWidget::GLWidget(QWidget *parent)
 	m_trackBallTest = m_trackBall;
 	motor_rot_x = 0;
 	motor_rot_y = 0;
+	m_cutToothIndex = -1;
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -366,6 +367,8 @@ void GLWidget::initializeGL()
 // 	m_bkGroundProgram->addShader(bgvshader);
 // 	m_bkGroundProgram->addShader(bgfshader);
 	makeGroundObject();
+
+	makeCutBoxObject();
 	
 	// 	m_bkGroundProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
 	// 	m_bkGroundProgram->link();
@@ -395,29 +398,38 @@ void GLWidget::paintGL()
 //	drawGradient();
 	glUseProgram(0);
 	m_backgroundModel->OnPaint(m_projection,m_view,this);
-
+	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
 	m_view.setToIdentity();
 	m_view.translate(0.0f, 0.0f, -230.0f);
 	m_view.rotate(m_trackBall.rotation());
-	m_model.setToIdentity();
-	m_model.rotate(m_trackBall.rotation());
-	// 	m_view.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
-	// 	m_view.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
-	// 	m_view.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
+	//m_model.setToIdentity();
+	//m_model.rotate(m_trackBall.rotation());
+	//m_view.rotate(30.0f, 1.0f, 0.0f, 0.0f);
+	//m_view.rotate(30.0f, 0.0f, 1.0f, 0.0f);
+	//m_view.rotate(30.0f, 0.0f, 0.0f, 1.0f);
 
 	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 	for (; iter != m_ModelsVt.end(); iter++) {
 		glUseProgram(0);
 		(*iter)->OnPaint(m_projection, m_view, this);
 	}
+	map<int, pCCutBoxObject>::iterator mapIter = m_cutBoxesMap.begin();
+	for (; mapIter != m_cutBoxesMap.end(); mapIter++) {
+		glUseProgram(0);
+		mapIter->second->OnPaint(m_projection, m_view, this);
+		//(*mapIter)->second()->OnPaint(m_projection, m_view, this);
+	}
+	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 
 	iter = m_ToolsModelsVt.begin();
 	for (; iter != m_ToolsModelsVt.end(); iter++) {
 		glUseProgram(0);
 		(*iter)->OnPaint(m_projection, m_view, this);
 	}
+
+	
 
 	//	glSwapBuffers();
 
@@ -654,25 +666,191 @@ QPointF GLWidget::pixelPosToViewPos(const QPointF& p)
 	// 	return QPointF(2.0 * float(p.x()) / 700 - 1.0, \
 	// 		1.0 - 2.0 * float(p.y()) / 700);
 }
+
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-	if (getSelectReginValue()) {
-		if (event->buttons()&Qt::LeftButton) {
-			m_drawRectClickPosition = QPoint(event->x(), SCR_HEIGHT - event->y());
+
+	int screen_x = event->globalX();
+	int screen_y = event->globalY();
+	if (QApplication::keyboardModifiers() == Qt::ShiftModifier)
+	{
+		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+		if (event->button() == Qt::LeftButton)
+		{
+			qDebug() << "ShiftKey + MOuseLeftButton";
+			m_cutboxModel->movement_type = BoxMovement::Trans;
+
+			//int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, m_model, m_view, m_projection);
+			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+
+			if (face_index == 0 || face_index == 1)
+			{
+				m_cutboxModel->face_index = BoxFace::x_p;
+			}
+			if (face_index == 6 || face_index == 7)
+			{
+				m_cutboxModel->face_index = BoxFace::x_n;
+			}
+
+			if (face_index == 2 || face_index == 3)
+			{
+				m_cutboxModel->face_index = BoxFace::y_p;
+			}
+			if (face_index == 8 || face_index == 9)
+			{
+				m_cutboxModel->face_index = BoxFace::y_n;
+			}
+
+			if (face_index == 4 || face_index == 5)
+			{
+				m_cutboxModel->face_index = BoxFace::z_p;
+			}
+			if (face_index == 10 || face_index == 11)
+			{
+				m_cutboxModel->face_index = BoxFace::z_n;
+			}
+
+			m_cutboxModel->UpdateCutBoxObject();
+			
+			this->update();
+
+			return;
+		}
+	}
+	if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+	{
+		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+		if (event->button() == Qt::LeftButton)
+		{
+			qDebug() << "ControlKey + MOuseLeftButton";
+			m_cutboxModel->movement_type = BoxMovement::Rot;
+
+			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+
+			if (face_index == 0 || face_index == 1)
+			{
+				m_cutboxModel->face_index = BoxFace::x_p;
+			}
+			if (face_index == 6 || face_index == 7)
+			{
+				m_cutboxModel->face_index = BoxFace::x_n;
+			}
+
+			if (face_index == 2 || face_index == 3)
+			{
+				m_cutboxModel->face_index = BoxFace::y_p;
+			}
+			if (face_index == 8 || face_index == 9)
+			{
+				m_cutboxModel->face_index = BoxFace::y_n;
+			}
+
+			if (face_index == 4 || face_index == 5)
+			{
+				m_cutboxModel->face_index = BoxFace::z_p;
+			}
+			if (face_index == 10 || face_index == 11)
+			{
+				m_cutboxModel->face_index = BoxFace::z_n;
+			}
+
+			m_cutboxModel->UpdateCutBoxObject();
+
+			this->update();
+
+			return;
+		}
+	}
+	if (QApplication::keyboardModifiers() == Qt::AltModifier)
+	{
+		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+		if (event->button() == Qt::LeftButton)
+		{
+			qDebug() << "AltKey + MOuseLeftButton";
+			m_cutboxModel->movement_type = BoxMovement::Stretch;
+
+			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+
+			if (face_index == 0 || face_index == 1)
+			{
+				m_cutboxModel->face_index = BoxFace::x_p;
+			}
+			if (face_index == 6 || face_index == 7)
+			{
+				m_cutboxModel->face_index = BoxFace::x_n;
+			}
+
+			if (face_index == 2 || face_index == 3)
+			{
+				m_cutboxModel->face_index = BoxFace::y_p;
+			}
+			if (face_index == 8 || face_index == 9)
+			{
+				m_cutboxModel->face_index = BoxFace::y_n;
+			}
+
+			if (face_index == 4 || face_index == 5)
+			{
+				m_cutboxModel->face_index = BoxFace::z_p;
+			}
+			if (face_index == 10 || face_index == 11)
+			{
+				m_cutboxModel->face_index = BoxFace::z_n;
+			}
+
+			m_cutboxModel->UpdateCutBoxObject();
+
+			this->update();
+
+			return;
+		}
+	}
+	if (event->button() == Qt::MiddleButton)
+	{
+		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+		if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+		{
+			qDebug() << "CtrlKey + MiddleButton";
+
+			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+			for (; iter != m_ModelsVt.end(); iter++) {
+				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+				if (pModel) {
+					m_cutboxModel->CutModelInBox(pModel->m_model);
+					pModel->makeObject();
+				}
+			}
+
+			update();
+		}
+		else
+		{
+
+			//orth::MeshModel mm2;
+			m_cutboxModel->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
+			m_cutboxModel->Set_Visible(true);
+			this->update();
 		}
 	}
 	else {
-		lastPos = event->pos();
-		QQuaternion trans;
-		float xRot = 0, yRot = 0;
-		m_trackBallTest.push(pixelPosToViewPos(event->pos()), trans);
-		GetRotateMotorRot(xRot, yRot,m_trackBallTest);
-		//if (abs(xRot - m_xRotLim) >= 0 || abs(yRot - m_yRotLim) >= 0)
-		if (xRot > m_xMaxRotLim || xRot<m_xMinRotLim)
-			return;
-		
-		//m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
-		//m_trackBallTest = m_trackBall;
+		if (getSelectReginValue()) {
+			if (event->buttons()&Qt::LeftButton) {
+				m_drawRectClickPosition = QPoint(event->globalX(), SCR_HEIGHT - event->globalY());
+			}
+		}
+		else {
+			lastPos = event->pos();
+			QQuaternion trans;
+			float xRot = 0, yRot = 0;
+			m_trackBallTest.push(pixelPosToViewPos(event->pos()), trans);
+			GetRotateMotorRot(xRot, yRot, m_trackBallTest);
+			//if (abs(xRot - m_xRotLim) >= 0 || abs(yRot - m_yRotLim) >= 0)
+			if (xRot > m_xMaxRotLim || xRot<m_xMinRotLim)
+				return;
+
+			//m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
+			//m_trackBallTest = m_trackBall;
+		}
 	}
 }
 
@@ -680,7 +858,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
 	if (getSelectReginValue()) {
 		if (event->buttons()&Qt::LeftButton) {
-			m_drawRectEndPosition = QPoint(event->x(), SCR_HEIGHT - event->y());
+			m_drawRectEndPosition = QPoint(event->globalX(), SCR_HEIGHT - event->globalY());
 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 			for (; iter != m_ModelsVt.end(); iter++) {
 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
@@ -692,57 +870,81 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		}
 	}
 	else {
-		int dx = event->x() - lastPos.x();
-		int dy = event->y() - lastPos.y();
+		int dx = event->globalX() - lastPos.x();
+		int dy = event->globalY() - lastPos.y();
 		//cout << dx << " ----- " << dy << endl;
 
 		//if (event->buttons()&Qt::LeftButton)
 		//{
 		//	if (event->modifiers() == Qt::CTRL)
 		//	{
-		//		program->executeTranslateOperation(event->x(), event->y());
+		//		program->executeTranslateOperation(event->globalX(), event->globalY());
 		//	}
 		//	else
 		//	{
-		//		program->executeRotateOperation(event->x(), event->y());
+		//		program->executeRotateOperation(event->globalX(), event->globalY());
 		//	}
 		//}
 
-		if (event->buttons() & Qt::LeftButton) {
-			rotateBy(dy, dx, 0);
+		if (QApplication::keyboardModifiers() == Qt::AltModifier|| QApplication::keyboardModifiers() == Qt::ControlModifier|| QApplication::keyboardModifiers() == Qt::ShiftModifier)
+		{
+			if (m_cutboxModel->movement_type == BoxMovement::Trans)
+			{
+				m_cutboxModel->BoxTrans(dx, dy);
+			}
+			if (m_cutboxModel->movement_type == BoxMovement::Stretch)
+			{
+				m_cutboxModel->BoxStretch(dx, dy);
+			}
+			if (m_cutboxModel->movement_type == BoxMovement::Rot)
+			{
+				m_cutboxModel->BoxRot(pixelPosToViewPos(event->globalPos()));
+			}
+			m_cutboxModel->UpdateCutBoxObject();
+			this->update();
+			lastPos = event->globalPos();
+
 		}
-		else if (event->buttons() & Qt::RightButton) {
-			//translateBy(dx, dy, 0);
+		else
+		{
+			if (event->buttons() & Qt::LeftButton) {
+				rotateBy(dy, dx, 0);
+			}
+			else if (event->buttons() & Qt::RightButton) {
+				//translateBy(dx, dy, 0);
+			}
+			if (event->buttons() & Qt::LeftButton) {
+				float xRot = 0, yRot = 0;
+				TrackBall trackBallTest;
+				trackBallTest = m_trackBallTest;
+				QQuaternion trans;
+				trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
+				GetRotateMotorRot(xRot, yRot, trackBallTest);
+				if (xRot> m_xMaxRotLim || xRot < m_xMinRotLim)
+					return;
+
+				//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
+				//m_trackBallTest = m_trackBall;
+				m_trackBallTest = trackBallTest;
+				m_trackBall = m_trackBallTest;
+				// 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+				// 			for (; iter != m_ModelsVt.end(); iter++) {
+				// 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+				// 				if (pModel) {
+				// 					pModel->rotate(m_trackBall.rotation());
+				// 				}
+				// 			}
+				// 			m_groundModel->rotate(m_trackBall.rotation());
+				// 			m_axisMode->rotate(m_trackBall.rotation());
+			}
+			else {
+				QQuaternion trans;
+				m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
+			}
+			lastPos = event->pos();
 		}
-		if (event->buttons() & Qt::LeftButton) {
-			float xRot = 0, yRot = 0;
-			TrackBall trackBallTest;
-			trackBallTest = m_trackBallTest;
-			QQuaternion trans;
-			trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
-			GetRotateMotorRot(xRot,yRot, trackBallTest);
-			if (xRot> m_xMaxRotLim || xRot < m_xMinRotLim)
-				return;
-			
-			//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
-			//m_trackBallTest = m_trackBall;
-			m_trackBallTest = trackBallTest;
-			m_trackBall = m_trackBallTest;
-// 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
-// 			for (; iter != m_ModelsVt.end(); iter++) {
-// 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-// 				if (pModel) {
-// 					pModel->rotate(m_trackBall.rotation());
-// 				}
-// 			}
-// 			m_groundModel->rotate(m_trackBall.rotation());
-// 			m_axisMode->rotate(m_trackBall.rotation());
-		}
-		else {
-			QQuaternion trans;
-			m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
-		}
-		lastPos = event->pos();
+
+
 	}
 }
 
@@ -793,6 +995,27 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 			return;
 		m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
 	}
+
+
+	m_cutboxModel->SetOriginalColor();
+	m_cutboxModel->UpdateCutBoxObject();
+	this->update();
+}
+
+void GLWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	if (event->button() == Qt::LeftButton) {
+		if (m_cutToothIndex == -1)
+			return;
+		pCCutBoxObject ptmp = makeCutBoxObject();
+		if (!ptmp)
+			return;
+		int screen_x = event->globalX();
+		int screen_y = event->globalY();
+		ptmp->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
+		ptmp->Set_Visible(true);
+		update();
+	}
 }
 
 void GLWidget::glUseProgram(GLuint program)
@@ -806,19 +1029,16 @@ pCTeethModel GLWidget::makeObject()
 	point_.setY(mm.P[mm.F[0].x].y / 1.0);
 	point_.setZ(mm.P[mm.F[0].x].z / 1.0);
 	point_.setW(1);*/
-
 	/*for (int i = 0; i < mm.F.size(); i++)
 	{
 		vertices_in.push_back(mm.P[mm.F[i].x].x);
 		vertices_in.push_back(mm.P[mm.F[i].x].y);
 		vertices_in.push_back(mm.P[mm.F[i].x].z);
 		label_in.push_back((float)mm.L[mm.F[i].x]);
-
 		vertices_in.push_back(mm.P[mm.F[i].y].x);
 		vertices_in.push_back(mm.P[mm.F[i].y].y);
 		vertices_in.push_back(mm.P[mm.F[i].y].z);
 		label_in.push_back((float)mm.L[mm.F[i].y]);
-
 		vertices_in.push_back(mm.P[mm.F[i].z].x);
 		vertices_in.push_back(mm.P[mm.F[i].z].y);
 		vertices_in.push_back(mm.P[mm.F[i].z].z);
@@ -827,17 +1047,14 @@ pCTeethModel GLWidget::makeObject()
 
 	if (mm.N.size()!=0)
 	{
-
 		for (int i = 0; i < mm.F.size(); i++)
 		{
 			normal_in.push_back(mm.N[mm.F[i].x].x);
 			normal_in.push_back(mm.N[mm.F[i].x].y);
 			normal_in.push_back(mm.N[mm.F[i].x].z);
-
 			normal_in.push_back(mm.N[mm.F[i].y].x);
 			normal_in.push_back(mm.N[mm.F[i].y].y);
 			normal_in.push_back(mm.N[mm.F[i].y].z);
-
 			normal_in.push_back(mm.N[mm.F[i].z].x);
 			normal_in.push_back(mm.N[mm.F[i].z].y);
 			normal_in.push_back(mm.N[mm.F[i].z].z);
@@ -903,7 +1120,6 @@ pCTeethModel GLWidget::makeObject()
 	return l_TeethModel;
 }
 
-
 void GLWidget::TeethSegmentRun(const std::string label_file_path)
 {
 	//
@@ -917,7 +1133,7 @@ void GLWidget::TeethSegmentRun(const std::string label_file_path)
 	//std::cout << label_file_path << "--- all file is as follows:---" << std::endl;
 	while (!outFile.eof())
 	{
-		outFile.getline(buffer, 256, '\n');//getline(char *,int,char) ±Ì æ∏√––◊÷∑˚¥ÔµΩ256∏ˆªÚ”ˆµΩªª––æÕΩ· ¯
+		outFile.getline(buffer, 256, '\n');//getline(char *,int,char) Ë°®Á§∫ËØ•Ë°åÂ≠óÁ¨¶ËææÂà∞256‰∏™ÊàñÈÅáÂà∞Êç¢Ë°åÂ∞±ÁªìÊùü
 										   //std::cout << buffer << "-" << std::endl;
 		if (strcmp(buffer, "background") == 0)
 		{
@@ -943,40 +1159,118 @@ void GLWidget::reSetValue()
 void GLWidget::overView()
 {
 	reSetValue();
-	xRot = -90 * 16;
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(-90, 0, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(-90, 0, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
 	update();
+}
+
+QQuaternion GLWidget::EulerAngle2Quaternion(const QVector3D &ea)
+{
+	float fCosHRoll = cos(ea.x()*M_PI/180.0 * .5f);
+	float fSinHRoll = sin(ea.x()*M_PI / 180.0 * .5f);
+
+	float fCosHPitch = cos(ea.y()*M_PI / 180.0 * .5f);
+	float fSinHPitch = sin(ea.y()*M_PI / 180.0 * .5f);
+
+	float fCosHYaw = cos(ea.z()*M_PI / 180.0 * .5f);
+	float fSinHYaw = sin(ea.z()*M_PI / 180.0 * .5f);
+
+	/// Cartesian coordinate System
+	//float w = fCosHRoll * fCosHPitch * fCosHYaw + fSinHRoll * fSinHPitch * fSinHYaw;
+	//float x = fSinHRoll * fCosHPitch * fCosHYaw - fCosHRoll * fSinHPitch * fSinHYaw;
+	//float y = fCosHRoll * fSinHPitch * fCosHYaw + fSinHRoll * fCosHPitch * fSinHYaw;
+	//float z = fCosHRoll * fCosHPitch * fSinHYaw - fSinHRoll * fSinHPitch * fCosHYaw;
+
+	float w = fCosHRoll * fCosHPitch * fCosHYaw - fSinHRoll * fSinHPitch * fSinHYaw;
+	float x = fCosHRoll * fSinHPitch * fSinHYaw + fSinHRoll * fCosHPitch * fCosHYaw;
+	float y = fCosHRoll * fSinHPitch * fCosHYaw + fSinHRoll * fCosHPitch * fSinHYaw;
+	float z = fCosHRoll * fCosHPitch * fSinHYaw - fSinHRoll * fSinHPitch * fCosHYaw;
+	
+
+	//float w = fCosHRoll * fCosHPitch * fCosHYaw + fSinHRoll * fSinHPitch * fSinHYaw;
+	//float x = fCosHRoll * fSinHPitch * fCosHYaw + fSinHRoll * fCosHPitch * fSinHYaw;
+	//float y = fCosHRoll * fCosHPitch * fSinHYaw - fSinHRoll * fSinHPitch * fCosHYaw;
+	//float z = fSinHRoll * fCosHPitch * fCosHYaw - fCosHRoll * fSinHPitch * fSinHYaw;
+
+	QQuaternion new_q(w,x,y,z);
+
+	return new_q;
 }
 
 void GLWidget::upwardView()
 {
 	reSetValue();
-	xRot = 90 * 16;
+
+
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(90,0,0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(90, 0, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+
 	update();
+	//QQuaternion::toRotationMatrix();
 }
 
 void GLWidget::leftView()
 {
 	reSetValue();
-	yRot = -90 * 16;
+	
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(0, 90, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(0, 90, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+
 	update();
 }
 
 void GLWidget::rightView()
 {
 	reSetValue();
-	yRot = 90 * 16;
+	
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(0, -90, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(0, -90, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+
+	//m_view.rotate(m_trackBall.rotation());
+	//QMatrix4x4 qm;
+	//qm.rotate(m_trackBall.m_rotation);
+	//cv::Mat merot = cv::Mat(4, 4, CV_32F, qm.data());
+	//orth::MeshModel mm;
+	//for (int i = 0; i < 30; i++)
+	//{
+	//	orth::Point3d point(0, 0, (double)i);
+
+	//	mm.P.push_back(point);
+	//}
+	//mm.Rotation((double *)merot.data);
+
+	//vector<double> new_direct;
+	//for (int i = 0; i < mm.P.size(); i++)
+	//{
+	//	new_direct.push_back(mm.P[i].x);
+	//	new_direct.push_back(mm.P[i].y);
+	//	new_direct.push_back(mm.P[i].z);
+	//}
+
+	//ColoredPoints(new_direct, 3);
+
 	update();
 }
 
 void GLWidget::mainView()
 {
 	reSetValue();
+
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(0, 0, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(0, 0, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+
 	update();
 }
 
 void GLWidget::backView()
 {
+	reSetValue();
+	m_trackBall.m_rotation = EulerAngle2Quaternion(QVector3D(0, 179.9, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
+	m_trackBallTest.m_rotation = EulerAngle2Quaternion(QVector3D(0, 179.9, 0));// QQuaternion::fromEulerAngles(QVector3D(90, 0, 0));
 
+
+
+	update();
 }
 
 void GLWidget::enlargeView()
@@ -1160,6 +1454,7 @@ void GLWidget::remakeObject()
 			vertData.append(mm.N[mm.F[i].y].y);
 			vertData.append(mm.N[mm.F[i].y].z);
 			vertData.append(0.0);
+
 			vertData.append(mm.P[mm.F[i].z].x);
 			vertData.append(mm.P[mm.F[i].z].y);
 			vertData.append(mm.P[mm.F[i].z].z);
@@ -1417,14 +1712,108 @@ void GLWidget::makeGroundObject()
 	this->update();
 }
 
+pCCutBoxObject GLWidget::makeCutBoxObject()
+{
+	if (m_cutToothIndex != -1 &&m_cutBoxesMap.find(m_cutToothIndex) != m_cutBoxesMap.end()) {
+		return m_cutBoxesMap[m_cutToothIndex];
+	}
+	orth::MeshModel mm2;
+	double box_min_x = -10, box_min_y = -10, box_min_z = -10, box_max_x = 10, box_max_y = 10, box_max_z = 10;
+	pCCutBoxObject pcutboxModel;
+	pcutboxModel = make_shared<CCutBoxObject>(":/MainWidget/Resources/images/cutbox.vs", ":/MainWidget/Resources/images/cutbox.fs", this);
+	{
+		mm2.F.resize(12);
+		mm2.P.clear();
+		vector<orth::Point3d> box_vertex(8);
+		box_vertex[0].x = box_min_x; box_vertex[0].y = box_min_y; box_vertex[0].z = box_min_z; mm2.P.push_back(box_vertex[0]);
+		box_vertex[1].x = box_max_x; box_vertex[1].y = box_min_y; box_vertex[1].z = box_min_z; mm2.P.push_back(box_vertex[1]);
+		box_vertex[2].x = box_max_x; box_vertex[2].y = box_min_y; box_vertex[2].z = box_max_z; mm2.P.push_back(box_vertex[2]);
+		box_vertex[3].x = box_min_x; box_vertex[3].y = box_min_y; box_vertex[3].z = box_max_z; mm2.P.push_back(box_vertex[3]);
+		box_vertex[4].x = box_min_x; box_vertex[4].y = box_max_y; box_vertex[4].z = box_min_z; mm2.P.push_back(box_vertex[4]);
+		box_vertex[5].x = box_max_x; box_vertex[5].y = box_max_y; box_vertex[5].z = box_min_z; mm2.P.push_back(box_vertex[5]);
+		box_vertex[6].x = box_max_x; box_vertex[6].y = box_max_y; box_vertex[6].z = box_max_z; mm2.P.push_back(box_vertex[6]);
+		box_vertex[7].x = box_min_x; box_vertex[7].y = box_max_y; box_vertex[7].z = box_max_z; mm2.P.push_back(box_vertex[7]);
+
+		mm2.F[0].x = 1; mm2.F[0].y = 6; mm2.F[0].z = 2;
+		mm2.F[1].x = 1; mm2.F[1].y = 5; mm2.F[1].z = 6;
+		mm2.F[2].x = 4; mm2.F[2].y = 7; mm2.F[2].z = 6;
+		mm2.F[3].x = 4; mm2.F[3].y = 6; mm2.F[3].z = 5;
+		mm2.F[4].x = 2; mm2.F[4].y = 6; mm2.F[4].z = 7;
+		mm2.F[5].x = 2; mm2.F[5].y = 7; mm2.F[5].z = 3;
+		mm2.F[6].x = 0; mm2.F[6].y = 3; mm2.F[6].z = 7;
+		mm2.F[7].x = 0; mm2.F[7].y = 7; mm2.F[7].z = 4;
+		mm2.F[8].x = 0; mm2.F[8].y = 1; mm2.F[8].z = 2;
+		mm2.F[9].x = 0; mm2.F[9].y = 2; mm2.F[9].z = 3;
+		mm2.F[10].x = 1; mm2.F[10].y = 0; mm2.F[10].z = 4;
+		mm2.F[11].x = 1; mm2.F[11].y = 4; mm2.F[11].z = 5;
+
+	}
+
+	pcutboxModel->new_box = mm2;
+	
+	QVector<GLfloat> vertData;
+
+	//x1 r
+	for (int i = 0; i < mm2.F.size(); i++)
+	{
+		//float x, y, z;
+		vertData.append(mm2.P[mm2.F[i].x].x);
+		vertData.append(mm2.P[mm2.F[i].x].y);
+		vertData.append(mm2.P[mm2.F[i].x].z);
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
+
+		vertData.append(mm2.P[mm2.F[i].y].x);
+		vertData.append(mm2.P[mm2.F[i].y].y);
+		vertData.append(mm2.P[mm2.F[i].y].z);
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
+
+		vertData.append(mm2.P[mm2.F[i].z].x);
+		vertData.append(mm2.P[mm2.F[i].z].y);
+		vertData.append(mm2.P[mm2.F[i].z].z);
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
+
+	}
+
+
+	pcutboxModel->box_center = orth::Point3d(0, 0, 0);
+	pcutboxModel->direct_x = orth::Point3d(1, 0, 0);
+	pcutboxModel->direct_y = orth::Point3d(0, 1, 0);
+	pcutboxModel->direct_z = orth::Point3d(0, 0, 1);
+	pcutboxModel->max_x_dir = orth::Point3d(1, 0, 0);
+	pcutboxModel->max_y_dir = orth::Point3d(0, 1, 0);
+	pcutboxModel->max_z_dir = orth::Point3d(0, 0, 1);
+	pcutboxModel->min_x_dir = orth::Point3d(-1, 0, 0);
+	pcutboxModel->min_y_dir = orth::Point3d(0, -1, 0);
+	pcutboxModel->min_z_dir = orth::Point3d(0, 0, -1);
+
+	pcutboxModel->makeObject(vertData, 36);
+
+	pcutboxModel->Set_Visible(false);
+	//m_ToolsModelsVt.push_back(m_cutboxModel);
+	m_cutBoxesMap.insert(make_pair(m_cutToothIndex,pcutboxModel));
+	this->update();
+	return pcutboxModel;
+}
+
+
+
 void GLWidget::makeBackGround()
 {
 	QVector<GLfloat> vertData =
 	{ 
-		1.0f,1.0f,-1.0f,    1.0f,1.0f,
-		1.0f,-1.0f,-1.0f,   1.0f,0.0f,
-		-1.0f,-1.0f,-1.0f,  0.0f,0.0f,
-		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
+		1.0f,1.0f,1.0f,    1.0f,1.0f,
+		1.0f,-1.0f,1.0f,   1.0f,0.0f,
+		-1.0f,-1.0f,1.0f,  0.0f,0.0f,
+		-1.0f,1.0f,1.0f ,  0.0f,1.0f
 	};
 	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
 	QString name_ = "./Resources/images/background-grey3.png";
@@ -1569,12 +1958,12 @@ void GLWidget::DrawAxisObject() {
 }
 
 /*----------------------------------- new rot x rot y --------------------------------*/
-//»´æ÷
+//ÂÖ®Â±Ä
 void GLWidget::GetRotateMotorRot(float &xrot, float &yrot, TrackBall & v_TrackBall) {
 	QVector3D camera_pos2 = QVector3D(0.0f, 0.0f, 0.0f);
 #define ToDeg(x) x*57.295780490442968321226628812406
 
-	//»Œ∫Œ–˝◊™ ¬º˛ ∏ƒ±‰ viewæÿ’Û∫Û º∆À„cameraŒª÷√
+	//‰ªª‰ΩïÊóãËΩ¨‰∫ã‰ª∂ ÊîπÂèò viewÁü©ÈòµÂêé ËÆ°ÁÆócamera‰ΩçÁΩÆ
 	QVector3D zaxis(0.0f, 0.0f, 1.0f);
 	//QMatrix4x4 viewinv = view.inverted(0);
 	QMatrix4x4 view;
@@ -1587,7 +1976,7 @@ void GLWidget::GetRotateMotorRot(float &xrot, float &yrot, TrackBall & v_TrackBa
 	camera_pos2 = viewinv*zaxis;
 	//cout << "###### ---- " << camera_pos2[0] << ", " << camera_pos2[1] << ", " << camera_pos2[2] << endl;
 
-	//º∆À„–˝◊™Ω«∂»
+	//ËÆ°ÁÆóÊóãËΩ¨ËßíÂ∫¶
 	double c_x = camera_pos2[0];
 	double c_y = camera_pos2[1];
 	double c_z = camera_pos2[2];

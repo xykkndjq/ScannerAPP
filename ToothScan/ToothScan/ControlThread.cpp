@@ -50,7 +50,6 @@ ControlThread::~ControlThread()
 
 void ControlThread::InitParameters()
 {
-	//return;
 	cout << " RasterScan Start!!" << endl;
 	rs->InitRasterScan("SystemCalibration.yml");
 

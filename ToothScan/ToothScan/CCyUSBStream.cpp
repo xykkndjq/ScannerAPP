@@ -599,7 +599,7 @@ namespace Communication
 		m_EndPtOut = m_USBDevice->EndPointOf(0X01); //使用端点2，out传输
 
 		m_endptInLength = m_EndPtIn->MaxPktSize* SCALE;
-
+   
 		m_EndPtIn->SetXferSize(m_endptInLength);
 		
 		return 0;

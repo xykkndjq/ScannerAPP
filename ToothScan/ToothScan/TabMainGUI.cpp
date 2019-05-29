@@ -1088,7 +1088,7 @@ void TabMainGUI::PatientInformationSave()
 						if (lowerJawScanTask == nullptr) {
 							lowerJawScanTask = make_shared<CScanTask>();
 							lowerJawScanTask->Set_ScanType(eLowerJawScan);
-							//lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+							lowerJawScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
 							lowerJawScanTask->Set_TaskType(eScan);
 						}
 						lowerJawScanTask->Set_DentalImplant(true);
@@ -2018,11 +2018,14 @@ void TabMainGUI::readFileStorage(QString fPath)
 			QJsonArray jsonArray = jsonDoc.array();
 			pCScanTask upperScanTask = nullptr, lowerJawScanTask = nullptr, allJawScanTask = nullptr,
 				pCrownGroupScan = nullptr;
-			for (int i = 0; i < 32;i++) {
-				m_eScanType = eScanNULL;
-				chooseID = m_eScanType + 1;
-				toothList[i]->clicked();
-			}
+			m_eScanType = eScanNULL;
+			chooseID = m_eScanType + 1;
+			clearAllButtonPress();
+// 			for (int i = 0; i < 32;i++) {
+// 				m_eScanType = eScanNULL;
+// 				chooseID = m_eScanType + 1;
+// 				toothList[i]->clicked();
+// 			}
 			for (int i = 0; i < jsonArray.size(); i++) {
 				QJsonObject simp_ayjson = jsonArray[i].toObject();
 				QString strClassName = simp_ayjson.value("class").toString(),

@@ -644,6 +644,45 @@ namespace scan
 
 	};
 
+	extern "C"
+	class cudaPFH
+	{
+	public:
+		__declspec (dllexport) cudaPFH();
+		__declspec (dllexport) ~cudaPFH();
+
+		void __declspec (dllexport) computeFeature(vector<vector<float>> &point_PFHfeatures);
+
+		void __declspec (dllexport) SetRadius(float radius_);
+
+		void __declspec (dllexport) SetModel(orth::MeshModel &model);
+
+		void __declspec (dllexport) computeOnePointFeature(const int index_, vector<float> &point_PFHfeatures);
+
+	private:
+
+		void HistogramCalculate(vector<vector<float>> &point_PFHfeatures);
+
+		void OnePointHistogramCalculate(const int index_, vector<float> &point_PFHfeatures);
+
+		bool ComputePairFeatures(const orth::Point3d p1, const orth::Normal n1,
+			const orth::Point3d p2, const orth::Normal n2,
+			float &f1, float &f2, float &f3, float &f4);
+
+		float radius;
+
+		int nr_split;
+
+		float d_pi_;
+
+		orth::MeshModel *feature_model;
+
+		vector<vector<unsigned int>> query_index;
+		vector<vector<double>> nearest_distance;
+
+	};
+
+
 
 
 }

@@ -120,6 +120,7 @@ signals:
 	void taskTeethSititSignal();
 	void startAllJawScan();//控制正常扫描信号signals
 	void showOrderInfoSignal(COrderInfo);
+
 	void usbDeviceSignal();//开机判断usbDevice是否成功信号
 private:
 	Ui::ScanMainGUI ui;
@@ -239,6 +240,7 @@ private:
 
 	void movecutHeightSpinBoxSlot();//调整切割水平面
 	void movecutHeightSliderSlot();
+	void ToothButtonListPress();
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();
