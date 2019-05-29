@@ -69,6 +69,7 @@
 #include "TeethModel.h"
 #include "trackball.h"
 #include "BackGroundObject.h"
+#include "CutBoxModel.h"
 using std::cout;
 using std::endl;
 
@@ -164,6 +165,8 @@ private:
 	bool m_bkGroundShow;
 	void makeGroundObject();
 	void makeBackGround();
+	void makeCutBoxObject();
+	pCCutBoxObject m_cutboxModel;
 	QVector4D m_bkGroundColor;
 	//bkgroundmodel
 	//Axis
@@ -174,6 +177,7 @@ private:
 	bool m_AxisNodeShow;
 	void makeAxisObject();
 	void DrawAxisObject();
+	QQuaternion EulerAngle2Quaternion(const QVector3D &ea);
 	//Axis
 	
 

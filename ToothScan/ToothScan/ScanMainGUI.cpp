@@ -464,6 +464,16 @@ void ScanMainGUI::setConnections()
 	connect(ControlComputeThread, SIGNAL(progressBarsetOrientation(Qt::Orientation)), ui.progressBar, SLOT(setOrientation(Qt::Orientation)));
 	connect(ControlComputeThread, SIGNAL(progressBarVisibleSignal(bool)), ui.progressBar, SLOT(setVisible(bool)));
 	connect(ControlComputeThread, SIGNAL(progressBarSetSignal(int, int,  bool)), this, SLOT(progressBarSetSlot(int, int, bool)));
+	for (int i = 0; i < 32; i++)
+	{
+		QString strWidgetName = "teethBtn_" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10);
+		QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+		if (pButton) {
+			pButton->setObjectName(QString::number(i, 10));
+			pButton->setCheckable(true);
+			connect(pButton, SIGNAL(clicked()), this, SLOT(ToothButtonListPress()));
+		}
+	}
 // 	void progressBarSetMinSignal(int min);
 // 	void progressBarSetMaxSignal(int max);
 // 	void progressBarSetValueSignal(int value);
@@ -472,6 +482,10 @@ void ScanMainGUI::setConnections()
 
 void ScanMainGUI::closeBtnClicked()
 {
+	controlScanQThread->terminate();
+	controlComputeQThread->terminate();
+	controlComputeQThread->wait();
+	controlScanQThread->wait();
 	tabMainPage->show();
 	tabMainPage->showMaximized();
 	this->hide();
@@ -649,6 +663,8 @@ void ScanMainGUI::updateMeshModel(int refreshIndex)
 
 void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 {
+	controlScanQThread->start();
+	controlComputeQThread->start();
 	cameraWindow->setVisible(true);
 	resetValue();
 	glWidget->m_ModelsVt.clear();
@@ -1044,6 +1060,7 @@ void ScanMainGUI::resetValue()
 	m_plowerTeethModel = nullptr;
 	m_pallTeethModel = nullptr;
 	m_bsplitModelFlag = false;
+	ui.progressBar->hide();
 	hideAllPanel();
 }
 
@@ -1429,6 +1446,19 @@ void ScanMainGUI::movecutHeightSliderSlot()
 		glWidget->bgGroundmoveDown();
 		scanTipWidget->globalSpinCutValue = curValue;
 	}
+}
+
+void ScanMainGUI::ToothButtonListPress()
+{
+	int toothButtonIndex = sender()->objectName().toInt();
+	QString strWidgetName = "teethBtn_" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10);
+	QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+	if (pButton) {
+		if (pButton->isChecked()) {
+
+		}
+	}
+
 }
 
 void ScanMainGUI::cutModelSlot()
@@ -2193,6 +2223,34 @@ void ScanMainGUI::meshFinishSlot()
 		m_pallTeethModel = pCurrentTask->pTeethModel;
 	}
 	saveModelFile(pCurrentTask);
+	if (pCurrentTask->Get_Gingiva() == false&& pCurrentTask->Get_DentalImplant() == true) {//ÖÖÖ²Ìå
+		ui.DentalImplantPanel->setVisible(true);
+		ui.lowerJawGroupBox->setVisible(false);
+		ui.upperJawGroupBox->setVisible(false);
+		for (int i = 0; i < 32;i++) {
+			QString strWidgetName = "teethBtn_" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10);
+			QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+			if (pButton) {
+				pButton->setDisabled(true);
+			}
+		}
+		if (pCurrentTask->Get_ScanType() == eUpperJawScan)	//ÉÏò¢
+		{
+			ui.upperJawGroupBox->setVisible(true);
+		}
+		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+			ui.lowerJawGroupBox->setVisible(true);
+		}
+		for (int i = 0; i < pCurrentTask->m_vtTeeth.size();i++) {
+			QString strWidgetName = "teethBtn_" + QString::number((pCurrentTask->m_vtTeeth[i] / 8 + 1) * 10 + pCurrentTask->m_vtTeeth[i] % 8 + 1, 10);
+			QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+			if (pButton) {
+				pButton->setEnabled(true);
+			}
+		}
+		ui.DentalImplantNextBtn->setDisabled(true);
+		return;
+	}
 
 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 

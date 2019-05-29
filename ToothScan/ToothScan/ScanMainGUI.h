@@ -228,6 +228,7 @@ private:
 
 	void movecutHeightSpinBoxSlot();//调整切割水平面
 	void movecutHeightSliderSlot();
+	void ToothButtonListPress();
 	public slots:
 	void updateTaskModel();
 	void meshFinishSlot();

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1844</width>
+    <width>1920</width>
     <height>1080</height>
    </rect>
   </property>
@@ -4927,13 +4927,6 @@ background-color:rgb(248,250,250);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <zorder>CutJawFinishPanelTips_5</zorder>
-   <zorder>stitchingFNextBtn</zorder>
-   <zorder>StitchingFinishPanelBackBtn</zorder>
-   <zorder>StitchingPanelTips_3</zorder>
-   <zorder>stitchingUpperJawBtn</zorder>
-   <zorder>stitchingLowerJawBtn</zorder>
-   <zorder>DentalImplantPanel</zorder>
   </widget>
   <widget class="QGroupBox" name="OralSubstitutePanel">
    <property name="enabled">
@@ -7553,8 +7546,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_48">
      <property name="geometry">
       <rect>
-       <x>244</x>
-       <y>276</y>
+       <x>8</x>
+       <y>272</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -7575,8 +7568,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_36">
      <property name="geometry">
       <rect>
-       <x>18</x>
-       <y>372</y>
+       <x>235</x>
+       <y>375</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -7619,8 +7612,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_33">
      <property name="geometry">
       <rect>
-       <x>57</x>
-       <y>466</y>
+       <x>205</x>
+       <y>474</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -7685,8 +7678,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_32">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>486</y>
+       <x>176</x>
+       <y>490</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -7707,8 +7700,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_44">
      <property name="geometry">
       <rect>
-       <x>218</x>
-       <y>447</y>
+       <x>38</x>
+       <y>443</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -7729,8 +7722,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_42">
      <property name="geometry">
       <rect>
-       <x>174</x>
-       <y>489</y>
+       <x>76</x>
+       <y>487</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -7795,8 +7788,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_35">
      <property name="geometry">
       <rect>
-       <x>29</x>
-       <y>415</y>
+       <x>230</x>
+       <y>420</y>
        <width>40</width>
        <height>40</height>
       </rect>
@@ -7831,28 +7824,6 @@ background-color:rgb(248,250,250);</string>
      </property>
      <property name="pixmap">
       <pixmap>Resources/images/teeth/22.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_41">
-     <property name="geometry">
-      <rect>
-       <x>142</x>
-       <y>499</y>
-       <width>40</width>
-       <height>34</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background:transparent</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>Resources/images/teeth/41.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7905,8 +7876,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_43">
      <property name="geometry">
       <rect>
-       <x>203</x>
-       <y>471</y>
+       <x>55</x>
+       <y>466</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -7949,8 +7920,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_45">
      <property name="geometry">
       <rect>
-       <x>226</x>
-       <y>419</y>
+       <x>27</x>
+       <y>415</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -8015,8 +7986,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_37">
      <property name="geometry">
       <rect>
-       <x>14</x>
-       <y>322</y>
+       <x>243</x>
+       <y>325</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -8037,8 +8008,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_46">
      <property name="geometry">
       <rect>
-       <x>235</x>
-       <y>375</y>
+       <x>14</x>
+       <y>372</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -8059,8 +8030,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_31">
      <property name="geometry">
       <rect>
-       <x>109</x>
-       <y>496</y>
+       <x>143</x>
+       <y>500</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -8103,8 +8074,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_38">
      <property name="geometry">
       <rect>
-       <x>13</x>
-       <y>272</y>
+       <x>244</x>
+       <y>276</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -8147,8 +8118,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_47">
      <property name="geometry">
       <rect>
-       <x>243</x>
-       <y>325</y>
+       <x>7</x>
+       <y>322</y>
        <width>44</width>
        <height>52</height>
       </rect>
@@ -8213,8 +8184,8 @@ background-color:rgb(248,250,250);</string>
     <widget class="QLabel" name="label_34">
      <property name="geometry">
       <rect>
-       <x>42</x>
-       <y>445</y>
+       <x>220</x>
+       <y>449</y>
        <width>40</width>
        <height>34</height>
       </rect>
@@ -8249,6 +8220,28 @@ background-color:rgb(248,250,250);</string>
      </property>
      <property name="pixmap">
       <pixmap>Resources/images/teeth/13.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_41">
+     <property name="geometry">
+      <rect>
+       <x>109</x>
+       <y>499</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Resources/images/teeth/41.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8316,7 +8309,6 @@ background-color:rgb(248,250,250);</string>
      <string/>
     </property>
    </widget>
-   <zorder>teethGroupBox</zorder>
    <zorder>label</zorder>
    <zorder>orderNoLabel</zorder>
    <zorder>patientNameLabel</zorder>
@@ -8325,9 +8317,10 @@ background-color:rgb(248,250,250);</string>
    <zorder>i_2</zorder>
    <zorder>upperJawBtn</zorder>
    <zorder>lowJawBtn</zorder>
-   <zorder>jawGroupBox</zorder>
    <zorder>i_3</zorder>
    <zorder>operatorNameLabel</zorder>
+   <zorder>jawGroupBox</zorder>
+   <zorder>teethGroupBox</zorder>
   </widget>
   <widget class="QProgressBar" name="progressBar">
    <property name="geometry">
@@ -8360,10 +8353,10 @@ QProgressBar::chunk {
    </property>
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>260</y>
+     <x>1580</x>
+     <y>250</y>
      <width>300</width>
-     <height>700</height>
+     <height>821</height>
     </rect>
    </property>
    <property name="palette">
@@ -8795,7 +8788,7 @@ background-color:rgb(248,250,250);</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>620</y>
+      <y>740</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8822,7 +8815,7 @@ background-color:rgb(248,250,250);</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>530</y>
+      <y>660</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8985,6 +8978,773 @@ background-color:rgb(248,250,250);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QGroupBox" name="upperJawGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>120</y>
+      <width>300</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="teethBtn_11">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>10</y>
+       <width>40</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/11.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>11</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_12">
+     <property name="geometry">
+      <rect>
+       <x>74</x>
+       <y>23</y>
+       <width>34</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/12.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>12</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_13">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>40</y>
+       <width>38</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/13.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>13</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_14">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>70</y>
+       <width>46</width>
+       <height>38</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/14.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>14</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_15">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>105</y>
+       <width>44</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/15.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>15</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_16">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>143</y>
+       <width>38</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/16.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>16</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_17">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>183</y>
+       <width>38</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/17.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>17</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_18">
+     <property name="geometry">
+      <rect>
+       <x>6</x>
+       <y>220</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/18.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>18</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_21">
+     <property name="geometry">
+      <rect>
+       <x>141</x>
+       <y>10</y>
+       <width>40</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/21.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>21</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_22">
+     <property name="geometry">
+      <rect>
+       <x>182</x>
+       <y>20</y>
+       <width>34</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/22.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>22</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_23">
+     <property name="geometry">
+      <rect>
+       <x>211</x>
+       <y>41</y>
+       <width>36</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/23.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>23</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_24">
+     <property name="geometry">
+      <rect>
+       <x>229</x>
+       <y>65</y>
+       <width>42</width>
+       <height>38</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/24.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>24</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_25">
+     <property name="geometry">
+      <rect>
+       <x>242</x>
+       <y>100</y>
+       <width>44</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/25.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>25</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_26">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>137</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/26.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>26</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_27">
+     <property name="geometry">
+      <rect>
+       <x>256</x>
+       <y>177</y>
+       <width>34</width>
+       <height>36</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/27.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>27</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_28">
+     <property name="geometry">
+      <rect>
+       <x>257</x>
+       <y>213</y>
+       <width>40</width>
+       <height>42</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/28.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>28</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="lowerJawGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>120</y>
+      <width>300</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="teethBtn_31">
+     <property name="geometry">
+      <rect>
+       <x>163</x>
+       <y>435</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/31.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>31</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_32">
+     <property name="geometry">
+      <rect>
+       <x>192</x>
+       <y>420</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/32.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>32</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_33">
+     <property name="geometry">
+      <rect>
+       <x>222</x>
+       <y>406</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/33.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>33</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_34">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>380</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/34.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>34</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_36">
+     <property name="geometry">
+      <rect>
+       <x>256</x>
+       <y>294</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/36.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>36</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_37">
+     <property name="geometry">
+      <rect>
+       <x>257</x>
+       <y>243</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/37.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>37</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_38">
+     <property name="geometry">
+      <rect>
+       <x>257</x>
+       <y>191</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/38.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>38</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_41">
+     <property name="geometry">
+      <rect>
+       <x>123</x>
+       <y>434</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/41.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>41</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_42">
+     <property name="geometry">
+      <rect>
+       <x>86</x>
+       <y>424</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/42.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>42</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_43">
+     <property name="geometry">
+      <rect>
+       <x>57</x>
+       <y>403</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/43.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>43</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_44">
+     <property name="geometry">
+      <rect>
+       <x>39</x>
+       <y>379</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/44.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>44</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_45">
+     <property name="geometry">
+      <rect>
+       <x>23</x>
+       <y>351</y>
+       <width>40</width>
+       <height>34</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/45.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>45</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_46">
+     <property name="geometry">
+      <rect>
+       <x>7</x>
+       <y>305</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/46.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>46</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_47">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>251</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/47.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>47</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_48">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>200</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/48.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>48</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="teethBtn_35">
+     <property name="geometry">
+      <rect>
+       <x>252</x>
+       <y>343</y>
+       <width>40</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/35.png);
+background-color: rgba(255, 255, 255, 0);</string>
+     </property>
+     <property name="text">
+      <string>35</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <zorder>lowerJawGroupBox</zorder>
+   <zorder>DentalImplantNextBtn</zorder>
+   <zorder>DentalImplantPanelBackBtn</zorder>
+   <zorder>DentalImplantPanelTips</zorder>
+   <zorder>upperJawGroupBox</zorder>
   </widget>
   <zorder>compensationScanPanel</zorder>
   <zorder>ScanJawGroup</zorder>

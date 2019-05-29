@@ -635,7 +635,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
 
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
-	emit progressBarSetSignal(0, 0,true);
+	emit progressBarSetSignal(0, SCAN_ROTATE_POS_CNT2-2,true);
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -687,6 +687,7 @@ void ComputeThread::normalComputeScan(int chooseJawIndex)
 			}
 		}
  		emit cameraShowSignal();
+		emit progressBarSetValueSignal(scan_index);
  		bufferBias++;
  		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
  		freeSpace.release();
@@ -725,7 +726,7 @@ void ComputeThread::normalAllJawComputeScan()
 	int chooseJawIndex = 3;
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
-	emit progressBarSetSignal(0, 0, true);
+	emit progressBarSetSignal(0, SCAN_ALLJAW_POS - 2, true);
 	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -775,6 +776,7 @@ void ComputeThread::normalAllJawComputeScan()
 				}
 			}
 		}
+		emit progressBarSetValueSignal(scan_index);
 		emit cameraShowSignal();
 		bufferBias++;
 		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
@@ -1473,7 +1475,7 @@ void ComputeThread::taskTeethSitit()
 	//1分割srcmodel pCTeethModel pTeethModel;
 	if (!pDstTask || !pSrcTask)
 		return;
-	emit progressBarSetSignal(0, 0,  true);
+	emit progressBarSetSignal(0, 3,  true);
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
 	if (pDstTask->m_mRegistrationModels.size() == 0)
@@ -1485,7 +1487,7 @@ void ComputeThread::taskTeethSitit()
 	//reg.SetSearchDepth(40);
 	vector<orth::MeshModel> l_vtModel;
 	l_tmpModel.ModelSplit(l_vtModel,5000);
-	
+	emit progressBarSetValueSignal(1);
 	for (int i = 0; i < l_vtModel.size(); i++) {
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
 		orth::ModelIO merge_io(&l_vtModel[i]);
@@ -1499,6 +1501,7 @@ void ComputeThread::taskTeethSitit()
 			cout << "The registration of one tooth is failure..." << endl;
 		}
 	}
+	emit progressBarSetValueSignal(2);
 // 	for (int i = 0; i < l_vtModel.size();i++) {
 // 		if(l_vtModel[i].P.size() < 10000)
 // 			continue;
@@ -1524,6 +1527,7 @@ void ComputeThread::taskTeethSitit()
 		//pDstTask->m_mAllModel = l_dstModel;
 		pDstTask->m_mRegistrationModels.push_back(l_dstModel);
 	}
+	emit progressBarSetValueSignal(3);
 	emit progressBarVisibleSignal(false);
 	emit taskTeethSititFinish();
 
@@ -1616,7 +1620,7 @@ void ComputeThread::allJawComputeScan()
 // 	emit progressBarSetMinSignal(0);
 // 	emit progressBarSetMaxSignal(l_dataSize - 1);
 // 	emit progressBarSetValueSignal(0);
-	emit progressBarSetSignal(0,0,true);
+	emit progressBarSetSignal(0, l_dataSize -1,true);
 	//reg.SetRegistError(0.3);
 	for (int scan_index = 0; scan_index < l_dataSize; scan_index++)
 	{
@@ -1784,7 +1788,7 @@ void ComputeThread::normalComputeScan()
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
 	//reg.SetRegistError(0.3);
-	emit progressBarSetSignal(0, 0, true);
+	emit progressBarSetSignal(0, SCAN_ROTATE_POS_CNT2 - 2, true);
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -1828,6 +1832,7 @@ void ComputeThread::normalComputeScan()
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
 		emit showTaskModel();
 		emit cameraShowSignal();
+		emit progressBarSetValueSignal(scan_index);
 		bufferBias++;
 		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
 		HLogHelper::getInstance()->HLogTime("The ComputeThread: %d has finished", scan_index);
@@ -1866,7 +1871,7 @@ void ComputeThread::compensationCompute()
 	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
 // 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 // 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	emit progressBarSetSignal(0, 0, true);
+	emit progressBarSetSignal(0, 3, true);
 	vector<cv::Mat> image_rgb;
 	cv::Mat imageMat;
 	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
@@ -1895,7 +1900,7 @@ void ComputeThread::compensationCompute()
 	}
 
 	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
-
+	emit progressBarSetValueSignal(1);
 	/*vector<double> points_;
 	vector<float> normal;
 	vector<unsigned char> points_color;*/
@@ -1905,7 +1910,7 @@ void ComputeThread::compensationCompute()
 	scan::Registration reg( 1.0, 15.0, 50);
 	reg.SetSearchDepth(40);
 	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp,reg, pScanTask);
-
+	emit progressBarSetValueSignal(2);
 	// 	if (scanFlag == true)
 	// 	{
 	// 		if (oldJawIndex != 0)
@@ -1920,8 +1925,9 @@ void ComputeThread::compensationCompute()
 	// 			}
 	// 		}
 	// 	}
+	emit progressBarSetValueSignal(3);
 	emit showTaskModel();
-	freeSpace.release();
+//	freeSpace.release();
 	cout << "补扫一个角度图片计算完成" << endl;
 
 	emit cameraShowSignal();
