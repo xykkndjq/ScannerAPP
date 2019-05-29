@@ -459,7 +459,7 @@ background-color:rgb(245,245,245);</string>
    <widget class="QLabel" name="ScanJawGroupTipImage">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>50</x>
       <y>180</y>
       <width>200</width>
       <height>130</height>

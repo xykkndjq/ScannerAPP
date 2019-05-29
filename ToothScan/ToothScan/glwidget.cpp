@@ -997,8 +997,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 	}
 
 
-	m_cutboxModel->SetOriginalColor();
-	m_cutboxModel->UpdateCutBoxObject();
+	//m_cutboxModel->SetOriginalColor();
+	//m_cutboxModel->UpdateCutBoxObject();
 	this->update();
 }
 

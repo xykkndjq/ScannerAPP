@@ -261,7 +261,7 @@ public:
 "background-color:rgb(245,245,245);"));
         ScanJawGroupTipImage = new QLabel(ScanJawGroup);
         ScanJawGroupTipImage->setObjectName(QStringLiteral("ScanJawGroupTipImage"));
-        ScanJawGroupTipImage->setGeometry(QRect(0, 180, 200, 130));
+        ScanJawGroupTipImage->setGeometry(QRect(50, 180, 200, 130));
         ScanJawGroupTipImage->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/lowerjaw_yes.png")));
         ScanJawGroupTipImage->setScaledContents(true);
         ScanJawScanBtn = new QPushButton(ScanJawGroup);
