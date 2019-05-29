@@ -17,13 +17,23 @@
 #include "TabMainGUI.h"
 #include "ScanTipWidget.h"
 
-class ScanMainGUI : public QWidget
+class ScanMainGUI : public QWidget, public QAbstractNativeEventFilter
 {
 	Q_OBJECT
 
 public:
 	ScanMainGUI(QWidget *parent = Q_NULLPTR);
 	~ScanMainGUI();
+
+	bool	bPnP_Arrival = false;
+	bool	bPnP_Removal = false;
+	bool	bPnP_DevNodeChange = false;
+	bool    m_usbDeviceState = false;//判断开机是否连接了USB
+
+	virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long *) Q_DECL_OVERRIDE;
+
+	void initUSBDevice();
+	void installNativeEventFilter();
 
 	vector<shared_ptr<BaseModel>> upper_ModelsVt;
 	vector<shared_ptr<BaseModel>> lower_ModelsVt;
@@ -110,6 +120,8 @@ signals:
 	void taskTeethSititSignal();
 	void startAllJawScan();//控制正常扫描信号signals
 	void showOrderInfoSignal(COrderInfo);
+
+	void usbDeviceSignal();//开机判断usbDevice是否成功信号
 private:
 	Ui::ScanMainGUI ui;
 
@@ -240,6 +252,8 @@ private:
 	void lowJawBtnClick();
 
 	void progressBarSetSlot(int min, int max, bool bVisible);
+	
+	void usbDeviceSlot();//软件打开时，提示是否USB连接成功
 };
 
 #endif

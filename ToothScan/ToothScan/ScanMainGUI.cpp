@@ -330,6 +330,8 @@ void ScanMainGUI::setConnections()
 	void (QSpinBox:: *spinBoxSignal)(int) = &QSpinBox::valueChanged;
 	QObject::connect(spinCameraBox, spinBoxSignal, sliderCamera, &QSlider::setValue);
 	spinCameraBox->setValue(35);
+	//软件打开时，提示是否USB连接成功
+	connect(this, SIGNAL(usbDeviceSignal()), this, SLOT(usbDeviceSlot()));
 
 	//订单管理信息
 	connect(tabMainPage, SIGNAL(scanDataSignal(QJsonObject)), this, SLOT(doScanDialogSlot(QJsonObject)));
@@ -2615,4 +2617,113 @@ void ScanMainGUI::ShowHideLowerModel()
 
 
 	this->showMaximized();
+}
+
+bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, long *)
+{
+	MSG* msg = reinterpret_cast<MSG*>(message);
+
+	if (msg->message == WM_DEVICECHANGE)
+	{
+		/*if (msg->hwnd != WId()) {
+		return false;
+		}*/
+		// Tracks DBT_DEVNODES_CHANGED followed by DBT_DEVICEREMOVECOMPLETE
+		//cout << "nativeEventFilter" << endl;
+		if (msg->wParam == DBT_DEVNODES_CHANGED)
+		{
+			bPnP_DevNodeChange = true;
+			bPnP_Removal = false;
+			//cout << "nativeEventFilter-------changed" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		// Tracks DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (msg->wParam == DBT_DEVICEARRIVAL)
+		{
+			bPnP_Arrival = true;
+			bPnP_DevNodeChange = false;
+			//cout << "nativeEventFilter-------arrival" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		if (msg->wParam == DBT_DEVICEREMOVECOMPLETE)
+		{
+			bPnP_Removal = true;
+			//cout << "nativeEventFilter-------remove" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		//If DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (bPnP_DevNodeChange && bPnP_Removal)
+		{
+			bPnP_Removal = false;
+			bPnP_DevNodeChange = false;
+
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB被拔出请重新连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+
+			/*ControlScanThread->l_usbStream.AbortXferLoop();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.InitCyUSBParameter(handle);*/
+			ControlScanThread->l_usbStream.CloseUSB();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.OpenUSB(handle);
+		}
+
+		// If DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (bPnP_DevNodeChange && bPnP_Arrival)
+		{
+			bPnP_Arrival = false;
+			bPnP_DevNodeChange = false;
+			//bPnP_Removal = false;
+			//	installNativeEventFilter();
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB已连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.OpenUSB(handle);
+			if (!m_usbDeviceState)
+			{
+				ControlScanThread->l_usbStream.InitUSBBufferParameter();
+				m_usbDeviceState = true;
+			}
+		}
+	}
+	return false;
+};
+
+void ScanMainGUI::initUSBDevice()
+{
+	void *handle = (void *)winId();
+	int usbDeviceState = ControlScanThread->l_usbStream.InitCyUSBParameter(handle);//初始化
+	if (usbDeviceState != 0)
+	{
+		m_usbDeviceState = false;
+	}
+	else
+	{
+		m_usbDeviceState = true;
+		bPnP_DevNodeChange = 1;
+	}
+	emit usbDeviceSignal();
+}
+
+void ScanMainGUI::installNativeEventFilter()
+{
+	QApplication::instance()->installNativeEventFilter(this);
+}
+
+void ScanMainGUI::usbDeviceSlot()
+{
+	if (!m_usbDeviceState)
+	{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备未与电脑连接!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+	}
 }
