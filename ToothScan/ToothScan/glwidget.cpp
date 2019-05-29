@@ -211,6 +211,7 @@ GLWidget::GLWidget(QWidget *parent)
 	m_trackBallTest = m_trackBall;
 	motor_rot_x = 0;
 	motor_rot_y = 0;
+	m_cutToothIndex = -1;
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -414,8 +415,13 @@ void GLWidget::paintGL()
 		glUseProgram(0);
 		(*iter)->OnPaint(m_projection, m_view, this);
 	}
-
-	m_cutboxModel->OnPaint(m_projection, m_view, this);
+	map<int, pCCutBoxObject>::iterator mapIter = m_cutBoxesMap.begin();
+	for (; mapIter != m_cutBoxesMap.end(); mapIter++) {
+		glUseProgram(0);
+		mapIter->second->OnPaint(m_projection, m_view, this);
+		//(*mapIter)->second()->OnPaint(m_projection, m_view, this);
+	}
+	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 
 	iter = m_ToolsModelsVt.begin();
 	for (; iter != m_ToolsModelsVt.end(); iter++) {
@@ -822,22 +828,6 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 			//orth::MeshModel mm2;
 			m_cutboxModel->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
-
-			//box_vertexs.clear();
-			//box_vertexs.resize(mm2.P.size());
-			//for (int point_index = 0; point_index < mm2.P.size(); point_index++)
-			//{
-			//	box_vertexs[point_index] = mm2.P[point_index];
-			//}
-
-			//m_cutboxModel->v_zoom_x = (mm2.P[1].x - mm2.P[0].x)/2;
-			//m_cutboxModel->v_zoom_y = (mm2.P[1].y - mm2.P[0].y)/2;
-			//m_cutboxModel->v_zoom_z = (mm2.P[1].z - mm2.P[0].z)/2;
-
-			//m_cutboxModel->v_trans_x = mm2.P[0].x + m_cutboxModel->v_zoom_x;
-			//m_cutboxModel->v_trans_y = mm2.P[0].y + m_cutboxModel->v_zoom_y;
-			//m_cutboxModel->v_trans_z = mm2.P[0].z + m_cutboxModel->v_zoom_z;
-
 			m_cutboxModel->Set_Visible(true);
 			this->update();
 		}
@@ -1010,6 +1000,22 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 	m_cutboxModel->SetOriginalColor();
 	m_cutboxModel->UpdateCutBoxObject();
 	this->update();
+}
+
+void GLWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	if (event->button() == Qt::LeftButton) {
+		if (m_cutToothIndex == -1)
+			return;
+		pCCutBoxObject ptmp = makeCutBoxObject();
+		if (!ptmp)
+			return;
+		int screen_x = event->globalX();
+		int screen_y = event->globalY();
+		ptmp->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
+		ptmp->Set_Visible(true);
+		update();
+	}
 }
 
 void GLWidget::glUseProgram(GLuint program)
@@ -1706,65 +1712,15 @@ void GLWidget::makeGroundObject()
 	this->update();
 }
 
-void GLWidget::makeCutBoxObject()
+pCCutBoxObject GLWidget::makeCutBoxObject()
 {
-	//if (box_vertexs.size()==0)
-	//{
-	//	box_vertexs.resize(8);
-
-	//	box_vertexs[0] = orth::Point3f(-1, -1, -1);
-	//	box_vertexs[1] = orth::Point3f(1, -1, -1);
-	//	box_vertexs[2] = orth::Point3f(1, -1, 1);
-	//	box_vertexs[3] = orth::Point3f(-1, -1, 1);
-	//	box_vertexs[4] = orth::Point3f(-1, 1, -1);
-	//	box_vertexs[5] = orth::Point3f(1, 1, -1);
-	//	box_vertexs[6] = orth::Point3f(1, 1, 1);
-	//	box_vertexs[7] = orth::Point3f(-1, 1, 1);
-	//}
-
-	//QVector<GLfloat> vertData =
-	//{ 
-	//		//y2 g
-	//	    box_vertexs[0].x, box_vertexs[0].y, box_vertexs[0].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[1].x, box_vertexs[1].y, box_vertexs[1].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[2].x, box_vertexs[2].y, box_vertexs[2].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[3].x, box_vertexs[3].y, box_vertexs[3].z, 0.65f, 1.0f, 0.65f, 0.7f,
-
-	//		//z2 b
-	//		box_vertexs[0].x, box_vertexs[0].y, box_vertexs[0].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[1].x, box_vertexs[1].y, box_vertexs[1].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[5].x, box_vertexs[5].y, box_vertexs[5].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[4].x, box_vertexs[4].y, box_vertexs[4].z, 0.65f, 0.79f, 1.0f, 0.7f,
-
-	//		//x2 r
-	//		box_vertexs[0].x, box_vertexs[0].y, box_vertexs[0].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[3].x, box_vertexs[3].y, box_vertexs[3].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[7].x, box_vertexs[7].y, box_vertexs[7].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[4].x, box_vertexs[4].y, box_vertexs[4].z, 1.0f, 0.65f, 0.65f, 0.7f,
-
-	//		//x1 r
-	//		box_vertexs[1].x, box_vertexs[1].y, box_vertexs[1].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[2].x, box_vertexs[2].y, box_vertexs[2].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[6].x, box_vertexs[6].y, box_vertexs[6].z, 1.0f, 0.65f, 0.65f, 0.7f,
-	//		box_vertexs[5].x, box_vertexs[5].y, box_vertexs[5].z, 1.0f, 0.65f, 0.65f, 0.7f,
-
-	//		//z1 b
-	//		box_vertexs[6].x, box_vertexs[6].y, box_vertexs[6].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[2].x, box_vertexs[2].y, box_vertexs[2].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[3].x, box_vertexs[3].y, box_vertexs[3].z, 0.65f, 0.79f, 1.0f, 0.7f,
-	//		box_vertexs[7].x, box_vertexs[7].y, box_vertexs[7].z, 0.65f, 0.79f, 1.0f, 0.7f,
-
-	//		//y1 g
-	//		box_vertexs[5].x, box_vertexs[5].y, box_vertexs[5].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[6].x, box_vertexs[6].y, box_vertexs[6].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[7].x, box_vertexs[7].y, box_vertexs[7].z, 0.65f, 1.0f, 0.65f, 0.7f,
-	//		box_vertexs[4].x, box_vertexs[4].y, box_vertexs[4].z, 0.65f, 1.0f, 0.65f, 0.7f
-
-	//};
-
+	if (m_cutToothIndex != -1 &&m_cutBoxesMap.find(m_cutToothIndex) != m_cutBoxesMap.end()) {
+		return m_cutBoxesMap[m_cutToothIndex];
+	}
 	orth::MeshModel mm2;
 	double box_min_x = -10, box_min_y = -10, box_min_z = -10, box_max_x = 10, box_max_y = 10, box_max_z = 10;
-	m_cutboxModel = make_shared<CCutBoxObject>(":/MainWidget/Resources/images/cutbox.vs", ":/MainWidget/Resources/images/cutbox.fs", this);
+	pCCutBoxObject pcutboxModel;
+	pcutboxModel = make_shared<CCutBoxObject>(":/MainWidget/Resources/images/cutbox.vs", ":/MainWidget/Resources/images/cutbox.fs", this);
 	{
 		mm2.F.resize(12);
 		mm2.P.clear();
@@ -1793,7 +1749,7 @@ void GLWidget::makeCutBoxObject()
 
 	}
 
-	m_cutboxModel->new_box = mm2;
+	pcutboxModel->new_box = mm2;
 	
 	QVector<GLfloat> vertData;
 
@@ -1804,46 +1760,48 @@ void GLWidget::makeCutBoxObject()
 		vertData.append(mm2.P[mm2.F[i].x].x);
 		vertData.append(mm2.P[mm2.F[i].x].y);
 		vertData.append(mm2.P[mm2.F[i].x].z);
-		vertData.append(m_cutboxModel->face_color[i].x());
-		vertData.append(m_cutboxModel->face_color[i].y());
-		vertData.append(m_cutboxModel->face_color[i].z());
-		vertData.append(m_cutboxModel->face_color[i].w());
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
 
 		vertData.append(mm2.P[mm2.F[i].y].x);
 		vertData.append(mm2.P[mm2.F[i].y].y);
 		vertData.append(mm2.P[mm2.F[i].y].z);
-		vertData.append(m_cutboxModel->face_color[i].x());
-		vertData.append(m_cutboxModel->face_color[i].y());
-		vertData.append(m_cutboxModel->face_color[i].z());
-		vertData.append(m_cutboxModel->face_color[i].w());
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
 
 		vertData.append(mm2.P[mm2.F[i].z].x);
 		vertData.append(mm2.P[mm2.F[i].z].y);
 		vertData.append(mm2.P[mm2.F[i].z].z);
-		vertData.append(m_cutboxModel->face_color[i].x());
-		vertData.append(m_cutboxModel->face_color[i].y());
-		vertData.append(m_cutboxModel->face_color[i].z());
-		vertData.append(m_cutboxModel->face_color[i].w());
+		vertData.append(pcutboxModel->face_color[i].x());
+		vertData.append(pcutboxModel->face_color[i].y());
+		vertData.append(pcutboxModel->face_color[i].z());
+		vertData.append(pcutboxModel->face_color[i].w());
 
 	}
 
 
-	m_cutboxModel->box_center = orth::Point3d(0, 0, 0);
-	m_cutboxModel->direct_x = orth::Point3d(1, 0, 0);
-	m_cutboxModel->direct_y = orth::Point3d(0, 1, 0);
-	m_cutboxModel->direct_z = orth::Point3d(0, 0, 1);
-	m_cutboxModel->max_x_dir = orth::Point3d(1, 0, 0);
-	m_cutboxModel->max_y_dir = orth::Point3d(0, 1, 0);
-	m_cutboxModel->max_z_dir = orth::Point3d(0, 0, 1);
-	m_cutboxModel->min_x_dir = orth::Point3d(-1, 0, 0);
-	m_cutboxModel->min_y_dir = orth::Point3d(0, -1, 0);
-	m_cutboxModel->min_z_dir = orth::Point3d(0, 0, -1);
+	pcutboxModel->box_center = orth::Point3d(0, 0, 0);
+	pcutboxModel->direct_x = orth::Point3d(1, 0, 0);
+	pcutboxModel->direct_y = orth::Point3d(0, 1, 0);
+	pcutboxModel->direct_z = orth::Point3d(0, 0, 1);
+	pcutboxModel->max_x_dir = orth::Point3d(1, 0, 0);
+	pcutboxModel->max_y_dir = orth::Point3d(0, 1, 0);
+	pcutboxModel->max_z_dir = orth::Point3d(0, 0, 1);
+	pcutboxModel->min_x_dir = orth::Point3d(-1, 0, 0);
+	pcutboxModel->min_y_dir = orth::Point3d(0, -1, 0);
+	pcutboxModel->min_z_dir = orth::Point3d(0, 0, -1);
 
-	m_cutboxModel->makeObject(vertData, 36);
+	pcutboxModel->makeObject(vertData, 36);
 
-	m_cutboxModel->Set_Visible(true);
+	pcutboxModel->Set_Visible(false);
 	//m_ToolsModelsVt.push_back(m_cutboxModel);
+	m_cutBoxesMap.insert(make_pair(m_cutToothIndex,pcutboxModel));
 	this->update();
+	return pcutboxModel;
 }
 
 

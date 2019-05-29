@@ -1456,11 +1456,8 @@ void ScanMainGUI::ToothButtonListPress()
 	QString strWidgetName = "teethBtn_" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10);
 	QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
 	if (pButton) {
-		if (pButton->isChecked()) {
-
-		}
+		glWidget->m_cutToothIndex = toothButtonIndex;
 	}
-
 }
 
 void ScanMainGUI::cutModelSlot()
@@ -2227,6 +2224,7 @@ void ScanMainGUI::meshFinishSlot()
 	saveModelFile(pCurrentTask);
 	if (pCurrentTask->Get_Gingiva() == false&& pCurrentTask->Get_DentalImplant() == true) {//ÖÖÖ²Ìå
 		ui.DentalImplantPanel->setVisible(true);
+		glWidget->m_cutBoxesMap.clear();
 		ui.lowerJawGroupBox->setVisible(false);
 		ui.upperJawGroupBox->setVisible(false);
 		for (int i = 0; i < 32;i++) {
