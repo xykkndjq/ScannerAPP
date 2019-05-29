@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ScanMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.9.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -227,7 +227,7 @@ public:
 "background-color:rgb(245,245,245);"));
         ScanJawGroupTipImage = new QLabel(ScanJawGroup);
         ScanJawGroupTipImage->setObjectName(QStringLiteral("ScanJawGroupTipImage"));
-        ScanJawGroupTipImage->setGeometry(QRect(0, 180, 300, 102));
+        ScanJawGroupTipImage->setGeometry(QRect(0, 180, 200, 130));
         ScanJawGroupTipImage->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/lowerjaw_yes.png")));
         ScanJawGroupTipImage->setScaledContents(true);
         ScanJawScanBtn = new QPushButton(ScanJawGroup);
@@ -886,12 +886,6 @@ public:
         stitchingLowerJawBtn->setFont(font);
         stitchingLowerJawBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         stitchingLowerJawBtn->setCheckable(true);
-        CutJawFinishPanelTips_5->raise();
-        stitchingFNextBtn->raise();
-        StitchingFinishPanelBackBtn->raise();
-        StitchingPanelTips_3->raise();
-        stitchingUpperJawBtn->raise();
-        stitchingLowerJawBtn->raise();
         OralSubstitutePanel = new QGroupBox(ScanMainGUI);
         OralSubstitutePanel->setObjectName(QStringLiteral("OralSubstitutePanel"));
         OralSubstitutePanel->setEnabled(true);

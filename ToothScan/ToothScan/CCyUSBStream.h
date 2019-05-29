@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "CyAPI.h"
+#include <dbt.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -51,9 +52,10 @@ namespace Communication
 		
 			 CCyUSBDevice *m_USBDevice;
 
-			 int InitCyUSBParameter();//初始化USB
-			 int OpenUSB();
-			 int InitCyParameter();//初始化USB
+			 int InitCyUSBParameter(void *handle);//初始化USB//return 0:正常的初始化成功，1：代表USBDevice初始化失败,2:代表没有USBDevice,3:代表有多于一个USBDevice
+			 int OpenUSB(void *handle);//return 0:正常的初始化成功，1：代表USBDevice初始化失败,2:代表没有USBDevice,3:代表有多于一个USBDevice
+			 int CloseUSB();//清空USBdevice和端口
+			 void InitUSBBufferParameter();
 
 			 bool OpenDLPFunction();//打开光机
 			 bool ClosedDLPFunction();//关闭光机

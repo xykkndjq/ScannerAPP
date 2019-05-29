@@ -27,17 +27,29 @@ int main(int argc, char *argv[])
 	//RunCrashHandler();
 	SetUnhandledExceptionFilter(ExceptionFilter);
 	SingleApplication a(argc, argv);
-	QFont f("微软雅黑", 14);
-	f.setBold(true);
+	//QFont f("微软雅黑", 14);
+	//f.setBold(true);
+
 // 	widget->setStyleSheet("border:0px groove gray;border-radius:10px;padding:2px 4px;\
 // 			border - color: rgb(128, 128, 128);\
 // 		background - color: rgb(255, 255, 255); ");
 
-	QPalette p;
-	p.setColor(QPalette::ColorRole::ButtonText, QColor(128, 128, 128));
-	a.setFont(f);
-	a.setPalette(p);
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName("gbk"));
+	//QPalette p;
+	//p.setColor(QPalette::ColorRole::ButtonText, QColor(128, 128, 128));
+	//a.setFont(f);
+	//a.setPalette(p);
+
+	//QTextCodec::setCodecForLocale(QTextCodec::codecForName("gbk"));
+	int lcdFontId = QFontDatabase::addApplicationFont("./Resources/font/SourceHanSansCN-Bold.ttf");
+
+	QStringList fontList;
+	// int lcdFontId = QFontDatabase::addApplicationFont(dir + "/fonts/DS-DIGI.ttf"); //从外部资源文件
+	if (lcdFontId != -1) // -1为加载失败
+	{
+		fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+	}
+
+	a.setFont(QFont(fontList[0]));
 	a.setQuitOnLastWindowClosed(true);
 //	SingleApplication abc(argc, argv);
 	int nresult = 0;

@@ -1,23 +1,1230 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>TabMainGUI</class>
- <widget class="QWidget" name="TabMainGUI" >
-  <property name="objectName" >
-   <string notr="true">TabMainGUI</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QWidget" name="TabMainGUI">
+  <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>400</width>
-	<height>300</height>
+    <x>0</x>
+    <y>0</y>
+    <width>2222</width>
+    <height>1011</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>TabMainGUI</string>
   </property>
+  <widget class="QGroupBox" name="orderInforGroupBox">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>100</y>
+     <width>1920</width>
+     <height>1180</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255, 255);</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QGroupBox" name="orderGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>470</width>
+      <height>980</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 255, 255);</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="newPushButton">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>45</y>
+       <width>97</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+     </property>
+     <property name="text">
+      <string> 新建</string>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwidget.qrc">
+       <normaloff>:/MainWidget/Resources/images/new.png</normaloff>:/MainWidget/Resources/images/new.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="openPushButton">
+     <property name="geometry">
+      <rect>
+       <x>132</x>
+       <y>45</y>
+       <width>97</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+     </property>
+     <property name="text">
+      <string>导入</string>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwidget.qrc">
+       <normaloff>:/MainWidget/Resources/images/open.png</normaloff>:/MainWidget/Resources/images/open.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="watchPushButton">
+     <property name="geometry">
+      <rect>
+       <x>239</x>
+       <y>45</y>
+       <width>97</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+     </property>
+     <property name="text">
+      <string>预览</string>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwidget.qrc">
+       <normaloff>:/MainWidget/Resources/images/preview.png</normaloff>:/MainWidget/Resources/images/preview.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="orderDateGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>177</y>
+       <width>389</width>
+       <height>55</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLineEdit" name="orderDateLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>12</y>
+        <width>291</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="orderDateLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>146</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>订单日期</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="orderNumLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>258</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>订单编号</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="orderNumGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>289</y>
+       <width>389</width>
+       <height>55</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLineEdit" name="orderNumLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>12</y>
+        <width>291</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="patientNameLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>370</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>患者姓名</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="patientNameGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>401</y>
+       <width>389</width>
+       <height>55</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLineEdit" name="patientNameLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>12</y>
+        <width>291</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;
+</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="text">
+       <string>患者</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="doctorNameLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>482</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>医生姓名</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="doctorNameGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>37</x>
+       <y>513</y>
+       <width>389</width>
+       <height>55</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLineEdit" name="doctorNameLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>12</y>
+        <width>291</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;
+</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="text">
+       <string>医生</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="operatorNameLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>594</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>技师姓名</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="operatorNameGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>625</y>
+       <width>389</width>
+       <height>55</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLineEdit" name="operatorNameLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>12</y>
+        <width>291</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;</string>
+      </property>
+      <property name="text">
+       <string>技师</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="additionLabel">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>706</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(102, 105, 120);</string>
+     </property>
+     <property name="text">
+      <string>备注</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="additionTextEdit">
+     <property name="geometry">
+      <rect>
+       <x>43</x>
+       <y>740</y>
+       <width>389</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+color: rgb(160, 160, 160);
+</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="savePushButton">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>45</y>
+       <width>97</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+     </property>
+     <property name="text">
+      <string>保存</string>
+     </property>
+     <property name="icon">
+      <iconset resource="mainwidget.qrc">
+       <normaloff>:/MainWidget/Resources/images/save.png</normaloff>:/MainWidget/Resources/images/save.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="orderScanGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>0</y>
+      <width>1450</width>
+      <height>980</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(250, 250, 252,255);</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QPushButton" name="spliteModelPushButton">
+     <property name="geometry">
+      <rect>
+       <x>626</x>
+       <y>43</y>
+       <width>200</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); 
+border: 0px;border-style: outset;}
+QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }</string>
+     </property>
+     <property name="text">
+      <string>分模</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="moulagePushButton">
+     <property name="geometry">
+      <rect>
+       <x>827</x>
+       <y>43</y>
+       <width>200</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); 
+border: 0px;border-style: outset;}
+QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }</string>
+     </property>
+     <property name="text">
+      <string>印模</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="unModelGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>425</x>
+       <y>100</y>
+       <width>600</width>
+       <height>660</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;  </string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QPushButton" name="upperJawPushButton">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>160</y>
+        <width>500</width>
+        <height>185</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="lowerJawPushButton">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>330</y>
+        <width>448</width>
+        <height>153</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>lowerJawPushButton</zorder>
+     <zorder>upperJawPushButton</zorder>
+    </widget>
+    <widget class="QPushButton" name="unModelPushButton">
+     <property name="geometry">
+      <rect>
+       <x>425</x>
+       <y>43</y>
+       <width>200</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); 
+border: 0px;border-style: outset;}
+QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }</string>
+     </property>
+     <property name="text">
+      <string>未分模</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="scanPushButton">
+     <property name="geometry">
+      <rect>
+       <x>598</x>
+       <y>810</y>
+       <width>255</width>
+       <height>48</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+     </property>
+     <property name="text">
+      <string>扫描</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../../../QTProject/qtwidgettest11/qtwidgettest/qtwidgettest/Resources/images/scan.png</normaloff>../../../../../QTProject/qtwidgettest11/qtwidgettest/qtwidgettest/Resources/images/scan.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="moulageGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>425</x>
+       <y>100</y>
+       <width>600</width>
+       <height>660</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;  </string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QPushButton" name="moulagePushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>125</x>
+        <y>220</y>
+        <width>359</width>
+        <height>182</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/moulage2_yes.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/moulage2_yes.png);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="moulagePushButton_1">
+      <property name="geometry">
+       <rect>
+        <x>125</x>
+        <y>10</y>
+        <width>359</width>
+        <height>182</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/moulage1_yes.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/moulage1_yes.png);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="moulagePushButton_3">
+      <property name="geometry">
+       <rect>
+        <x>125</x>
+        <y>430</y>
+        <width>359</width>
+        <height>182</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/moulage3_yes.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/moulage3_yes.png);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>moulagePushButton_2</zorder>
+     <zorder>moulagePushButton_3</zorder>
+     <zorder>moulagePushButton_1</zorder>
+    </widget>
+    <widget class="QGroupBox" name="spliteModelGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>100</y>
+       <width>700</width>
+       <height>660</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;  </string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QPushButton" name="clearAllButton">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>280</y>
+        <width>100</width>
+        <height>38</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+      </property>
+      <property name="text">
+       <string>清除选择</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
+     </widget>
+    </widget>
+    <zorder>spliteModelPushButton</zorder>
+    <zorder>moulagePushButton</zorder>
+    <zorder>unModelPushButton</zorder>
+    <zorder>scanPushButton</zorder>
+    <zorder>spliteModelGroupBox</zorder>
+    <zorder>moulageGroupBox</zorder>
+    <zorder>unModelGroupBox</zorder>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="mainGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1920</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255, 255);
+border:0px;</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="logoLabel">
+    <property name="geometry">
+     <rect>
+      <x>38</x>
+      <y>38</y>
+      <width>172</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/logo.png</pixmap>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnClose">
+    <property name="geometry">
+     <rect>
+      <x>1870</x>
+      <y>40</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/MainWidget/Resources/images/btnClose.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="settingGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>99</y>
+     <width>775</width>
+     <height>500</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255, 255);
+border-radius:5px;</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="textureLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>53</y>
+      <width>54</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>纹理</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="calibrationPointLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>125</y>
+      <width>54</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>标志点</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="jawFrameLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>197</y>
+      <width>54</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>颌架</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="saveSpliteModelLabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>269</y>
+      <width>81</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>保存单帧模型</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="scanpathLabel">
+    <property name="geometry">
+     <rect>
+      <x>53</x>
+      <y>406</y>
+      <width>81</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>扫描路径：</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="scanPathGroupBox">
+    <property name="geometry">
+     <rect>
+      <x>151</x>
+      <y>395</y>
+      <width>389</width>
+      <height>55</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgba(246, 246, 248, 255);
+border:0px groove gray;border-radius:5px;
+</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLineEdit" name="scanPathLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>12</y>
+       <width>291</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgba(246, 246, 248, 0);
+color: rgb(160, 160, 160);
+border:0px groove gray;border-radius:5px;
+</string>
+     </property>
+     <property name="inputMask">
+      <string/>
+     </property>
+     <property name="text">
+      <string>./ScanData</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="choosePathPushButton">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>397</y>
+      <width>115</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+    </property>
+    <property name="text">
+     <string>选择路径</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>22</width>
+      <height>22</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveSpliteModelCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>260</y>
+      <width>76</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }
+QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="jawFrameCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>188</y>
+      <width>76</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }
+QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="calibrationPointCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>116</y>
+      <width>76</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }
+QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="textureCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>51</y>
+      <width>76</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }
+QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="calibrationGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>100</y>
+     <width>1920</width>
+     <height>1080</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(250, 250, 252,255);</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QPushButton" name="calibrationPushButton">
+    <property name="geometry">
+     <rect>
+      <x>831</x>
+      <y>82</y>
+      <width>255</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(40, 138, 237, 255);
+color: rgb(255, 255, 255);
+border:0px groove gray;border-radius:5px;</string>
+    </property>
+    <property name="text">
+     <string>开始标定</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="leftCameraLable">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>180</y>
+      <width>806</width>
+      <height>668</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(217, 217, 217);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rightCameraLable">
+    <property name="geometry">
+     <rect>
+      <x>1016</x>
+      <y>180</y>
+      <width>806</width>
+      <height>668</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(217, 217, 217);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="aboutGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>100</y>
+     <width>1920</width>
+     <height>1180</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(250, 250, 252,255);</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QLabel" name="aboutImageLabel">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>335</y>
+      <width>234</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/logo.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="aboutTextLabel">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>432</y>
+      <width>671</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>牙齿扫描仪软件是一款对牙齿模型进行扫描，取得相应三维模型的软件，该软件配套牙齿扫描仪器使用。</string>
+    </property>
+   </widget>
+  </widget>
+  <zorder>aboutGroupBox</zorder>
+  <zorder>calibrationGroupBox</zorder>
+  <zorder>mainGroupBox</zorder>
+  <zorder>orderInforGroupBox</zorder>
+  <zorder>settingGroupBox</zorder>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
- <resources/>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="mainwidget.qrc"/>
+ </resources>
  <connections/>
-</UI>
+</ui>

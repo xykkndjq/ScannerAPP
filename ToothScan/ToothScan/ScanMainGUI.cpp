@@ -330,8 +330,9 @@ void ScanMainGUI::setConnections()
 	void (QSpinBox:: *spinBoxSignal)(int) = &QSpinBox::valueChanged;
 	QObject::connect(spinCameraBox, spinBoxSignal, sliderCamera, &QSlider::setValue);
 	spinCameraBox->setValue(35);
-
-	//订单管理信息
+	//软件打开时，提示是否USB连接成功
+	connect(this, SIGNAL(usbDeviceSignal()), this, SLOT(usbDeviceSlot()));
+	/*----------------订单信息管理子页面---------------*/
 	connect(tabMainPage, SIGNAL(scanDataSignal(QJsonObject)), this, SLOT(doScanDialogSlot(QJsonObject)));
 	connect(tabMainPage, SIGNAL(showOrderInfoSignal(COrderInfo)), this, SLOT(showOrderInfo(COrderInfo)));
 
@@ -376,9 +377,9 @@ void ScanMainGUI::setConnections()
 	connect(this, SIGNAL(updateModelsVtSingle()), this, SLOT(updateModelsVtSlot()));
 	connect(ControlComputeThread, SIGNAL(cameraShowSignal()), this, SLOT(updateCamera()));
 
-	//Calibrate标定子页面
-	connect(tabMainPage->calibratePushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
-	connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
+	/*----------------------Calibrate标定子页面---------------------*/
+	connect(tabMainPage->ui.calibrationPushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
+	//connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
 	connect(ControlScanThread, SIGNAL(calibImageSignal(int)), this, SLOT(calibImageCameraSlot(int)));//展示标定照片
 
 	//模型工具栏操作
@@ -2369,7 +2370,7 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 		int chooseID = -1;
 		for (int i = 0; i < 32;i++) {
 			chooseID = orderInfo.eTeethScanType[i];
-			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + QString::number(chooseID+1, 10) + ".png",
+			QString dstpath = ":/MainWidget/Resources/images/" + QString::number(chooseID + 1, 10) + QString::number(chooseID+1, 10) + ".png",
 				srcPath = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";;
 			QImage resultImage, destinationImage, sourceImage;
 			if(chooseID != eScanNULL){				
@@ -2479,23 +2480,23 @@ void ScanMainGUI::calibImageCameraSlot(int endFlag)
 	rightImageMat = ControlScanThread->calibImageCamera[CameraImageSize - 1];
 
 	leftCalibCameraImage = Mat2QImage(leftImageMat);
-	tabMainPage->leftCameraLable->clear();
-	tabMainPage->leftCameraLable->setPixmap(QPixmap::fromImage(leftCalibCameraImage));
-	tabMainPage->leftCameraLable->setScaledContents(true);
+	tabMainPage->ui.leftCameraLable->clear();
+	tabMainPage->ui.leftCameraLable->setPixmap(QPixmap::fromImage(leftCalibCameraImage));
+	tabMainPage->ui.leftCameraLable->setScaledContents(true);
 	rightCalibCameraImage = Mat2QImage(rightImageMat);
-	tabMainPage->rightCameraLable->clear();
-	tabMainPage->rightCameraLable->setPixmap(QPixmap::fromImage(rightCalibCameraImage));;
-	tabMainPage->rightCameraLable->setScaledContents(true);
+	tabMainPage->ui.rightCameraLable->clear();
+	tabMainPage->ui.rightCameraLable->setPixmap(QPixmap::fromImage(rightCalibCameraImage));;
+	tabMainPage->ui.rightCameraLable->setScaledContents(true);
 	cout << "endFlag: " << endFlag << endl;
 	if (endFlag == 1)
 	{
 		_sleep(3000);
-		tabMainPage->leftCameraLable->clear();
-		tabMainPage->rightCameraLable->clear();
-		tabMainPage->leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-		tabMainPage->rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-		tabMainPage->leftCameraLable->update();
-		tabMainPage->rightCameraLable->update();
+		tabMainPage->ui.leftCameraLable->clear();
+		tabMainPage->ui.rightCameraLable->clear();
+		tabMainPage->ui.leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->ui.rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->ui.leftCameraLable->update();
+		tabMainPage->ui.rightCameraLable->update();
 		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("标定结束!"));
 		box.setStandardButtons(QMessageBox::Yes);
 		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
@@ -2615,4 +2616,112 @@ void ScanMainGUI::ShowHideLowerModel()
 
 
 	this->showMaximized();
+}
+bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, long *)
+{
+	MSG* msg = reinterpret_cast<MSG*>(message);
+
+	if (msg->message == WM_DEVICECHANGE)
+	{
+		/*if (msg->hwnd != WId()) {
+		return false;
+		}*/
+		// Tracks DBT_DEVNODES_CHANGED followed by DBT_DEVICEREMOVECOMPLETE
+		//cout << "nativeEventFilter" << endl;
+		if (msg->wParam == DBT_DEVNODES_CHANGED)
+		{
+			bPnP_DevNodeChange = true;
+			bPnP_Removal = false;
+			//cout << "nativeEventFilter-------changed" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		// Tracks DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (msg->wParam == DBT_DEVICEARRIVAL)
+		{
+			bPnP_Arrival = true;
+			bPnP_DevNodeChange = false;
+			//cout << "nativeEventFilter-------arrival" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		if (msg->wParam == DBT_DEVICEREMOVECOMPLETE)
+		{
+			bPnP_Removal = true;
+			//cout << "nativeEventFilter-------remove" << endl;
+			//cout << "change = " << bPnP_DevNodeChange << "; arrival = " << bPnP_Arrival << "; Removal = " << bPnP_Removal << endl;
+		}
+
+		//If DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (bPnP_DevNodeChange && bPnP_Removal)
+		{
+			bPnP_Removal = false;
+			bPnP_DevNodeChange = false;
+
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB被拔出请重新连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+
+			/*ControlScanThread->l_usbStream.AbortXferLoop();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.InitCyUSBParameter(handle);*/
+			ControlScanThread->l_usbStream.CloseUSB();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.OpenUSB(handle);
+		}
+
+		// If DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
+		if (bPnP_DevNodeChange && bPnP_Arrival)
+		{
+			bPnP_Arrival = false;
+			bPnP_DevNodeChange = false;
+			//bPnP_Removal = false;
+			//	installNativeEventFilter();
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB已连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+			void *handle = (void *)winId();
+			ControlScanThread->l_usbStream.OpenUSB(handle);
+			if (!m_usbDeviceState)
+			{
+				ControlScanThread->l_usbStream.InitUSBBufferParameter();
+				m_usbDeviceState = true;
+			}
+		}
+	}
+	return false;
+};
+
+void ScanMainGUI::initUSBDevice()
+{
+	void *handle = (void *)winId();
+	int usbDeviceState = ControlScanThread->l_usbStream.InitCyUSBParameter(handle);//初始化
+	if (usbDeviceState != 0)
+	{
+		m_usbDeviceState = false;
+	}
+	else
+	{
+		m_usbDeviceState = true;
+		bPnP_DevNodeChange = 1;
+	}
+	emit usbDeviceSignal();
+}
+
+void ScanMainGUI::installNativeEventFilter()
+{
+	QApplication::instance()->installNativeEventFilter(this);
+}
+
+void ScanMainGUI::usbDeviceSlot()
+{
+	if (!m_usbDeviceState)
+	{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备未与电脑连接!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+	}
 }
