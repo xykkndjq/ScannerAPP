@@ -530,6 +530,11 @@ namespace Communication
 	void CCyUSBStream::AbortXferLoop()
 	{
 		//EndPt->Abort(); - This is disabled to make sure that while application is doing IO and user unplug the device, this function hang the app.
+		if (m_USBDevice != 0)
+		{
+			delete m_USBDevice;
+		}
+		m_USBDevice = nullptr;
 		m_EndPtOut->Abort();
 		long len = m_EndPtIn->MaxPktSize * SCALE;
 		m_EndPtIn->Abort();
@@ -538,35 +543,52 @@ namespace Communication
 		{
 			CloseHandle(m_inOvLap[j].hEvent);
 
-			delete[] m_buffers[j];
-			delete[] m_isoPktInfos[j];
+			delete m_buffers[j];
+			delete m_isoPktInfos[j];
 		}
 
-		m_buffers = NULL;
+		/*m_buffers = NULL;
 		m_isoPktInfos = NULL;
 		m_contexts = NULL;
 
 		m_totalRealTimeBuffers = NULL;
 		m_totalCalibImageBuffers = NULL;
 		m_totalScanImageBuffers = NULL;
-		m_USBDevice = NULL;
+		m_USBDevice = NULL;*/
 
-		delete[] m_buffers;
-		delete[] m_isoPktInfos;
-		delete[] m_contexts;
+		delete m_buffers;
+		delete m_isoPktInfos;
+		delete m_contexts;
 
-		delete[] m_totalRealTimeBuffers;
-		delete[] m_totalCalibImageBuffers;
-		delete[] m_totalScanImageBuffers;
-		delete[] m_USBDevice;
+		delete m_totalRealTimeBuffers;
+		delete m_totalCalibImageBuffers;
+		delete m_totalScanImageBuffers;
 	}
 	 
-	int CCyUSBStream::OpenUSB() {
+	int CCyUSBStream::OpenUSB(void *handle) {
 		if(m_USBDevice)
 			delete m_USBDevice;
 
-		m_USBDevice = new CCyUSBDevice(NULL); //USB设备  
+		m_USBDevice = new CCyUSBDevice((HANDLE)handle); //USB设备  
 
+		if (m_USBDevice == NULL)
+		{
+			cout << "The initialization of USB Device is failure..";
+			return 1;
+		}
+
+		int devices = m_USBDevice->DeviceCount();
+		//判断USBDevice数目
+		if (devices < 1)
+		{
+			cout << "The USB is not plugged into computer..." << endl;
+			return 2;
+		}
+		if (devices > 1)
+		{
+			cout << "The num of USB Device exceeds one..." << endl;
+			return 3;
+		}
 		if (!m_USBDevice->Open(0))
 		{
 			cout << " The connection of USB is failed!" << endl;
@@ -575,23 +597,27 @@ namespace Communication
 
 		m_EndPtIn = m_USBDevice->EndPointOf(0X81); //使用端点1，in传输
 		m_EndPtOut = m_USBDevice->EndPointOf(0X01); //使用端点2，out传输
+
 		m_endptInLength = m_EndPtIn->MaxPktSize* SCALE;
    
 		m_EndPtIn->SetXferSize(m_endptInLength);
+		
+		return 0;
+	}
+	int CCyUSBStream::CloseUSB()
+	{
+		if (m_USBDevice)
+			delete m_USBDevice;
+		m_USBDevice = nullptr;
+
+		m_EndPtIn = nullptr;
+		m_EndPtOut = nullptr;
+
 		return 0;
 	}
 
-	int CCyUSBStream::InitCyUSBParameter()
+	void CCyUSBStream::InitUSBBufferParameter()
 	{
-		OpenUSB();
-
-		/*Sleep(1000);
-		if (!m_USBDevice->ReConnect())
-		{
-		cout << " The reconnection of USB is failed!" << endl;
-		}
-		Sleep(2000);*/
-
 		//Allocate the arrays needed for queneing
 		m_buffers = new PUCHAR[QueueSize];
 		m_isoPktInfos = new CCyIsoPktInfo*[QueueSize];
@@ -617,6 +643,18 @@ namespace Communication
 		ZeroMemory(m_totalRealTimeBuffers, sizeof(m_totalRealTimeBuffers));
 		ZeroMemory(m_totalCalibImageBuffers, sizeof(m_totalCalibImageBuffers));
 		ZeroMemory(m_totalScanImageBuffers, sizeof(m_totalScanImageBuffers));
+	}
+
+	int CCyUSBStream::InitCyUSBParameter(void *handle)//return 0:正常的初始化成功，1：代表USBDevice初始化失败,2:代表没有USBDevice,3:代表有多于一个USBDevice
+	{
+		int initdeviceStatus = OpenUSB(handle);
+
+		if (initdeviceStatus != 0)
+		{
+			return initdeviceStatus;
+		}
+
+		InitUSBBufferParameter();
 
 		return 0;
 	}

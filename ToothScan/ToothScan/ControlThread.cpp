@@ -114,13 +114,13 @@ void ControlThread::InitParameters()
 	}
 	fs_g.release();
 
-	l_usbStream.InitCyUSBParameter();//初始化
-	bool closedFlag = l_usbStream.ClosedDLPFunction();
-	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(1000);
-	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
-	cout << "openFlag = " << closedFlag << endl;
-	cout << "初始化光机，等待5秒。。。 " << endl;
+	//l_usbStream.InitCyUSBParameter();//初始化
+	//bool closedFlag = l_usbStream.ClosedDLPFunction();
+	//cout << "closedFlag = " << closedFlag << endl;
+	//_sleep(1000);
+	//bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+	//cout << "openFlag = " << closedFlag << endl;
+	//cout << "初始化光机，等待5秒。。。 " << endl;
 }
 
 void ControlThread::setFlage(bool flag)
