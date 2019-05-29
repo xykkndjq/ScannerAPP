@@ -50,23 +50,13 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\visual studio 2015\Projects\a_property_release\OPENCV_RELEASE.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\a_property_release\CUDA_RELEASE.props" />
-    <Import Project="..\..\a_property_release\CyAPI_RELEASE.props" />
-    <Import Project="..\..\a_property_release\EIGEN.props" />
-    <Import Project="..\..\a_property_release\FLANN_RELEASE.props" />
-    <Import Project="..\..\a_property_release\OPENCV_RELEASE.props" />
-    <Import Project="..\..\a_property_release\OPENNI2_RELEASE.props" />
-    <Import Project="..\..\a_property_release\PCL_RELEASE.props" />
-    <Import Project="..\..\a_property_release\QHULL_RELEASE.props" />
-    <Import Project="..\..\a_property_release\QT_RELEASE.props" />
-    <Import Project="..\..\a_property_release\VTK_RELEASE.props" />
-    <Import Project="..\..\a_property_release\BOOST_RELEASE.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -162,6 +152,7 @@
     <ClCompile Include="CCyUSBStream.cpp" />
     <ClCompile Include="commonFun.cpp" />
     <ClCompile Include="ComputeThread.cpp" />
+    <ClCompile Include="CutBoxModel.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_ComputeThread.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -254,6 +245,7 @@
     </ClCompile>
     <ClCompile Include="glwidget.cpp" />
     <ClCompile Include="GroundObject.cpp" />
+    <ClCompile Include="HeaderBtn.cpp" />
     <ClCompile Include="HLogHelper.cpp" />
     <ClCompile Include="ImageBtn.cpp" />
     <ClCompile Include="main.cpp" />
@@ -314,6 +306,7 @@
     <ClInclude Include="CCyUSBStream.h" />
     <ClInclude Include="commondefine.h" />
     <ClInclude Include="commonFun.h" />
+    <ClInclude Include="CutBoxModel.h" />
     <ClInclude Include="datastream.h" />
     <ClInclude Include="GroundObject.h" />
     <CustomBuild Include="HLogHelper.h">
@@ -334,6 +327,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -D_UNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS -D%(PreprocessorDefinitions) "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets"</Command>
     </CustomBuild>
+    <ClInclude Include="HeaderBtn.h" />
     <ClInclude Include="ImageBtn.h" />
     <ClInclude Include="minidmp.h" />
     <CustomBuild Include="SplitModelBtn.h">

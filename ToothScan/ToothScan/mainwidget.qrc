@@ -248,5 +248,6 @@
         <file>Resources/images/lowerjaw.png</file>
         <file>Resources/images/upperjaw.png</file>
         <file>Resources/images/alljaw.png</file>
+        <file>Resources/images/daixingpan.png</file>
     </qresource>
 </RCC>
