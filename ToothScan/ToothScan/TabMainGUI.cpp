@@ -137,7 +137,7 @@ void addShadow(QWidget * pWidget) {
 
 	shadow_effect->setOffset(0, 0);
 
-	shadow_effect->setColor(Qt::gray);
+	shadow_effect->setColor(/*Qt::gray*/QColor(243,243,243,255));
 
 	shadow_effect->setBlurRadius(8);
 	pWidget->setGraphicsEffect(shadow_effect);
@@ -1241,7 +1241,18 @@ void TabMainGUI::PatientInformationSave()
 	cctimeout.Print("judgePatientSaveFlag");
 	if (judgePatientSaveFlag() == true&& pBtn->text() == QStringLiteral("扫描"))
 	{
-		emit scanSignal();
+		if (m_usbDeviceState)
+		{
+			emit scanSignal();
+		}
+		else
+		{
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备未与电脑连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+		}
+		
 	}
 	cctimeout.Print("PatientInformationSave");
 }

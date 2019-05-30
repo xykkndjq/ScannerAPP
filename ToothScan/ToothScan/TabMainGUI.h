@@ -43,6 +43,8 @@ public:
 	TabMainGUI(QWidget *parent = Q_NULLPTR);
 	~TabMainGUI();
 
+	bool m_usbDeviceState = false;//判断开机是否连接了USB,由ScanMainGUI里的相关变量赋值
+
 	void initVariable();
 	void constructIHM();
 	void setConnections();

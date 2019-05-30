@@ -153,255 +153,255 @@ void ControlThread::setFlage(bool flag)
 //	m_bcali = v_bcali;
 //}
 
-void ControlThread::normalControlScan()
-{
-	bool l_bcali = false;
-	//vector<cv::Mat> image_groups_left, image_groups_right;
-	int imageSize = IMG_ROW * IMG_COL;
-	int bufferBias = 0;
-	
-	//l_usbStream.InitCyUSBParameter();//初始化
-#ifdef DEPLOY
-	 	bool closedFlag = l_usbStream.ClosedDLPFunction();
-	 	cout << "closedFlag = " << closedFlag << endl;
-	 	_sleep(1000);
-	 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
-	 	cout << "openFlag = " << closedFlag << endl;
-	 	cout << "初始化光机，等待5秒。。。 " << endl;
-	 	_sleep(4000);
-#else
-	bool resetFlag = l_usbStream.ResetDLPFunction();
-	cout << "resetFlag = " << resetFlag << endl;
-	_sleep(4000);
-#endif
+//void ControlThread::normalControlScan()
+//{
+//	bool l_bcali = false;
+//	//vector<cv::Mat> image_groups_left, image_groups_right;
+//	int imageSize = IMG_ROW * IMG_COL;
+//	int bufferBias = 0;
+//	
+//	//l_usbStream.InitCyUSBParameter();//初始化
+//#ifdef DEPLOY
+//	 	bool closedFlag = l_usbStream.ClosedDLPFunction();
+//	 	cout << "closedFlag = " << closedFlag << endl;
+//	 	_sleep(1000);
+//	 	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+//	 	cout << "openFlag = " << closedFlag << endl;
+//	 	cout << "初始化光机，等待5秒。。。 " << endl;
+//	 	_sleep(4000);
+//#else
+//	bool resetFlag = l_usbStream.ResetDLPFunction();
+//	cout << "resetFlag = " << resetFlag << endl;
+//	_sleep(4000);
+//#endif
+//
+//
+//	l_usbStream.SetScanDLPLight();
+//	clock_t time1, time2, time3, time4;
+//	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
+//	{
+//		double d_scan_x = 0.0;
+//		double d_scan_y = 0.0;
+//		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
+//		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
+//
+//		d_scan_x = (c_scan_x - l_scan_x);
+//		d_scan_y = (c_scan_y - l_scan_y);
+//		
+//		l_scan_x = c_scan_x;
+//		l_scan_y = c_scan_y;
+//
+//		if (c_scan_x < -90 || c_scan_x > 90)
+//		{
+//			return;
+//		}
+//		
+//
+//		vector<cv::Mat> imgL_set, imgR_set;
+//
+//		time1 = clock();
+//		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y,  l_bcali, imgL_set, imgR_set);
+//		time2 = clock();
+//
+//	if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
+//		{
+//			continue;
+//		}
+//
+//		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+//		{
+//			cout << "USB has a problem, because of insufficient data..." << endl;
+//			return;
+//		}		
+//		
+//		CCon coc(freeSpace, usedSpace);
+//		//freeSpace.acquire();
+//		vector<cv::Mat> images_l, images_r;
+//		vector<cv::Mat> image_rgb;
+//		//unsigned char* im_l = 0;
+//		//unsigned char* im_r = 0;
+//		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+//		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+//		int imageBias = 0;
+//		time3 = clock();
+//		for (int image_index = 0; image_index < 19; image_index++)
+//		{
+//			
+//			ostringstream filename_L;
+//			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+//			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
+//			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+//
+//
+//			ostringstream filename_R;
+//			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+//			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
+//			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+//			if (image_index == 0)
+//			{
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//			}
+//
+//			if (image_index>0 && image_index<16)
+//			{
+//				//images_l.push_back(imgL_set[image_index]);
+//				//images_r.push_back(imgR_set[image_index]);
+//				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+//				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//				
+//			}
+//			else if (image_index>=16)
+//			{
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//			}
+//		}
+//		time4 = clock();
+//		bufferBias++;
+//		//usedSpace.release();
+//		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+//
+//		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+//	}
+//
+//	//3、关闭DLP
+//#ifdef DEPLOY
+//	l_usbStream.ClosedDLPFunction();
+//#endif
+//	//l_usbStream.AbortXferLoop();
+//	//cout << "关闭DLP。。 " << endl;
+//}
 
-
-	l_usbStream.SetScanDLPLight();
-	clock_t time1, time2, time3, time4;
-	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
-	{
-		double d_scan_x = 0.0;
-		double d_scan_y = 0.0;
-		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
-		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
-
-		d_scan_x = (c_scan_x - l_scan_x);
-		d_scan_y = (c_scan_y - l_scan_y);
-		
-		l_scan_x = c_scan_x;
-		l_scan_y = c_scan_y;
-
-		if (c_scan_x < -90 || c_scan_x > 90)
-		{
-			return;
-		}
-		
-
-		vector<cv::Mat> imgL_set, imgR_set;
-
-		time1 = clock();
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y,  l_bcali, imgL_set, imgR_set);
-		time2 = clock();
-
-	if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
-		{
-			continue;
-		}
-
-		if (imgL_set.size() < 19 || imgR_set.size() < 19)
-		{
-			cout << "USB has a problem, because of insufficient data..." << endl;
-			return;
-		}		
-		
-		CCon coc(freeSpace, usedSpace);
-		//freeSpace.acquire();
-		vector<cv::Mat> images_l, images_r;
-		vector<cv::Mat> image_rgb;
-		//unsigned char* im_l = 0;
-		//unsigned char* im_r = 0;
-		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
-		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
-		int imageBias = 0;
-		time3 = clock();
-		for (int image_index = 0; image_index < 19; image_index++)
-		{
-			
-			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
-			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
-			//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
-
-
-			ostringstream filename_R;
-			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
-			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
-			//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
-			if (image_index == 0)
-			{
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-			}
-
-			if (image_index>0 && image_index<16)
-			{
-				//images_l.push_back(imgL_set[image_index]);
-				//images_r.push_back(imgR_set[image_index]);
-				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
-				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-				
-			}
-			else if (image_index>=16)
-			{
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-			}
-		}
-		time4 = clock();
-		bufferBias++;
-		//usedSpace.release();
-		cout << "The ControlThread: " << scan_index << " has finished." << endl;
-
-		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
-	}
-
-	//3、关闭DLP
-#ifdef DEPLOY
-	l_usbStream.ClosedDLPFunction();
-#endif
-	//l_usbStream.AbortXferLoop();
-	//cout << "关闭DLP。。 " << endl;
-}
-
-void ControlThread::normalAllJawControlScan()
-{
-	bool l_bcali = false;
-	//vector<cv::Mat> image_groups_left, image_groups_right;
-	int imageSize = IMG_ROW * IMG_COL;
-	int bufferBias = 0;
-
-	//l_usbStream.InitCyUSBParameter();//初始化
-#ifdef DEPLOY
-	bool closedFlag = l_usbStream.ClosedDLPFunction();
-	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(1000);
-	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
-	cout << "openFlag = " << closedFlag << endl;
-	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(4000);
-#else
-	bool resetFlag = l_usbStream.ResetDLPFunction();
-	cout << "resetFlag = " << resetFlag << endl;
-	_sleep(4000);
-#endif
-
-	l_usbStream.SetScanDLPLight();//设置光机亮度
-
-	clock_t time1, time2, time3, time4;
-	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS; scan_index++)
-	{
-		double d_scan_x = 0.0;
-		double d_scan_y = 0.0;
-		c_scan_x = ALLJAWX_SCAN_ROTATE_DEGREE2[scan_index];
-		c_scan_y = ALLJAWY_SCAN_ROTATE_DEGREE2[scan_index];
-
-		d_scan_x = (c_scan_x - l_scan_x);
-		d_scan_y = (c_scan_y - l_scan_y);
-
-		l_scan_x = c_scan_x;
-		l_scan_y = c_scan_y;
-
-		if (c_scan_x < -90 || c_scan_x > 90)
-		{
-			return;
-		}
-
-
-		vector<cv::Mat> imgL_set, imgR_set;
-
-		time1 = clock();
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-		time2 = clock();
-
-		if (scan_index == SCAN_ALLJAW_POS - 1)
-		{
-			continue;
-		}
-
-		if (imgL_set.size() < 19 || imgR_set.size() < 19)
-		{
-			cout << "USB has a problem, because of insufficient data..." << endl;
-			return;
-		}
-
-		CCon coc(freeSpace, usedSpace);
-		//freeSpace.acquire();
-		vector<cv::Mat> images_l, images_r;
-		vector<cv::Mat> image_rgb;
-		//unsigned char* im_l = 0;
-		//unsigned char* im_r = 0;
-		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
-		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
-		int imageBias = 0;
-		time3 = clock();
-		for (int image_index = 0; image_index < 19; image_index++)
-		{
-
-			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
-			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
-			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
-
-
-			ostringstream filename_R;
-			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
-			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
-			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
-			if (image_index == 0)
-			{
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-			}
-
-			if (image_index>0 && image_index<16)
-			{
-				//images_l.push_back(imgL_set[image_index]);
-				//images_r.push_back(imgR_set[image_index]);
-				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
-				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-
-			}
-			else if (image_index >= 16)
-			{
-				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
-				imageBias++;
-			}
-		}
-		time4 = clock();
-		bufferBias++;
-		//usedSpace.release();
-		cout << "The ControlThread: " << scan_index << " has finished." << endl;
-
-		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
-	}
-
-	//3、关闭DLP
-#ifdef DEPLOY
-	l_usbStream.ClosedDLPFunction();
-#endif
-	//l_usbStream.AbortXferLoop();
-	//cout << "关闭DLP。。 " << endl;
-}
+//void ControlThread::normalAllJawControlScan()
+//{
+//	bool l_bcali = false;
+//	//vector<cv::Mat> image_groups_left, image_groups_right;
+//	int imageSize = IMG_ROW * IMG_COL;
+//	int bufferBias = 0;
+//
+//	//l_usbStream.InitCyUSBParameter();//初始化
+//#ifdef DEPLOY
+//	bool closedFlag = l_usbStream.ClosedDLPFunction();
+//	cout << "closedFlag = " << closedFlag << endl;
+//	_sleep(1000);
+//	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+//	cout << "openFlag = " << closedFlag << endl;
+//	cout << "初始化光机，等待5秒。。。 " << endl;
+//	_sleep(4000);
+//#else
+//	bool resetFlag = l_usbStream.ResetDLPFunction();
+//	cout << "resetFlag = " << resetFlag << endl;
+//	_sleep(4000);
+//#endif
+//
+//	l_usbStream.SetScanDLPLight();//设置光机亮度
+//
+//	clock_t time1, time2, time3, time4;
+//	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS; scan_index++)
+//	{
+//		double d_scan_x = 0.0;
+//		double d_scan_y = 0.0;
+//		c_scan_x = ALLJAWX_SCAN_ROTATE_DEGREE2[scan_index];
+//		c_scan_y = ALLJAWY_SCAN_ROTATE_DEGREE2[scan_index];
+//
+//		d_scan_x = (c_scan_x - l_scan_x);
+//		d_scan_y = (c_scan_y - l_scan_y);
+//
+//		l_scan_x = c_scan_x;
+//		l_scan_y = c_scan_y;
+//
+//		if (c_scan_x < -90 || c_scan_x > 90)
+//		{
+//			return;
+//		}
+//
+//
+//		vector<cv::Mat> imgL_set, imgR_set;
+//
+//		time1 = clock();
+//		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+//		time2 = clock();
+//
+//		if (scan_index == SCAN_ALLJAW_POS - 1)
+//		{
+//			continue;
+//		}
+//
+//		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+//		{
+//			cout << "USB has a problem, because of insufficient data..." << endl;
+//			return;
+//		}
+//
+//		CCon coc(freeSpace, usedSpace);
+//		//freeSpace.acquire();
+//		vector<cv::Mat> images_l, images_r;
+//		vector<cv::Mat> image_rgb;
+//		//unsigned char* im_l = 0;
+//		//unsigned char* im_r = 0;
+//		//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+//		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
+//		int imageBias = 0;
+//		time3 = clock();
+//		for (int image_index = 0; image_index < 19; image_index++)
+//		{
+//
+//			ostringstream filename_L;
+//			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+//			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
+//			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+//
+//
+//			ostringstream filename_R;
+//			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+//			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
+//			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+//			if (image_index == 0)
+//			{
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//			}
+//
+//			if (image_index>0 && image_index<16)
+//			{
+//				//images_l.push_back(imgL_set[image_index]);
+//				//images_r.push_back(imgR_set[image_index]);
+//				//memcpy(im_l + (image_index-1) * 1280 * 1024, (unsigned char*)imgL_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+//				//memcpy(im_r + (image_index-1) * 1280 * 1024, (unsigned char*)imgR_set[image_index].data, 1280 * 1024 * sizeof(unsigned char));
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgL_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//
+//			}
+//			else if (image_index >= 16)
+//			{
+//				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
+//				imageBias++;
+//			}
+//		}
+//		time4 = clock();
+//		bufferBias++;
+//		//usedSpace.release();
+//		cout << "The ControlThread: " << scan_index << " has finished." << endl;
+//
+//		cout << "The rotation and projection time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//		cout << "The memcpy time is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+//	}
+//
+//	//3、关闭DLP
+//#ifdef DEPLOY
+//	l_usbStream.ClosedDLPFunction();
+//#endif
+//	//l_usbStream.AbortXferLoop();
+//	//cout << "关闭DLP。。 " << endl;
+//}
 
 void ControlThread::allJawScan()
 {
@@ -662,85 +662,85 @@ void ControlThread::controlCalibrationScan()
 }
 
 
-void ControlThread::controlGlobalCaliScan()
-{
-	bool l_bcali = true;
-	//l_usbStream.InitCyUSBParameter();//初始化
-
-#ifdef DEPLOY
-	bool closedFlag = l_usbStream.ClosedDLPFunction();
-	cout << "closedFlag = " << closedFlag << endl;
-	_sleep(1000);
-	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
-	cout << "openFlag = " << closedFlag << endl;
-	cout << "初始化光机，等待5秒。。。 " << endl;
-	_sleep(4000);
-#else
-	bool resetFlag = l_usbStream.ResetDLPFunction();
-	cout << "resetFlag = " << resetFlag << endl;
-	_sleep(4000);
-#endif
-
-	l_usbStream.SetScanDLPLight();//设置光机亮度
-	vector<Mat> image_groups_left, image_groups_right;
-	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
-	{
-		
-		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
-		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
-
-		double d_scan_x = (c_scan_x - l_scan_x);
-		double d_scan_y = (c_scan_y - l_scan_y);
-		//double d_scan_z = (c_scan_z - l_scan_z);
-		l_scan_x = c_scan_x;
-		l_scan_y = c_scan_y;
-
-		cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
-		//l_scan_z = c_scan_z;
-		if (c_scan_x<-90 || c_scan_x>90)
-		{
-			return;
-		}
-		
-		vector<cv::Mat> imgL_set, imgR_set;
-		cout << "******************************************************************" << endl;
-		cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
-
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-
-		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
-		{
-			continue;
-		}
-
-		cout << "开始存图片。。 " << endl;
-
-		cv::flip(imgL_set[0], imgL_set[0], -1);
-		image_groups_left.push_back(imgL_set[0]);
-		ostringstream filename_L;
-		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
-
-		//cv::imwrite(filename_L.str().c_str(), imgL_set[0]);
-
-		cv::flip(imgR_set[0], imgR_set[0], -1);
-		image_groups_right.push_back(imgR_set[0]);
-		ostringstream filename_R;
-		filename_R << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "R" << ".png";
-
-		//cv::imwrite(filename_R.str().c_str(), imgR_set[0]);
-
-		//4、保存图片
-		cout << "标定图片存储完毕。。 " << endl;
-	}
-
-	////3、关闭DLP
-	//l_usbStream.ClosedDLPFunction();
-
-	vector<double> mask_points;
-	rs->PlaneRTCalculate(image_groups_left, image_groups_right, "D:/dentalimage/dentalimage2/external_parameter.yml", mask_points);
-	//ColoredPoints(mask_points, 2);
-	InitParameters();
-}
+//void ControlThread::controlGlobalCaliScan()
+//{
+//	bool l_bcali = true;
+//	//l_usbStream.InitCyUSBParameter();//初始化
+//
+//#ifdef DEPLOY
+//	bool closedFlag = l_usbStream.ClosedDLPFunction();
+//	cout << "closedFlag = " << closedFlag << endl;
+//	_sleep(1000);
+//	bool openFlag = l_usbStream.OpenDLPFunction();//打开光机
+//	cout << "openFlag = " << closedFlag << endl;
+//	cout << "初始化光机，等待5秒。。。 " << endl;
+//	_sleep(4000);
+//#else
+//	bool resetFlag = l_usbStream.ResetDLPFunction();
+//	cout << "resetFlag = " << resetFlag << endl;
+//	_sleep(4000);
+//#endif
+//
+//	l_usbStream.SetScanDLPLight();//设置光机亮度
+//	vector<Mat> image_groups_left, image_groups_right;
+//	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
+//	{
+//		
+//		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];
+//		c_scan_y = SMY_SCAN_ROTATE_DEGREE2[scan_index];
+//
+//		double d_scan_x = (c_scan_x - l_scan_x);
+//		double d_scan_y = (c_scan_y - l_scan_y);
+//		//double d_scan_z = (c_scan_z - l_scan_z);
+//		l_scan_x = c_scan_x;
+//		l_scan_y = c_scan_y;
+//
+//		cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
+//		//l_scan_z = c_scan_z;
+//		if (c_scan_x<-90 || c_scan_x>90)
+//		{
+//			return;
+//		}
+//		
+//		vector<cv::Mat> imgL_set, imgR_set;
+//		cout << "******************************************************************" << endl;
+//		cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
+//
+//		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+//
+//		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
+//		{
+//			continue;
+//		}
+//
+//		cout << "开始存图片。。 " << endl;
+//
+//		cv::flip(imgL_set[0], imgL_set[0], -1);
+//		image_groups_left.push_back(imgL_set[0]);
+//		ostringstream filename_L;
+//		filename_L << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "L" << ".png";
+//
+//		//cv::imwrite(filename_L.str().c_str(), imgL_set[0]);
+//
+//		cv::flip(imgR_set[0], imgR_set[0], -1);
+//		image_groups_right.push_back(imgR_set[0]);
+//		ostringstream filename_R;
+//		filename_R << "D:\\dentalimage\\dentalimage2\\GloPic\\" << scan_index << "_0_" << "R" << ".png";
+//
+//		//cv::imwrite(filename_R.str().c_str(), imgR_set[0]);
+//
+//		//4、保存图片
+//		cout << "标定图片存储完毕。。 " << endl;
+//	}
+//
+//	////3、关闭DLP
+//	//l_usbStream.ClosedDLPFunction();
+//
+//	vector<double> mask_points;
+//	rs->PlaneRTCalculate(image_groups_left, image_groups_right, "D:/dentalimage/dentalimage2/external_parameter.yml", mask_points);
+//	//ColoredPoints(mask_points, 2);
+//	InitParameters();
+//}
 
 void ControlThread::compensationControlScan()
 {
