@@ -181,7 +181,7 @@ void ChosePoints(const float point1_x, const float point1_y, const float point2_
 QVector4D point_ = QVector4D(0, 0, 0, 0), point_end = QVector4D(0, 0, 0, 0);
 GLWidget::GLWidget(QWidget *parent)
 	: QOpenGLWidget(parent),
-	clearColor(Qt::GlobalColor::white),
+	clearColor(250,250,252,255),
 	xRot(0),
 	yRot(0),
 	zRot(0),
@@ -369,7 +369,7 @@ void GLWidget::initializeGL()
 // 	m_bkGroundProgram->addShader(bgfshader);
 	makeGroundObject();
 
-	makeCutBoxObject();
+//	makeCutBoxObject();
 	
 	// 	m_bkGroundProgram->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
 	// 	m_bkGroundProgram->link();
@@ -391,14 +391,15 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-
+	
 	glClearColor(clearColor.redF(), clearColor.greenF(), clearColor.blueF(), clearColor.alphaF());
 	//cout << clearColor.redF() << " ;" << clearColor.greenF() << " ;" << clearColor.blueF() << " ;" << endl;
 	//glClearColor()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	drawGradient();
+	//drawGradient();
 	glUseProgram(0);
 	m_backgroundModel->OnPaint(m_projection,m_view,this);
+	//return;
 	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -1834,10 +1835,10 @@ void GLWidget::makeBackGround()
 		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
 	};
 	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
-	QString name_ = "./Resources/images/background-grey3.png";
+	QString name_ = ":/MainWidget/Resources/images/background-grey3.png";
 	m_backgroundModel->readPicture(name_);
 	m_backgroundModel->makeObject(vertData, 4);
-	m_backgroundModel->Set_Visible(true);
+	m_backgroundModel->Set_Visible(false);
 	//m_ToolsModelsVt.push_back(m_backgroundModel);
 	this->update();
 }

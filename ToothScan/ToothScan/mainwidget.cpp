@@ -29,7 +29,6 @@ void MainWidget::initVariable()
 	scanMainPage = new ScanMainGUI();	
 	scanMainPage->installNativeEventFilter();
 	scanMainPage->initUSBDevice();
-	
 	//scanMainPage->showMaximized();
 }
 

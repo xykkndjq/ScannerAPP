@@ -19,6 +19,7 @@ void CImageBtn::paintEvent(QPaintEvent * qEvent)
 {
 	QPainter pPainter(this);
 	QRect rtBtn = qEvent->rect();
+	pPainter.setRenderHint(QPainter::Antialiasing, true);
 	pPainter.begin(this);
 	pPainter.setBackgroundMode(Qt::BGMode::TransparentMode);
 	pPainter.setCompositionMode(QPainter::CompositionMode_Source);

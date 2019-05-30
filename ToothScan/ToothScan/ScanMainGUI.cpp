@@ -78,6 +78,19 @@ void ScanMainGUI::hideAllPanel()
 	ui.DentalImplantFinishPanel->hide();
 }
 
+void addShadow2(QWidget * pWidget) {
+	if (pWidget == nullptr)
+		return;
+	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect();
+
+	shadow_effect->setOffset(0, 0);
+
+	shadow_effect->setColor(QColor(243,243,243,255));
+
+	shadow_effect->setBlurRadius(8);
+	pWidget->setGraphicsEffect(shadow_effect);
+}
+
 void styleControl2(QObject *obj) {
 	QObjectList list = obj->children();
 	QWidget *b;
@@ -137,17 +150,19 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	this->constructIHM();
 	ui.setupUi(this);
 	this->setConnections();
-	ui.CutJawPanel->move(1600, 230);
-	ui.CutJawFinishPanel->move(1600, 230);
-	ui.ScanJawGroup->move(1600, 230);
-	ui.compensationScanPanel->move(1600, 230);
-	ui.StitchingPanel->move(1600, 230);
-	ui.StitchingFinishPanel->move(1600, 230);
-	ui.OralSubstitutePanel->move(1600, 230);
-	ui.TeethStitchingPanel->move(1600, 230);
-	ui.orderInfoPanel->move(1600, 100);
-	ui.DentalImplantFinishPanel->move(1600, 100);
-	ui.DentalImplantPanel->move(1600, 100);
+	ui.CutJawPanel->move(1600, 50);
+	ui.CutJawFinishPanel->move(1600, 50);
+	ui.ScanJawGroup->move(1600, 50);
+	ui.compensationScanPanel->move(1600, 50);
+	ui.StitchingPanel->move(1600, 50);
+	ui.StitchingFinishPanel->move(1600, 50);
+	ui.OralSubstitutePanel->move(1600, 50);
+	ui.TeethStitchingPanel->move(1600, 50);
+	ui.orderInfoPanel->move(1600, 50);
+	ui.DentalImplantFinishPanel->move(1600, 50);
+	ui.DentalImplantPanel->move(1600, 50);
+	addShadow2(ui.topCameraLabel);
+	addShadow2(ui.bottomCameraLabel);
 	// 	ui.ScanJawGroup->setStyleSheet("background-color:rgb(225,225,225);");
 	// 	ui.CutJawFinishPanel->setStyleSheet("background-color:rgb(215,215,215);");
 	// 	ui.CutJawPanel->setStyleSheet("background-color:rgb(215,215,215);");
@@ -190,15 +205,13 @@ ScanMainGUI::~ScanMainGUI()
 	controlComputeQThread->wait();
 }
 
-
 void ScanMainGUI::initVariable()
 {
+	timer = new QTimer(this);
 	glWidget = new GLWidget(this);
 
 	tabMainPage = new TabMainGUI();
 	tabMainPage->showMaximized();
-
-	scanTipWidget = new ScanTipWidget(this);
 
 	//初始化线程
 	ControlScanThread = new ControlThread;
@@ -218,32 +231,32 @@ void ScanMainGUI::initVariable()
 	controlComputeQThread->start();
 
 	//cameraWindow
-	cameraWindow = new QDockWidget(QStringLiteral("相机显示"), this);
-	cameraImageLabel = new QLabel(cameraWindow);
-	cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
-	cameraImageLabel->setScaledContents(true);
+	//cameraWindow = new QDockWidget(QStringLiteral("相机显示"), this);
+	//cameraImageLabel = new QLabel(cameraWindow);
+	//cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
+	//cameraImageLabel->setScaledContents(true);
 
-	autoTunePushButton = new QPushButton(QStringLiteral("自动调节"), cameraWindow);
-	spinCameraBox = new QSpinBox(cameraWindow);
-	sliderCamera = new QSlider(Qt::Horizontal, cameraWindow);
-	spinCameraBox->setRange(0, 130);
-	sliderCamera->setRange(0, 130);
+	//autoTunePushButton = new QPushButton(QStringLiteral("自动调节"), cameraWindow);
+	//spinCameraBox = new QSpinBox(cameraWindow);
+	//sliderCamera = new QSlider(Qt::Horizontal, cameraWindow);
+	//spinCameraBox->setRange(0, 130);
+	//sliderCamera->setRange(0, 130);
 
 	//toptoolButtons
-	leftWatchButton = new QToolButton();
+	/*leftWatchButton = new QToolButton();
 	rightWatchButton = new QToolButton();
 	topWatchButton = new QToolButton();
 	bottomWatchButton = new QToolButton();
 	frontWatchButton = new QToolButton();
 	backWatchButton = new QToolButton();
 	enlargeButton = new QToolButton();
-	shrinkButton = new QToolButton();
+	shrinkButton = new QToolButton();*/
 	//bottomtoolButtons
-	selectRegionButton = new QToolButton();
-	deleteModelButton = new QToolButton();
-	m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png", "", this);
-	m_closeBtn->setFixedSize(30, 30);
-	m_closeBtn->move(1880,20);
+	/*selectRegionButton = new QToolButton();
+	deleteModelButton = new QToolButton();*/
+	//m_closeBtn = new CTeethImgBtn(":/MainWidget/Resources/images/btnclose.png", "", this);
+	//m_closeBtn->setFixedSize(30, 30);
+	//m_closeBtn->move(1880,20);
 }
 
 void ScanMainGUI::constructIHM()
@@ -254,19 +267,35 @@ void ScanMainGUI::constructIHM()
 	glWidget->showFullScreen();
 
 	//相机设置
-	cameraWindow->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable); // 设置停靠窗口特性，可移动,可关闭
-	cameraWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);//设置可停靠区域为主窗口左边和右边
-	cameraWindow->setGeometry(0, 0, 320, 276);
-
-	cameraImageLabel->setGeometry(0, 20, 320, 256);
-	sliderCamera->setGeometry(0, 256, 175, 20);
-	spinCameraBox->setGeometry(175, 256, 60, 20);
-	autoTunePushButton->setGeometry(235, 256, 85, 20);
-
+	//cameraWindow->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable); // 设置停靠窗口特性，可移动,可关闭
+	//cameraWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);//设置可停靠区域为主窗口左边和右边
+	//cameraWindow->setGeometry(0, 0, 320, 276);
 	//cameraWindow->setContentsMargins(0, 0, 0, 0);
+	//cameraImageLabel->setGeometry(0, 22, 320, 256);
+	
+	
+	//给按钮加阴影
+	//addShadow2(ui.toolsGroupBox);
+	/*addShadow2(ui.bottomWatchButton);
+	addShadow2(ui.leftWatchButton);
+	addShadow2(ui.rightWatchButton);
+	addShadow2(ui.frontWatchButton);
+	addShadow2(ui.backWatchButton);
+	addShadow2(ui.enlargeButton);
+	addShadow2(ui.shrinkButton);
+	addShadow2(ui.selectRegionButton);
+	addShadow2(ui.deleteModelButton);*/
+
+	//工具箱
+	//ui.toolsGroupBox->move(0,400);
+	//sliderCamera->setGeometry(0, 256, 175, 20);
+	//spinCameraBox->setGeometry(175, 256, 60, 20);
+	//autoTunePushButton->setGeometry(235, 256, 85, 20);
+
+	
 
 	//BottomTool底部工具栏
-	leftWatchButton->setFixedSize(80, 80);
+	/*leftWatchButton->setFixedSize(80, 80);
 	leftWatchButton->setIcon(QIcon(":/MainWidget/Resources/images/LeftView.png"));
 	leftWatchButton->setIconSize(QSize(leftWatchButton->width(), leftWatchButton->height()));
 	leftWatchButton->setStyleSheet("border-style:flat");
@@ -324,10 +353,10 @@ void ScanMainGUI::constructIHM()
 	deleteModelButton->setIcon(QIcon(":/MainWidget/Resources/images/DeleteSelected.png"));
 	deleteModelButton->setIconSize(QSize(shrinkButton->width(), shrinkButton->height()));
 	deleteModelButton->setStyleSheet("border-style:flat");
-	deleteModelButton->setToolTip(QStringLiteral("删除框选"));
+	deleteModelButton->setToolTip(QStringLiteral("删除框选"));*/
 
 	//顶部工具栏
-	QWidget *topWidget = new QWidget(this);
+	/*QWidget *topWidget = new QWidget(this);
 	QHBoxLayout *topHLayout = new QHBoxLayout(topWidget);
 	topHLayout->addStretch();
 	topHLayout->addWidget(topWatchButton);
@@ -340,49 +369,36 @@ void ScanMainGUI::constructIHM()
 	topHLayout->addWidget(shrinkButton);
 	topHLayout->addStretch();
 	topHLayout->addWidget(m_closeBtn);
-	topWidget->setGeometry(0, 10, 1920, 100);
+	topWidget->setGeometry(0, 10, 1920, 100);*/
 
 	//底部工具栏
-	QWidget *bottomWidget = new QWidget(this);
+	/*QWidget *bottomWidget = new QWidget(this);
 	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
 	bottomHLayout->addStretch();
 	bottomHLayout->addWidget(selectRegionButton);
 	bottomHLayout->addWidget(deleteModelButton);
 	bottomHLayout->addStretch();
 	
-	bottomWidget->setGeometry(0, 900, 1920, 100);
-
-	//提示窗口
-	scanTipWidget->setFixedSize(300, 700);
-	scanTipWidget->setGeometry(1615, 80, 300, 700);
-	scanTipWidget->setVisible(false);
+	bottomWidget->setGeometry(0, 900, 1920, 100);*/
 }
 
 void ScanMainGUI::setConnections()
 {
-	QObject::connect(sliderCamera, &QSlider::valueChanged, spinCameraBox, &QSpinBox::setValue);
-	void (QSpinBox:: *spinBoxSignal)(int) = &QSpinBox::valueChanged;
-	QObject::connect(spinCameraBox, spinBoxSignal, sliderCamera, &QSlider::setValue);
-	spinCameraBox->setValue(35);
+	//QObject::connect(sliderCamera, &QSlider::valueChanged, spinCameraBox, &QSpinBox::setValue);
+	//void (QSpinBox:: *spinBoxSignal)(int) = &QSpinBox::valueChanged;
+	//QObject::connect(spinCameraBox, spinBoxSignal, sliderCamera, &QSlider::setValue);
+	//spinCameraBox->setValue(35);
+
+	/*----------------------关闭软件------------------------*/
+	connect(ui.btnClose, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));//关闭
 	//软件打开时，提示是否USB连接成功
 	connect(this, SIGNAL(usbDeviceSignal()), this, SLOT(usbDeviceSlot()));
-
-	//订单管理信息
+	/*----------------订单信息管理子页面---------------*/
 	connect(tabMainPage, SIGNAL(scanDataSignal(QJsonObject)), this, SLOT(doScanDialogSlot(QJsonObject)));
 	connect(tabMainPage, SIGNAL(showOrderInfoSignal(COrderInfo)), this, SLOT(showOrderInfo(COrderInfo)));
 
-	//扫描提示页面
-	connect(scanTipWidget->forwardStepButton, SIGNAL(clicked()), this, SLOT(judgeForwardStep()));//扫描 完成 下一步 按钮
-	connect(scanTipWidget->backStepButton, SIGNAL(clicked()), this, SLOT(judgeBackStep()));//后退 按钮
-	//补充扫描
-	connect(scanTipWidget->compensationButton, SIGNAL(clicked()), this, SLOT(compensationScan()));
-	//撤销补扫
-	connect(scanTipWidget->discardButton, SIGNAL(clicked()), this, SLOT(discardCompensationSlot()));
-
-	connect(scanTipWidget, SIGNAL(updateModelAngle()), this, SLOT(setRotationWaverSlot()));//RotationAndWaver
-
 	//MeshandGpa
-	connect(this, SIGNAL(gpaMeshSignal(int)), ControlComputeThread, SLOT(GPAMeshing(int)));
+	//connect(this, SIGNAL(gpaMeshSignal(int)), ControlComputeThread, SLOT(GPAMeshing(int)));
 	//保存切割后模型
 	connect(this, SIGNAL(saveCutModelSignal()), this, SLOT(saveCutModelSlot()));
 	//保存所有模型到文件
@@ -390,51 +406,45 @@ void ScanMainGUI::setConnections()
 
 	//远距离配准，将上颌、下颌以及全颌进行配准
 	connect(this, SIGNAL(farRegistrationSignal()), ControlComputeThread, SLOT(FarRegistrationSlot()));
-	connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(updateRegMeshSlot()));
-	connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(JawScan()));
-	//完成配准后，显示或者隐藏模型连接																		   
-	connect(scanTipWidget->upperShowButton, SIGNAL(clicked()), this, SLOT(ShowHideUpperModel()));//显示或隐藏上颌模型
-	connect(scanTipWidget->lowerShowButton, SIGNAL(clicked()), this, SLOT(ShowHideLowerModel()));//显示或隐藏上颌模型
+	//connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(updateRegMeshSlot()));
+	//connect(ControlComputeThread, SIGNAL(finishFarRegSignal()), this, SLOT(JawScan()));																   
 
 	//扫描控制和计算
-	connect(this, SIGNAL(compensationSignal(int)), ControlScanThread, SLOT(compensationControlScan()));
-	connect(this, SIGNAL(compensationSignal(int)), ControlComputeThread, SLOT(compensationComputeScan(int)));
-	connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(normalControlScan()));
-	connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(normalComputeScan(int)));
-	connect(this, SIGNAL(startAllJawNormalScan()), ControlScanThread, SLOT(normalAllJawControlScan()));
-	connect(this, SIGNAL(startAllJawNormalScan()), ControlComputeThread, SLOT(normalAllJawComputeScan()));
+	//connect(this, SIGNAL(compensationSignal(int)), ControlScanThread, SLOT(compensationControlScan()));
+	//connect(this, SIGNAL(compensationSignal(int)), ControlComputeThread, SLOT(compensationComputeScan(int)));
+	//connect(this, SIGNAL(startControlNormalScan(int)), ControlScanThread, SLOT(normalControlScan()));
+	//connect(this, SIGNAL(startControlNormalScan(int)), ControlComputeThread, SLOT(normalComputeScan(int)));
+	//connect(this, SIGNAL(startAllJawNormalScan()), ControlScanThread, SLOT(normalAllJawControlScan()));
+	//connect(this, SIGNAL(startAllJawNormalScan()), ControlComputeThread, SLOT(normalAllJawComputeScan()));
 
-	connect(this, SIGNAL(startControlCalibrationSignal()), ControlScanThread, SLOT(controlCalibrationScan()));
-	connect(ControlComputeThread, SIGNAL(computeFinish()), this, SLOT(JawScan()));
+	//扫描完成
+	connect(ControlComputeThread, SIGNAL(computeFinish()), this, SLOT(JawScanFinish()));
 	//展示模型
-	connect(ControlComputeThread, SIGNAL(showModeltoGlSingel(int)), this, SLOT(updateMeshModel(int)));
-	connect(this, SIGNAL(updateMeshModelSingel(int)), this, SLOT(updateMeshModel(int)));
-	connect(this, SIGNAL(updateModelsVtSingle()), this, SLOT(updateModelsVtSlot()));
+	//connect(ControlComputeThread, SIGNAL(showModeltoGlSingel(int)), this, SLOT(updateMeshModel(int)));
+	//connect(this, SIGNAL(updateMeshModelSingel(int)), this, SLOT(updateMeshModel(int)));
+	//connect(this, SIGNAL(updateModelsVtSingle()), this, SLOT(updateModelsVtSlot()));
 	connect(ControlComputeThread, SIGNAL(cameraShowSignal()), this, SLOT(updateCamera()));
 
-	//Calibrate标定子页面
-	connect(tabMainPage->calibratePushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
-	connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
+	/*----------------------Calibrate标定子页面---------------------*/
+	connect(tabMainPage->ui.calibrationPushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
+	connect(this, SIGNAL(startControlCalibrationSignal()), ControlScanThread, SLOT(controlCalibrationScan()));
+	//connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
 	connect(ControlScanThread, SIGNAL(calibImageSignal(int)), this, SLOT(calibImageCameraSlot(int)));//展示标定照片
 
 	//模型工具栏操作
-	connect(this->topWatchButton, SIGNAL(clicked()), this, SLOT(topModelWatchSlot()));
-	connect(this->bottomWatchButton, SIGNAL(clicked()), this, SLOT(bottomModelWatchSlot()));
-	connect(this->leftWatchButton, SIGNAL(clicked()), this, SLOT(leftModelWatchSlot()));
-	connect(this->rightWatchButton, SIGNAL(clicked()), this, SLOT(rightModelWatchSlot()));
-	connect(this->frontWatchButton, SIGNAL(clicked()), this, SLOT(frontModelWatchSlot()));
-	connect(this->backWatchButton, SIGNAL(clicked()), this, SLOT(backModelWatchSlot()));
-	connect(this->enlargeButton, SIGNAL(clicked()), this, SLOT(enlargeModelSlot()));
-	connect(this->shrinkButton, SIGNAL(clicked()), this, SLOT(shrinkModelSlot()));
-	connect(this->selectRegionButton, SIGNAL(clicked()), this, SLOT(selectRegionSlot()));
-	connect(this->deleteModelButton, SIGNAL(clicked()), this, SLOT(deleteSelectedRegionSlot()));
+	connect(ui.topWatchButton, SIGNAL(clicked()), this, SLOT(topModelWatchSlot()));
+	connect(ui.bottomWatchButton, SIGNAL(clicked()), this, SLOT(bottomModelWatchSlot()));
+	connect(ui.leftWatchButton, SIGNAL(clicked()), this, SLOT(leftModelWatchSlot()));
+	connect(ui.rightWatchButton, SIGNAL(clicked()), this, SLOT(rightModelWatchSlot()));
+	connect(ui.frontWatchButton, SIGNAL(clicked()), this, SLOT(frontModelWatchSlot()));
+	connect(ui.backWatchButton, SIGNAL(clicked()), this, SLOT(backModelWatchSlot()));
+	connect(ui.enlargeButton, SIGNAL(clicked()), this, SLOT(enlargeModelSlot()));
+	connect(ui.shrinkButton, SIGNAL(clicked()), this, SLOT(shrinkModelSlot()));
+	connect(ui.selectRegionButton, SIGNAL(clicked()), this, SLOT(selectRegionSlot()));
+	connect(ui.deleteModelButton, SIGNAL(clicked()), this, SLOT(deleteSelectedRegionSlot()));
 
 	//水平切面
 	connect(this, SIGNAL(cutSurfaceSignal(bool)), this, SLOT(showCutSurfaceSlot(bool)));
-	connect(scanTipWidget->spinCutBox, SIGNAL(valueChanged(int)), this, SLOT(moveCutSurfaceSpinSlot()));
-	connect(scanTipWidget->sliderCut, SIGNAL(valueChanged(int)), this, SLOT(moveCutSurfaceSliderSlot()));
-	connect(scanTipWidget->cutHeightButton, SIGNAL(clicked()), this, SLOT(cutModelSlot()));
-	connect(scanTipWidget->discardCutHeightButton, SIGNAL(clicked()), this, SLOT(discardCutModelSlot()));
 
 	connect(ui.ScanJawScanBtn, SIGNAL(clicked()), this, SLOT(scanJawScanBtnClick()));
 	connect(ui.ScanJawBackStepBtn, SIGNAL(clicked()), this, SLOT(ScanJawBackStepBtnClick()));
@@ -494,7 +504,7 @@ void ScanMainGUI::setConnections()
 	connect(ui.teethStitchingPanelBackBtn, SIGNAL(clicked()), this, SLOT(teethStitchingPanelBackBtnClick()));
 	connect(ui.CutJawFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(cutJawFinishPanelBackBtnClick()));
 	connect(ui.StitchingFinishPanelBackBtn, SIGNAL(clicked()), this, SLOT(stitchingFinishPanelBackBtnClick()));
-	connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
+	//connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	connect(ui.upperJawBtn, SIGNAL(clicked()), this, SLOT(upperJawBtnBtnClick()));
 	connect(ui.upperJawDenBtn, SIGNAL(clicked()), this, SLOT(upperJawDenBtnClick()));
 	connect(ui.upperJawGinBtn, SIGNAL(clicked()), this, SLOT(upperJawGinBtnClick()));
@@ -524,6 +534,9 @@ void ScanMainGUI::setConnections()
 			connect(pButton, SIGNAL(clicked()), this, SLOT(ToothButtonListPress()));
 		}
 	}
+
+	connect(timer, SIGNAL(timeout()), this, SLOT(setRotationWaverSlot()));
+	timer->start(1000);
 // 	void progressBarSetMinSignal(int min);
 // 	void progressBarSetMaxSignal(int max);
 // 	void progressBarSetValueSignal(int value);
@@ -556,47 +569,47 @@ void ScanMainGUI::ToothCalibrateSlot()
 	emit startControlCalibrationSignal();
 }
 
-void ScanMainGUI::GlobalCalibrateSlot()
-{
-	ControlScanThread->controlGlobalCaliScan();
-}
+//void ScanMainGUI::GlobalCalibrateSlot()
+//{
+//	ControlScanThread->controlGlobalCaliScan();
+//}
 
-void ScanMainGUI::CalculatePointCloud()
-{
-	cout <<"controlScanQThread->isRunning() = "<< controlScanQThread->isRunning() << endl;
-	cout << "controlComputeQThread->isRunning() = " << controlComputeQThread->isRunning() << endl;
-	cout <<"chooseJawIndex" <<chooseJawIndex << endl;
-	if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
-	{
-		if (chooseJawIndex == 3)
-		{
-			emit startAllJawNormalScan();
-			return;
-		}
-		emit startControlNormalScan(chooseJawIndex);
-		return;
-	}
-	if (controlScanQThread->isRunning() == false)
-	{
-		//启动子线程，但没有启动线程处理函数
-		controlScanQThread->start();
-		ControlScanThread->setFlage(false);
-	}
-	if (controlComputeQThread->isRunning() == false)
-	{
-		//启动子线程，但没有启动线程处理函数
-		controlComputeQThread->start();
-		ControlComputeThread->setFlage(false);
-	}
-	if (chooseJawIndex == 3)
-	{
-		emit startAllJawNormalScan();
-		return;
-	}
-
-
-	emit startControlNormalScan(chooseJawIndex);
-}
+//void ScanMainGUI::CalculatePointCloud()
+//{
+//	cout <<"controlScanQThread->isRunning() = "<< controlScanQThread->isRunning() << endl;
+//	cout << "controlComputeQThread->isRunning() = " << controlComputeQThread->isRunning() << endl;
+//	cout <<"chooseJawIndex" <<chooseJawIndex << endl;
+//	if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
+//	{
+//		if (chooseJawIndex == 3)
+//		{
+//			emit startAllJawNormalScan();
+//			return;
+//		}
+//		emit startControlNormalScan(chooseJawIndex);
+//		return;
+//	}
+//	if (controlScanQThread->isRunning() == false)
+//	{
+//		//启动子线程，但没有启动线程处理函数
+//		controlScanQThread->start();
+//		ControlScanThread->setFlage(false);
+//	}
+//	if (controlComputeQThread->isRunning() == false)
+//	{
+//		//启动子线程，但没有启动线程处理函数
+//		controlComputeQThread->start();
+//		ControlComputeThread->setFlage(false);
+//	}
+//	if (chooseJawIndex == 3)
+//	{
+//		emit startAllJawNormalScan();
+//		return;
+//	}
+//
+//
+//	emit startControlNormalScan(chooseJawIndex);
+//}
 
 void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
 {
@@ -628,97 +641,102 @@ void ScanMainGUI::splitModelCalculatePointCloud(pCScanTask pScanTask)
 	emit startNormalScan();
 }
 
-void ScanMainGUI::updateMeshModel(int refreshIndex)
-{
-	if (refreshIndex == 1)//清空之前窗口上所有的模型
-	{
-		glWidget->m_ModelsVt.clear();
-	}
-
-	if (chooseJawIndex == 1)
-	{
-		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
-		{
-			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
-			{
-				upper_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
-			}*/
-			upper_ModelsVt = glWidget->m_ModelsVt;
-			glWidget->m_ModelsVt.clear();
-		}
-		if (ControlComputeThread->upper_mModel.size() != 0)
-		{
-			int scan_index = ControlComputeThread->upper_mModel.size() - 1;
-			glWidget->mm = ControlComputeThread->upper_mModel[scan_index];
-		}
-		else
-		{
-			glWidget->update();
-			this->showMaximized();
-			return;
-		}
-		upperTeethModel = glWidget->makeObject();
-	}
-	else if (chooseJawIndex == 2)
-	{
-		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
-		{
-			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
-			{
-				lower_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
-			}*/
-			lower_ModelsVt = glWidget->m_ModelsVt;
-			glWidget->m_ModelsVt.clear();
-		}
-		if (ControlComputeThread->lower_mModel.size() != 0)
-		{
-			int scan_index = ControlComputeThread->lower_mModel.size() - 1;
-			glWidget->mm = ControlComputeThread->lower_mModel[scan_index];
-		}
-		else
-		{
-			glWidget->update();
-			this->showMaximized();
-			return;
-		}
-		lowerTeethModel = glWidget->makeObject();
-	}
-	else if (chooseJawIndex == 3)
-	{
-		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
-		{
-			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
-			{
-				all_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
-			}*/
-			all_ModelsVt = glWidget->m_ModelsVt;
-			glWidget->m_ModelsVt.clear();
-		}
-		if (ControlComputeThread->all_mModel.size() != 0)
-		{
-			int scan_index = ControlComputeThread->all_mModel.size() - 1;
-			glWidget->mm = ControlComputeThread->all_mModel[scan_index];
-		}
-		else
-		{
-			glWidget->update();
-			this->showMaximized();
-			return;
-		}
-		allTeethModel = glWidget->makeObject();
-	}
-
-	this->showMaximized();
-}
+//void ScanMainGUI::updateMeshModel(int refreshIndex)
+//{
+//	if (refreshIndex == 1)//清空之前窗口上所有的模型
+//	{
+//		glWidget->m_ModelsVt.clear();
+//	}
+//
+//	if (chooseJawIndex == 1)
+//	{
+//		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
+//		{
+//			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
+//			{
+//				upper_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
+//			}*/
+//			upper_ModelsVt = glWidget->m_ModelsVt;
+//			glWidget->m_ModelsVt.clear();
+//		}
+//		if (ControlComputeThread->upper_mModel.size() != 0)
+//		{
+//			int scan_index = ControlComputeThread->upper_mModel.size() - 1;
+//			glWidget->mm = ControlComputeThread->upper_mModel[scan_index];
+//		}
+//		else
+//		{
+//			glWidget->update();
+//			this->showMaximized();
+//			return;
+//		}
+//		upperTeethModel = glWidget->makeObject();
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
+//		{
+//			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
+//			{
+//				lower_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
+//			}*/
+//			lower_ModelsVt = glWidget->m_ModelsVt;
+//			glWidget->m_ModelsVt.clear();
+//		}
+//		if (ControlComputeThread->lower_mModel.size() != 0)
+//		{
+//			int scan_index = ControlComputeThread->lower_mModel.size() - 1;
+//			glWidget->mm = ControlComputeThread->lower_mModel[scan_index];
+//		}
+//		else
+//		{
+//			glWidget->update();
+//			this->showMaximized();
+//			return;
+//		}
+//		lowerTeethModel = glWidget->makeObject();
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		if (refreshIndex == 2 && glWidget->m_ModelsVt.size() != 0)
+//		{
+//			/*for (int i = 0; i < glWidget->m_ModelsVt.size(); i++)
+//			{
+//				all_ModelsVt.push_back(glWidget->m_ModelsVt[i]);
+//			}*/
+//			all_ModelsVt = glWidget->m_ModelsVt;
+//			glWidget->m_ModelsVt.clear();
+//		}
+//		if (ControlComputeThread->all_mModel.size() != 0)
+//		{
+//			int scan_index = ControlComputeThread->all_mModel.size() - 1;
+//			glWidget->mm = ControlComputeThread->all_mModel[scan_index];
+//		}
+//		else
+//		{
+//			glWidget->update();
+//			this->showMaximized();
+//			return;
+//		}
+//		allTeethModel = glWidget->makeObject();
+//	}
+//
+//	this->showMaximized();
+//}
 
 void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 {
 	controlScanQThread->start();
 	controlComputeQThread->start();
-	cameraWindow->setVisible(true);
+	{
+		ui.topCameraLabel->setVisible(true);
+		ui.bottomCameraLabel->setVisible(true);
+		ui.cameraImageLabel->setVisible(true);
+	}
+	
 	resetValue();
 	glWidget->m_ModelsVt.clear();
-	scanTipWidget->setVisible(true);
+	//scanTipWidget->setVisible(true);
 	m_bsplitModelFlag = false;
 	cout << "caseType" << scanObj.value("caseType").toInt() << endl;
 	cout << "upperJaw" << scanObj.value("upperJaw").toInt() << endl;
@@ -759,7 +777,7 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	glWidget->m_ModelsVt.clear();
 	tabMainPage->hide();
 	this->showMaximized();
-	scanTipWidget->showMaximized();
+	//scanTipWidget->showMaximized();
 
 }
 void ScanMainGUI::showScanJawGroup(bool bBack) {
@@ -921,212 +939,45 @@ void ScanMainGUI::showcompensationScanPanel(bool bBack) {
 		//回退操作
 	}
 }
-void ScanMainGUI::judgeForwardStep()
-{
-	scanTipWidget->setVisible(false);
-	cout << "forwardIndex: " << forwardIndex << endl;
-	if (forwardIndex == 1)
-	{
-		if (allJawIndex == 4 || allJawIndex == 7)
-		{
-			bool bShow = false;
-			glWidget->showBkGround(false);
-			glWidget->update();
-		}
-		CalculatePointCloud();
-	}
-	else if (forwardIndex == 2)
-	{
-		emit gpaMeshSignal(chooseJawIndex);
-	}
-	else if (forwardIndex == 3)
-	{
-		JawScan();
-	}
-	else if (forwardIndex == 4)
-	{
-		emit saveModeltoFileSignal();
-		scanTipWidget->setVisible(false);
-	}
-	else if (forwardIndex == 5)
-	{
-		emit farRegistrationSignal();
-		//JawScan();
-	}
-}
 
-void ScanMainGUI::JawScan()
+void ScanMainGUI::JawScanFinish()
 {
 	showcompensationScanPanel();
-	return;
-	if (m_bsplitModelFlag) {		//分模
-	
-	}
-	else
-	{
-		scanTipWidget->setVisible(true);
-		if (globalTipIndex == 1)
-		{
-			if (compensationFlag == true)
-			{
-				--upperJawIndex;
-			}
-			if (upperJawIndex == 1)
-			{
-				scanTipWidget->upperCompenConstructIHM2();
-				forwardIndex = 2;
-				compensationFlag = false;
-			}
-			else if (upperJawIndex == 2)
-			{
-				scanTipWidget->upperCutConstructIHM3();
-				forwardIndex = 3;
-				emit cutSurfaceSignal(true);
-			}
-			else if (upperJawIndex == 3)
-			{
-				ControlComputeThread->showUpperModelFlag = true;
-				ControlComputeThread->regUpperModelFlag = true;
-				scanTipWidget->upperFinishConstructIHM4();
-				forwardIndex = 4;
-				emit cutSurfaceSignal(false);
-			}
-			++upperJawIndex;
-		}
-		else if (globalTipIndex == 2)
-		{
-			if (compensationFlag == true)
-			{
-				--lowerJawIndex;
-			}
-
-			if (lowerJawIndex == 1)
-			{
-				scanTipWidget->lowerCompenConstructIHM2();
-				forwardIndex = 2;
-				compensationFlag = false;
-			}
-			else if (lowerJawIndex == 2)
-			{
-				scanTipWidget->lowerCutConstructIHM3();
-				forwardIndex = 3;
-				emit cutSurfaceSignal(true);
-			}
-			else if (lowerJawIndex == 3)
-			{
-				ControlComputeThread->showLowerModelFlag = true;
-				ControlComputeThread->regLowerModelFlag = true;
-				scanTipWidget->lowerFinishConstructIHM4();
-				forwardIndex = 4;
-				emit cutSurfaceSignal(false);
-			}
-			++lowerJawIndex;
-		}
-		else if (globalTipIndex == 3)
-		{
-			if (compensationFlag == true)
-			{
-				--allJawIndex;
-			}
-			if (allJawIndex == 1)
-			{
-				scanTipWidget->allCompenConstructIHM2();
-				forwardIndex = 2;
-				cout <<"forwardIndex = " << forwardIndex <<endl;
-				compensationFlag = false;
-			}
-			else if (allJawIndex == 2)
-			{
-				scanTipWidget->allCutConstructIHM3();
-				forwardIndex = 3;
-				emit cutSurfaceSignal(true);
-			}
-			else if (allJawIndex == 3)
-			{
-				scanTipWidget->allPlaceConstructIHM4();
-				forwardIndex = 1;
-				chooseJawIndex = 2;
-				emit cutSurfaceSignal(false);
-			}
-			else if (allJawIndex == 4)
-			{
-				scanTipWidget->allCompenConstructIHM5();
-				forwardIndex = 2;
-				compensationFlag = false;
-			}
-			else if (allJawIndex == 5)
-			{
-				scanTipWidget->allCutConstructIHM6();
-				forwardIndex = 3;
-				emit cutSurfaceSignal(true);
-			}
-			else if (allJawIndex == 6)
-			{
-				scanTipWidget->allPlaceConstructIHM7();
-				forwardIndex = 1;
-				chooseJawIndex = 1;
-				emit cutSurfaceSignal(false);
-			}
-			else if (allJawIndex == 7)
-			{
-				scanTipWidget->allCompenConstructIHM8();
-				forwardIndex = 2;
-				compensationFlag = false;
-			}
-			else if (allJawIndex == 8)
-			{
-				scanTipWidget->allCutConstructIHM9();
-				forwardIndex = 5;
-				emit cutSurfaceSignal(true);
-			}
-			else if (allJawIndex == 9)
-			{
-				scanTipWidget->allFinishConstructIHM10();
-				forwardIndex = 4;
-				chooseJawIndex = 3;
-				emit cutSurfaceSignal(false);
-			}
-			allJawIndex++;
-		}
-
-		this->showMaximized();
-		scanTipWidget->showMaximized();
-	}
 }
 
-void ScanMainGUI::deleteAllCutModel()
-{
-	if (chooseJawIndex == 1)
-	{
-		if (upperCutModelNum > 0)
-		{
-			for (int i = 0; i < upperCutModelNum; i++)
-			{
-				ControlComputeThread->upper_mModel.pop_back();
-			}
-		}
-	}
-	else if (chooseJawIndex == 2)
-	{
-		if (lowerCutModelNum > 0)
-		{
-			for (int i = 0; i < lowerCutModelNum; i++)
-			{
-				ControlComputeThread->lower_mModel.pop_back();
-			}
-		}
-	}
-	else if (chooseJawIndex == 3)
-	{
-		if (allCutModelNum > 0)
-		{
-			for (int i = 0; i < lowerCutModelNum; i++)
-			{
-				ControlComputeThread->all_mModel.pop_back();
-			}
-		}
-	}
-}
+//void ScanMainGUI::deleteAllCutModel()
+//{
+//	if (chooseJawIndex == 1)
+//	{
+//		if (upperCutModelNum > 0)
+//		{
+//			for (int i = 0; i < upperCutModelNum; i++)
+//			{
+//				ControlComputeThread->upper_mModel.pop_back();
+//			}
+//		}
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		if (lowerCutModelNum > 0)
+//		{
+//			for (int i = 0; i < lowerCutModelNum; i++)
+//			{
+//				ControlComputeThread->lower_mModel.pop_back();
+//			}
+//		}
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		if (allCutModelNum > 0)
+//		{
+//			for (int i = 0; i < lowerCutModelNum; i++)
+//			{
+//				ControlComputeThread->all_mModel.pop_back();
+//			}
+//		}
+//	}
+//}
 
 void ScanMainGUI::resetValue()
 {
@@ -1142,259 +993,91 @@ void ScanMainGUI::resetValue()
 	hideAllPanel();
 }
 
-void ScanMainGUI::judgeBackStep()
-{
-	scanTipWidget->setVisible(true);
-	if (globalTipIndex == 1)
-	{
-		if (upperJawIndex == 2)
-		{
-			scanTipWidget->upperPlaceConstructIHM1();
-			globalTipIndex = 1;
-			forwardIndex = 1;
-			chooseJawIndex = 1;
-			ControlComputeThread->upper_mModel.clear();
-			//ControlComputeThread->upper_points_cloud_end2.clear();
-			//ControlComputeThread->upper_points_cloud_globle2.clear();
-			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
-			emit updateMeshModelSingel(1);
-		}
-		else if (upperJawIndex == 3)
-		{
-			scanTipWidget->upperCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
-			//ControlComputeThread->upper_mModel.pop_back();
-			deleteAllCutModel();
-			emit cutSurfaceSignal(false);
-			emit updateModelsVtSingle();
-		}
-		else if (upperJawIndex == 4)
-		{
-			scanTipWidget->upperCutConstructIHM3();
-			forwardIndex = 3;
-			//ControlComputeThread->upper_mModel.pop_back();
-			emit cutSurfaceSignal(true);
-			emit updateMeshModelSingel(1);
-		}
-		--upperJawIndex;
-	}
-	else if (globalTipIndex == 2)
-	{
-		if (lowerJawIndex == 2)
-		{
-			scanTipWidget->lowerPlaceConstructIHM1();
-			globalTipIndex = 2;
-			forwardIndex = 1;
-			chooseJawIndex = 2;
-			ControlComputeThread->lower_mModel.clear();
-			//ControlComputeThread->lower_points_cloud_end2.clear();
-			//ControlComputeThread->lower_points_cloud_globle2.clear();
-			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
-			emit updateMeshModelSingel(1);
-		}
-		else if (lowerJawIndex == 3)
-		{
-			scanTipWidget->lowerCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
-			//ControlComputeThread->lower_mModel.pop_back();
-			deleteAllCutModel();
-			emit cutSurfaceSignal(false);
-			emit updateModelsVtSingle();
-		}
-		else if (lowerJawIndex == 4)
-		{
-			scanTipWidget->lowerCutConstructIHM3();
-			forwardIndex = 3;
-			//ControlComputeThread->lower_mModel.pop_back();
-			emit cutSurfaceSignal(true);
-			emit updateMeshModelSingel(1);
-		}
-		--lowerJawIndex;
-	}
-	else if (globalTipIndex == 3)
-	{
-		if (allJawIndex == 2)
-		{
-			scanTipWidget->allPlaceConstructIHM1();
-			globalTipIndex = 3;
-			forwardIndex = 1;
-			chooseJawIndex = 3;
-			ControlComputeThread->all_mModel.clear();
-			//ControlComputeThread->all_points_cloud_end2.clear();
-			//ControlComputeThread->all_points_cloud_globle2.clear();
-			cameraImageLabel->setStyleSheet("background-color:rgb(0,0,0);");
-			emit updateMeshModelSingel(1);
-		}
-		else if (allJawIndex == 3)
-		{
-			scanTipWidget->allCompenConstructIHM2();
-			forwardIndex = 2;
-			compensationFlag = false;
-			//ControlComputeThread->all_mModel.pop_back();
-			deleteAllCutModel();
-			emit cutSurfaceSignal(false);
-			emit updateModelsVtSingle();
-		}
-		else if (allJawIndex == 4)
-		{
-			scanTipWidget->allCutConstructIHM3();
-			forwardIndex = 3;
-			//ControlComputeThread->all_mModel.pop_back();
-			emit cutSurfaceSignal(true);
-			emit updateMeshModelSingel(1);
-		}
-		else if (allJawIndex == 5)
-		{
-			scanTipWidget->allPlaceConstructIHM4();
-			forwardIndex = 1;
-			chooseJawIndex = 2;
-			ControlComputeThread->lower_mModel.clear();
-			//ControlComputeThread->lower_points_cloud_end2.clear();
-			//ControlComputeThread->lower_points_cloud_globle2.clear();
-			emit cutSurfaceSignal(false);
-			emit updateMeshModelSingel(1);
-		}
-		else if (allJawIndex == 6)
-		{
-			scanTipWidget->allCompenConstructIHM5();
-			forwardIndex = 2;
-			compensationFlag = false;
-			//ControlComputeThread->lower_mModel.pop_back();
-			deleteAllCutModel();
-			emit cutSurfaceSignal(false);
-			emit updateModelsVtSingle();
-		}
-		else if (allJawIndex == 7)
-		{
-			scanTipWidget->allCutConstructIHM6();
-			forwardIndex = 3;
-			//ControlComputeThread->lower_mModel.pop_back();
-			emit cutSurfaceSignal(true);
-			emit updateMeshModelSingel(1);
-		}
-		else if (allJawIndex == 8)
-		{
-			scanTipWidget->allPlaceConstructIHM7();
-			forwardIndex = 1;
-			chooseJawIndex = 1;
-			ControlComputeThread->upper_mModel.clear();
-			//ControlComputeThread->upper_points_cloud_end2.clear();
-			//ControlComputeThread->upper_points_cloud_globle2.clear();
-			emit cutSurfaceSignal(false);
-			emit updateMeshModelSingel(1);
-		}
-		else if (allJawIndex == 9)
-		{
-			scanTipWidget->allCompenConstructIHM8();
-			forwardIndex = 2;
-			compensationFlag = false;
-			//ControlComputeThread->upper_mModel.pop_back();
-			deleteAllCutModel();
-			emit cutSurfaceSignal(false);
-			emit updateModelsVtSingle();
-		}
-		else if (allJawIndex == 10)
-		{
-			scanTipWidget->allCutConstructIHM9();
-			forwardIndex = 3;
-			//ControlComputeThread->upper_mModel.pop_back();
-			emit cutSurfaceSignal(true);
-			emit updateMeshModelSingel(1);
-		}
-		--allJawIndex;
-	}
+//void ScanMainGUI::compensationScan()
+//{
+//	compensationFlag = true;
+//	//float ax = 0, ay = 0;
+//	//glWidget->GetMotorRot(ax, ay);
+//	c_scan_x = ax;
+//	c_scan_y = ay;
+//	cout << "c_scan_x: " << c_scan_x << "; c_scan_y: " << c_scan_y;
+//	if (c_scan_x > -90 && c_scan_x < 90)
+//	{
+//		if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
+//		{
+//			emit compensationSignal(chooseJawIndex);
+//			return;
+//		}
+//		if (controlScanQThread->isRunning() == false)
+//		{
+//			//启动子线程，但没有启动线程处理函数
+//			controlScanQThread->start();
+//			ControlScanThread->setFlage(false);
+//		}
+//		if (controlComputeQThread->isRunning() == false)
+//		{
+//			//启动子线程，但没有启动线程处理函数
+//			controlComputeQThread->start();
+//			ControlComputeThread->setFlage(false);
+//		}
+//		emit compensationSignal(chooseJawIndex);
+//	}
+//}
 
-	this->showMaximized();
-	scanTipWidget->showMaximized();
-}
-
-void ScanMainGUI::compensationScan()
-{
-	compensationFlag = true;
-	//float ax = 0, ay = 0;
-	//glWidget->GetMotorRot(ax, ay);
-	c_scan_x = ax;
-	c_scan_y = ay;
-	cout << "c_scan_x: " << c_scan_x << "; c_scan_y: " << c_scan_y;
-	if (c_scan_x > -90 && c_scan_x < 90)
-	{
-		if (controlScanQThread->isRunning() == true && controlComputeQThread->isRunning() == true)  //判断线程占用
-		{
-			emit compensationSignal(chooseJawIndex);
-			return;
-		}
-		if (controlScanQThread->isRunning() == false)
-		{
-			//启动子线程，但没有启动线程处理函数
-			controlScanQThread->start();
-			ControlScanThread->setFlage(false);
-		}
-		if (controlComputeQThread->isRunning() == false)
-		{
-			//启动子线程，但没有启动线程处理函数
-			controlComputeQThread->start();
-			ControlComputeThread->setFlage(false);
-		}
-		emit compensationSignal(chooseJawIndex);
-	}
-}
-
-void ScanMainGUI::discardCompensationSlot()
-{
-	if (chooseJawIndex == 1)
-	{
-		if (ControlComputeThread->addUpperCompensationNum > 0)
-		{
-			ControlComputeThread->upper_mModel.pop_back();
-			glWidget->m_ModelsVt.pop_back();
-			glWidget->update();
-			--ControlComputeThread->addUpperCompensationNum;
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有增扫数据!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-		}
-	}
-	else if (chooseJawIndex == 2)
-	{
-		if (ControlComputeThread->addLowerCompensationNum > 0)
-		{
-			ControlComputeThread->lower_mModel.pop_back();
-			glWidget->m_ModelsVt.pop_back();
-			glWidget->update();
-			--ControlComputeThread->addLowerCompensationNum;
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有增扫数据!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-		}
-	}
-	else if (chooseJawIndex == 3)
-	{
-		if (ControlComputeThread->addAllCompensationNum > 0)
-		{
-			ControlComputeThread->all_mModel.pop_back();
-			glWidget->m_ModelsVt.pop_back();
-			glWidget->update();
-			--ControlComputeThread->addAllCompensationNum;
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有增扫数据!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-		}
-	}
-}
+//void ScanMainGUI::discardCompensationSlot()
+//{
+//	if (chooseJawIndex == 1)
+//	{
+//		if (ControlComputeThread->addUpperCompensationNum > 0)
+//		{
+//			ControlComputeThread->upper_mModel.pop_back();
+//			glWidget->m_ModelsVt.pop_back();
+//			glWidget->update();
+//			--ControlComputeThread->addUpperCompensationNum;
+//		}
+//		else
+//		{
+//			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有增扫数据!"));
+//			box.setStandardButtons(QMessageBox::Yes);
+//			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+//			box.exec();
+//		}
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		if (ControlComputeThread->addLowerCompensationNum > 0)
+//		{
+//			ControlComputeThread->lower_mModel.pop_back();
+//			glWidget->m_ModelsVt.pop_back();
+//			glWidget->update();
+//			--ControlComputeThread->addLowerCompensationNum;
+//		}
+//		else
+//		{
+//			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有增扫数据!"));
+//			box.setStandardButtons(QMessageBox::Yes);
+//			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+//			box.exec();
+//		}
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		if (ControlComputeThread->addAllCompensationNum > 0)
+//		{
+//			ControlComputeThread->all_mModel.pop_back();
+//			glWidget->m_ModelsVt.pop_back();
+//			glWidget->update();
+//			--ControlComputeThread->addAllCompensationNum;
+//		}
+//		else
+//		{
+//			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有增扫数据!"));
+//			box.setStandardButtons(QMessageBox::Yes);
+//			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+//			box.exec();
+//		}
+//	}
+//}
 
 void ScanMainGUI::topModelWatchSlot()
 {
@@ -1460,52 +1143,19 @@ void ScanMainGUI::showCutSurfaceSlot(bool bShow)
 	glWidget->update();
 }
 
-void ScanMainGUI::moveCutSurfaceSpinSlot()
-{
-	int curValue = scanTipWidget->spinCutBox->value();
-	scanTipWidget->cutHeightLineEdit->setText(QString::number(curValue, 10));
-	if (curValue > scanTipWidget->globalSpinCutValue)
-	{
-		glWidget->bgGroundmoveUp();
-		scanTipWidget->globalSpinCutValue = curValue;
-	}
-	else if (curValue < scanTipWidget->globalSpinCutValue)
-	{
-		glWidget->bgGroundmoveDown();
-		scanTipWidget->globalSpinCutValue = curValue;
-	}
-
-}
-
-void ScanMainGUI::moveCutSurfaceSliderSlot()
-{
-	int curValue = scanTipWidget->sliderCut->value();
-	scanTipWidget->cutHeightLineEdit->setText(QString::number(curValue, 10));
-	if (curValue > scanTipWidget->globalSpinCutValue)
-	{
-		glWidget->bgGroundmoveUp();
-		scanTipWidget->globalSpinCutValue = curValue;
-	}
-	else if (curValue < scanTipWidget->globalSpinCutValue)
-	{
-		glWidget->bgGroundmoveDown();
-		scanTipWidget->globalSpinCutValue = curValue;
-	}
-}
-
 void ScanMainGUI::movecutHeightSpinBoxSlot()
 {
 	int curValue = ui.cutHeightSpinBox->value();
 	ui.cutHeightSpinBox->setValue(curValue);
-	if (curValue > scanTipWidget->globalSpinCutValue)
+	if (curValue > globalSpinCutValue)
 	{
 		glWidget->bgGroundmoveUp();
-		scanTipWidget->globalSpinCutValue = curValue;
+		globalSpinCutValue = curValue;
 	}
-	else if (curValue < scanTipWidget->globalSpinCutValue)
+	else if (curValue < globalSpinCutValue)
 	{
 		glWidget->bgGroundmoveDown();
-		scanTipWidget->globalSpinCutValue = curValue;
+		globalSpinCutValue = curValue;
 	}
 
 }
@@ -1514,15 +1164,15 @@ void ScanMainGUI::movecutHeightSliderSlot()
 {
 	int curValue = ui.cutHeightSlider->value();
 	ui.cutHeightSpinBox->setValue(curValue);
-	if (curValue > scanTipWidget->globalSpinCutValue)
+	if (curValue > globalSpinCutValue)
 	{
 		glWidget->bgGroundmoveUp();
-		scanTipWidget->globalSpinCutValue = curValue;
+		globalSpinCutValue = curValue;
 	}
-	else if (curValue < scanTipWidget->globalSpinCutValue)
+	else if (curValue < globalSpinCutValue)
 	{
 		glWidget->bgGroundmoveDown();
-		scanTipWidget->globalSpinCutValue = curValue;
+		globalSpinCutValue = curValue;
 	}
 }
 
@@ -1536,12 +1186,6 @@ void ScanMainGUI::ToothButtonListPress()
 	if (pButton) {
 		glWidget->m_cutToothIndex = toothButtonIndex;
 	}
-}
-
-void ScanMainGUI::cutModelSlot()
-{
-	glWidget->cutModelUnderBg();
-	emit saveCutModelSignal();
 }
 
 void ScanMainGUI::setRotationWaverSlot()
@@ -1567,8 +1211,6 @@ void ScanMainGUI::setRotationWaverSlot()
 
 	ay = round(ay * 10);
 	ay = ay / 10;
-	scanTipWidget->rotationLineEdit->setText(QString("%1").arg(ay));
-	scanTipWidget->waverLineEdit->setText(QString("%1").arg(ax));
 
 	ui.rotationLineEdit->setText(QString("%1").arg(ay));
 	ui.waverLineEdit->setText(QString("%1").arg(ax));
@@ -1580,8 +1222,8 @@ void ScanMainGUI::updateCamera()
 {
 	QImage cameraImage;
 	cameraImage = Mat2QImage(ControlComputeThread->camera_image);
-	cameraImageLabel->setPixmap(QPixmap::fromImage(cameraImage));
-	cameraImageLabel->setScaledContents(true);
+	ui.cameraImageLabel->setPixmap(QPixmap::fromImage(cameraImage));
+	//cameraImageLabel->setScaledContents(true);
 }
 
 QImage ScanMainGUI::Mat2QImage(const cv::Mat &InputMat)
@@ -1603,174 +1245,120 @@ QImage ScanMainGUI::Mat2QImage(const cv::Mat &InputMat)
 	return Result;
 }
 
-void ScanMainGUI::saveCutModelSlot()
-{
-	if (chooseJawIndex == 1)
-	{
-		/*int size = glWidget->m_ModelsVt.size();
-		glWidget->m_ModelsVt[size - 1];*/
-		orth::MeshModel mm;
-		upperTeethModel->getMeshModel(mm);
-		ControlComputeThread->upper_mModel.push_back(mm);
-		++upperCutModelNum;
-	}
-	else if (chooseJawIndex == 2)
-	{
-		orth::MeshModel mm;
-		lowerTeethModel->getMeshModel(mm);
-		ControlComputeThread->lower_mModel.push_back(mm);
-		++lowerCutModelNum;
-	}
-	else if (chooseJawIndex == 3)
-	{
-		orth::MeshModel mm;
-		allTeethModel->getMeshModel(mm);
-		ControlComputeThread->all_mModel.push_back(mm);
-		++allCutModelNum;
-	}
-	emit updateMeshModelSingel(1);
-}
+//void ScanMainGUI::saveCutModelSlot()
+//{
+//	if (chooseJawIndex == 1)
+//	{
+//		/*int size = glWidget->m_ModelsVt.size();
+//		glWidget->m_ModelsVt[size - 1];*/
+//		orth::MeshModel mm;
+//		upperTeethModel->getMeshModel(mm);
+//		ControlComputeThread->upper_mModel.push_back(mm);
+//		++upperCutModelNum;
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		orth::MeshModel mm;
+//		lowerTeethModel->getMeshModel(mm);
+//		ControlComputeThread->lower_mModel.push_back(mm);
+//		++lowerCutModelNum;
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		orth::MeshModel mm;
+//		allTeethModel->getMeshModel(mm);
+//		ControlComputeThread->all_mModel.push_back(mm);
+//		++allCutModelNum;
+//	}
+//	emit updateMeshModelSingel(1);
+//}
 
-void ScanMainGUI::discardCutModelSlot()
-{
-	if (chooseJawIndex == 1)
-	{
-		if (upperCutModelNum > 0)
-		{
-			ControlComputeThread->upper_mModel.pop_back();
-			--upperCutModelNum;
-			emit updateMeshModelSingel(1);
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-			//QMessageBox::warning(NULL, QStringLiteral("提示"), QStringLiteral("上颌没有切割模型!"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-		}
-	}
-	else if (chooseJawIndex == 2)
-	{
-		if (lowerCutModelNum > 0)
-		{
-			ControlComputeThread->lower_mModel.pop_back();
-			--lowerCutModelNum;
-			emit updateMeshModelSingel(1);
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("下颌没有切割模型!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-		}
-	}
-	else if (chooseJawIndex == 3)
-	{
-		if (allCutModelNum > 0)
-		{
-			ControlComputeThread->all_mModel.pop_back();
-			--allCutModelNum;
-			emit updateMeshModelSingel(1);
-		}
-		else
-		{
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("全颌没有切割模型!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
-		}
-	}
+//void ScanMainGUI::updateModelsVtSlot()
+//{
+//	glWidget->m_ModelsVt.clear();
+//	if (chooseJawIndex == 1)
+//	{
+//		/*for (int i = 0; i < upper_ModelsVt.size(); i++)
+//		{
+//			glWidget->m_ModelsVt.push_back(upper_ModelsVt[i]);
+//		}*/
+//		glWidget->m_ModelsVt = upper_ModelsVt;
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		glWidget->m_ModelsVt = lower_ModelsVt;
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		glWidget->m_ModelsVt = all_ModelsVt;
+//	}
+//	glWidget->update();
+//	this->showMaximized();
+//}
 
-}
-
-void ScanMainGUI::updateModelsVtSlot()
-{
-	glWidget->m_ModelsVt.clear();
-	if (chooseJawIndex == 1)
-	{
-		/*for (int i = 0; i < upper_ModelsVt.size(); i++)
-		{
-			glWidget->m_ModelsVt.push_back(upper_ModelsVt[i]);
-		}*/
-		glWidget->m_ModelsVt = upper_ModelsVt;
-	}
-	else if (chooseJawIndex == 2)
-	{
-		glWidget->m_ModelsVt = lower_ModelsVt;
-	}
-	else if (chooseJawIndex == 3)
-	{
-		glWidget->m_ModelsVt = all_ModelsVt;
-	}
-	glWidget->update();
-	this->showMaximized();
-}
-
-void ScanMainGUI::saveModeltoFileSlot()
-{
-	if (chooseJawIndex == 1)
-	{
-		int mModelVSize = ControlComputeThread->upper_mModel.size();
-		/*for (int index = 0; index < mModelVSize - 1; index++)
-		{
-			orth::ModelIO model_io(&ControlComputeThread->upper_mModel[index]);
-			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_UpperJaw_" + std::to_string(index) + ".stl";
-			cout << "fileStr: " << fileStr << endl;
-			model_io.writeModel(fileStr,"stl");
-		}*/
-		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
-		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
-	}
-	else if (chooseJawIndex == 2)
-	{
-		int mModelVSize = ControlComputeThread->lower_mModel.size();
-		/*for (int index = 0; index < mModelVSize - 1; index++)
-		{
-			orth::ModelIO model_io(&ControlComputeThread->lower_mModel[index]);
-			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_LowerJaw_" + std::to_string(index) + ".stl";
-			model_io.writeModel(fileStr, "stl");
-		}*/
-		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
-		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		finish_model_io.writeModel(modelNameStr, "stlb");
-	}
-	else if (chooseJawIndex == 3)
-	{
-		int mModelVSize = ControlComputeThread->all_mModel.size();
-		/*for (int index = 0; index < mModelVSize - 1; index++)
-		{
-			orth::ModelIO model_io(&ControlComputeThread->all_mModel[index]);
-			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_AllJaw_" + std::to_string(index) + ".stl";
-			model_io.writeModel(fileStr, "stl");
-		}*/
-		orth::ModelIO all_finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
-		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		all_finish_model_io.writeModel(modelNameStr, "stlb");
-
-		mModelVSize = ControlComputeThread->upper_mModel.size();
-		orth::ModelIO upper_finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
-		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		upper_finish_model_io.writeModel(modelNameStr, "stlb");
-
-		mModelVSize = ControlComputeThread->lower_mModel.size();
-		orth::ModelIO lower_finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
-		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
-		cout << "pathname: " << modelNameStr << endl;
-		lower_finish_model_io.writeModel(modelNameStr, "stlb");
-	}
-	glWidget->m_ModelsVt.clear();
-	glWidget->update();
-
-	this->setVisible(false);
-	tabMainPage->showMaximized();
-}
+//void ScanMainGUI::saveModeltoFileSlot()
+//{
+//	if (chooseJawIndex == 1)
+//	{
+//		int mModelVSize = ControlComputeThread->upper_mModel.size();
+//		/*for (int index = 0; index < mModelVSize - 1; index++)
+//		{
+//			orth::ModelIO model_io(&ControlComputeThread->upper_mModel[index]);
+//			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_UpperJaw_" + std::to_string(index) + ".stl";
+//			cout << "fileStr: " << fileStr << endl;
+//			model_io.writeModel(fileStr,"stl");
+//		}*/
+//		orth::ModelIO finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
+//		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+//		cout << "pathname: " << modelNameStr << endl;
+//		finish_model_io.writeModel(modelNameStr, "stlb");
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		int mModelVSize = ControlComputeThread->lower_mModel.size();
+//		/*for (int index = 0; index < mModelVSize - 1; index++)
+//		{
+//			orth::ModelIO model_io(&ControlComputeThread->lower_mModel[index]);
+//			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_LowerJaw_" + std::to_string(index) + ".stl";
+//			model_io.writeModel(fileStr, "stl");
+//		}*/
+//		orth::ModelIO finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
+//		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+//		cout << "pathname: " << modelNameStr << endl;
+//		finish_model_io.writeModel(modelNameStr, "stlb");
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		int mModelVSize = ControlComputeThread->all_mModel.size();
+//		/*for (int index = 0; index < mModelVSize - 1; index++)
+//		{
+//			orth::ModelIO model_io(&ControlComputeThread->all_mModel[index]);
+//			std::string fileStr = filePath.toStdString() + tabMainPage->ToChineseStr(patientNameQStr).data() + "_AllJaw_" + std::to_string(index) + ".stl";
+//			model_io.writeModel(fileStr, "stl");
+//		}*/
+//		orth::ModelIO all_finish_model_io(&ControlComputeThread->all_mModel[mModelVSize - 1]);
+//		std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalAllJawModel.stl";
+//		cout << "pathname: " << modelNameStr << endl;
+//		all_finish_model_io.writeModel(modelNameStr, "stlb");
+//
+//		mModelVSize = ControlComputeThread->upper_mModel.size();
+//		orth::ModelIO upper_finish_model_io(&ControlComputeThread->upper_mModel[mModelVSize - 1]);
+//		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalUpperJawModel.stl";
+//		cout << "pathname: " << modelNameStr << endl;
+//		upper_finish_model_io.writeModel(modelNameStr, "stlb");
+//
+//		mModelVSize = ControlComputeThread->lower_mModel.size();
+//		orth::ModelIO lower_finish_model_io(&ControlComputeThread->lower_mModel[mModelVSize - 1]);
+//		modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + "_FinalLowerJawModel.stl";
+//		cout << "pathname: " << modelNameStr << endl;
+//		lower_finish_model_io.writeModel(modelNameStr, "stlb");
+//	}
+//	glWidget->m_ModelsVt.clear();
+//	glWidget->update();
+//
+//	this->setVisible(false);
+//	tabMainPage->showMaximized();
+//}
 
 void ScanMainGUI::scanJawScanBtnClick()
 {
@@ -2639,7 +2227,11 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	m_plowerTeethModel = nullptr;
 	m_pupperTeethModel = nullptr;
 	tabMainPage->hide();
-	cameraWindow->setVisible(false);
+	{
+		ui.topCameraLabel->setVisible(false);
+		ui.bottomCameraLabel->setVisible(false);
+		ui.cameraImageLabel->setVisible(false);
+	}
 	this->ui.orderInfoPanel->setVisible(true);
 	this->showMaximized();
 	ui.orderNoLabel->setText(QString::fromLocal8Bit(orderInfo.strOrderNumber.c_str()));
@@ -2660,7 +2252,7 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 		int chooseID = -1;
 		for (int i = 0; i < 32;i++) {
 			chooseID = orderInfo.eTeethScanType[i];
-			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + QString::number(chooseID+1, 10) + ".png",
+			QString dstpath = ":/MainWidget/Resources/images/" + QString::number(chooseID + 1, 10) + QString::number(chooseID+1, 10) + ".png",
 				srcPath = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";;
 			QImage resultImage, destinationImage, sourceImage;
 			if (chooseID == eDentalImplantScan) {
@@ -2845,23 +2437,23 @@ void ScanMainGUI::calibImageCameraSlot(int endFlag)
 	rightImageMat = ControlScanThread->calibImageCamera[CameraImageSize - 1];
 
 	leftCalibCameraImage = Mat2QImage(leftImageMat);
-	tabMainPage->leftCameraLable->clear();
-	tabMainPage->leftCameraLable->setPixmap(QPixmap::fromImage(leftCalibCameraImage));
-	tabMainPage->leftCameraLable->setScaledContents(true);
+	tabMainPage->ui.leftCameraLable->clear();
+	tabMainPage->ui.leftCameraLable->setPixmap(QPixmap::fromImage(leftCalibCameraImage));
+	tabMainPage->ui.leftCameraLable->setScaledContents(true);
 	rightCalibCameraImage = Mat2QImage(rightImageMat);
-	tabMainPage->rightCameraLable->clear();
-	tabMainPage->rightCameraLable->setPixmap(QPixmap::fromImage(rightCalibCameraImage));;
-	tabMainPage->rightCameraLable->setScaledContents(true);
+	tabMainPage->ui.rightCameraLable->clear();
+	tabMainPage->ui.rightCameraLable->setPixmap(QPixmap::fromImage(rightCalibCameraImage));;
+	tabMainPage->ui.rightCameraLable->setScaledContents(true);
 	cout << "endFlag: " << endFlag << endl;
 	if (endFlag == 1)
 	{
 		_sleep(3000);
-		tabMainPage->leftCameraLable->clear();
-		tabMainPage->rightCameraLable->clear();
-		tabMainPage->leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-		tabMainPage->rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-		tabMainPage->leftCameraLable->update();
-		tabMainPage->rightCameraLable->update();
+		tabMainPage->ui.leftCameraLable->clear();
+		tabMainPage->ui.rightCameraLable->clear();
+		tabMainPage->ui.leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->ui.rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+		tabMainPage->ui.leftCameraLable->update();
+		tabMainPage->ui.rightCameraLable->update();
 		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("标定结束!"));
 		box.setStandardButtons(QMessageBox::Yes);
 		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
@@ -2902,87 +2494,87 @@ void ScanMainGUI::updateRegMeshSlot()
 	this->showMaximized();
 }
 
-void ScanMainGUI::ShowHideUpperModel()
-{
-	if (ControlComputeThread->regUpperModelFlag == false)
-	{
-		return;
-	}
-	glWidget->m_ModelsVt.clear();
-	if (ControlComputeThread->showUpperModelFlag == true)
-	{
-		ControlComputeThread->showUpperModelFlag = false;
-		if (ControlComputeThread->showLowerModelFlag == true)
-		{
-			int size = ControlComputeThread->lower_mModel.size();
-			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
-			glWidget->makeObject();
-		}
-		else
-		{
-			glWidget->update();
-		}
-	}
-	else
-	{
-		ControlComputeThread->showUpperModelFlag = true;
-		if (ControlComputeThread->showLowerModelFlag == true)
-		{
-			glWidget->mm = ControlComputeThread->allRegModel;
-			glWidget->makeObject();
-		}
-		else
-		{
-			int size = ControlComputeThread->upper_mModel.size();
-			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
-			glWidget->makeObject();
-		}
-	}
-
-	this->showMaximized();
-}
-
-void ScanMainGUI::ShowHideLowerModel()
-{
-	if (ControlComputeThread->regLowerModelFlag == false)
-	{
-		return;
-	}
-	glWidget->m_ModelsVt.clear();
-	if (ControlComputeThread->showLowerModelFlag == true)
-	{
-		ControlComputeThread->showLowerModelFlag = false;
-		if (ControlComputeThread->showUpperModelFlag == true)
-		{
-			int size = ControlComputeThread->upper_mModel.size();
-			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
-			glWidget->makeObject();
-		}
-		else
-		{
-			glWidget->update();
-		}
-	}
-	else
-	{
-		ControlComputeThread->showLowerModelFlag = true;
-		if (ControlComputeThread->showUpperModelFlag == true)
-		{
-			glWidget->mm = ControlComputeThread->allRegModel;
-			glWidget->makeObject();
-		}
-		else
-		{
-			int size = ControlComputeThread->lower_mModel.size();
-			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
-			glWidget->makeObject();
-		}
-	}
-
-
-	this->showMaximized();
-}
-
+//void ScanMainGUI::ShowHideUpperModel()
+//{
+//	if (ControlComputeThread->regUpperModelFlag == false)
+//	{
+//		return;
+//	}
+//	glWidget->m_ModelsVt.clear();
+//	if (ControlComputeThread->showUpperModelFlag == true)
+//	{
+//		ControlComputeThread->showUpperModelFlag = false;
+//		if (ControlComputeThread->showLowerModelFlag == true)
+//		{
+//			int size = ControlComputeThread->lower_mModel.size();
+//			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
+//			glWidget->makeObject();
+//		}
+//		else
+//		{
+//			glWidget->update();
+//		}
+//	}
+//	else
+//	{
+//		ControlComputeThread->showUpperModelFlag = true;
+//		if (ControlComputeThread->showLowerModelFlag == true)
+//		{
+//			glWidget->mm = ControlComputeThread->allRegModel;
+//			glWidget->makeObject();
+//		}
+//		else
+//		{
+//			int size = ControlComputeThread->upper_mModel.size();
+//			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
+//			glWidget->makeObject();
+//		}
+//	}
+//
+//	this->showMaximized();
+//}
+//
+//void ScanMainGUI::ShowHideLowerModel()
+//{
+//	if (ControlComputeThread->regLowerModelFlag == false)
+//	{
+//		return;
+//	}
+//	glWidget->m_ModelsVt.clear();
+//	if (ControlComputeThread->showLowerModelFlag == true)
+//	{
+//		ControlComputeThread->showLowerModelFlag = false;
+//		if (ControlComputeThread->showUpperModelFlag == true)
+//		{
+//			int size = ControlComputeThread->upper_mModel.size();
+//			glWidget->mm = ControlComputeThread->upper_mModel[size - 1];
+//			glWidget->makeObject();
+//		}
+//		else
+//		{
+//			glWidget->update();
+//		}
+//	}
+//	else
+//	{
+//		ControlComputeThread->showLowerModelFlag = true;
+//		if (ControlComputeThread->showUpperModelFlag == true)
+//		{
+//			glWidget->mm = ControlComputeThread->allRegModel;
+//			glWidget->makeObject();
+//		}
+//		else
+//		{
+//			int size = ControlComputeThread->lower_mModel.size();
+//			glWidget->mm = ControlComputeThread->lower_mModel[size - 1];
+//			glWidget->makeObject();
+//		}
+//	}
+//
+//
+//	this->showMaximized();
+//
+//}
 bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, long *)
 {
 	MSG* msg = reinterpret_cast<MSG*>(message);
@@ -3054,6 +2646,7 @@ bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, 
 			{
 				ControlScanThread->l_usbStream.InitUSBBufferParameter();
 				m_usbDeviceState = true;
+				tabMainPage->m_usbDeviceState = m_usbDeviceState;
 			}
 		}
 	}
@@ -3073,6 +2666,7 @@ void ScanMainGUI::initUSBDevice()
 		m_usbDeviceState = true;
 		bPnP_DevNodeChange = 1;
 	}
+	tabMainPage->m_usbDeviceState = m_usbDeviceState;
 	emit usbDeviceSignal();
 }
 
@@ -3091,3 +2685,4 @@ void ScanMainGUI::usbDeviceSlot()
 		box.exec();
 	}
 }
+

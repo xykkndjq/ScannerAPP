@@ -125,11 +125,11 @@ public:
 signals:
 	void calibImageSignal(int endFlag);
 public slots:
-	void normalControlScan();
-	void normalAllJawControlScan();
+	//void normalControlScan();
+	//void normalAllJawControlScan();
 	void controlCalibrationScan();
 	void compensationControlScan();
-	void controlGlobalCaliScan();
+	//void controlGlobalCaliScan();
 
 	void allJawScan();
 	void normalScan();

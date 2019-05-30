@@ -128,10 +128,8 @@ signals:
 	void progressBarSetSignal(int min,int max, bool bVisible);
 public slots:
 	void FarRegistrationSlot();//??????????
-	void normalComputeScan(int chooseJawIndex);//??????
-	void normalAllJawComputeScan();
-	void compensationComputeScan(int chooseJawIndex);
-	void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
+	//void normalAllJawComputeScan();
+	//void GPAMeshing(int chooseJawIndex);//全局配准和Meshing
 
 	void normalComputeScan();
 	void allJawComputeScan();

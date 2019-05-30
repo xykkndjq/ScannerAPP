@@ -86,15 +86,6 @@
     <ClCompile Include="ComputeThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ScanTipWidget.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ScanTipWidget.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="ScanTipWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_glWidget.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -170,6 +161,15 @@
     <ClCompile Include="CutBoxModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HeaderBtn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ScanTipWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ScanTipWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -199,12 +199,6 @@
     <CustomBuild Include="ComputeThread.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ScanTipWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ScanTipWidget.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="glWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -226,9 +220,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_ScanTipWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="octree.hpp">
@@ -283,6 +274,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CutBoxModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderBtn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ScanTipWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

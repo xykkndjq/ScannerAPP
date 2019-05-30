@@ -15,7 +15,7 @@
 #include "ControlThread.h"
 #include "ComputeThread.h"
 #include "TabMainGUI.h"
-#include "ScanTipWidget.h"
+//#include "ScanTipWidget.h"
 
 class ScanMainGUI : public QWidget, public QAbstractNativeEventFilter,public IGlWidget
 {
@@ -24,6 +24,10 @@ class ScanMainGUI : public QWidget, public QAbstractNativeEventFilter,public IGl
 public:
 	ScanMainGUI(QWidget *parent = Q_NULLPTR);
 	~ScanMainGUI();
+
+	QTimer *timer;
+
+	int globalSpinCutValue = 0;
 
 	bool	bPnP_Arrival = false;
 	bool	bPnP_Removal = false;
@@ -55,13 +59,13 @@ public:
 	forwardIndex = 2；"下一步"
 	forwardIndex = 3；"完成"*/
 
-	int upperJawIndex = 1;
+	//int upperJawIndex = 1;
 
-	int lowerJawIndex = 1;
+	//int lowerJawIndex = 1;
 
-	int allJawIndex = 1;
+	//int allJawIndex = 1;
 
-	int chooseJawIndex = 0;//1代表是只扫上颌；2代表只扫下颌；3代表扫全颌；
+	//int chooseJawIndex = 0;//1代表是只扫上颌；2代表只扫下颌；3代表扫全颌；
 
 	bool compensationFlag = false;
 
@@ -72,13 +76,13 @@ public:
 	ComputeThread *ControlComputeThread;
 	QThread *controlScanQThread, *controlComputeQThread;
 
-	ScanTipWidget *scanTipWidget;
+	//ScanTipWidget *scanTipWidget;
 
 	void initVariable();
 	void constructIHM();
 	void setConnections();
 	//扫描模型
-	void CalculatePointCloud();
+	//void CalculatePointCloud();
 	void splitModelCalculatePointCloud(pCScanTask pScanTask);
 	//Mat2QImage
 	QImage Mat2QImage(const cv::Mat &InputMat);
@@ -90,7 +94,7 @@ public:
 	int lowerCutModelNum = 0;
 	int allCutModelNum = 0;
 	//删除所有切割数据
-	void deleteAllCutModel();
+	//void deleteAllCutModel();
 
 	pCTeethModel m_pupperTeethModel;
 	pCTeethModel m_plowerTeethModel;
@@ -105,18 +109,17 @@ public:
 		ui.DentalImplantNextBtn->setEnabled(true);
 	}
 signals:
-	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
-	void startAllJawNormalScan();
+	//void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
+	//void startAllJawNormalScan();
 	void startControlCalibrationSignal();//开始标定信号
-	void compensationSignal(int chooseJawIndex);//补充扫描信号
+	//void compensationSignal(int chooseJawIndex);//补充扫描信号
 	void doScanSignal();
 	void cutSurfaceSignal(bool bShow);
 
-	void gpaMeshSignal(int chooseJawIndex);
-	void saveCutModelSignal();//保存切割后的模型
+	//void gpaMeshSignal(int chooseJawIndex);
 	void farRegistrationSignal();
 
-	void updateMeshModelSingel(int refreshIndex);//刷新模型显示信号
+	//void updateMeshModelSingel(int refreshIndex);//刷新模型显示信号
 	void updateModelsVtSingle();
 	void saveModeltoFileSignal();
 
@@ -134,54 +137,51 @@ private:
 
 	GLWidget *glWidget;
 	//顶部模型操作栏
-	QToolButton *leftWatchButton;
-	QToolButton *rightWatchButton;
-	QToolButton *topWatchButton;
-	QToolButton *bottomWatchButton;
-	QToolButton *frontWatchButton;
-	QToolButton *backWatchButton;
-	QToolButton *enlargeButton;
-	QToolButton *shrinkButton;
-	CTeethImgBtn * m_closeBtn;
+	//QToolButton *leftWatchButton;
+	//QToolButton *rightWatchButton;
+	//QToolButton *topWatchButton;
+	//QToolButton *bottomWatchButton;
+	//QToolButton *frontWatchButton;
+	//QToolButton *backWatchButton;
+	//QToolButton *enlargeButton;
+	//QToolButton *shrinkButton;
+	//CTeethImgBtn * m_closeBtn;
 	//底部模型操作栏
 	bool bSelected = false;
-	QToolButton *selectRegionButton;
-	QToolButton *deleteModelButton;
+	//QToolButton *selectRegionButton;
+	//QToolButton *deleteModelButton;
 
 	//相机显示窗口
-	QDockWidget *cameraWindow;
-	QPushButton *autoTunePushButton;
-	QLabel *cameraImageLabel;
-	QSpinBox *spinCameraBox;
-	QSlider *sliderCamera;
+	//QDockWidget *cameraWindow;
+	//QPushButton *autoTunePushButton;
+	//QLabel *cameraImageLabel;
+	//QSpinBox *spinCameraBox;
+	//QSlider *sliderCamera;
 	bool m_bsplitModelFlag;	//分模
 	private slots:
 	void closeBtnClicked();
 	//标定
 	void ToothCalibrateSlot();
-	void GlobalCalibrateSlot();
+	//void GlobalCalibrateSlot();
 	void calibImageCameraSlot(int endFlag);//更新标定相机照片
 
 	//展示模型
-	void updateMeshModel(int refreshIndex);
-	void updateModelsVtSlot();
+	//void updateMeshModel(int refreshIndex);
+	//void updateModelsVtSlot();
 	void updateCamera();
 	void updateRegMeshSlot();
 
 	//完成后，显示或隐藏模型按钮
-	void ShowHideUpperModel();//显示或者隐藏上颌
-	void ShowHideLowerModel();//显示或者隐藏下颌
+	//void ShowHideUpperModel();//显示或者隐藏上颌
+	//void ShowHideLowerModel();//显示或者隐藏下颌
 
 	void doScanDialogSlot(QJsonObject scanObj);
 
-	//扫描
-	void judgeForwardStep();
-	void JawScan();
+	
 	//补扫
-	void compensationScan();
+	//void compensationScan();
 	//撤销补扫
-	void discardCompensationSlot();
-	void judgeBackStep();
+	//void discardCompensationSlot();
 
 	//操作模型
 	void topModelWatchSlot();
@@ -198,16 +198,13 @@ private:
 
 	//cutSurface
 	void showCutSurfaceSlot(bool bShow);//切割模型
-
-	void moveCutSurfaceSpinSlot();//调整切割水平面
-	void moveCutSurfaceSliderSlot();
-	void cutModelSlot();//切割模型
+	//void cutModelSlot();//切割模型
 	void setRotationWaverSlot();//显示旋转和摆动角度
-	void saveCutModelSlot();//保存切割后模型
-	void discardCutModelSlot();//撤销切割模型
+	//void saveCutModelSlot();//保存切割后模型
+	//void discardCutModelSlot();//撤销切割模型
 
 	//保存所有模型到文件
-	void saveModeltoFileSlot();
+	//void saveModeltoFileSlot();
 
 	void scanJawScanBtnClick();
 	void ScanJawBackStepBtnClick();
@@ -276,6 +273,8 @@ private:
 	void progressBarSetSlot(int min, int max, bool bVisible);
 	
 	void usbDeviceSlot();//软件打开时，提示是否USB连接成功
+						 //扫描
+	void JawScanFinish();
 };
 
 #endif

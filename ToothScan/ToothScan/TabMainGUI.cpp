@@ -129,6 +129,20 @@ public:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
 };
+
+void addShadow(QWidget * pWidget) {
+	if (pWidget == nullptr)
+		return;
+	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect();
+
+	shadow_effect->setOffset(0, 0);
+
+	shadow_effect->setColor(/*Qt::gray*/QColor(243,243,243,255));
+
+	shadow_effect->setBlurRadius(8);
+	pWidget->setGraphicsEffect(shadow_effect);
+}
+
 void styleControl(QObject *obj) {
 	//return;
 	QObjectList list = obj->children();
@@ -172,7 +186,7 @@ TabMainGUI::TabMainGUI(QWidget *parent)
 	this->setConnections();
 	m_eScanType = eScanType::eScanNULL;
 	//network_group_box->setGraphicsEffect(shadow_effect);
-	styleControl(this);
+	//styleControl(this);
 	setWindowFlags(Qt::FramelessWindowHint);
 	qRegisterMetaType<COrderInfo>();
 }
@@ -183,223 +197,177 @@ TabMainGUI::~TabMainGUI()
 
 void TabMainGUI::setConnections()
 {
-	//订单信息子页面
-	//导入
-	connect(exportButton, SIGNAL(clicked()), this, SLOT(openFileDialogSlot()));
-
-	//保存
-	connect(saveScanButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
-	connect(saveButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));
-	connect(watchButton, SIGNAL(clicked()), this, SLOT(OrderPreview()));
-	connect(m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
+	/*-----------------------------------------------------------update tabMainGui:begin-------------------------------------------------*/
+	/*----------------------关闭软件------------------------*/
+	connect(ui.btnClose, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));//关闭
+	
+	/*----------------------打开订单管理子页面------------------------*/
+	connect(m_orderMgrBtn, SIGNAL(clicked()), this, SLOT(showOrderInforGroupBox()));//打开设置子页面
+	//订单的新建、导入、预览、保存、订单扫描
+	connect(ui.newPushButton, SIGNAL(clicked()), this, SLOT(newButtonClickedSlot()));//新建
+	connect(ui.openPushButton, SIGNAL(clicked()), this, SLOT(openFileDialogSlot()));//导入
+	connect(ui.watchPushButton, SIGNAL(clicked()), this, SLOT(OrderPreview()));//预览
+	connect(ui.savePushButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));//保存订单信息
+	connect(ui.scanPushButton, SIGNAL(clicked()), this, SLOT(PatientInformationSave()));//保存并扫描订单
 	connect(this, SIGNAL(scanSignal()), this, SLOT(ScanDataPackagePress()));//扫描按钮连接
+
 	//未分模
-	connect(upperJawButton, SIGNAL(clicked()), this, SLOT(UpperJawPress()));
+	connect(ui.unModelPushButton, SIGNAL(clicked()), this, SLOT(showUnModelGroupBox()));//选择未分模功能
+	connect(ui.upperJawPushButton, SIGNAL(clicked()), this, SLOT(UpperJawPress()));
 	connect(this, SIGNAL(exportUpperJawSignal()), this, SLOT(UpperJawPress()));
-	connect(lowerJawButton, SIGNAL(clicked()), this, SLOT(LowerJawPress()));
+	connect(ui.lowerJawPushButton, SIGNAL(clicked()), this, SLOT(LowerJawPress()));
 	connect(this, SIGNAL(exportLowerJawSignal()), this, SLOT(LowerJawPress()));
 
-	//印模
-	connect(MoulageButton1, SIGNAL(clicked()), this, SLOT(MoulagePress1()));
-	connect(this, SIGNAL(exportFirstMoulageSignal()), this, SLOT(MoulagePress1()));
-	connect(MoulageButton2, SIGNAL(clicked()), this, SLOT(MoulagePress2()));
-	connect(this, SIGNAL(exportSecondMoulageSignal()), this, SLOT(MoulagePress2()));
-	connect(MoulageButton3, SIGNAL(clicked()), this, SLOT(MoulagePress3()));
-	connect(this, SIGNAL(exportThirdMoulageSignal()), this, SLOT(MoulagePress3()));
-
 	//分模
+	connect(ui.spliteModelPushButton, SIGNAL(clicked()), this, SLOT(showSpliteModelGroupBox()));//选择未分模功能
 	connect(toothRadioButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(ToothGroupClicked(int)));
-	connect(clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllButtonPress()));
+	connect(ui.clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllButtonPress()));
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < TOOTHNUM; i++)
 	{
 		connect(toothList[i], SIGNAL(clicked()), this, SLOT(ToothButtonListPress()));
 	}
-	connect(settingButtonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
 
-	connect(saveSpliteModelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(saveSpliteModelCheckBoxClicked(int)));
+	//印模
+	connect(ui.moulagePushButton, SIGNAL(clicked()), this, SLOT(showMoulageGroupBox()));//选择未分模功能
+	connect(ui.moulagePushButton_1, SIGNAL(clicked()), this, SLOT(MoulagePress1()));
+	connect(this, SIGNAL(exportFirstMoulageSignal()), this, SLOT(MoulagePress1()));
+	connect(ui.moulagePushButton_2, SIGNAL(clicked()), this, SLOT(MoulagePress2()));
+	connect(this, SIGNAL(exportSecondMoulageSignal()), this, SLOT(MoulagePress2()));
+	connect(ui.moulagePushButton_3, SIGNAL(clicked()), this, SLOT(MoulagePress3()));
+	connect(this, SIGNAL(exportThirdMoulageSignal()), this, SLOT(MoulagePress3()));
 
-	connect(choosePathButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
+	/*----------------------打开标定子页面------------------------*/
+	connect(m_calibrationMgrBtn, SIGNAL(clicked()), this, SLOT(showCalibrationGroupBox()));//打开标定子页面
 
-	connect(newButton, SIGNAL(clicked()), this, SLOT(newButtonClickedSlot()));
+	/*----------------------打开设置子页面------------------------*/
+	connect(m_settingMgrBtn, SIGNAL(clicked()), this, SLOT(showSettingGroupBox()));//打开设置子页面
+	//connect(ui.checkBoxGroupBox, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
+	connect(ui.saveSpliteModelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(saveSpliteModelCheckBoxClicked(int)));
+	connect(ui.choosePathPushButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
+
+	/*----------------------打开关于子页面------------------------*/
+	connect(m_aboutMgrBtn, SIGNAL(clicked()), this, SLOT(showAboutGroupBox()));//打开设置子页面
+	/*-------------------------------------------------------update tabMainGui:end---------------------------------------------------------*/
 }
 
-void TabMainGUI::newButtonClickedSlot() {
-	QDateTime currentDateTime = QDateTime::currentDateTime();
-	dateLineEdit->setDateTime(currentDateTime);
-	dateLineEdit->setReadOnly(true);
 
-	QString curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
-	lastDateTimeStr = curDateTimeStr;
-	orderLineEdit->setText(curDateTimeStr);
-	//orderLineEdit->setReadOnly(true);
-	patientLineEdit->setText("");
-	doctorLineEdit->setText("");
-	operatorLineEdit->setText("");
-	additionTextEdit->setText("");
-	CTaskManager::getInstance()->DelAllTasks();
-	clearAllButtonPress();
-}
 
 void TabMainGUI::initVariable()
 {
-	totalGLayOut = new QGridLayout(this);
+	//totalGLayOut = new QGridLayout(this);
 
-	totalTabWidget = new QTabWidget(this);
+	//totalTabWidget = new QTabWidget(this);
 
-	orderInforWidget = new QWidget(this);
-	settingWidget = new QWidget(this);
-	calibrateWidget = new QWidget(this);
-	aboutWidget = new QWidget(this);
+	//orderInforWidget = new QWidget(this);
+	//settingWidget = new QWidget(this);
+	//calibrateWidget = new QWidget(this);
+	//aboutWidget = new QWidget(this);
 
 	//orderInformPage订单管理页面
 	//topbutton
-	newButton = new QPushButton(QStringLiteral("新   建"), this);
-	newButton->setFixedSize(180, 30);
+	//newButton = new QPushButton(QStringLiteral("新   建"), this);
+	//newButton->setFixedSize(180, 30);
 
-	exportButton = new QPushButton(QStringLiteral("导   入"), this);
-	exportButton->setFixedSize(180, 30);
+	//exportButton = new QPushButton(QStringLiteral("导   入"), this);
+	//exportButton->setFixedSize(180, 30);
 	//saveButton = new QPushButton(QStringLiteral("保存"), this);
-	watchButton = new QPushButton(QStringLiteral("预   览"), this);
-	watchButton->setFixedSize(180, 30);
-	saveScanButton = new QPushButton(QStringLiteral("扫描"), this);
-	saveScanButton->setFixedSize(180, 30);
+	//watchButton = new QPushButton(QStringLiteral("预   览"), this);
+	//watchButton->setFixedSize(180, 30);
+	//saveScanButton = new QPushButton(QStringLiteral("扫描"), this);
+	//saveScanButton->setFixedSize(180, 30);
 
-	saveButton = new QPushButton(QStringLiteral("保存"), this);
-	saveButton->setFixedSize(180, 30);
+	//saveButton = new QPushButton(QStringLiteral("保存"), this);
+	//saveButton->setFixedSize(180, 30);
 
-	m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png","",this);
-	m_closeBtn->setFixedSize(30, 30);
-
-	//leftbutton
-	dateLineEdit = new QDateTimeEdit(this);
+	//m_closeBtn = new CTeethImgBtn("./Resources/images/closebtn.png","",this);
+	//m_closeBtn->setFixedSize(30, 30);
+	
+	addShadow(ui.mainGroupBox);
+	/*订单管理页面*/
+	
+	//利用当前时间设置订单编号
 	QDateTime currentDateTime = QDateTime::currentDateTime();
-	dateLineEdit->setDateTime(currentDateTime);
-	dateLineEdit->setReadOnly(true);
+	QString curDateTimeStr = currentDateTime.toString("yyyy/MM/dd/hh:mm:ss");
+	ui.orderDateLineEdit->setText(curDateTimeStr);
+	ui.orderDateLineEdit->setReadOnly(true);
 
-	orderLineEdit = new QLineEdit(this);
-	QString curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
+	curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
+	
 	lastDateTimeStr = curDateTimeStr;
-	orderLineEdit->setText(curDateTimeStr);
+	ui.orderNumLineEdit->setText(curDateTimeStr);
 	QRegExp regx("[0-9]+$");
-	QValidator* validator = new QRegExpValidator(regx, orderLineEdit);
-	orderLineEdit->setValidator(validator);
-	//orderLineEdit->setReadOnly(true);
+	QValidator* validator = new QRegExpValidator(regx, ui.orderNumLineEdit);
+	ui.orderNumLineEdit->setValidator(validator);
 
-	patientLineEdit = new QLineEdit(this);
-	doctorLineEdit = new QLineEdit(this);
-	additionTextEdit = new QTextEdit(this);
-	operatorLineEdit = new QLineEdit(this);
-	additionLabel = new QLabel(QStringLiteral("备注："), this);
-	//未分模
-	upperJawButton = new QPushButton(this);
-	upperJawButton->setFixedSize(310, 110);
-	upperJawButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}"
-		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
-	lowerJawButton = new QPushButton(this);
-	lowerJawButton->setFixedSize(310, 110);
-	lowerJawButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}"
-		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
-	//印模
-	MoulageButton1 = new QPushButton(this);
-	MoulageButton1->setFixedSize(362, 185);
-	MoulageButton1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}"
-		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/Moulage1_yes.png);}");
-	MoulageButton2 = new QPushButton(this);
-	MoulageButton2->setFixedSize(362, 185);
-	MoulageButton2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}"
-		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/Moulage2_yes.png);}");
-	MoulageButton3 = new QPushButton(this);
-	MoulageButton3->setFixedSize(362, 185);
-	MoulageButton3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}"
-		"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/Moulage3_yes.png);}");
+	//顶部：订单管理、设置、标定、关于控件
+	headerButtonGroup = new QButtonGroup();
+	headerButtonGroup->setExclusive(true);
+	m_orderMgrBtn = new CHeaderCheckBtn(":/MainWidget/Resources/images/orderIconCheck.png",
+		":/MainWidget/Resources/images/orderIconUnCheck.png", QStringLiteral("订单管理"),
+		QColor(255, 255, 255, 0), QColor(40, 138, 237, 255), QColor(160, 160, 160, 255),
+		QColor(40, 138, 237, 255), ui.mainGroupBox);
+	m_settingMgrBtn = new CHeaderCheckBtn(":/MainWidget/Resources/images/setIconChecked.png",
+		":/MainWidget/Resources/images/setIconUnCheck.png", QStringLiteral("设置"),
+		QColor(255, 255, 255, 0), QColor(40, 138, 237, 255), QColor(160, 160, 160, 255),
+		QColor(40, 138, 237, 255), ui.mainGroupBox);;
+	m_calibrationMgrBtn = new CHeaderCheckBtn(":/MainWidget/Resources/images/bdIconChecked.png",
+		":/MainWidget/Resources/images/bdIconUnCheck.png", QStringLiteral("标定"),
+		QColor(255, 255, 255, 0), QColor(40, 138, 237, 255), QColor(160, 160, 160, 255),
+		QColor(40, 138, 237, 255), ui.mainGroupBox);;
+	m_aboutMgrBtn = new CHeaderCheckBtn(":/MainWidget/Resources/images/aboutIconCheck.png",
+		":/MainWidget/Resources/images/aboutIconUncheck.png", QStringLiteral("关于"),
+		QColor(255, 255, 255, 0), QColor(40, 138, 237, 255), QColor(160, 160, 160, 255),
+		QColor(40, 138, 237, 255), ui.mainGroupBox);
+	m_orderMgrBtn->setGeometry(717, 40, 110, 60);
+	m_settingMgrBtn->setGeometry(857, 40, 110, 60);
+	m_calibrationMgrBtn->setGeometry(997, 40, 110, 60);
+	m_aboutMgrBtn->setGeometry(1137, 40, 110, 60);
+	m_orderMgrBtn->setCheckable(true);
+	m_settingMgrBtn->setCheckable(true);
+	m_calibrationMgrBtn->setCheckable(true);
+	m_aboutMgrBtn->setCheckable(true);
+	headerButtonGroup->addButton(m_orderMgrBtn);
+	headerButtonGroup->addButton(m_settingMgrBtn);
+	headerButtonGroup->addButton(m_calibrationMgrBtn);
+	headerButtonGroup->addButton(m_aboutMgrBtn);
+
+	m_orderMgrBtn->setChecked(true);
+
+	//右侧：未分模、分模、印模
+	rightButtonGroup = new QButtonGroup();
+	rightButtonGroup->setExclusive(true);
+	rightButtonGroup->addButton(ui.unModelPushButton);
+	rightButtonGroup->addButton(ui.spliteModelPushButton);
+	rightButtonGroup->addButton(ui.moulagePushButton);
+	ui.unModelPushButton->setChecked(true);
+
+
 	//分模
-	//splitleft
+	//split
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
 		int row = i / 8;
 		int col = i % 8;
 		int value = (row + 1) * 10 + col + 1;
-		QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
-		//cout <<"i="<<i<<" num = " <<nNum << endl;
-		path = "QPushButton{background-image: url(./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png);}";
-		//toothList[i]->setStyleSheet(path);
-		path = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";
+		QString path = ":/MainWidget/Resources/images/0/" + QString::number(value, 10) + ".png";
+		//QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}";
 		CTeethImgBtn *toothPushButton = new CTeethImgBtn(path, QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10));
-// 		toothPushButton->setFixedSize(40, 40);
-// 		toothPushButton->setStyleSheet("border-width: 1px;border-style: solid;border-color: rgb(128, 128, 128);");
 		toothList.append(toothPushButton);
 		toothList[i]->setObjectName(QString::number(i, 10));
-// 		QImage img(path);
-// 		//cout << "img.width()" << img.width() << "img.height()" << img.height() << endl;
-// 		toothList[i]->setFixedSize(img.width(), img.height());
-// 		QImage resultImage;
-// 		resultImage = QImage(img.size(), QImage::Format_ARGB32_Premultiplied);
-// 		QPainter painter(&resultImage);
-// 		painter.setCompositionMode(QPainter::CompositionMode_Source);
-//  		painter.fillRect(resultImage.rect(), Qt::transparent);
-//  		painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-// 		painter.drawImage(0, 0, img);
-// 		QTextOption option;
-// 		option.setAlignment(Qt::AlignCenter);
-// 		painter.drawText(resultImage.rect(),QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10), option);
-// 		painter.end();
-// 		toothList[i]->setIcon(QPixmap::fromImage(resultImage));
-// 		toothList[i]->setStyleSheet("border:0px");
-// 		toothList[i]->setIconSize(QPixmap::fromImage(resultImage).rect().size());
-
 		toothFlagList.append(false);
+		addShadow(toothPushButton);
 		toothID.append(0);
 		m_pTeethScanTaskArray[i] = make_shared<CScanTask>();
 		m_pTeethScanTaskArray[i]->Set_TeethId(i);
 	}
-// 	toothList[0]->setText("11");
-// 	toothList[1]->setText("12");
-// 	toothList[2]->setText("13");
-// 	toothList[3]->setText("14");
-// 	toothList[4]->setText("15");
-// 	toothList[5]->setText("16");
-// 	toothList[6]->setText("17");
-// 	toothList[7]->setText("18");
-// 
-// 	toothList[8]->setText("21");
-// 	toothList[9]->setText("22");
-// 	toothList[10]->setText("23");
-// 	toothList[11]->setText("24");
-// 	toothList[12]->setText("25");
-// 	toothList[13]->setText("26");
-// 	toothList[14]->setText("27");
-// 	toothList[15]->setText("28");
-// 
-// 	toothList[16]->setText("31");
-// 	toothList[17]->setText("32");
-// 	toothList[18]->setText("33");
-// 	toothList[19]->setText("34");
-// 	toothList[20]->setText("35");
-// 	toothList[21]->setText("36");
-// 	toothList[22]->setText("37");
-// 	toothList[23]->setText("38");
-// 
-// 	toothList[24]->setText("41");
-// 	toothList[25]->setText("42");
-// 	toothList[26]->setText("43");
-// 	toothList[27]->setText("44");
-// 	toothList[28]->setText("45");
-// 	toothList[29]->setText("46");
-// 	toothList[30]->setText("47");
-// 	toothList[31]->setText("48");
-
-	clearAllButton = new QPushButton(QStringLiteral("清除所有"));
-	clearAllButton->setFixedSize(60, 20);
 
 	//splitright
 	toothRadioButtonGroup = new QButtonGroup();
 	toothRadioButtonGroup->setExclusive(true);
 
 	totalCrownButton = new CImageBtn("./Resources/images/facing.png",QColor(255,0,0,100),QStringLiteral("牙冠"));
-// 	totalCrownButton = new QCheckBox(QStringLiteral("牙冠"));
-// 	totalCrownButton->setFixedSize(150, 30);
-// 	totalCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+
 	totalCrownButton->setCheckable(true);
 
 	toothCrownButton = new CImageBtn("./Resources/images/facing.png", QColor(126, 90, 34, 100), QStringLiteral("嵌体"));
@@ -411,364 +379,351 @@ void TabMainGUI::initVariable()
 	inlayButton = new CImageBtn("./Resources/images/inlay.png", QColor(0, 0, 255, 100), QStringLiteral("种植牙"));
 	inlayButton->setCheckable(true);
 
-// 	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
-// 	jawToothButton->setFixedSize(150, 30);
-// 	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
 
 	jawToothButton = new CImageBtn("./Resources/images/inlay.png", QColor(255, 0, 234, 100), QStringLiteral("对颌牙"));
 	jawToothButton->setCheckable(true);
 
-// 	toothCrownButton = new QCheckBox(QStringLiteral("嵌体"));
-// 	toothCrownButton->setFixedSize(150, 30);
-// 	toothCrownButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-// 	lossToothButton = new QCheckBox(QStringLiteral("缺失牙"));
-// 	lossToothButton->setFixedSize(150, 30);
-// 	lossToothButton->setStyleSheet("border-width: 2px;border-style: Zsolid;border-color: rgb(128, 128, 128);");
-// 	lossToothButton->setIcon(QIcon(":/MainWidget/Resources/images/loseTooth.png"));
-// 	inlayButton = new QCheckBox(QStringLiteral("种植牙"));
-// 	inlayButton->setFixedSize(150, 30);
-// 	inlayButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-// 	inlayButton->setIcon(QIcon(":/MainWidget/Resources/images/inlay.png"));
 	facingButton = new QCheckBox(QStringLiteral("           贴面"));
-	facingButton->setFixedSize(150, 30);
+	/*facingButton->setFixedSize(150, 30);
 	facingButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-	facingButton->setIcon(QIcon(":/MainWidget/Resources/images/facing.png"));
+	facingButton->setIcon(QIcon(":/MainWidget/Resources/images/facing.png"));*/
 	waxTypeButton = new QCheckBox(QStringLiteral("               蜡型"));
-	waxTypeButton->setFixedSize(150, 30);
-	waxTypeButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	/*waxTypeButton->setFixedSize(150, 30);
+	waxTypeButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");*/
 	implantButton = new QCheckBox(QStringLiteral("             种植体"));
-	implantButton->setFixedSize(150, 30);
-	implantButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
-// 	jawToothButton = new QCheckBox(QStringLiteral("             对颌牙"));
-// 	jawToothButton->setFixedSize(150, 30);
-// 	jawToothButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");
+	/*implantButton->setFixedSize(150, 30);
+	implantButton->setStyleSheet("border-width: 2px;border-style: solid;border-color: rgb(128, 128, 128);");*/
 
-	//关于页面
-	aboutTextLabel = new QLabel(this);
-	aboutImageLabel = new QLabel(this);
+	/*设置初始页面*/
+	ui.settingGroupBox->setVisible(false);
+	ui.aboutGroupBox->setVisible(false);
+	ui.calibrationGroupBox->setVisible(false);
+	ui.orderGroupBox->setVisible(true);
+	ui.unModelGroupBox->setVisible(true);
+	ui.spliteModelGroupBox->setVisible(false);
+	ui.moulageGroupBox->setVisible(false);
 
-	//calibatepage标定页面
-	calibratePushButton = new QPushButton(QStringLiteral("开始标定"), this);
-	calibratePushButton->setFixedSize(150, 30);
-	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"), this);
-	globalCaliPushButton->setFixedSize(150, 30);
-	leftCameraLable = new QLabel(this);
-	leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-	leftCameraLable->setScaledContents(true);
-	leftCameraLable->setFixedSize(800, 640);
-	rightCameraLable = new QLabel(this);
-	rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
-	rightCameraLable->setScaledContents(true);
-	rightCameraLable->setFixedSize(800, 640);
 
-	//设置子页面
-	settingButtonGroup = new QButtonGroup(this);
-	textureCheckBox = new QCheckBox(this);
-	textureCheckBox->setText(QStringLiteral("纹理"));
-
-	textureCheckBox->setFixedSize(100, 60);
-	ACheckBox = new QCheckBox(this);
-	ACheckBox->setText(QStringLiteral("标志点"));
-	ACheckBox->setFixedSize(100, 60);
-	BCheckBox = new QCheckBox(this);
-	BCheckBox->setText(QStringLiteral("颌架"));
-	BCheckBox->setFixedSize(100, 60);
-	saveSpliteModelCheckBox = new QCheckBox(this);
-	saveSpliteModelCheckBox->setText(QStringLiteral("保存单帧模型"));
-	saveSpliteModelCheckBox->setFixedSize(150, 60);
-
-	settingButtonGroup->addButton(textureCheckBox);
-	settingButtonGroup->addButton(ACheckBox);
-	settingButtonGroup->addButton(BCheckBox);
-	//settingButtonGroup->addButton(saveSpliteModelCheckBox);
-	settingButtonGroup->setExclusive(false);
-
-	scanDataPathLabel = new QLabel(QStringLiteral("扫描路径:"), this);
-	scanDataPathEdit = new QLineEdit(this);
-	scanDataPathEdit->setText("./ScanData");
-	choosePathButton = new QPushButton(QStringLiteral("选择路径"), this);
-
-	{
-		facingButton->setVisible(false);
-		waxTypeButton->setVisible(false);
-		implantButton->setVisible(false);
-		//jawToothButton->setVisible(false);
-	}
+//	//关于页面
+//	aboutTextLabel = new QLabel(this);
+//	aboutImageLabel = new QLabel(this);
+//
+//	//calibatepage标定页面
+//	calibratePushButton = new QPushButton(QStringLiteral("开始标定"), this);
+//	calibratePushButton->setFixedSize(150, 30);
+//	globalCaliPushButton = new QPushButton(QStringLiteral("全局标定"), this);
+//	globalCaliPushButton->setFixedSize(150, 30);
+//	leftCameraLable = new QLabel(this);
+//	leftCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+//	leftCameraLable->setScaledContents(true);
+//	leftCameraLable->setFixedSize(800, 640);
+//	rightCameraLable = new QLabel(this);
+//	rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
+//	rightCameraLable->setScaledContents(true);
+//	rightCameraLable->setFixedSize(800, 640);
+//
+//	//设置子页面
+//	settingButtonGroup = new QButtonGroup(this);
+//	textureCheckBox = new QCheckBox(this);
+//	textureCheckBox->setText(QStringLiteral("纹理"));
+//
+//	textureCheckBox->setFixedSize(100, 60);
+//	ACheckBox = new QCheckBox(this);
+//	ACheckBox->setText(QStringLiteral("标志点"));
+//	ACheckBox->setFixedSize(100, 60);
+//	BCheckBox = new QCheckBox(this);
+//	BCheckBox->setText(QStringLiteral("颌架"));
+//	BCheckBox->setFixedSize(100, 60);
+//	saveSpliteModelCheckBox = new QCheckBox(this);
+//	saveSpliteModelCheckBox->setText(QStringLiteral("保存单帧模型"));
+//	saveSpliteModelCheckBox->setFixedSize(150, 60);
+//
+//	settingButtonGroup->addButton(textureCheckBox);
+//	settingButtonGroup->addButton(ACheckBox);
+//	settingButtonGroup->addButton(BCheckBox);
+//	//settingButtonGroup->addButton(saveSpliteModelCheckBox);
+//	settingButtonGroup->setExclusive(false);
+//
+//	scanDataPathLabel = new QLabel(QStringLiteral("扫描路径:"), this);
+//	scanDataPathEdit = new QLineEdit(this);
+//	scanDataPathEdit->setText("./ScanData");
+//	choosePathButton = new QPushButton(QStringLiteral("选择路径"), this);
+//
+//	{
+//		facingButton->setVisible(false);
+//		waxTypeButton->setVisible(false);
+//		implantButton->setVisible(false);
+//		//jawToothButton->setVisible(false);
+//	}
 }
 
 void TabMainGUI::constructIHM()
 {
-	totalTabWidget->setTabPosition(QTabWidget::West);
-	totalTabWidget->setStyle(new CustomTabStyle);
-	totalTabWidget->setStyleSheet("QTabWidget::pane{ \border-left: 1px solid #eeeeee;}");
+//	totalTabWidget->setTabPosition(QTabWidget::West);
+//	totalTabWidget->setStyle(new CustomTabStyle);
+//	totalTabWidget->setStyleSheet("QTabWidget::pane{ \border-left: 1px solid #eeeeee;}");
+//
+//	//订单管理子页面
+//	totalOrderVLayout = new QVBoxLayout(orderInforWidget);
+//
+//	//topwidget
+//	QWidget *topWidget = new QWidget();
+//	QHBoxLayout *topHLayout = new QHBoxLayout(topWidget);
+//	topHLayout->addStretch(1);
+//	topHLayout->addWidget(newButton);
+//	topHLayout->addStretch(1);
+//	topHLayout->addWidget(exportButton);
+//	topHLayout->addWidget(saveButton);
+//	topHLayout->addWidget(watchButton);
+//	topHLayout->addStretch(6);
+//	topHLayout->addWidget(saveScanButton);
+//	topHLayout->addStretch(8);
+//	topHLayout->addWidget(m_closeBtn);
+//
+//	//leftwidget
+//	QWidget *leftTopWidget = new QWidget();
+//	QFormLayout *leftTopFLayout = new QFormLayout(leftTopWidget);
+//
+//	leftTopFLayout->addRow(QStringLiteral("订单日期:"), dateLineEdit);
+//	leftTopFLayout->addRow(QStringLiteral("订单编号:"), orderLineEdit);
+//	leftTopFLayout->addRow(QStringLiteral("患者姓名:"), patientLineEdit);
+//	leftTopFLayout->addRow(QStringLiteral("医生姓名:"), doctorLineEdit);
+//	leftTopFLayout->addRow(QStringLiteral("技师姓名:"), operatorLineEdit);
+//
+//	QWidget *leftBottomWidget = new QWidget();
+//	QGridLayout *leftBottomFLayout = new QGridLayout(leftBottomWidget);
+//	leftBottomFLayout->addWidget(additionLabel);
+//	leftBottomFLayout->addWidget(additionTextEdit);
+//
+//	QWidget *leftWidget = new QWidget();
+//	QGridLayout *leftGLayout = new QGridLayout(leftWidget);
+//	leftGLayout->addWidget(leftTopWidget);
+//	leftGLayout->addWidget(leftBottomWidget);
+//	QWidget *totalleftWidget = new QWidget();
+//	QHBoxLayout *leftHLayout = new QHBoxLayout(totalleftWidget);
+//	leftHLayout->addWidget(leftWidget);
+//	leftHLayout->addStretch();
+//	//rightWidget
+//	rightTabWidget = new QTabWidget();
+//	rightTabWidget->setStyleSheet("border:0px");
+//	rightTabWidget->setStyle(new CustomTabStyle);
+//	//未分模
+//	QWidget *rightTotalModelVWidget = new QWidget();
+//	QVBoxLayout *rightTotalModelVLayout = new QVBoxLayout(rightTotalModelVWidget);
+//	QWidget *rightTotalModelHWidget = new QWidget();
+//	QHBoxLayout *rightTotalModelHLayout = new QHBoxLayout(rightTotalModelHWidget);
+//	rightTotalModelVLayout->addStretch();
+//	rightTotalModelVLayout->addWidget(upperJawButton);
+//	rightTotalModelVLayout->addWidget(lowerJawButton);
+//	rightTotalModelVLayout->addStretch();
+//
+//	rightTotalModelHLayout->addStretch();
+//	rightTotalModelHLayout->addWidget(rightTotalModelVWidget);
+//	rightTotalModelHLayout->addStretch();
+//
+//	//印模
+//	QWidget *rightMoulageVWidget = new QWidget();
+//	QVBoxLayout *rightMoulageVLayout = new QVBoxLayout(rightMoulageVWidget);
+//	rightMoulageVLayout->addStretch();
+//	rightMoulageVLayout->addWidget(MoulageButton1);
+//	rightMoulageVLayout->addWidget(MoulageButton2);
+//	rightMoulageVLayout->addWidget(MoulageButton3);
+//	rightMoulageVLayout->addStretch();
+//	QWidget *rightMoulageHWidget = new QWidget();
+//	QHBoxLayout *rightMoulageHLayout = new QHBoxLayout(rightMoulageHWidget);
+//	rightMoulageHLayout->addStretch();
+//	rightMoulageHLayout->addWidget(rightMoulageVWidget);
+//	rightMoulageHLayout->addStretch();
+//
+//	rightTabWidget->addTab(rightTotalModelHWidget, QStringLiteral("未分模"));
+//	rightTabWidget->addTab(middleSplitModelWidget, QStringLiteral("分模"));
+//	rightTabWidget->addTab(rightMoulageHWidget, QStringLiteral("印模"));
+//	rightTabWidget->setObjectName("selftabControl");
+////	rightTotalModelHWidget->setStyleSheet("border:0px");
+//
+//	QWidget *bottomWidget = new QWidget();
+//	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
+//	bottomHLayout->setContentsMargins(0, 0, 0, 0);
+//	bottomHLayout->setSpacing(0);
+//	bottomHLayout->addWidget(totalleftWidget);
+//	//bottomHLayout->setStretch();
+//	bottomHLayout->addWidget(rightTabWidget);
+//
+//	totalOrderVLayout->addWidget(topWidget);
+//	totalOrderVLayout->addWidget(bottomWidget);
+//
+//	//关于子页面
+//	totalAboutGLayout = new QGridLayout(aboutWidget);
+//
+//	aboutImageLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/Setting.png"));
+//	aboutTextLabel->setStyleSheet(QString("color:rgb(128,128,128);"));
+//	aboutTextLabel->setText(QStringLiteral("牙齿扫描仪软件是一款对牙齿模型进行扫描，取得相应三维模型的软件，该软件配套牙齿扫描仪器使用。"));
+//
+//	totalAboutGLayout->addWidget(aboutImageLabel, 1, 0, 1, 1);
+//	totalAboutGLayout->addWidget(aboutTextLabel, 1, 3, 1, 2);
+//
+//	//标定子页面
+//	QVBoxLayout *calibVLayout = new QVBoxLayout(calibrateWidget);
+//
+//	QWidget *topCalibHWidget = new QWidget();
+//	QHBoxLayout *topCalibHLayout = new QHBoxLayout(topCalibHWidget);
+//	topCalibHLayout->addStretch(1);
+//	topCalibHLayout->addWidget(globalCaliPushButton);
+//	topCalibHLayout->addStretch(2);
+//	topCalibHLayout->addWidget(calibratePushButton);
+//	topCalibHLayout->addStretch(1);
+//
+//	QWidget *bottomCalibHWidget = new QWidget();
+//	QHBoxLayout *bottomCalibHLayout = new QHBoxLayout(bottomCalibHWidget);
+//	bottomCalibHLayout->addStretch(2);
+//	bottomCalibHLayout->addWidget(leftCameraLable);
+//	bottomCalibHLayout->addStretch(3);
+//	bottomCalibHLayout->addWidget(rightCameraLable);
+//	bottomCalibHLayout->addStretch(2);
+//	calibVLayout->addStretch(2);
+//	calibVLayout->addWidget(topCalibHWidget);
+//	calibVLayout->addStretch(1);
+//	calibVLayout->addWidget(bottomCalibHWidget);
+//	calibVLayout->addStretch(3);
+//
+//	//设置子页面
+//	QVBoxLayout *settingVLayout = new QVBoxLayout(settingWidget);
+//
+//	QWidget *topSettingHWidget = new QWidget();
+//	QHBoxLayout *topSettingHLayout = new QHBoxLayout(topSettingHWidget);
+//	topSettingHLayout->addStretch();
+//	topSettingHLayout->addWidget(textureCheckBox);
+//	topSettingHLayout->addWidget(ACheckBox);
+//	topSettingHLayout->addWidget(BCheckBox);
+//	topSettingHLayout->addStretch();
+//	topSettingHLayout->addWidget(saveSpliteModelCheckBox);
+//	topSettingHLayout->addStretch();
+//
+//	QWidget *bottomSettingHWidget = new QWidget();
+//	QHBoxLayout *bottomSettingHLayout = new QHBoxLayout(bottomSettingHWidget);
+//	bottomSettingHLayout->addStretch();
+//	bottomSettingHLayout->addWidget(scanDataPathLabel);
+//	bottomSettingHLayout->addWidget(scanDataPathEdit);
+//	bottomSettingHLayout->addWidget(choosePathButton);
+//	bottomSettingHLayout->addStretch();
+//
+//	settingVLayout->addStretch(2);
+//	settingVLayout->addWidget(topSettingHWidget);
+//	settingVLayout->addStretch(1);
+//	settingVLayout->addWidget(bottomSettingHWidget);
+//	settingVLayout->addStretch(3);
+//
+//
+//	//总TabWidget
+//	totalTabWidget->addTab(orderInforWidget, QStringLiteral("订单管理"));
+//	totalTabWidget->addTab(settingWidget, QStringLiteral("设置"));
+//	totalTabWidget->addTab(calibrateWidget, QStringLiteral("标定"));
+//	totalTabWidget->addTab(aboutWidget, QStringLiteral("关于"));
+//	totalGLayOut->addWidget(totalTabWidget);
+//	totalGLayOut->setContentsMargins(0, 0, 0, 0);
+//	this->setLayout(totalGLayOut);
 
-	//订单管理子页面
-	totalOrderVLayout = new QVBoxLayout(orderInforWidget);
 
-	//topwidget
-	QWidget *topWidget = new QWidget();
-	QHBoxLayout *topHLayout = new QHBoxLayout(topWidget);
-	topHLayout->addStretch(1);
-	topHLayout->addWidget(newButton);
-	topHLayout->addStretch(1);
-	topHLayout->addWidget(exportButton);
-	topHLayout->addWidget(saveButton);
-	topHLayout->addWidget(watchButton);
-	topHLayout->addStretch(6);
-	topHLayout->addWidget(saveScanButton);
-	topHLayout->addStretch(8);
-	topHLayout->addWidget(m_closeBtn);
 
-	//leftwidget
-	QWidget *leftTopWidget = new QWidget();
-	QFormLayout *leftTopFLayout = new QFormLayout(leftTopWidget);
-
-	leftTopFLayout->addRow(QStringLiteral("订单日期:"), dateLineEdit);
-	leftTopFLayout->addRow(QStringLiteral("订单编号:"), orderLineEdit);
-	leftTopFLayout->addRow(QStringLiteral("患者姓名:"), patientLineEdit);
-	leftTopFLayout->addRow(QStringLiteral("医生姓名:"), doctorLineEdit);
-	leftTopFLayout->addRow(QStringLiteral("技师姓名:"), operatorLineEdit);
-
-	QWidget *leftBottomWidget = new QWidget();
-	QGridLayout *leftBottomFLayout = new QGridLayout(leftBottomWidget);
-	leftBottomFLayout->addWidget(additionLabel);
-	leftBottomFLayout->addWidget(additionTextEdit);
-
-	QWidget *leftWidget = new QWidget();
-	QGridLayout *leftGLayout = new QGridLayout(leftWidget);
-	leftGLayout->addWidget(leftTopWidget);
-	leftGLayout->addWidget(leftBottomWidget);
-	QWidget *totalleftWidget = new QWidget();
-	QHBoxLayout *leftHLayout = new QHBoxLayout(totalleftWidget);
-	leftHLayout->addWidget(leftWidget);
-	leftHLayout->addStretch();
-	//rightWidget
-	rightTabWidget = new QTabWidget();
-	rightTabWidget->setStyleSheet("border:0px");
-	rightTabWidget->setStyle(new CustomTabStyle);
-	//未分模
-	QWidget *rightTotalModelVWidget = new QWidget();
-	QVBoxLayout *rightTotalModelVLayout = new QVBoxLayout(rightTotalModelVWidget);
-	QWidget *rightTotalModelHWidget = new QWidget();
-	QHBoxLayout *rightTotalModelHLayout = new QHBoxLayout(rightTotalModelHWidget);
-	rightTotalModelVLayout->addStretch();
-	rightTotalModelVLayout->addWidget(upperJawButton);
-	rightTotalModelVLayout->addWidget(lowerJawButton);
-	rightTotalModelVLayout->addStretch();
-
-	rightTotalModelHLayout->addStretch();
-	rightTotalModelHLayout->addWidget(rightTotalModelVWidget);
-	rightTotalModelHLayout->addStretch();
 	//分模
-	QWidget *middleSplitModelWidget = new QWidget(rightTabWidget);
-	middleSplitModelWidget->setGeometry(0, 0, 1000, 1000);
 	for (int i = 0; i < TOOTHNUM; i++)
 	{
-		toothList[i]->setParent(middleSplitModelWidget);
+		toothList[i]->setParent(ui.spliteModelGroupBox);
 	}
-	clearAllButton->setParent(middleSplitModelWidget);
-	clearAllButton->setGeometry(220, 390, 60, 20);
-// 	toothList[0]->setGeometry(200, 50, 40, 40);
-// 	toothList[1]->setGeometry(180, 91, 40, 40);
-// 	toothList[2]->setGeometry(160, 132, 40, 40);
-// 	toothList[3]->setGeometry(140, 173, 40, 40);
-// 	toothList[4]->setGeometry(120, 214, 40, 40);
-// 	toothList[5]->setGeometry(100, 255, 40, 40);
-// 	toothList[6]->setGeometry(80, 296, 40, 40);
-// 	toothList[7]->setGeometry(60, 337, 40, 40);
-// 
-// 	toothList[8]->setGeometry(250, 50, 40, 40);
-// 	toothList[9]->setGeometry(270, 91, 40, 40);
-// 	toothList[10]->setGeometry(290, 132, 40, 40);
-// 	toothList[11]->setGeometry(310, 173, 40, 40);
-// 	toothList[12]->setGeometry(330, 214, 40, 40);
-// 	toothList[13]->setGeometry(350, 255, 40, 40);
-// 	toothList[14]->setGeometry(370, 296, 40, 40);
-// 	toothList[15]->setGeometry(390, 337, 40, 40);
-// 
-// 
-// 
-// 
-// 	toothList[23]->setGeometry(390, 437, 40, 40);
-// 	toothList[22]->setGeometry(370, 478, 40, 40);
-// 	toothList[21]->setGeometry(350, 519, 40, 40);
-// 	toothList[20]->setGeometry(330, 560, 40, 40);
-// 	toothList[19]->setGeometry(310, 601, 40, 40);
-// 	toothList[18]->setGeometry(290, 642, 40, 40);
-// 	toothList[17]->setGeometry(270, 683, 40, 40);
-// 	toothList[16]->setGeometry(250, 724, 40, 40);
-// 
-// 	toothList[31]->setGeometry(60, 437, 40, 40);
-// 	toothList[30]->setGeometry(80, 478, 40, 40);
-// 	toothList[29]->setGeometry(100, 519, 40, 40);
-// 	toothList[28]->setGeometry(120, 560, 40, 40);
-// 	toothList[27]->setGeometry(140, 601, 40, 40);
-// 	toothList[26]->setGeometry(160, 642, 40, 40);
-// 	toothList[25]->setGeometry(180, 683, 40, 40);
-// 	toothList[24]->setGeometry(200, 724, 40, 40);
 
-	toothList[0]->move(195, 27);
-	toothList[1]->move(144, 43);
-	toothList[2]->move(105, 76);
-	toothList[3]->move(76, 116);
-	toothList[4]->move(57, 167);
-	toothList[5]->move(42, 222);
-	toothList[6]->move(34, 275);
-	toothList[7]->move(30, 327);
-	toothList[8]->move(254, 27);
-	toothList[9]->move(306, 44);
-	toothList[10]->move(344, 75);
-	toothList[11]->move(370, 115);
-	toothList[12]->move(388, 168);
-	toothList[13]->move(404, 221);
-	toothList[14]->move(415, 277);
-	toothList[15]->move(417, 329);
-	toothList[16]->move(204, 732);
-	toothList[17]->move(163, 723);
-	toothList[18]->move(131, 697);
-	toothList[19]->move(103, 669);
-	toothList[20]->move(74, 625);
-	toothList[21]->move(48, 565);
-	toothList[22]->move(32, 501);
-	toothList[23]->move(30, 442);
-	toothList[24]->move(244, 733);
-	toothList[25]->move(283, 721);
-	toothList[26]->move(318, 698);
-	toothList[27]->move(345, 665);
-	toothList[28]->move(374, 622);
-	toothList[29]->move(399, 565);
-	toothList[30]->move(414, 501);
-	toothList[31]->move(415, 443);
-	toothRadioButtonGroup->setParent(middleSplitModelWidget);
+	toothList[0]->move(150, 23);
+	toothList[1]->move(118, 33);
+	toothList[2]->move(95, 55);
+	toothList[3]->move(72, 85);
+	toothList[4]->move(58, 117);
+	toothList[5]->move(37, 148);
+	toothList[6]->move(25, 195);
+	toothList[7]->move(13, 241);
+
+	toothList[8]->move(193, 23);
+	toothList[9]->move(231, 33);
+	toothList[10]->move(249, 55);
+	toothList[11]->move(268, 85);
+	toothList[12]->move(285, 117);
+	toothList[13]->move(297, 148);
+	toothList[14]->move(320, 195);
+	toothList[15]->move(331, 240);
+
+	toothList[16]->move(186, 530);
+	toothList[17]->move(212, 526);
+	toothList[18]->move(238, 512);
+	toothList[19]->move(258, 492);
+	toothList[20]->move(271, 461);
+	toothList[21]->move(285, 412);
+	toothList[22]->move(305, 366);
+	toothList[23]->move(323, 322);
+
+	toothList[24]->move(159, 530);
+	toothList[25]->move(128, 526);
+	toothList[26]->move(101, 512);
+	toothList[27]->move(76, 492);
+	toothList[28]->move(59, 461);
+	toothList[29]->move(39, 412);
+	toothList[30]->move(23, 366);
+	toothList[31]->move(18, 322);
+
+	/*toothList[0]->move(247, 23);
+	toothList[1]->move(215, 33);
+	toothList[2]->move(192, 55);
+	toothList[3]->move(169, 85);
+	toothList[4]->move(155, 117);
+	toothList[5]->move(134, 148);
+	toothList[6]->move(122, 195);
+	toothList[7]->move(110, 241);
+
+	toothList[8]->move(290, 23);
+	toothList[9]->move(328, 33);
+	toothList[10]->move(346, 55);
+	toothList[11]->move(365, 85);
+	toothList[12]->move(382, 117);
+	toothList[13]->move(394, 148);
+	toothList[14]->move(417, 195);
+	toothList[15]->move(428, 240);
+
+	toothList[16]->move(283,530);
+	toothList[17]->move(309,526);
+	toothList[18]->move(335, 512);
+	toothList[19]->move(355, 492);
+	toothList[20]->move(368, 461);
+	toothList[21]->move(382, 412);
+	toothList[22]->move(402, 366);
+	toothList[23]->move(420, 322);
+
+	toothList[24]->move(256, 530);
+	toothList[25]->move(225, 526);
+	toothList[26]->move(198, 512);
+	toothList[27]->move(173, 492);
+	toothList[28]->move(156, 461);
+	toothList[29]->move(136, 412);
+	toothList[30]->move(120, 366);
+	toothList[31]->move(115, 322);*/
+
+
+	toothRadioButtonGroup->setParent(ui.spliteModelGroupBox);
 	toothRadioButtonGroup->addButton(totalCrownButton, 1);
 	toothRadioButtonGroup->addButton(toothCrownButton, 2);
 	toothRadioButtonGroup->addButton(lossToothButton, 3);
 	toothRadioButtonGroup->addButton(inlayButton, 4);
 	toothRadioButtonGroup->addButton(jawToothButton, 5);
-	//toothRadioButtonGroup->addButton(facingButton, 5);
-	//toothRadioButtonGroup->addButton(waxTypeButton, 6);
-	//toothRadioButtonGroup->addButton(implantButton, 7);
-	//toothRadioButtonGroup->addButton(jawToothButton, 8);
-
-	totalCrownButton->setParent(middleSplitModelWidget);
-	toothCrownButton->setParent(middleSplitModelWidget);
-	lossToothButton->setParent(middleSplitModelWidget);
-	inlayButton->setParent(middleSplitModelWidget);
-// 	facingButton->setParent(middleSplitModelWidget);
-// 	waxTypeButton->setParent(middleSplitModelWidget);
-// 	implantButton->setParent(middleSplitModelWidget);
-	jawToothButton->setParent(middleSplitModelWidget);
-
-	totalCrownButton->setGeometry(550, 100, 200, 50);
-	toothCrownButton->setGeometry(550, 180, 200, 50);
-	lossToothButton->setGeometry(550, 260, 200, 50);
-	inlayButton->setGeometry(550, 340, 200, 50);
-// 	facingButton->setGeometry(550, 300, 150, 30);
-// 	waxTypeButton->setGeometry(550, 350, 150, 30);
-// 	implantButton->setGeometry(550, 400, 150, 30);
-	jawToothButton->setGeometry(550, 420, 200, 50);
-
-	//印模
-	QWidget *rightMoulageVWidget = new QWidget();
-	QVBoxLayout *rightMoulageVLayout = new QVBoxLayout(rightMoulageVWidget);
-	rightMoulageVLayout->addStretch();
-	rightMoulageVLayout->addWidget(MoulageButton1);
-	rightMoulageVLayout->addWidget(MoulageButton2);
-	rightMoulageVLayout->addWidget(MoulageButton3);
-	rightMoulageVLayout->addStretch();
-	QWidget *rightMoulageHWidget = new QWidget();
-	QHBoxLayout *rightMoulageHLayout = new QHBoxLayout(rightMoulageHWidget);
-	rightMoulageHLayout->addStretch();
-	rightMoulageHLayout->addWidget(rightMoulageVWidget);
-	rightMoulageHLayout->addStretch();
-
-	rightTabWidget->addTab(rightTotalModelHWidget, QStringLiteral("未分模"));
-	rightTabWidget->addTab(middleSplitModelWidget, QStringLiteral("分模"));
-	rightTabWidget->addTab(rightMoulageHWidget, QStringLiteral("印模"));
-	rightTabWidget->setObjectName("selftabControl");
-//	rightTotalModelHWidget->setStyleSheet("border:0px");
-
-	QWidget *bottomWidget = new QWidget();
-	QHBoxLayout *bottomHLayout = new QHBoxLayout(bottomWidget);
-	bottomHLayout->setContentsMargins(0, 0, 0, 0);
-	bottomHLayout->setSpacing(0);
-	bottomHLayout->addWidget(totalleftWidget);
-	//bottomHLayout->setStretch();
-	bottomHLayout->addWidget(rightTabWidget);
-
-	totalOrderVLayout->addWidget(topWidget);
-	totalOrderVLayout->addWidget(bottomWidget);
-
-	//关于子页面
-	totalAboutGLayout = new QGridLayout(aboutWidget);
-
-	aboutImageLabel->setPixmap(QPixmap(":/MainWidget/Resources/images/Setting.png"));
-	aboutTextLabel->setStyleSheet(QString("color:rgb(128,128,128);"));
-	aboutTextLabel->setText(QStringLiteral("牙齿扫描仪软件是一款对牙齿模型进行扫描，取得相应三维模型的软件，该软件配套牙齿扫描仪器使用。"));
-
-	totalAboutGLayout->addWidget(aboutImageLabel, 1, 0, 1, 1);
-	totalAboutGLayout->addWidget(aboutTextLabel, 1, 3, 1, 2);
-
-	//标定子页面
-	QVBoxLayout *calibVLayout = new QVBoxLayout(calibrateWidget);
-
-	QWidget *topCalibHWidget = new QWidget();
-	QHBoxLayout *topCalibHLayout = new QHBoxLayout(topCalibHWidget);
-	topCalibHLayout->addStretch(1);
-	topCalibHLayout->addWidget(globalCaliPushButton);
-	topCalibHLayout->addStretch(2);
-	topCalibHLayout->addWidget(calibratePushButton);
-	topCalibHLayout->addStretch(1);
-
-	QWidget *bottomCalibHWidget = new QWidget();
-	QHBoxLayout *bottomCalibHLayout = new QHBoxLayout(bottomCalibHWidget);
-	bottomCalibHLayout->addStretch(2);
-	bottomCalibHLayout->addWidget(leftCameraLable);
-	bottomCalibHLayout->addStretch(3);
-	bottomCalibHLayout->addWidget(rightCameraLable);
-	bottomCalibHLayout->addStretch(2);
-	calibVLayout->addStretch(2);
-	calibVLayout->addWidget(topCalibHWidget);
-	calibVLayout->addStretch(1);
-	calibVLayout->addWidget(bottomCalibHWidget);
-	calibVLayout->addStretch(3);
-
-	//设置子页面
-	QVBoxLayout *settingVLayout = new QVBoxLayout(settingWidget);
-
-	QWidget *topSettingHWidget = new QWidget();
-	QHBoxLayout *topSettingHLayout = new QHBoxLayout(topSettingHWidget);
-	topSettingHLayout->addStretch();
-	topSettingHLayout->addWidget(textureCheckBox);
-	topSettingHLayout->addWidget(ACheckBox);
-	topSettingHLayout->addWidget(BCheckBox);
-	topSettingHLayout->addStretch();
-	topSettingHLayout->addWidget(saveSpliteModelCheckBox);
-	topSettingHLayout->addStretch();
-
-	QWidget *bottomSettingHWidget = new QWidget();
-	QHBoxLayout *bottomSettingHLayout = new QHBoxLayout(bottomSettingHWidget);
-	bottomSettingHLayout->addStretch();
-	bottomSettingHLayout->addWidget(scanDataPathLabel);
-	bottomSettingHLayout->addWidget(scanDataPathEdit);
-	bottomSettingHLayout->addWidget(choosePathButton);
-	bottomSettingHLayout->addStretch();
-
-	settingVLayout->addStretch(2);
-	settingVLayout->addWidget(topSettingHWidget);
-	settingVLayout->addStretch(1);
-	settingVLayout->addWidget(bottomSettingHWidget);
-	settingVLayout->addStretch(3);
 
 
-	//总TabWidget
-	totalTabWidget->addTab(orderInforWidget, QStringLiteral("订单管理"));
-	totalTabWidget->addTab(settingWidget, QStringLiteral("设置"));
-	totalTabWidget->addTab(calibrateWidget, QStringLiteral("标定"));
-	totalTabWidget->addTab(aboutWidget, QStringLiteral("关于"));
-	totalGLayOut->addWidget(totalTabWidget);
-	totalGLayOut->setContentsMargins(0, 0, 0, 0);
-	this->setLayout(totalGLayOut);
+	totalCrownButton->setParent(ui.spliteModelGroupBox);
+	toothCrownButton->setParent(ui.spliteModelGroupBox);
+	lossToothButton->setParent(ui.spliteModelGroupBox);
+	inlayButton->setParent(ui.spliteModelGroupBox);
+	jawToothButton->setParent(ui.spliteModelGroupBox);
+
+	totalCrownButton->setGeometry(420, 100, 200, 50);
+	toothCrownButton->setGeometry(420, 180, 200, 50);
+	lossToothButton->setGeometry(420, 260, 200, 50);
+	inlayButton->setGeometry(420, 340, 200, 50);
+	jawToothButton->setGeometry(420, 420, 200, 50);
+
 
 }
 
@@ -793,28 +748,43 @@ QByteArray TabMainGUI::ToChineseStr(const QString &chineseString)
 	return byteArray;
 }
 
+void TabMainGUI::newButtonClickedSlot() {
+	QDateTime currentDateTime = QDateTime::currentDateTime();
+	QString curDateTimeStr = currentDateTime.toString("yyyy/MM/dd/hh:mm:ss");
+	ui.orderDateLineEdit->setText(curDateTimeStr);
+	ui.orderDateLineEdit->setReadOnly(true);
+
+	curDateTimeStr = currentDateTime.toString("yyyyMMddhhmmss");
+	lastDateTimeStr = curDateTimeStr;
+	ui.orderNumLineEdit->setText(curDateTimeStr);
+	//orderLineEdit->setReadOnly(true);
+	ui.patientNameLineEdit->setText("");
+	ui.doctorNameLineEdit->setText("");
+	ui.operatorNameLineEdit->setText("");
+	ui.additionTextEdit->setText("");
+	CTaskManager::getInstance()->DelAllTasks();
+	clearAllButtonPress();
+}
+
 bool TabMainGUI::judgePatientSaveFlag()
 {
 	coTimeCout ccTimeout;
-	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL&& orderOperatorName != NULL) &&
+	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL) &&
 		(unMoulageFlag == true || doMoulageFlag == true || splitModelFlag == true))
 	{
-		QString tempFilePath = filePath + "/" + orderNumber+"_"+ orderDoctorName+"_"+orderPatientName;
+		QString tempFilePath = filePath + "/" + orderNumber;
 		std::cout << "tempFilePath is " << tempFilePath.toStdString() << std::endl;
 		bool creatFlag = isDirExist(tempFilePath);
 		fileQStr = tempFilePath + "/";
 		std::cout << "fileQStr is " << fileQStr.toStdString() << std::endl;
-		QString strOrderDate = orderDate;
-		strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
-		QByteArray orderPN = ToChineseStr(strOrderDate);
-		std::string filePathStr = Qstring2String(fileQStr)+ orderPN.data() + ".OI";
+		QByteArray orderPN = ToChineseStr(orderPatientName);
+		std::string filePathStr = fileQStr.toStdString() + orderPN.data() + ".OI";
 		std::cout << "string filepath is " << filePathStr << std::endl;
 		cv::FileStorage fwrite(filePathStr.c_str(), cv::FileStorage::WRITE);
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
-			<< "Patient Name" << ToChineseStr(orderPatientName).data()
+			<< "Patient Name" << orderPN.data()
 			<< "Doctor Name" << ToChineseStr(orderDoctorName).data()
-			<<"Operator Name"<< ToChineseStr(orderOperatorName).data()
 			<< "Addition" << ToChineseStr(orderAddition).data()
 			<< "splitModelFlag" << splitModelFlag;
 
@@ -885,7 +855,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < lossToothList.size(); i++)
 						{
-							//fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
+							fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -907,7 +877,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < facingList.size(); i++)
 						{
-							//fwrite << "facing" << facingList[i]->text().toStdString();
+							fwrite << "facing" << facingList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -918,7 +888,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < waxTypeList.size(); i++)
 						{
-							//fwrite << "waxType" << waxTypeList[i]->text().toStdString();
+							fwrite << "waxType" << waxTypeList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -929,7 +899,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < implantList.size(); i++)
 						{
-							//fwrite << "implant" << implantList[i]->text().toStdString();
+							fwrite << "implant" << implantList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -940,7 +910,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < jawToothList.size(); i++)
 						{
-							//fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
+							fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -995,12 +965,12 @@ void TabMainGUI::PatientInformationSave()
 {
 	std::cout << "storage a order information..." << std::endl;
 	coTimeCout cctimeout;
-	orderDate = dateLineEdit->text();
-	orderNumber = orderLineEdit->text();
-	orderPatientName = patientLineEdit->text();
-	orderDoctorName = doctorLineEdit->text();
-	orderAddition = additionTextEdit->toPlainText();
-	orderOperatorName = operatorLineEdit->text();
+	orderDate = ui.orderDateLineEdit->text();
+	orderNumber = ui.orderNumLineEdit->text();
+	orderPatientName = ui.patientNameLineEdit->text();
+	orderDoctorName = ui.doctorNameLineEdit->text();
+	orderAddition = ui.additionTextEdit->toPlainText();
+	orderOperatorName = ui.operatorNameLineEdit->text();
 	judgeSplitModelFlag();
 	cctimeout.Print("judgeSplitModelFlag");
 	if (splitModelFlag)//分模
@@ -1271,25 +1241,36 @@ void TabMainGUI::PatientInformationSave()
 	cctimeout.Print("judgePatientSaveFlag");
 	if (judgePatientSaveFlag() == true&& pBtn->text() == QStringLiteral("扫描"))
 	{
-		emit scanSignal();
+		if (m_usbDeviceState)
+		{
+			emit scanSignal();
+		}
+		else
+		{
+			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备未与电脑连接!"));
+			box.setStandardButtons(QMessageBox::Yes);
+			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+			box.exec();
+		}
+		
 	}
 	cctimeout.Print("PatientInformationSave");
 }
 
 void TabMainGUI::OrderPreview()
 {
-	QString strOrderDate = dateLineEdit->text();
+	QString strOrderDate = ui.orderDateLineEdit->text();
 	strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
 	QByteArray orderPN = ToChineseStr(strOrderDate);
 	QString tempFilePath = filePath + "/" + orderNumber + "_" + orderDoctorName + "_" + orderPatientName;
 	COrderInfo orderInfo;
 	orderInfo.strOderDate = orderPN.data();
-	orderInfo.strPatientName = Qstring2String(patientLineEdit->text());
-	orderInfo.strDoctorName = Qstring2String(doctorLineEdit->text());
-	orderInfo.strOrderAddition = Qstring2String(additionTextEdit->toPlainText());
-	orderInfo.strOrderNumber = Qstring2String(orderLineEdit->text());
+	orderInfo.strPatientName = Qstring2String(ui.patientNameLineEdit->text());
+	orderInfo.strDoctorName = Qstring2String(ui.doctorNameLineEdit->text());
+	orderInfo.strOrderAddition = Qstring2String(ui.additionTextEdit->toPlainText());
+	orderInfo.strOrderNumber = Qstring2String(ui.orderNumLineEdit->text());
 	orderInfo.strFilePath = Qstring2String(tempFilePath + "/");
-	orderInfo.strOperatorName = Qstring2String(operatorLineEdit->text());
+	orderInfo.strOperatorName = Qstring2String(ui.operatorNameLineEdit->text());
 	if (splitModelFlag)
 		orderInfo.eorderType = esplitModel;
 	else if (unMoulageFlag) {
@@ -1313,16 +1294,16 @@ void TabMainGUI::UpperJawPress()
 
 	if (upperJawButtonFlag == false)
 	{
-		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
+		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
 		upperJawButtonFlag = true;
 		unMoulageFlag = true;
 
 		//doMoulage
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 		doMoulageFlag = false;
 		//spllitModel
@@ -1330,7 +1311,7 @@ void TabMainGUI::UpperJawPress()
 	}
 	else
 	{
-		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 		upperJawButtonFlag = false;
 		if (lowerJawButtonFlag == false)
 		{
@@ -1343,16 +1324,16 @@ void TabMainGUI::LowerJawPress()
 {
 	if (lowerJawButtonFlag == false)
 	{
-		lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
+		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 		lowerJawButtonFlag = true;
 		unMoulageFlag = true;
 
 		//doMoulage
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 
 		doMoulageFlag = false;
@@ -1361,7 +1342,7 @@ void TabMainGUI::LowerJawPress()
 	}
 	else
 	{
-		lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
 		lowerJawButtonFlag = false;
 		if (upperJawButtonFlag == false)
 		{
@@ -1374,19 +1355,19 @@ void TabMainGUI::MoulagePress1()
 {
 	if (MoulageFlag1 == false)
 	{
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_yes.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_yes.png);}");
 		MoulageFlag1 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 		//unMoulage
-		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 		upperJawButtonFlag = false;
-		lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1395,7 +1376,7 @@ void TabMainGUI::MoulagePress1()
 	}
 	else if (MoulageFlag1 == true && MoulageFlag2 == false && MoulageFlag3 == false)
 	{
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
 		doMoulageFlag = false;
 	}
@@ -1405,19 +1386,19 @@ void TabMainGUI::MoulagePress2()
 {
 	if (MoulageFlag2 == false)
 	{
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_yes.png);}");
+		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_yes.png);}");
 		MoulageFlag2 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 		//unMoulage
-		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 		upperJawButtonFlag = false;
-		lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton ->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1426,7 +1407,7 @@ void TabMainGUI::MoulagePress2()
 	}
 	else if (MoulageFlag2 == true && MoulageFlag1 == false && MoulageFlag3 == false)
 	{
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
 		doMoulageFlag = false;
 	}
@@ -1436,19 +1417,19 @@ void TabMainGUI::MoulagePress3()
 {
 	if (MoulageFlag3 == false)
 	{
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_yes.png);}");
+		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_yes.png);}");
 		MoulageFlag3 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
-		MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
 		//unMoulage
-		upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 		upperJawButtonFlag = false;
-		lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1457,7 +1438,7 @@ void TabMainGUI::MoulagePress3()
 	}
 	else if (MoulageFlag3 == true && MoulageFlag1 == false && MoulageFlag2 == false)
 	{
-		MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 		doMoulageFlag = false;
 	}
@@ -1520,13 +1501,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	{
 	case 1:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/11.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/11.png);}";
 		totalCrownButton->setStyleSheet(path);
 		if (totalCrownList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, totalCrownList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "1.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "1.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1534,13 +1515,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 2:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/22.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/22.png);}";
 		toothCrownButton->setStyleSheet(path);
 		if (toothCrownList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, toothCrownList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "2.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "2.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1548,13 +1529,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 3:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/33.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/33.png);}";
 		lossToothButton->setStyleSheet(path);
 		if (lossToothList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, lossToothList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "3.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "3.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1562,13 +1543,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 4:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/44.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/44.png);}";
 		inlayButton->setStyleSheet(path);
 		if (inlayList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, inlayList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "4.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "4.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1576,13 +1557,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 5:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/55.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/55.png);}";
 		facingButton->setStyleSheet(path);
 		if (facingList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, facingList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "5.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "5.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1590,13 +1571,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 6:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/66.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/66.png);}";
 		waxTypeButton->setStyleSheet(path);
 		if (waxTypeList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, waxTypeList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "6.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "6.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1604,13 +1585,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 7:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/77.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/77.png);}";
 		implantButton->setStyleSheet(path);
 		if (implantList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, implantList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "7.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "7.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1618,13 +1599,13 @@ void TabMainGUI::ToothGroupClicked(int id)
 	}
 	case 8:
 	{
-		QString path = "QRadioButton{background-image: url(:/MainWidget/Resources/images/88.png);}";
+		QString path = "QRadioButton{border-image: url(:/MainWidget/Resources/images/88.png);}";
 		jawToothButton->setStyleSheet(path);
 		if (jawToothList.size() != 0)
 		{
 			foreach(QPushButton *chooseButton, jawToothList)
 			{
-				QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "8.png);}";
+				QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/" + chooseButton->objectName() + "8.png);}";
 				chooseButton->setStyleSheet(path);
 			}
 		}
@@ -1726,8 +1707,8 @@ void TabMainGUI::ToothButtonListPress()
 		{
 			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png);}";
 			//QString dstpath = ":/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + QString::number(chooseID, 10) + ".png",
-			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + QString::number(chooseID, 10) + ".png",
-				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
+			QString dstpath = ":/MainWidget/Resources/images/" + QString::number(chooseID, 10) + QString::number(chooseID, 10) + ".png",
+				srcPath = ":/MainWidget/Resources/images/0/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
 
 			QImage resultImage, destinationImage, sourceImage;
 			destinationImage.load(dstpath);
@@ -1755,34 +1736,34 @@ void TabMainGUI::ToothButtonListPress()
 			toothFlagList[toothButtonIndex] = true;
 			toothID[toothButtonIndex] = chooseID;
 			//doMoulage
-			MoulageButton1->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage1_no.png);}");
+			ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 			MoulageFlag1 = false;
-			MoulageButton2->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage2_no.png);}");
+			ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 			MoulageFlag2 = false;
-			MoulageButton3->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/Moulage3_no.png);}");
+			ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 			MoulageFlag3 = false;
 
 			doMoulageFlag = false;
 			//unMoulage
-			upperJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+			ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 			upperJawButtonFlag = false;
-			lowerJawButton->setStyleSheet("QPushButton{background-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+			ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
 			lowerJawButtonFlag = false;
 
 			unMoulageFlag = false;
 		}
 		else if (toothFlagList[toothButtonIndex] == true && chooseID == toothID[toothButtonIndex])
 		{
-			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + "0.png);}";
+			//QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/tooth" + toothList[toothButtonIndex]->text() + "0.png);}";
 			//toothList[toothButtonIndex]->setStyleSheet(path);
-			toothList[toothButtonIndex]->SetImage(QString("./Resources/images/teeth/"+ toothList[toothButtonIndex]->text() + ".png"));
+			toothList[toothButtonIndex]->SetImage(QString(":/MainWidget/Resources/images/0/"+ toothList[toothButtonIndex]->text() + ".png"));
 			removeToothList(chooseID, toothButtonIndex);
 			toothFlagList[toothButtonIndex] = false;
 		}
 		else if (toothFlagList[toothButtonIndex] == true && chooseID != toothID[toothButtonIndex])
 		{
-			QString dstpath = ":/MainWidget/Resources/images/tooth" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + QString::number(chooseID, 10) + ".png",
-				srcPath = "./Resources/images/teeth/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
+			QString dstpath = ":/MainWidget/Resources/images/" + QString::number(chooseID, 10) + QString::number(chooseID, 10) + ".png",
+				srcPath = ":/MainWidget/Resources/images/0/" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10) + ".png";;
 
 			QImage resultImage, destinationImage, sourceImage;
 			destinationImage.load(dstpath);
@@ -1823,9 +1804,7 @@ void TabMainGUI::setSplitToothFalse()
 			int row = i / 8;
 			int col = i % 8;
 			int value = (row + 1) * 10 + col + 1;
-			QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
-			path = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";
-			//toothList[i]->setStyleSheet(path);
+			QString path = ":/MainWidget/Resources/images/0/" + QString::number(value, 10) + ".png";
 			toothList[i]->SetImage(path);
 			QList<QPushButton *> *toothPushButtonList = judgeToothList(toothID[i]);
 			if(toothPushButtonList&& toothPushButtonList->size()>0)
@@ -1834,7 +1813,7 @@ void TabMainGUI::setSplitToothFalse()
 		}
 	}
 
-	totalCrownButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/10.png);}");
+	totalCrownButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/0.png);}");
 	if (totalCrownButton->isChecked())
 	{
 		totalCrownButton->setAutoExclusive(false);
@@ -1845,7 +1824,7 @@ void TabMainGUI::setSplitToothFalse()
 		chooseID = -1;
 	}
 
-	toothCrownButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/20.png);}");//牙冠
+	toothCrownButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/20.png);}");//牙冠
 	if (toothCrownButton->isChecked())
 	{
 		toothCrownButton->setAutoExclusive(false);
@@ -1854,7 +1833,7 @@ void TabMainGUI::setSplitToothFalse()
 		chooseID = -1;
 	}
 
-	lossToothButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/30.png);}");//缺失牙
+	lossToothButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/30.png);}");//缺失牙
 	if (lossToothButton->isChecked())
 	{
 		lossToothButton->setAutoExclusive(false);
@@ -1863,7 +1842,7 @@ void TabMainGUI::setSplitToothFalse()
 		chooseID = -1;
 	}
 
-	inlayButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/40.png);}");//嵌体
+	inlayButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/40.png);}");//嵌体
 	if (inlayButton->isChecked())
 	{
 		inlayButton->setAutoExclusive(false);
@@ -1873,7 +1852,7 @@ void TabMainGUI::setSplitToothFalse()
 	}
 
 
-	facingButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/50.png);}");//贴面
+	facingButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/50.png);}");//贴面
 	if (facingButton->isChecked())
 	{
 		facingButton->setAutoExclusive(false);
@@ -1882,7 +1861,7 @@ void TabMainGUI::setSplitToothFalse()
 		chooseID = -1;
 	}
 
-	waxTypeButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/60.png);}");//蜡型
+	waxTypeButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/60.png);}");//蜡型
 
 	if (waxTypeButton->isChecked())
 	{
@@ -1892,7 +1871,7 @@ void TabMainGUI::setSplitToothFalse()
 		chooseID = -1;
 	}
 
-	implantButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/70.png);}");//种植体
+	implantButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/70.png);}");//种植体
 	if (implantButton->isChecked())
 	{
 		implantButton->setAutoExclusive(false);
@@ -1902,7 +1881,7 @@ void TabMainGUI::setSplitToothFalse()
 	}
 
 
-	jawToothButton->setStyleSheet("QRadioButton{background-image: url(:/MainWidget/Resources/images/80.png);}");//对颌牙
+	jawToothButton->setStyleSheet("QRadioButton{border-image: url(:/MainWidget/Resources/images/80.png);}");//对颌牙
 	if (jawToothButton->isChecked())
 	{
 		jawToothButton->setAutoExclusive(false);
@@ -1923,9 +1902,9 @@ void TabMainGUI::clearAllButtonPress()
 			int row = i / 8;
 			int col = i % 8;
 			int value = (row + 1) * 10 + col + 1;
-			//QString path = "QPushButton{background-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
+			//QString path = "QPushButton{border-image: url(:/MainWidget/Resources/images/tooth" + QString::number(value, 10) + "0.png);}";
 			//toothList[i]->setStyleSheet(path);
-			toothList[i]->SetImage(QString("./Resources/images/teeth/" + toothList[i]->text() + ".png"));
+			toothList[i]->SetImage(QString(":/MainWidget/Resources/images/0/" + toothList[i]->text() + ".png"));
 			QList<QPushButton *>* toothPushButtonList = judgeToothList(toothID[i]);
 			if (toothPushButtonList)
 				toothPushButtonList->clear();
@@ -1994,12 +1973,14 @@ void TabMainGUI::readFileStorage(QString fPath)
 	orderAddition = QString::fromLocal8Bit(fRead["Addition"].string().c_str());
 	orderOperatorName = QString::fromLocal8Bit(fRead["Operator Name"].string().c_str());
 	bool bsplitModelFlag = int(fRead["splitModelFlag"]);
-	dateLineEdit->setDateTime(QDateTime::fromString(orderDate, "yyyy/MM/dd hh:mm"));
-	orderLineEdit->setText(orderNumber);
-	patientLineEdit->setText(orderPatientName);
-	doctorLineEdit->setText(orderDoctorName);
-	additionTextEdit->setText(orderAddition);
-	operatorLineEdit->setText(orderOperatorName);
+	QDateTime orderDateTime =QDateTime::fromString(orderDate, "yyyy/MM/dd hh:mm:ss");
+	QString orderDateTimeStr = orderDateTime.toString("yyyy/MM/dd/hh:mm:ss");
+	ui.orderDateLineEdit->setText(orderDateTimeStr);
+	ui.orderNumLineEdit->setText(orderNumber);
+	ui.patientNameLineEdit->setText(orderPatientName);
+	ui.doctorNameLineEdit->setText(orderDoctorName);
+	ui.additionTextEdit->setText(orderAddition);
+	ui.operatorNameLineEdit->setText(orderOperatorName);
 	if (fRead["scanModel"].real() == 1)
 	{
 		emit exportUpperJawSignal();
@@ -2164,7 +2145,7 @@ void TabMainGUI::openDirectoryDialogSlot()
 	QString file_path = QFileDialog::getExistingDirectory(this, "请选择扫描数据保存路径...", "./");
 	if (!file_path.isEmpty())
 	{
-		scanDataPathEdit->setText(file_path);
+		ui.scanPathLineEdit->setText(file_path);
 		filePath = file_path;
 	}
 	else {
@@ -2173,19 +2154,19 @@ void TabMainGUI::openDirectoryDialogSlot()
 
 }
 
-void TabMainGUI::settingButtonClicked(QAbstractButton *button)
-{
-	// 当前点击的按钮
-	qDebug() << QString("Clicked Button : %1").arg(button->text());
-
-	// 遍历按钮，获取选中状态
-	QList<QAbstractButton*> list = settingButtonGroup->buttons();
-	foreach(QAbstractButton *pCheckBox, list)
-	{
-		QString strStatus = pCheckBox->isChecked() ? "Checked" : "Unchecked";
-		qDebug() << QString("Button : %1 is %2").arg(pCheckBox->text()).arg(strStatus);
-	}
-}
+//void TabMainGUI::settingButtonClicked(QAbstractButton *button)
+//{
+//	// 当前点击的按钮
+//	qDebug() << QString("Clicked Button : %1").arg(button->text());
+//
+//	// 遍历按钮，获取选中状态
+//	QList<QAbstractButton*> list = ui.checkBoxGroupBox->buttons();
+//	foreach(QAbstractButton *pCheckBox, list)
+//	{
+//		QString strStatus = pCheckBox->isChecked() ? "Checked" : "Unchecked";
+//		qDebug() << QString("Button : %1 is %2").arg(pCheckBox->text()).arg(strStatus);
+//	}
+//}
 
 void TabMainGUI::saveSpliteModelCheckBoxClicked(int nState)
 {
@@ -2193,4 +2174,54 @@ void TabMainGUI::saveSpliteModelCheckBoxClicked(int nState)
 	if (!pCheckBox)
 		return;
 	CSystemConfig::shareInstance()->setValue(B_SAVESPLITEMODEL,pCheckBox->isChecked()?"true":"false");
+}
+
+void TabMainGUI::showSettingGroupBox()
+{
+	ui.settingGroupBox->show();
+	//ui.settingGroupBox->show();
+}
+
+void TabMainGUI::showOrderInforGroupBox()
+{
+	ui.settingGroupBox->hide();
+	ui.calibrationGroupBox->hide();
+	ui.aboutGroupBox->hide();
+	ui.orderInforGroupBox->show();
+}
+
+void TabMainGUI::showCalibrationGroupBox()
+{
+	ui.settingGroupBox->hide();
+	ui.calibrationGroupBox->show();
+	ui.aboutGroupBox->hide();
+	ui.orderInforGroupBox->hide();
+}
+
+void TabMainGUI::showAboutGroupBox()
+{
+	ui.settingGroupBox->hide();
+	ui.calibrationGroupBox->hide();
+	ui.aboutGroupBox->show();
+	ui.orderInforGroupBox->hide();
+}
+
+void TabMainGUI::showUnModelGroupBox()
+{
+	ui.unModelGroupBox->show();
+	ui.spliteModelGroupBox->hide();
+	ui.moulageGroupBox->hide();
+}
+void TabMainGUI::showSpliteModelGroupBox()
+{
+	ui.unModelGroupBox->hide();
+	ui.spliteModelGroupBox->show();
+	ui.moulageGroupBox->hide();
+}
+
+void TabMainGUI::showMoulageGroupBox()
+{
+	ui.unModelGroupBox->hide();
+	ui.spliteModelGroupBox->hide();
+	ui.moulageGroupBox->show();
 }

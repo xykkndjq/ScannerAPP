@@ -613,189 +613,96 @@ image_rgb.push_back(imgr);
 // 	}
 // }
 
-void ComputeThread::normalComputeScan(int chooseJawIndex)
- {
 
- 	int imageSize = IMG_ROW * IMG_COL;
- 	vector<double> dis_;
- 	unsigned char* im_l = 0;
- 	unsigned char* im_r = 0;
-	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
-	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
-//  	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-//  	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
- 
- 	vector<cv::Mat> image_rgb;
- 	cv::Mat imageMat;
- 	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
- 	image_rgb.resize(3, imageMat);
- 
-	int bufferBias = 0;
-
-	scan::Registration reg(1.0, 15.0, 50);
-	reg.SetSearchDepth(40);
-	emit progressBarSetSignal(0, SCAN_ROTATE_POS_CNT2-2,true);
-	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
-	{
-		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
- 		usedSpace.acquire();
- 
- 		int image_bias = 0;
- 		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
- 		image_bias++;
- 		for (int j = 0; j < 15; j++)
- 		{
- 			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
- 			image_bias++;
- 
- 			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
- 			image_bias++;
- 		}
- 		if (image_bias > 30)
- 		{
- 			for (int i = 0; i < 3; i++)
- 			{
- 				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
- 				image_bias++;
- 			}
- 		}
-		cout << "scan_index:" << scan_index << endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
-
-		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
-		if (scanFlag == true)
-		{
-			if (oldJawIndex == 0)
-			{
-				oldJawIndex = chooseJawIndex;
-				emit showModeltoGlSingel(1);
-			}
-			else if (oldJawIndex != 0)
-			{
-				if (oldJawIndex == chooseJawIndex)
-				{
-					emit showModeltoGlSingel(0);
-				}
-				else if (oldJawIndex != chooseJawIndex)
-				{
-					oldJawIndex = chooseJawIndex;
-					emit showModeltoGlSingel(1);
-				}
-			}
-		}
- 		emit cameraShowSignal();
-		emit progressBarSetValueSignal(scan_index);
- 		bufferBias++;
- 		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
- 		freeSpace.release();
- 		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 2))
- 		{
- 			//for (int i = 0; i < 9; i++)
- 			//{
- 			//	string modelNameStr = std::to_string(i) + ".ply";
- 			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
- 			//	cout << "pathname: " << modelNameStr << endl;
- 			//	finish_model_io.writeModel(modelNameStr, "stl");
- 			//	//writefile(upper_mModel[i], name);
- 			//}
-			emit progressBarVisibleSignal(false);
- 			emit computeFinish();
- 		}
- 	}
-}
-
-void ComputeThread::normalAllJawComputeScan()
-{
-	int imageSize = IMG_ROW * IMG_COL;
-	vector<double> dis_;
-	unsigned char* im_l = 0;
-	unsigned char* im_r = 0;
-	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-
-	vector<cv::Mat> image_rgb;
-	cv::Mat imageMat;
-	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
-	image_rgb.resize(3, imageMat);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-
-	int bufferBias = 0;
-	int chooseJawIndex = 3;
-	scan::Registration reg(1.0, 15.0, 50);
-	reg.SetSearchDepth(40);
-	emit progressBarSetSignal(0, SCAN_ALLJAW_POS - 2, true);
-	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
-	{
-		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-		cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
-		usedSpace.acquire();
-
-		int image_bias = 0;
-		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
-		for (int j = 0; j < 15; j++)
-		{
-			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
-
-			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
-		}
-		if (image_bias > 30)
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
-				image_bias++;
-			}
-		}
-		cout << "scan_index:" << scan_index << endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
-
-		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
-		if (scanFlag == true)
-		{
-			if (oldJawIndex == 0)
-			{
-				oldJawIndex = chooseJawIndex;
-				emit showModeltoGlSingel(1);
-			}
-			else if (oldJawIndex != 0)
-			{
-				if (oldJawIndex == chooseJawIndex)
-				{
-					emit showModeltoGlSingel(0);
-				}
-				else if (oldJawIndex != chooseJawIndex)
-				{
-					emit showModeltoGlSingel(1);
-				}
-			}
-		}
-		emit progressBarSetValueSignal(scan_index);
-		emit cameraShowSignal();
-		bufferBias++;
-		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
-		freeSpace.release();
-		if (scan_index == (SCAN_ALLJAW_POS - 2))
-		{
-			//for (int i = 0; i < 9; i++)
-			//{
-			//	string modelNameStr = std::to_string(i) + ".ply";
-			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
-			//	cout << "pathname: " << modelNameStr << endl;
-			//	finish_model_io.writeModel(modelNameStr, "stl");
-			//	//writefile(upper_mModel[i], name);
-			//}
-			emit progressBarVisibleSignal(false);
-			emit computeFinish();
-		}
-	}
-}
+//void ComputeThread::normalAllJawComputeScan()
+//{
+//	int imageSize = IMG_ROW * IMG_COL;
+//	vector<double> dis_;
+//	unsigned char* im_l = 0;
+//	unsigned char* im_r = 0;
+//	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+//	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
+//
+//	vector<cv::Mat> image_rgb;
+//	cv::Mat imageMat;
+//	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
+//	image_rgb.resize(3, imageMat);
+//	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+//
+//	int bufferBias = 0;
+//	int chooseJawIndex = 3;
+//	scan::Registration reg(1.0, 15.0, 50);
+//	reg.SetSearchDepth(40);
+//	emit progressBarSetSignal(0, SCAN_ALLJAW_POS - 2, true);
+//	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS - 1; scan_index++)
+//	{
+//		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+//		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
+//		cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
+//		usedSpace.acquire();
+//
+//		int image_bias = 0;
+//		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//		image_bias++;
+//		for (int j = 0; j < 15; j++)
+//		{
+//			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//			image_bias++;
+//
+//			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//			image_bias++;
+//		}
+//		if (image_bias > 30)
+//		{
+//			for (int i = 0; i < 3; i++)
+//			{
+//				memcpy(image_rgb[i].data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
+//				image_bias++;
+//			}
+//		}
+//		cout << "scan_index:" << scan_index << endl;
+//		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+//
+//		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, scan_index, reg);
+//		if (scanFlag == true)
+//		{
+//			if (oldJawIndex == 0)
+//			{
+//				oldJawIndex = chooseJawIndex;
+//				emit showModeltoGlSingel(1);
+//			}
+//			else if (oldJawIndex != 0)
+//			{
+//				if (oldJawIndex == chooseJawIndex)
+//				{
+//					emit showModeltoGlSingel(0);
+//				}
+//				else if (oldJawIndex != chooseJawIndex)
+//				{
+//					emit showModeltoGlSingel(1);
+//				}
+//			}
+//		}
+//		emit progressBarSetValueSignal(scan_index);
+//		emit cameraShowSignal();
+//		bufferBias++;
+//		cout << "The ComputeThread: " << scan_index << " has finished." << endl;
+//		freeSpace.release();
+//		if (scan_index == (SCAN_ALLJAW_POS - 2))
+//		{
+//			//for (int i = 0; i < 9; i++)
+//			//{
+//			//	string modelNameStr = std::to_string(i) + ".ply";
+//			//	orth::ModelIO finish_model_io(&upper_mModel[i]);
+//			//	cout << "pathname: " << modelNameStr << endl;
+//			//	finish_model_io.writeModel(modelNameStr, "stl");
+//			//	//writefile(upper_mModel[i], name);
+//			//}
+//			emit progressBarVisibleSignal(false);
+//			emit computeFinish();
+//		}
+//	}
+//}
 
 void ComputeThread::Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot)
 {
@@ -976,88 +883,6 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 	return true;
 }
 
-void ComputeThread::compensationComputeScan(int chooseJawIndex)
-{
-	if (oldJawIndex == 0)
-	{
-		oldJawIndex = chooseJawIndex;
-	}
-	cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
-	cv::Mat depth_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC1);
-
-	int imageSize = IMG_ROW * IMG_COL;
-	vector<double> dis_;
-	unsigned char* im_l = 0;
-	unsigned char* im_r = 0;
-	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
-	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
-// 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-// 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
-	emit progressBarSetSignal(0, 0, true);
-	vector<cv::Mat> image_rgb;
-	cv::Mat imageMat;
-	imageMat = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
-	image_rgb.resize(3, imageMat);
-
-	usedSpace.acquire();
-	int image_bias = 0;
-	memcpy(camera_image.data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-	image_bias++;
-	for (int j = 0; j < 15; j++)
-	{
-		memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
-
-		memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-		image_bias++;
-	}
-	if (image_bias > 30)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			memcpy(image_rgb[i].data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
-			image_bias++;
-		}
-	}
-
-	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
-
-	/*vector<double> points_;
-	vector<float> normal;
-	vector<unsigned char> points_color;*/
-	vector<double> points_2;
-	/*vector<unsigned char> points_color2;
-	vector<uint32_t> faces;*/
-	scan::Registration reg(1.0, 15.0, 50);
-	reg.SetSearchDepth(40);
-
-
-	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, chooseJawIndex, reg);
-
-	if (scanFlag == true)
-	{
-		if (oldJawIndex != 0)
-		{
-			if (oldJawIndex == chooseJawIndex)
-			{
-				emit showModeltoGlSingel(0);
-			}
-			else if (oldJawIndex != chooseJawIndex)
-			{
-				emit showModeltoGlSingel(1);
-			}
-		}
-	}
-
-	freeSpace.release();
-	cout << "补扫一个角度图片计算完成" << endl;
-
-	emit cameraShowSignal();
-	emit progressBarVisibleSignal(false);
-	emit computeFinish();
-}
-
 void ComputeThread::pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, orth::PointColor &pointColor, cv::Mat &RT, orth::MeshModel &totalMeshModel)
 {
 	orth::PointCloudD pointCloud2;
@@ -1127,259 +952,259 @@ void ComputeThread::writefile(vector<double> cloud, string name)
 	cerr << "Saved " << outCloud->points.size() << " data points to cloud.ply." << endl;
 }
 
-void ComputeThread::GPAMeshing(int chooseJawIndex)
-{
-	emit progressBarSetSignal(0, 0, true);
-	vector<vector<double>> points_target;
-	int TotalIterNum = 82;
-	if (chooseJawIndex == 1)
-	{
-		if (upper_mModel.size() > 1)
-		{
-
-			vector<cv::Mat> rt_matrixs;
-			clock_t time1, time2, time3, time4;
-			time1 = clock();
-
-			//cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
-			//vector<cv::Mat> rt_matrixs(upper_mModel.size(),rteye);
-			/*-------------------------------------------------------------------------------------------------------*/
-			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
-
-
-			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
-			{
-				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
-			}
-
-			orth::MeshModel totalMeshModel;
-			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 9, 0.4);
-			//ReductMesh(totalMeshModel, totalMeshModel);
-			//orth::MeshModel totalMeshModel;
-			//for (int data_index = 0; data_index < upper_mModel.size(); data_index++)
-			//{
-			//	pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, upper_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
-			//}
-
-			///*for (int i = 0; i < points_target.size(); i++)
-			//{
-			//	string name1 = std::to_string(i) + "_rotation.ply";
-			//	writefile(points_target[i], name1);
-
-			//	string name2 = std::to_string(i) + "_totalpoint.ply";
-			//	writefile(upper_mModel[i], name2);
-			//}*/
-			///*string name = "totalMeshModel.ply";
-			//cout << name << endl;
-			//writefile(totalMeshModel, name);*/
-
-			///*string modelNameStr = "totalMeshModel.stl";
-			//orth::ModelIO finish_model_io(&totalMeshModel);
-			//cout << "pathname: " << modelNameStr << endl;
-			//finish_model_io.writeModel(modelNameStr, "stlb");*/
-
-			//time3 = clock();
-			////pr.Execute(totalMeshModel);
-
-			//orth::MeshModel totalMeshModel_copy;
-			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			//poissonRecon(totalMeshModel);
-
-			//ReductMesh(totalMeshModel_copy, totalMeshModel);
-			/*--------------------------------------------------------------------------------------------------------------------------*/
-
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./uppertotalmesh.stl", "stlb");
-			time4 = clock();
-			upper_mModel.push_back(totalMeshModel);
-			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "reconstruction is finished..." << endl;
-		}
-		else
-		{
-			clock_t time1, time2;
-			time1 = clock();
-			//recon::PoissonRec pr;
-			//pr.Execute(upper_mModel[0]);
-			orth::MeshModel totalMeshModel;
-			totalMeshModel = upper_mModel[0];
-
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			poissonRecon(totalMeshModel);
-
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./uppertotalmesh.stl", "stlb");
-
-			upper_mModel.push_back(totalMeshModel);
-			time2 = clock();
-			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-		}
-	}
-	else if (chooseJawIndex == 2)
-	{
-		if (lower_mModel.size() > 1)
-		{
-			vector<cv::Mat> rt_matrixs;
-			clock_t time1, time2, time3, time4;
-			time1 = clock();
-			gpa.GpaRegistrationGPU(lower_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
-
-			/*------------------------------------------------------------------------------------------------------------*/
-			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
-
-
-			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
-			{
-				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
-			}
-
-			orth::MeshModel totalMeshModel;
-			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
-			//ReductMesh(totalMeshModel, totalMeshModel);
-			//orth::MeshModel totalMeshModel;
-			//for (int data_index = 0; data_index < lower_mModel.size(); data_index++)
-			//{
-			//	pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, lower_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
-			//}
-			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
-			////writefile(totalMeshModel);
-			////recon::PoissonRec pr;
-			//time3 = clock();
-			////pr.Execute(totalMeshModel);
-
-			//orth::MeshModel totalMeshModel_copy;
-			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			//poissonRecon(totalMeshModel);
-
-			//ReductMesh(totalMeshModel_copy, totalMeshModel);
-			/*----------------------------------------------------------------------------------------------------*/
-
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./lowertotalmesh.stl", "stlb");
-			lower_mModel.push_back(totalMeshModel);
-			time4 = clock();
-			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "reconstruction is finished..." << endl;
-		}
-		else
-		{
-			clock_t time1, time2;
-			time1 = clock();
-			//recon::PoissonRec pr;
-			orth::MeshModel totalMeshModel;
-			totalMeshModel = lower_mModel[0];
-
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			poissonRecon(totalMeshModel);
-
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./lowertotalmesh.stl", "stlb");
-
-			lower_mModel.push_back(totalMeshModel);
-			//pr.Execute(lower_mModel[0]);
-			time2 = clock();
-			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-		}
-	}
-	else if (chooseJawIndex == 3)
-	{
-		if (all_mModel.size() > 1)
-		{
-			vector<cv::Mat> rt_matrixs;
-			clock_t time1, time2, time3, time4;
-			time1 = clock();
-			gpa.GpaRegistrationGPU(all_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
-
-			/*----------------------------------------------------------------------------------------------------*/
-			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
-
-
-			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
-			{
-				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
-			}
-
-			orth::MeshModel totalMeshModel;
-			PoissonReconstruction fsp;
-			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
-			//ReductMesh(totalMeshModel, totalMeshModel);
-			//orth::MeshModel totalMeshModel;
-			//for (int data_index = 0; data_index < all_mModel.size(); data_index++)
-			//{
-			//	pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, all_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
-			//}
-			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
-			////writefile(totalMeshModel);
-			////recon::PoissonRec pr;
-
-			//time3 = clock();
-
-			//orth::MeshModel totalMeshModel_copy;
-			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			//poissonRecon(totalMeshModel);
-
-			//ReductMesh(totalMeshModel_copy, totalMeshModel);
-			/*------------------------------------------------------------------------------------------------------------------------*/
-
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./alltotalmesh.stl", "stlb");
-			all_mModel.push_back(totalMeshModel);
-			time4 = clock();
-			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "reconstruction is finished..." << endl;
-		}
-		else
-		{
-			clock_t time1, time2;
-			time1 = clock();
-			//recon::PoissonRec pr;
-			orth::MeshModel totalMeshModel;
-			totalMeshModel = all_mModel[0];
-
-			orth::MeshModel totalMeshModel_copy;
-			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
-
-			poissonRecon(totalMeshModel);
-
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
-			orth::ModelIO meshio(&totalMeshModel);
-			meshio.writeModel("./alltotalmesh.stl", "stlb");
-
-			all_mModel.push_back(totalMeshModel);
-			time2 = clock();
-			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-		}
-	}
-	emit showModeltoGlSingel(2);
-	emit progressBarVisibleSignal(false);
-	emit computeFinish();
-}
+//void ComputeThread::GPAMeshing(int chooseJawIndex)
+//{
+//	emit progressBarSetSignal(0, 0, true);
+//	vector<vector<double>> points_target;
+//	int TotalIterNum = 82;
+//	if (chooseJawIndex == 1)
+//	{
+//		if (upper_mModel.size() > 1)
+//		{
+//
+//			vector<cv::Mat> rt_matrixs;
+//			clock_t time1, time2, time3, time4;
+//			time1 = clock();
+//
+//			//cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
+//			//vector<cv::Mat> rt_matrixs(upper_mModel.size(),rteye);
+//			/*-------------------------------------------------------------------------------------------------------*/
+//			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
+//			time2 = clock();
+//			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "GPA is finished..." << endl;
+//
+//
+//			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
+//			{
+//				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
+//			}
+//
+//			orth::MeshModel totalMeshModel;
+//			PoissonReconstruction fsp;
+//			fsp.run(upper_mModel, totalMeshModel, 9, 0.4);
+//			//ReductMesh(totalMeshModel, totalMeshModel);
+//			//orth::MeshModel totalMeshModel;
+//			//for (int data_index = 0; data_index < upper_mModel.size(); data_index++)
+//			//{
+//			//	pointcloudrotationandtotalmesh(upper_mModel[data_index].P, upper_mModel[data_index].N, upper_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+//			//}
+//
+//			///*for (int i = 0; i < points_target.size(); i++)
+//			//{
+//			//	string name1 = std::to_string(i) + "_rotation.ply";
+//			//	writefile(points_target[i], name1);
+//
+//			//	string name2 = std::to_string(i) + "_totalpoint.ply";
+//			//	writefile(upper_mModel[i], name2);
+//			//}*/
+//			///*string name = "totalMeshModel.ply";
+//			//cout << name << endl;
+//			//writefile(totalMeshModel, name);*/
+//
+//			///*string modelNameStr = "totalMeshModel.stl";
+//			//orth::ModelIO finish_model_io(&totalMeshModel);
+//			//cout << "pathname: " << modelNameStr << endl;
+//			//finish_model_io.writeModel(modelNameStr, "stlb");*/
+//
+//			//time3 = clock();
+//			////pr.Execute(totalMeshModel);
+//
+//			//orth::MeshModel totalMeshModel_copy;
+//			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			//poissonRecon(totalMeshModel);
+//
+//			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			/*--------------------------------------------------------------------------------------------------------------------------*/
+//
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./uppertotalmesh.stl", "stlb");
+//			time4 = clock();
+//			upper_mModel.push_back(totalMeshModel);
+//			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "reconstruction is finished..." << endl;
+//		}
+//		else
+//		{
+//			clock_t time1, time2;
+//			time1 = clock();
+//			//recon::PoissonRec pr;
+//			//pr.Execute(upper_mModel[0]);
+//			orth::MeshModel totalMeshModel;
+//			totalMeshModel = upper_mModel[0];
+//
+//			orth::MeshModel totalMeshModel_copy;
+//			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			poissonRecon(totalMeshModel);
+//
+//			ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./uppertotalmesh.stl", "stlb");
+//
+//			upper_mModel.push_back(totalMeshModel);
+//			time2 = clock();
+//			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//		}
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		if (lower_mModel.size() > 1)
+//		{
+//			vector<cv::Mat> rt_matrixs;
+//			clock_t time1, time2, time3, time4;
+//			time1 = clock();
+//			gpa.GpaRegistrationGPU(lower_mModel, rt_matrixs, TotalIterNum);
+//			time2 = clock();
+//			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "GPA is finished..." << endl;
+//
+//			/*------------------------------------------------------------------------------------------------------------*/
+//			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
+//			time2 = clock();
+//			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "GPA is finished..." << endl;
+//
+//
+//			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
+//			{
+//				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
+//			}
+//
+//			orth::MeshModel totalMeshModel;
+//			PoissonReconstruction fsp;
+//			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
+//			//ReductMesh(totalMeshModel, totalMeshModel);
+//			//orth::MeshModel totalMeshModel;
+//			//for (int data_index = 0; data_index < lower_mModel.size(); data_index++)
+//			//{
+//			//	pointcloudrotationandtotalmesh(lower_mModel[data_index].P, lower_mModel[data_index].N, lower_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+//			//}
+//			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+//			////writefile(totalMeshModel);
+//			////recon::PoissonRec pr;
+//			//time3 = clock();
+//			////pr.Execute(totalMeshModel);
+//
+//			//orth::MeshModel totalMeshModel_copy;
+//			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			//poissonRecon(totalMeshModel);
+//
+//			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			/*----------------------------------------------------------------------------------------------------*/
+//
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./lowertotalmesh.stl", "stlb");
+//			lower_mModel.push_back(totalMeshModel);
+//			time4 = clock();
+//			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "reconstruction is finished..." << endl;
+//		}
+//		else
+//		{
+//			clock_t time1, time2;
+//			time1 = clock();
+//			//recon::PoissonRec pr;
+//			orth::MeshModel totalMeshModel;
+//			totalMeshModel = lower_mModel[0];
+//
+//			orth::MeshModel totalMeshModel_copy;
+//			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			poissonRecon(totalMeshModel);
+//
+//			ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./lowertotalmesh.stl", "stlb");
+//
+//			lower_mModel.push_back(totalMeshModel);
+//			//pr.Execute(lower_mModel[0]);
+//			time2 = clock();
+//			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//		}
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		if (all_mModel.size() > 1)
+//		{
+//			vector<cv::Mat> rt_matrixs;
+//			clock_t time1, time2, time3, time4;
+//			time1 = clock();
+//			gpa.GpaRegistrationGPU(all_mModel, rt_matrixs, TotalIterNum);
+//			time2 = clock();
+//			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "GPA is finished..." << endl;
+//
+//			/*----------------------------------------------------------------------------------------------------*/
+//			gpa.GpaRegistrationGPU(upper_mModel, rt_matrixs, TotalIterNum);
+//			time2 = clock();
+//			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "GPA is finished..." << endl;
+//
+//
+//			for (int mesh_index = 0; mesh_index < upper_mModel.size(); mesh_index++)
+//			{
+//				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &upper_mModel[mesh_index]);
+//			}
+//
+//			orth::MeshModel totalMeshModel;
+//			PoissonReconstruction fsp;
+//			fsp.run(upper_mModel, totalMeshModel, 10, 0.4);
+//			//ReductMesh(totalMeshModel, totalMeshModel);
+//			//orth::MeshModel totalMeshModel;
+//			//for (int data_index = 0; data_index < all_mModel.size(); data_index++)
+//			//{
+//			//	pointcloudrotationandtotalmesh(all_mModel[data_index].P, all_mModel[data_index].N, all_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
+//			//}
+//			////cout << "totalMeshModel: " << totalMeshModel.P.size() << endl;
+//			////writefile(totalMeshModel);
+//			////recon::PoissonRec pr;
+//
+//			//time3 = clock();
+//
+//			//orth::MeshModel totalMeshModel_copy;
+//			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			//poissonRecon(totalMeshModel);
+//
+//			//ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			/*------------------------------------------------------------------------------------------------------------------------*/
+//
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./alltotalmesh.stl", "stlb");
+//			all_mModel.push_back(totalMeshModel);
+//			time4 = clock();
+//			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
+//			cout << "reconstruction is finished..." << endl;
+//		}
+//		else
+//		{
+//			clock_t time1, time2;
+//			time1 = clock();
+//			//recon::PoissonRec pr;
+//			orth::MeshModel totalMeshModel;
+//			totalMeshModel = all_mModel[0];
+//
+//			orth::MeshModel totalMeshModel_copy;
+//			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
+//
+//			poissonRecon(totalMeshModel);
+//
+//			ReductMesh(totalMeshModel_copy, totalMeshModel);
+//			orth::ModelIO meshio(&totalMeshModel);
+//			meshio.writeModel("./alltotalmesh.stl", "stlb");
+//
+//			all_mModel.push_back(totalMeshModel);
+//			time2 = clock();
+//			cout << "The Poisson time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+//		}
+//	}
+//	emit showModeltoGlSingel(2);
+//	emit progressBarVisibleSignal(false);
+//	emit computeFinish();
+//}
 
 void ComputeThread::GPAMeshing()
 {

@@ -31,6 +31,7 @@
 #include <QDockWidget>
 #include "TaskManager.h"
 #include "ImageBtn.h"
+#include "HeaderBtn.h"
 
 #define TOOTHNUM 32
 
@@ -41,6 +42,8 @@ class TabMainGUI : public QWidget
 public:
 	TabMainGUI(QWidget *parent = Q_NULLPTR);
 	~TabMainGUI();
+
+	bool m_usbDeviceState = false;//判断开机是否连接了USB,由ScanMainGUI里的相关变量赋值
 
 	void initVariable();
 	void constructIHM();
@@ -74,38 +77,38 @@ public:
 public:
 	Ui::TabMainGUI ui;
 	
-	QGridLayout *totalGLayOut;
-	QTabWidget *totalTabWidget;
+	//QGridLayout *totalGLayOut;
+	//QTabWidget *totalTabWidget;
 
-	QWidget *orderInforWidget;
-	QWidget *settingWidget;
-	QWidget *calibrateWidget;
-	QWidget *aboutWidget;
+	//QWidget *orderInforWidget;
+	//QWidget *settingWidget;
+	//QWidget *calibrateWidget;
+	//QWidget *aboutWidget;
 
-	QVBoxLayout *totalOrderVLayout;
-	QGridLayout *totalAboutGLayout;
+	//QVBoxLayout *totalOrderVLayout;
+	//QGridLayout *totalAboutGLayout;
 	//orderInfor订单管理控件
 	//topbutton
-	QPushButton *newButton;
-	QPushButton *exportButton;
+	//QPushButton *newButton;
+	//QPushButton *exportButton;
 	//QPushButton *saveButton;
-	QPushButton *watchButton;
-	QPushButton *saveScanButton;
-	QPushButton *saveButton;
-	CTeethImgBtn * m_closeBtn;
+	//QPushButton *watchButton;
+	//QPushButton *saveScanButton;
+	//QPushButton *saveButton;
+	//CTeethImgBtn * m_closeBtn;
 	
-	QDateTimeEdit *dateLineEdit;
-	QLineEdit *orderLineEdit;
-	QLineEdit *patientLineEdit;
-	QLineEdit *doctorLineEdit;
-	QLineEdit *operatorLineEdit;
-	QTextEdit *additionTextEdit;
-	QLabel *additionLabel;
+	//QDateTimeEdit *dateLineEdit;
+	//QLineEdit *orderLineEdit;
+	//QLineEdit *patientLineEdit;
+	//QLineEdit *doctorLineEdit;
+	//QLineEdit *operatorLineEdit;
+	//QTextEdit *additionTextEdit;
+	//QLabel *additionLabel;
 	//未分模
 	bool unMoulageFlag = false;
-	QPushButton *upperJawButton;
+	//QPushButton *upperJawButton;
 	bool upperJawButtonFlag = false;
-	QPushButton *lowerJawButton;
+	//QPushButton *lowerJawButton;
 	bool lowerJawButtonFlag = false;
 	
 	//分模
@@ -115,14 +118,13 @@ public:
 	int chooseID = -1;
 	QList<CTeethImgBtn *> toothList;
 	
-	
 	QList<int> toothID;
-	QPushButton *clearAllButton;
+	//QPushButton *clearAllButton;
 	//splitright
-	QButtonGroup *toothRadioButtonGroup;
+	QButtonGroup *toothRadioButtonGroup;//分模中放功能选项的ButtonGroup
 	
 	CImageBtn *totalCrownButton;//全冠
-	CImageBtn*toothCrownButton;//牙冠
+	CImageBtn *toothCrownButton;//牙冠
 	CImageBtn *lossToothButton;//缺失牙
 	CImageBtn *inlayButton;//嵌体
 	QCheckBox *facingButton;//贴面
@@ -141,11 +143,11 @@ public:
 
 	//印模
 	bool doMoulageFlag = false;
-	QPushButton *MoulageButton1;
+	//QPushButton *MoulageButton1;
 	bool MoulageFlag1 = false;
-	QPushButton *MoulageButton2;
+	//QPushButton *MoulageButton2;
 	bool MoulageFlag2 = false;
-	QPushButton *MoulageButton3;
+	//QPushButton *MoulageButton3;
 	bool MoulageFlag3 = false;
 	//orderInfor订单管理信息
 	QString orderDate;
@@ -156,27 +158,39 @@ public:
 	QString orderOperatorName;
 	//QString upperjaw;
 	//About关于页面控件
-	QLabel *aboutTextLabel;
-	QLabel *aboutImageLabel;
+	//QLabel *aboutTextLabel;
+	//QLabel *aboutImageLabel;
 
 	//Calibrate标定页面
-	QPushButton *calibratePushButton;
-	QPushButton *globalCaliPushButton;
-	QLabel *leftCameraLable;
-	QLabel *rightCameraLable;
+	//QPushButton *calibratePushButton;
+	//QPushButton *globalCaliPushButton;
+	//QLabel *leftCameraLable;
+	//QLabel *rightCameraLable;
+	
 	QTabWidget *rightTabWidget;
 
 	//设置子页面
-	QButtonGroup *settingButtonGroup;
-	QCheckBox *textureCheckBox;
-	QCheckBox *ACheckBox;
-	QCheckBox *BCheckBox;
-	QCheckBox *saveSpliteModelCheckBox;
-	QLabel *scanDataPathLabel;
-	QLineEdit *scanDataPathEdit;
-	QPushButton *choosePathButton;
+	//QButtonGroup *settingButtonGroup;
+	//QCheckBox *textureCheckBox;
+	//QCheckBox *ACheckBox;
+	//QCheckBox *BCheckBox;
+	//QCheckBox *saveSpliteModelCheckBox;
+	//QLabel *scanDataPathLabel;
+	//QLineEdit *scanDataPathEdit;
+	//QPushButton *choosePathButton;
 	pCScanTask m_pTeethScanTaskArray[32];
 	eScanType m_eScanType;
+
+	/*订单管理页面*/
+	//顶部
+	QButtonGroup *headerButtonGroup;
+	CHeaderCheckBtn * m_orderMgrBtn;
+	CHeaderCheckBtn * m_settingMgrBtn;
+	CHeaderCheckBtn * m_calibrationMgrBtn;
+	CHeaderCheckBtn * m_aboutMgrBtn;
+	//右侧
+	QButtonGroup *rightButtonGroup;
+
 
 signals:
 	void scanDataSignal(QJsonObject scanObj);
@@ -194,26 +208,27 @@ signals:
 	void exportThirdMoulageSignal();
 
 public slots:
+	/*订单管理页面*/
+	void showOrderInforGroupBox();//打开订单管理子页面
+	void newButtonClickedSlot();//新建文件
+	void openFileDialogSlot();//导入文件
 	//订单管理信息槽
 	void PatientInformationSave();
 	void OrderPreview();
 	void closeBtnClicked();
-	//打开文件
-	void openFileDialogSlot();
-
-	//打开路径
-	void openDirectoryDialogSlot();
-
-	void newButtonClickedSlot();
-
     //未分模
+	void showUnModelGroupBox();//选择未分模功能
 	void UpperJawPress();
 	void LowerJawPress();
 	//印模
+	void showMoulageGroupBox();//选择印模功能
+
 	void MoulagePress1();
 	void MoulagePress2();
 	void MoulagePress3();
 	//分模
+	void showSpliteModelGroupBox();//选择分模功能
+
 	void ToothGroupClicked(int id);
 
 	void ToothButtonListPress();
@@ -222,9 +237,19 @@ public slots:
 
 	void ScanDataPackagePress();
 
-	//
-	void settingButtonClicked(QAbstractButton *button);
+	//void settingButtonClicked(QAbstractButton *button);
 
 	void saveSpliteModelCheckBoxClicked(int);
+	
+	/*标定子页面*/
+	void showCalibrationGroupBox();
+	
+	/*关于子页面*/
+	void showAboutGroupBox();
+
+	/*设置子页面*/
+	void showSettingGroupBox();//打开设置子页面
+								 
+	void openDirectoryDialogSlot(); //打开路径下文件
 };
 #endif
