@@ -44,6 +44,7 @@ void ScanMainGUI::hideAllPanel()
 	ui.TeethStitchingPanel->setVisible(false);
 	ui.orderInfoPanel->setVisible(false);
 	ui.DentalImplantPanel->setVisible(false);
+	ui.DentalImplantFinishPanel->hide();
 }
 
 void styleControl2(QObject *obj) {
@@ -114,6 +115,8 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.OralSubstitutePanel->move(1600, 230);
 	ui.TeethStitchingPanel->move(1600, 230);
 	ui.orderInfoPanel->move(1600, 100);
+	ui.DentalImplantFinishPanel->move(1600, 100);
+	ui.DentalImplantPanel->move(1600, 100);
 	// 	ui.ScanJawGroup->setStyleSheet("background-color:rgb(225,225,225);");
 	// 	ui.CutJawFinishPanel->setStyleSheet("background-color:rgb(215,215,215);");
 	// 	ui.CutJawPanel->setStyleSheet("background-color:rgb(215,215,215);");
@@ -459,6 +462,12 @@ void ScanMainGUI::setConnections()
 	connect(this->m_closeBtn, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));
 	connect(ui.upperJawBtn, SIGNAL(clicked()), this, SLOT(upperJawBtnBtnClick()));
 	connect(ui.lowJawBtn, SIGNAL(clicked()), this, SLOT(lowJawBtnClick()));
+	connect(ui.DentalImplantNextBtn, SIGNAL(clicked()), this, SLOT(DentalImplantNextBtnClick()));
+	connect(ui.DentalImplantPanelBackBtn, SIGNAL(clicked()), this, SLOT(DentalImplantPanelBackBtnClick()));
+	connect(ui.DentalImplantFinishNextBtn, SIGNAL(clicked()), this, SLOT(DentalImplantFinishNextBtnClick()));
+	connect(ui.DentalImplantFinishBackBtn, SIGNAL(clicked()), this, SLOT(DentalImplantFinishBackBtnClick()));
+	
+	
 	connect(ControlComputeThread, SIGNAL(progressBarResetSignal()), ui.progressBar,SLOT(reset()));
 	connect(ControlComputeThread, SIGNAL(progressBarSetMinSignal(int)), ui.progressBar, SLOT(setMinimum(int)));
 	connect(ControlComputeThread, SIGNAL(progressBarSetMaxSignal(int)), ui.progressBar, SLOT(setMaximum(int)));
@@ -797,23 +806,47 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 	ui.StitchingFinishPanel->setVisible(true);
 	ui.stitchingUpperJawBtn->setVisible(false);
 	ui.stitchingLowerJawBtn->setVisible(false);
+	ui.stitchingUpperJawDenBtn->hide();
+	ui.stitchingUpperJawGingivaBtn->hide();
+	ui.stitchingLowerJawDenBtn->hide();
+	ui.stitchingLowerJawGingivaBtn->hide();
 	//pCurrentTask->Set_TaskPro(eProgressScan);
 	glWidget->m_ModelsVt.clear();
 	if (m_pupperTeethModel) {
 		ui.stitchingUpperJawBtn->setVisible(true);
+		ui.stitchingUpperJawBtn->setChecked(true);
+		m_pupperTeethModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
-// 		pCScanTask ptask= CTaskManager::getInstance()->getTask(eUpperJawScan);
-// 		if (ptask) {
-// 			saveModelFile(ptask);
-// 		}
 	}
 	if (m_plowerTeethModel) {
 		ui.stitchingLowerJawBtn->setVisible(true);
+		ui.stitchingLowerJawBtn->setChecked(true);
+		m_plowerTeethModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
-// 		pCScanTask ptask = CTaskManager::getInstance()->getTask(eLowerJawScan);
-// 		if (ptask) {
-// 			saveModelFile(ptask);
-// 		}
+	}
+	if (m_pLowerDentalImplantModel) {
+		ui.stitchingLowerJawDenBtn->setVisible(true);
+		ui.stitchingLowerJawDenBtn->setChecked(true);
+		m_pLowerDentalImplantModel->Set_Visible(true);
+		glWidget->m_ModelsVt.push_back(m_pLowerDentalImplantModel);
+	}
+	if (m_pUpperDentalImplantModel) {
+		ui.stitchingUpperJawDenBtn->setVisible(true);
+		ui.stitchingUpperJawDenBtn->setChecked(true);
+		m_pUpperDentalImplantModel->Set_Visible(true);
+		glWidget->m_ModelsVt.push_back(m_pUpperDentalImplantModel);
+	}
+	if (m_pLowJawGingvaModel) {
+		ui.stitchingLowerJawGingivaBtn->setVisible(true);
+		ui.stitchingLowerJawGingivaBtn->setChecked(true);
+		m_pLowJawGingvaModel->Set_Visible(true);
+		glWidget->m_ModelsVt.push_back(m_pLowJawGingvaModel);
+	}
+	if (m_pUpperJawGingvaModel) {
+		ui.stitchingUpperJawGingivaBtn->setVisible(true);
+		ui.stitchingUpperJawGingivaBtn->setChecked(true);
+		m_pUpperJawGingvaModel->Set_Visible(true);
+		glWidget->m_ModelsVt.push_back(m_pUpperJawGingvaModel);
 	}
 	glWidget->update();
 }
@@ -1061,6 +1094,10 @@ void ScanMainGUI::resetValue()
 	m_pupperTeethModel = nullptr;
 	m_plowerTeethModel = nullptr;
 	m_pallTeethModel = nullptr;
+	m_pLowerDentalImplantModel = nullptr;
+	m_pUpperDentalImplantModel = nullptr;
+	m_pUpperJawGingvaModel = nullptr;
+	m_pLowJawGingvaModel = nullptr;
 	m_bsplitModelFlag = false;
 	ui.progressBar->hide();
 	hideAllPanel();
@@ -2035,6 +2072,81 @@ void ScanMainGUI::lowJawBtnClick() {
 		glWidget->update();
 	}
 }
+void ScanMainGUI::DentalImplantNextBtnClick() {
+	hideAllPanel();
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (!pCurrentTask)
+		return;
+	orth::MeshModel meshModel;
+	pCurrentTask->pTeethModel->getMeshModel(meshModel);
+	pCurrentTask->m_dentalImplantMeshModel = meshModel;
+	glWidget->m_ModelsVt.clear();
+	glWidget->CutModelInBox(pCurrentTask->m_dentalImplantMeshModel);
+	glWidget->mm = pCurrentTask->m_dentalImplantMeshModel;
+	
+	if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+		m_pUpperDentalImplantModel = glWidget->makeObject();
+		m_pUpperDentalImplantModel->Set_Visible(true);
+	}
+	else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+		m_pLowerDentalImplantModel = glWidget->makeObject();
+		m_pLowerDentalImplantModel->Set_Visible(true);
+	}
+	glWidget->update();
+	ui.DentalImplantFinishPanel->show();
+}
+void ScanMainGUI::DentalImplantFinishNextBtnClick() {
+	hideAllPanel();
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (!pCurrentTask)
+		return;
+	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
+
+	if (!pNextTask&&pCurrentTask) {
+		ui.CutJawPanel->setVisible(false);
+		ui.StitchingFinishPanel->setVisible(true);
+		QString str;
+		ui.stitchingUpperJawBtn->setVisible(false);
+		ui.stitchingLowerJawBtn->setVisible(false);
+		if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+			m_pupperTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingUpperJawBtn->setChecked(true);
+			ui.stitchingUpperJawBtn->setVisible(true);
+		}
+		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+			m_plowerTeethModel = pCurrentTask->pTeethModel;
+			ui.stitchingLowerJawBtn->setChecked(true);
+			ui.stitchingLowerJawBtn->setVisible(true);
+		}
+	}
+	else if (pNextTask && pCurrentTask) {
+		if (pNextTask->Get_TaskType() == eScan && pNextTask->Get_ScanType() == etoothCrown
+			|| pNextTask->Get_ScanType() == einlayScan) {
+			showOralSubstitutePanel();
+		}
+		else if (pNextTask->Get_TaskType() == eScan) {
+			ui.CutJawPanel->setVisible(false);
+			ui.ScanJawBackStepBtn->setVisible(true);
+			showScanJawGroup();
+		}
+		else if (pNextTask->Get_TaskType() == eUpperStitching || pNextTask->Get_TaskType() == eLowerStitching) {	//上下颌的合并
+			ui.CutJawPanel->setVisible(false);
+			showSubstitutePanel();
+		}
+		else if (pNextTask->Get_TaskType() == eUpperTeethStit || pNextTask->Get_TaskType() == eLowerTeethStit) {
+			//牙齿拼接
+			ui.CutJawPanel->setVisible(false);
+			showSubstitutePanel();
+		}
+
+	}
+}
+void ScanMainGUI::DentalImplantPanelBackBtnClick() {
+	ShowLastScanTask();
+}
+void ScanMainGUI::DentalImplantFinishBackBtnClick() {
+	ShowLastScanTask();
+}
 
 void ScanMainGUI::progressBarSetSlot(int min, int max, bool bVisible)
 {
@@ -2064,21 +2176,6 @@ void ScanMainGUI::stitchingFNextBtnClick() {
 	ui.OralSubstitutePanel->setVisible(true);
 	return;
 #endif
-	// 	if (m_plowerTeethModel)
-	// 		m_plowerTeethModel->Set_Visible(glWidget->stitchingLowerJawBtn->isChecked());
-	// 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
-	// 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
-	// 	ui.StitchingFinishPanel->setVisible(false);
-	// 	if (pCurrentTask->Get_ScanType() == etoothCrown) {		//代型扫描
-	// 		showOralSubstitutePanel();
-	// 	}
-	// 	else if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
-	// // 		ui.ScanJawGroup->setVisible(true);
-	// // 		QString str;
-	// // 		str = QString::fromLocal8Bit("请插入") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str());
-	// // 		ui.ScanJawTips->setText(str);
-	// 		showScanJawGroup();
-	// 	}
 	if (m_pupperTeethModel) {
 		pCScanTask ptask = CTaskManager::getInstance()->getTask(eUpperJawScan);
 		if (ptask) {
@@ -2332,14 +2429,42 @@ void ScanMainGUI::StitchFinishSlot()
 					glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 					m_pallTeethModel->Set_Visible(true);
 				}
+// 				if (pCurrentTask->Get_TaskType() == eUpperStitching) {		//上颌拼接
+// 					m_pupperTeethModel = pSrcTask->pTeethModel;//pDstTask->pTeethModel;
+// 					ui.stitchingUpperJawBtn->setChecked(true);
+// 					//m_pallTeethModel = pSrcTask->pTeethModel;
+// 				}
+// 				else if (pCurrentTask->Get_TaskType() == eLowerStitching) {	//下颌拼接
+// 					m_plowerTeethModel = pSrcTask->pTeethModel; //pDstTask->pTeethModel;
+// 					ui.stitchingLowerJawBtn->setChecked(true);
+// 				}
 				if (pCurrentTask->Get_TaskType() == eUpperStitching) {		//上颌拼接
-					m_pupperTeethModel = pSrcTask->pTeethModel;//pDstTask->pTeethModel;
-					ui.stitchingUpperJawBtn->setChecked(true);
-					//m_pallTeethModel = pSrcTask->pTeethModel;
+																			//pDstTask->pTeethModel->makeObject();
+					if (pSrcTask->Get_Gingiva() == true) {			//带牙龈//不带扫描杆
+						m_pUpperJawGingvaModel = pSrcTask->pTeethModel;
+					}
+					else {			//不带牙龈
+						m_pupperTeethModel = pSrcTask->pTeethModel;
+					}
+					if (pSrcTask->Get_DentalImplant() == true) {//种植体
+						glWidget->mm = pSrcTask->m_dentalImplantMeshModel;
+						m_pUpperDentalImplantModel = glWidget->makeObject();
+						m_pUpperDentalImplantModel->Set_Visible(false);
+					}
 				}
 				else if (pCurrentTask->Get_TaskType() == eLowerStitching) {	//下颌拼接
-					m_plowerTeethModel = pSrcTask->pTeethModel; //pDstTask->pTeethModel;
-					ui.stitchingLowerJawBtn->setChecked(true);
+																			//m_plowerTeethModel = pDstTask->pTeethModel;
+					if (pSrcTask->Get_Gingiva() == true) {			//带牙龈//不带扫描杆
+						m_pLowJawGingvaModel = pSrcTask->pTeethModel;
+					}
+					else {			//不带牙龈
+						m_plowerTeethModel = pSrcTask->pTeethModel;
+					}
+					if (pSrcTask->Get_DentalImplant() == true) {//种植体
+						glWidget->mm = pSrcTask->m_dentalImplantMeshModel;
+						m_pLowerDentalImplantModel = glWidget->makeObject();
+						m_pLowerDentalImplantModel->Set_Visible(false);
+					}
 				}
 				//saveModelFile(pSrcTask);
 				glWidget->update();

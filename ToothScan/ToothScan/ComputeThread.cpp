@@ -1572,6 +1572,13 @@ void ComputeThread::Stitching()
 	else {
 		cout << "The registration of one Jaw is failure..." << endl;
 	}
+	if (pSrcTask->Get_DentalImplant() == true) {
+		if (reg.FarRegist(l_tmpModel, pScanTask->m_dentalImplantMeshModel)) {
+			//reg.FarRegist(l_dstModel, l_tmpModel);
+			//l_vtSucModel.push_back(l_tmpModel);
+			//pSrcTask->m_mAllModel = l_tmpModel;
+		}
+	}
 // 	if (l_vtSucModel.size() > 0) {
 // 		l_vtSucModel.push_back(l_dstModel);
 // 		orth::MeshModel dstAllModel;

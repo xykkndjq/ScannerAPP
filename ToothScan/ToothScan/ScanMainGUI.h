@@ -17,7 +17,7 @@
 #include "TabMainGUI.h"
 #include "ScanTipWidget.h"
 
-class ScanMainGUI : public QWidget, public QAbstractNativeEventFilter
+class ScanMainGUI : public QWidget, public QAbstractNativeEventFilter,public IGlWidget
 {
 	Q_OBJECT
 
@@ -95,8 +95,15 @@ public:
 	pCTeethModel m_pupperTeethModel;
 	pCTeethModel m_plowerTeethModel;
 	pCTeethModel m_pallTeethModel;
+	pCTeethModel m_pLowerDentalImplantModel;
+	pCTeethModel m_pUpperDentalImplantModel;
+	pCTeethModel m_pUpperJawGingvaModel;
+	pCTeethModel m_pLowJawGingvaModel;
 
 	void resetValue();
+	void setDentalImplantNextBtnEnable(bool bEnable) {
+		ui.DentalImplantNextBtn->setEnabled(true);
+	}
 signals:
 	void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
 	void startAllJawNormalScan();
@@ -251,6 +258,11 @@ private:
 	void showOrderInfo(COrderInfo orderInfo);
 	void upperJawBtnBtnClick();
 	void lowJawBtnClick();
+	void DentalImplantNextBtnClick();
+	void DentalImplantPanelBackBtnClick();
+	void DentalImplantFinishNextBtnClick();
+	void DentalImplantFinishBackBtnClick();
+	
 
 	void progressBarSetSlot(int min, int max, bool bVisible);
 	

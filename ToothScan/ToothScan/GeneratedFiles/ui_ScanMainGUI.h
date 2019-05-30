@@ -75,6 +75,10 @@ public:
     QLabel *StitchingPanelTips_3;
     QPushButton *stitchingUpperJawBtn;
     QPushButton *stitchingLowerJawBtn;
+    QPushButton *stitchingUpperJawDenBtn;
+    QPushButton *stitchingUpperJawGingivaBtn;
+    QPushButton *stitchingLowerJawDenBtn;
+    QPushButton *stitchingLowerJawGingivaBtn;
     QGroupBox *OralSubstitutePanel;
     QLabel *CutJawFinishPanelTips_4;
     QPushButton *OralSubstitutePanelNextBtn;
@@ -179,6 +183,10 @@ public:
     QPushButton *teethBtn_47;
     QPushButton *teethBtn_48;
     QPushButton *teethBtn_35;
+    QGroupBox *DentalImplantFinishPanel;
+    QPushButton *DentalImplantFinishNextBtn;
+    QPushButton *DentalImplantFinishBackBtn;
+    QLabel *DentalImplantFinishPanelTips;
 
     void setupUi(QWidget *ScanMainGUI)
     {
@@ -879,12 +887,12 @@ public:
         CutJawFinishPanelTips_5->setWordWrap(true);
         stitchingFNextBtn = new QPushButton(StitchingFinishPanel);
         stitchingFNextBtn->setObjectName(QStringLiteral("stitchingFNextBtn"));
-        stitchingFNextBtn->setGeometry(QRect(50, 620, 221, 40));
+        stitchingFNextBtn->setGeometry(QRect(40, 620, 221, 40));
         stitchingFNextBtn->setFont(font);
         stitchingFNextBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         StitchingFinishPanelBackBtn = new QPushButton(StitchingFinishPanel);
         StitchingFinishPanelBackBtn->setObjectName(QStringLiteral("StitchingFinishPanelBackBtn"));
-        StitchingFinishPanelBackBtn->setGeometry(QRect(50, 530, 221, 40));
+        StitchingFinishPanelBackBtn->setGeometry(QRect(40, 560, 221, 40));
         StitchingFinishPanelBackBtn->setFont(font);
         StitchingFinishPanelBackBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         StitchingPanelTips_3 = new QLabel(StitchingFinishPanel);
@@ -916,10 +924,34 @@ public:
         stitchingUpperJawBtn->setCheckable(true);
         stitchingLowerJawBtn = new QPushButton(StitchingFinishPanel);
         stitchingLowerJawBtn->setObjectName(QStringLiteral("stitchingLowerJawBtn"));
-        stitchingLowerJawBtn->setGeometry(QRect(40, 240, 221, 40));
+        stitchingLowerJawBtn->setGeometry(QRect(40, 340, 221, 40));
         stitchingLowerJawBtn->setFont(font);
         stitchingLowerJawBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         stitchingLowerJawBtn->setCheckable(true);
+        stitchingUpperJawDenBtn = new QPushButton(StitchingFinishPanel);
+        stitchingUpperJawDenBtn->setObjectName(QStringLiteral("stitchingUpperJawDenBtn"));
+        stitchingUpperJawDenBtn->setGeometry(QRect(40, 220, 221, 40));
+        stitchingUpperJawDenBtn->setFont(font);
+        stitchingUpperJawDenBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        stitchingUpperJawDenBtn->setCheckable(true);
+        stitchingUpperJawGingivaBtn = new QPushButton(StitchingFinishPanel);
+        stitchingUpperJawGingivaBtn->setObjectName(QStringLiteral("stitchingUpperJawGingivaBtn"));
+        stitchingUpperJawGingivaBtn->setGeometry(QRect(40, 280, 221, 40));
+        stitchingUpperJawGingivaBtn->setFont(font);
+        stitchingUpperJawGingivaBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        stitchingUpperJawGingivaBtn->setCheckable(true);
+        stitchingLowerJawDenBtn = new QPushButton(StitchingFinishPanel);
+        stitchingLowerJawDenBtn->setObjectName(QStringLiteral("stitchingLowerJawDenBtn"));
+        stitchingLowerJawDenBtn->setGeometry(QRect(40, 400, 221, 40));
+        stitchingLowerJawDenBtn->setFont(font);
+        stitchingLowerJawDenBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        stitchingLowerJawDenBtn->setCheckable(true);
+        stitchingLowerJawGingivaBtn = new QPushButton(StitchingFinishPanel);
+        stitchingLowerJawGingivaBtn->setObjectName(QStringLiteral("stitchingLowerJawGingivaBtn"));
+        stitchingLowerJawGingivaBtn->setGeometry(QRect(40, 460, 221, 40));
+        stitchingLowerJawGingivaBtn->setFont(font);
+        stitchingLowerJawGingivaBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        stitchingLowerJawGingivaBtn->setCheckable(true);
         OralSubstitutePanel = new QGroupBox(ScanMainGUI);
         OralSubstitutePanel->setObjectName(QStringLiteral("OralSubstitutePanel"));
         OralSubstitutePanel->setEnabled(true);
@@ -1537,7 +1569,7 @@ public:
         DentalImplantPanel = new QGroupBox(ScanMainGUI);
         DentalImplantPanel->setObjectName(QStringLiteral("DentalImplantPanel"));
         DentalImplantPanel->setEnabled(true);
-        DentalImplantPanel->setGeometry(QRect(1580, 250, 300, 821));
+        DentalImplantPanel->setGeometry(QRect(1270, 690, 300, 821));
         QPalette palette28;
         palette28.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette28.setBrush(QPalette::Active, QPalette::Button, brush13);
@@ -1852,6 +1884,89 @@ public:
         DentalImplantPanelBackBtn->raise();
         DentalImplantPanelTips->raise();
         upperJawGroupBox->raise();
+        DentalImplantFinishPanel = new QGroupBox(ScanMainGUI);
+        DentalImplantFinishPanel->setObjectName(QStringLiteral("DentalImplantFinishPanel"));
+        DentalImplantFinishPanel->setEnabled(true);
+        DentalImplantFinishPanel->setGeometry(QRect(1570, 10, 300, 821));
+        QPalette palette30;
+        palette30.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette30.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette30.setBrush(QPalette::Active, QPalette::Light, brush6);
+        palette30.setBrush(QPalette::Active, QPalette::Midlight, brush14);
+        palette30.setBrush(QPalette::Active, QPalette::Dark, brush15);
+        palette30.setBrush(QPalette::Active, QPalette::Mid, brush16);
+        palette30.setBrush(QPalette::Active, QPalette::Text, brush);
+        palette30.setBrush(QPalette::Active, QPalette::BrightText, brush6);
+        palette30.setBrush(QPalette::Active, QPalette::ButtonText, brush);
+        palette30.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette30.setBrush(QPalette::Active, QPalette::Window, brush13);
+        palette30.setBrush(QPalette::Active, QPalette::Shadow, brush);
+        palette30.setBrush(QPalette::Active, QPalette::AlternateBase, brush14);
+        palette30.setBrush(QPalette::Active, QPalette::ToolTipBase, brush8);
+        palette30.setBrush(QPalette::Active, QPalette::ToolTipText, brush);
+        palette30.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette30.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette30.setBrush(QPalette::Inactive, QPalette::Light, brush6);
+        palette30.setBrush(QPalette::Inactive, QPalette::Midlight, brush14);
+        palette30.setBrush(QPalette::Inactive, QPalette::Dark, brush15);
+        palette30.setBrush(QPalette::Inactive, QPalette::Mid, brush16);
+        palette30.setBrush(QPalette::Inactive, QPalette::Text, brush);
+        palette30.setBrush(QPalette::Inactive, QPalette::BrightText, brush6);
+        palette30.setBrush(QPalette::Inactive, QPalette::ButtonText, brush);
+        palette30.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette30.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette30.setBrush(QPalette::Inactive, QPalette::Shadow, brush);
+        palette30.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush14);
+        palette30.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush8);
+        palette30.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush);
+        palette30.setBrush(QPalette::Disabled, QPalette::WindowText, brush15);
+        palette30.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette30.setBrush(QPalette::Disabled, QPalette::Light, brush6);
+        palette30.setBrush(QPalette::Disabled, QPalette::Midlight, brush14);
+        palette30.setBrush(QPalette::Disabled, QPalette::Dark, brush15);
+        palette30.setBrush(QPalette::Disabled, QPalette::Mid, brush16);
+        palette30.setBrush(QPalette::Disabled, QPalette::Text, brush15);
+        palette30.setBrush(QPalette::Disabled, QPalette::BrightText, brush6);
+        palette30.setBrush(QPalette::Disabled, QPalette::ButtonText, brush15);
+        palette30.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette30.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        palette30.setBrush(QPalette::Disabled, QPalette::Shadow, brush);
+        palette30.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush17);
+        palette30.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush8);
+        palette30.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
+        DentalImplantFinishPanel->setPalette(palette30);
+        DentalImplantFinishPanel->setAutoFillBackground(false);
+        DentalImplantFinishPanel->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);\n"
+"background-color:rgb(248,250,250);"));
+        DentalImplantFinishNextBtn = new QPushButton(DentalImplantFinishPanel);
+        DentalImplantFinishNextBtn->setObjectName(QStringLiteral("DentalImplantFinishNextBtn"));
+        DentalImplantFinishNextBtn->setGeometry(QRect(50, 740, 221, 40));
+        DentalImplantFinishNextBtn->setFont(font);
+        DentalImplantFinishNextBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        DentalImplantFinishBackBtn = new QPushButton(DentalImplantFinishPanel);
+        DentalImplantFinishBackBtn->setObjectName(QStringLiteral("DentalImplantFinishBackBtn"));
+        DentalImplantFinishBackBtn->setGeometry(QRect(50, 660, 221, 40));
+        DentalImplantFinishBackBtn->setFont(font);
+        DentalImplantFinishBackBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        DentalImplantFinishPanelTips = new QLabel(DentalImplantFinishPanel);
+        DentalImplantFinishPanelTips->setObjectName(QStringLiteral("DentalImplantFinishPanelTips"));
+        DentalImplantFinishPanelTips->setGeometry(QRect(10, 10, 281, 61));
+        QPalette palette31;
+        palette31.setBrush(QPalette::Active, QPalette::WindowText, brush18);
+        palette31.setBrush(QPalette::Active, QPalette::Button, brush13);
+        palette31.setBrush(QPalette::Active, QPalette::Base, brush13);
+        palette31.setBrush(QPalette::Active, QPalette::Window, brush13);
+        palette31.setBrush(QPalette::Inactive, QPalette::WindowText, brush18);
+        palette31.setBrush(QPalette::Inactive, QPalette::Button, brush13);
+        palette31.setBrush(QPalette::Inactive, QPalette::Base, brush13);
+        palette31.setBrush(QPalette::Inactive, QPalette::Window, brush13);
+        palette31.setBrush(QPalette::Disabled, QPalette::WindowText, brush12);
+        palette31.setBrush(QPalette::Disabled, QPalette::Button, brush13);
+        palette31.setBrush(QPalette::Disabled, QPalette::Base, brush13);
+        palette31.setBrush(QPalette::Disabled, QPalette::Window, brush13);
+        DentalImplantFinishPanelTips->setPalette(palette31);
+        DentalImplantFinishPanelTips->setFont(font2);
+        DentalImplantFinishPanelTips->setWordWrap(true);
         compensationScanPanel->raise();
         ScanJawGroup->raise();
         CutJawFinishPanel->raise();
@@ -1863,6 +1978,7 @@ public:
         orderInfoPanel->raise();
         progressBar->raise();
         DentalImplantPanel->raise();
+        DentalImplantFinishPanel->raise();
 
         retranslateUi(ScanMainGUI);
 
@@ -1978,6 +2094,22 @@ public:
         stitchingLowerJawBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         stitchingLowerJawBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213     \351\242\214", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        stitchingUpperJawDenBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        stitchingUpperJawDenBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214\346\211\253\346\217\217\346\235\206", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        stitchingUpperJawGingivaBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        stitchingUpperJawGingivaBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214\347\211\231\351\276\210", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        stitchingLowerJawDenBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        stitchingLowerJawDenBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214\346\211\253\346\217\217\346\235\206", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        stitchingLowerJawGingivaBtn->setToolTip(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        stitchingLowerJawGingivaBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214\347\211\231\351\276\210", Q_NULLPTR));
         OralSubstitutePanel->setTitle(QString());
         CutJawFinishPanelTips_4->setText(QApplication::translate("ScanMainGUI", "\345\215\225\345\207\273\345\255\224\344\275\215,\345\234\250\346\250\241\345\236\213\344\270\212\346\240\207\350\256\260\347\211\231\351\275\277", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
@@ -2099,6 +2231,16 @@ public:
         teethBtn_47->setText(QApplication::translate("ScanMainGUI", "47", Q_NULLPTR));
         teethBtn_48->setText(QApplication::translate("ScanMainGUI", "48", Q_NULLPTR));
         teethBtn_35->setText(QApplication::translate("ScanMainGUI", "35", Q_NULLPTR));
+        DentalImplantFinishPanel->setTitle(QString());
+#ifndef QT_NO_TOOLTIP
+        DentalImplantFinishNextBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\256\214\346\210\220", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        DentalImplantFinishNextBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\344\270\200\346\255\245", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        DentalImplantFinishBackBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\220\216\351\200\200", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        DentalImplantFinishBackBtn->setText(QApplication::translate("ScanMainGUI", "\345\220\216     \351\200\200", Q_NULLPTR));
+        DentalImplantFinishPanelTips->setText(QApplication::translate("ScanMainGUI", "\346\217\220\345\217\226\345\256\214\346\210\220", Q_NULLPTR));
     } // retranslateUi
 
 };

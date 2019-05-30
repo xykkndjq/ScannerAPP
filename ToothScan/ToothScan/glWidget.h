@@ -81,6 +81,10 @@ using std::endl;
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram);
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
+__interface IGlWidget
+{
+	virtual void setDentalImplantNextBtnEnable(bool bEnable) = 0;
+};
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions,public IParentInterface
 {
@@ -99,6 +103,7 @@ public:
 	void SetMatrix(cv::Mat &m, cv::Mat &v);
 	//13 ªÒ»°x y Ω«∂»
 	void GetMotorRot(float &xrot, float &yrot);
+	void CutModelInBox(orth::MeshModel &meshModel);
 	pCTeethModel makeObject();
 
 	vector<float> vertices_in;

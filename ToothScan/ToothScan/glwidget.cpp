@@ -398,6 +398,7 @@ void GLWidget::paintGL()
 //	drawGradient();
 	glUseProgram(0);
 	m_backgroundModel->OnPaint(m_projection,m_view,this);
+	return;
 	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -1001,7 +1002,20 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 	m_cutboxModel->UpdateCutBoxObject();
 	this->update();
 }
-
+void GLWidget::CutModelInBox(orth::MeshModel &meshModel) {
+	if (m_cutToothIndex == -1)
+		return;
+	map<int, pCCutBoxObject>::iterator mapIter = m_cutBoxesMap.begin(); 
+	vector<orth::MeshModel> meshModelvt;
+	for (; mapIter != m_cutBoxesMap.end();mapIter++) {
+		orth::MeshModel tmp = meshModel;
+		mapIter->second->CutModelInBox(tmp);
+		meshModelvt.push_back(tmp);
+	}
+	if (meshModelvt.size()>0) {
+		MergeModels(meshModelvt, meshModel);
+	}
+}
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton) {

@@ -56,6 +56,7 @@ public:
 	vector<vector<orth::MeshModel>> m_mCutModel;	//剪切了几次模型 剪切后的模型
 	vector<orth::MeshModel> m_mRegistrationModels;		//配准的model的全体 为上一步做准备
 	pCTeethModel pTeethModel;
+	orth::MeshModel m_dentalImplantMeshModel;
 	void SetMoldeFileName();
 	string m_strModelFileName;
 	//PARAMDEFINE(string, str, ModelFileName);
