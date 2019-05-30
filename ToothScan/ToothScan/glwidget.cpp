@@ -212,6 +212,7 @@ GLWidget::GLWidget(QWidget *parent)
 	motor_rot_x = 0;
 	motor_rot_y = 0;
 	m_cutToothIndex = -1;
+	m_pIglWidget = dynamic_cast<IGlWidget*>(parent);
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -398,7 +399,6 @@ void GLWidget::paintGL()
 //	drawGradient();
 	glUseProgram(0);
 	m_backgroundModel->OnPaint(m_projection,m_view,this);
-	return;
 	//m_cutboxModel->OnPaint(m_projection, m_view, this);
 	m_projection.setToIdentity();
 	m_projection.perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 300.0f);
@@ -998,8 +998,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 	}
 
 
-	m_cutboxModel->SetOriginalColor();
-	m_cutboxModel->UpdateCutBoxObject();
+// 	m_cutboxModel->SetOriginalColor();
+// 	m_cutboxModel->UpdateCutBoxObject();
 	this->update();
 }
 void GLWidget::CutModelInBox(orth::MeshModel &meshModel) {
@@ -1028,6 +1028,10 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event)
 		int screen_y = event->globalY();
 		ptmp->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
 		ptmp->Set_Visible(true);
+		ptmp->UpdateCutBoxObject();
+		if (m_pIglWidget) {
+			m_pIglWidget->setDentalImplantNextBtnEnable(true);
+		}
 		update();
 	}
 }
@@ -1823,11 +1827,11 @@ pCCutBoxObject GLWidget::makeCutBoxObject()
 void GLWidget::makeBackGround()
 {
 	QVector<GLfloat> vertData =
-	{ 
-		1.0f,1.0f,1.0f,    1.0f,1.0f,
-		1.0f,-1.0f,1.0f,   1.0f,0.0f,
-		-1.0f,-1.0f,1.0f,  0.0f,0.0f,
-		-1.0f,1.0f,1.0f ,  0.0f,1.0f
+	{
+		1.0f,1.0f,-1.0f,    1.0f,1.0f,
+		1.0f,-1.0f,-1.0f,   1.0f,0.0f,
+		-1.0f,-1.0f,-1.0f,  0.0f,0.0f,
+		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
 	};
 	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
 	QString name_ = "./Resources/images/background-grey3.png";

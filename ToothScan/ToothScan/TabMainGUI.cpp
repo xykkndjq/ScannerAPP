@@ -1145,7 +1145,7 @@ void TabMainGUI::PatientInformationSave()
 						if (pUpperJawGingvaScanTask == nullptr) {
 							pUpperJawGingvaScanTask = make_shared<CScanTask>();
 							pUpperJawGingvaScanTask->Set_ScanType(eUpperJawScan);
-							pUpperJawGingvaScanTask->Set_TaskName((g_strScanName[eLowerJawScan]));
+							pUpperJawGingvaScanTask->Set_TaskName((g_strScanName[eUpperJawScan]));
 							pUpperJawGingvaScanTask->Set_TaskType(eScan);
 							pUpperJawGingvaScanTask->Set_Gingiva(true);		//ÓÐÑÀö¸
 						}

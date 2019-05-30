@@ -226,7 +226,11 @@ private:
 	void stitchingPanelBtnClick();
 	void stitchingBackBtnClick();
 	void stitchingUpperJawBtnClick();
+	void stitchingUpperJawDenBtnClick();
+	void stitchingUpperJawGingivaBtnClick();
 	void stitchingLowerJawBtnClick();
+	void stitchingLowerJawDenBtnClick();
+	void stitchingLowerJawGingivaBtnClick();
 	void stitchingFNextBtnClick();
 	void OralSubstitutePanelNextBtnClick();
 	void oralSubstitutePanelBackBtnClick();
@@ -235,6 +239,7 @@ private:
 	void stitchingFinishPanelBackBtnClick();	
 	void teethStitchingPanelNextBtnClick();
 	void saveModelFile(pCScanTask pTask);
+	void saveDenModelFile(pCScanTask pTask);//÷÷÷≤ÃÂ
 	bool isModelFileExit(pCScanTask &pTask);
 	void loadModelFile(pCScanTask &pTask);
 	void hideAllPanel();
@@ -257,7 +262,11 @@ private:
 
 	void showOrderInfo(COrderInfo orderInfo);
 	void upperJawBtnBtnClick();
+	void upperJawDenBtnClick();
+	void upperJawGinBtnClick();
 	void lowJawBtnClick();
+	void lowJawDenBtnClick();
+	void lowJawGinBtnClick();
 	void DentalImplantNextBtnClick();
 	void DentalImplantPanelBackBtnClick();
 	void DentalImplantFinishNextBtnClick();

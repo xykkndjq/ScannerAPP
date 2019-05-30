@@ -45,6 +45,7 @@ public:
     QLabel *label_4;
     QPushButton *compensationBtn;
     QPushButton *discardBtn;
+    QProgressBar *progressBar;
     QGroupBox *CutJawPanel;
     QLabel *label_5;
     QPushButton *cutPaneNextStepBtn;
@@ -144,7 +145,10 @@ public:
     QLabel *jawImage;
     QLabel *i_3;
     QLabel *operatorNameLabel;
-    QProgressBar *progressBar;
+    QPushButton *upperJawDenBtn;
+    QPushButton *upperJawGinBtn;
+    QPushButton *lowJawDenBtn;
+    QPushButton *lowJawGinBtn;
     QGroupBox *DentalImplantPanel;
     QPushButton *DentalImplantNextBtn;
     QPushButton *DentalImplantPanelBackBtn;
@@ -458,6 +462,32 @@ public:
         discardBtn->setGeometry(QRect(30, 360, 221, 40));
         discardBtn->setFont(font);
         discardBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        progressBar = new QProgressBar(compensationScanPanel);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setGeometry(QRect(-250, 330, 400, 30));
+        progressBar->setStyleSheet(QLatin1String("QProgressBar{\n"
+"        border: none;\n"
+"        color: white;\n"
+"        text-align: center;\n"
+"        background: rgb(68, 69, 73);\n"
+"}\n"
+"QProgressBar::chunk {\n"
+"        border: none;\n"
+"        background: rgb(0, 160, 230);\n"
+"}"));
+        progressBar->setValue(0);
+        label_2->raise();
+        compensationScanPanelNextBtn->raise();
+        compensationScanPanelBackBtn->raise();
+        compensationScanPanelTipLabel->raise();
+        label_3->raise();
+        rotationLineEdit->raise();
+        waverLineEdit->raise();
+        label_4->raise();
+        compensationBtn->raise();
+        discardBtn->raise();
+        progressBar->raise();
+        progressBar->raise();
         CutJawPanel = new QGroupBox(ScanMainGUI);
         CutJawPanel->setObjectName(QStringLiteral("CutJawPanel"));
         CutJawPanel->setEnabled(true);
@@ -599,7 +629,7 @@ public:
         CutJawFinishPanel = new QGroupBox(ScanMainGUI);
         CutJawFinishPanel->setObjectName(QStringLiteral("CutJawFinishPanel"));
         CutJawFinishPanel->setEnabled(true);
-        CutJawFinishPanel->setGeometry(QRect(590, 790, 300, 700));
+        CutJawFinishPanel->setGeometry(QRect(590, 1010, 300, 700));
         QPalette palette10;
         palette10.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette10.setBrush(QPalette::Active, QPalette::Button, brush13);
@@ -1252,7 +1282,7 @@ public:
         orderInfoPanel = new QGroupBox(ScanMainGUI);
         orderInfoPanel->setObjectName(QStringLiteral("orderInfoPanel"));
         orderInfoPanel->setEnabled(true);
-        orderInfoPanel->setGeometry(QRect(610, -20, 300, 801));
+        orderInfoPanel->setGeometry(QRect(610, -20, 300, 1031));
         QPalette palette27;
         palette27.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette27.setBrush(QPalette::Active, QPalette::Button, brush13);
@@ -1323,11 +1353,13 @@ public:
         i_2->setGeometry(QRect(6, 98, 100, 21));
         upperJawBtn = new QPushButton(orderInfoPanel);
         upperJawBtn->setObjectName(QStringLiteral("upperJawBtn"));
-        upperJawBtn->setGeometry(QRect(110, 710, 75, 23));
+        upperJawBtn->setGeometry(QRect(37, 710, 221, 40));
+        upperJawBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         upperJawBtn->setCheckable(true);
         lowJawBtn = new QPushButton(orderInfoPanel);
         lowJawBtn->setObjectName(QStringLiteral("lowJawBtn"));
-        lowJawBtn->setGeometry(QRect(110, 760, 75, 23));
+        lowJawBtn->setGeometry(QRect(37, 860, 221, 40));
+        lowJawBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
         lowJawBtn->setCheckable(true);
         teethGroupBox = new QGroupBox(orderInfoPanel);
         teethGroupBox->setObjectName(QStringLiteral("teethGroupBox"));
@@ -1540,6 +1572,26 @@ public:
         operatorNameLabel = new QLabel(orderInfoPanel);
         operatorNameLabel->setObjectName(QStringLiteral("operatorNameLabel"));
         operatorNameLabel->setGeometry(QRect(110, 138, 181, 21));
+        upperJawDenBtn = new QPushButton(orderInfoPanel);
+        upperJawDenBtn->setObjectName(QStringLiteral("upperJawDenBtn"));
+        upperJawDenBtn->setGeometry(QRect(37, 760, 221, 40));
+        upperJawDenBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        upperJawDenBtn->setCheckable(true);
+        upperJawGinBtn = new QPushButton(orderInfoPanel);
+        upperJawGinBtn->setObjectName(QStringLiteral("upperJawGinBtn"));
+        upperJawGinBtn->setGeometry(QRect(37, 810, 221, 40));
+        upperJawGinBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        upperJawGinBtn->setCheckable(true);
+        lowJawDenBtn = new QPushButton(orderInfoPanel);
+        lowJawDenBtn->setObjectName(QStringLiteral("lowJawDenBtn"));
+        lowJawDenBtn->setGeometry(QRect(37, 910, 221, 40));
+        lowJawDenBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        lowJawDenBtn->setCheckable(true);
+        lowJawGinBtn = new QPushButton(orderInfoPanel);
+        lowJawGinBtn->setObjectName(QStringLiteral("lowJawGinBtn"));
+        lowJawGinBtn->setGeometry(QRect(37, 960, 221, 40));
+        lowJawGinBtn->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        lowJawGinBtn->setCheckable(true);
         label->raise();
         orderNoLabel->raise();
         patientNameLabel->raise();
@@ -1552,20 +1604,10 @@ public:
         operatorNameLabel->raise();
         jawGroupBox->raise();
         teethGroupBox->raise();
-        progressBar = new QProgressBar(ScanMainGUI);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(722, 960, 400, 30));
-        progressBar->setStyleSheet(QLatin1String("QProgressBar{\n"
-"        border: none;\n"
-"        color: white;\n"
-"        text-align: center;\n"
-"        background: rgb(68, 69, 73);\n"
-"}\n"
-"QProgressBar::chunk {\n"
-"        border: none;\n"
-"        background: rgb(0, 160, 230);\n"
-"}"));
-        progressBar->setValue(0);
+        upperJawDenBtn->raise();
+        upperJawGinBtn->raise();
+        lowJawDenBtn->raise();
+        lowJawGinBtn->raise();
         DentalImplantPanel = new QGroupBox(ScanMainGUI);
         DentalImplantPanel->setObjectName(QStringLiteral("DentalImplantPanel"));
         DentalImplantPanel->setEnabled(true);
@@ -1976,7 +2018,6 @@ public:
         TeethStitchingPanel->raise();
         CutJawPanel->raise();
         orderInfoPanel->raise();
-        progressBar->raise();
         DentalImplantPanel->raise();
         DentalImplantFinishPanel->raise();
 
@@ -2187,6 +2228,10 @@ public:
         jawImage->setText(QString());
         i_3->setText(QApplication::translate("ScanMainGUI", "\345\214\273\347\224\237\345\247\223\345\220\215\357\274\232", Q_NULLPTR));
         operatorNameLabel->setText(QString());
+        upperJawDenBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214\346\211\253\346\217\217\346\235\206", Q_NULLPTR));
+        upperJawGinBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\212\351\242\214\347\211\231\351\276\210", Q_NULLPTR));
+        lowJawDenBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214\346\211\253\346\217\217\346\235\206", Q_NULLPTR));
+        lowJawGinBtn->setText(QApplication::translate("ScanMainGUI", "\344\270\213\351\242\214\347\211\231\351\276\210", Q_NULLPTR));
         DentalImplantPanel->setTitle(QString());
 #ifndef QT_NO_TOOLTIP
         DentalImplantNextBtn->setToolTip(QApplication::translate("ScanMainGUI", "\345\256\214\346\210\220", Q_NULLPTR));

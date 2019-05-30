@@ -51,9 +51,15 @@ string CScanTask::Get_ModelFileName()
 		break;
 	case eUpperJawScan:
 		m_strModelFileName += "toothUpperJaw";
+		if (Get_Gingiva() == true) {
+			m_strModelFileName += "gingiva";
+		}
 		break;
 	case eLowerJawScan:
 		m_strModelFileName += "toothLowerJaw";
+		if (Get_Gingiva() == true) {
+			m_strModelFileName += "gingiva";
+		}
 		break;
 	case eAllJawScan:
 		m_strModelFileName += "toothAllJaw";

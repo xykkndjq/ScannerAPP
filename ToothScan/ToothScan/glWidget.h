@@ -81,7 +81,7 @@ using std::endl;
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram);
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
-__interface IGlWidget
+interface IGlWidget
 {
 	virtual void setDentalImplantNextBtnEnable(bool bEnable) = 0;
 };
@@ -93,7 +93,7 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions,public IParent
 public:
     explicit GLWidget(QWidget *parent = 0);
     ~GLWidget();
-
+	IGlWidget * m_pIglWidget;
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
     void rotateBy(int xAngle, int yAngle, int zAngle);
