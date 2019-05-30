@@ -28,7 +28,6 @@
         <file>Resources/images/upperjaw_yes.png</file>
         <file>Resources/images/white.png</file>
         <file>Resources/images/btnClose.png</file>
-        <file>Resources/images/check.png</file>
         <file>Resources/images/uncheck.png</file>
         <file>Resources/images/1/11.png</file>
         <file>Resources/images/1/12.png</file>
@@ -259,5 +258,6 @@
         <file>Resources/images/shrink.png</file>
         <file>Resources/images/TopView.png</file>
         <file>Resources/images/background-grey3.png</file>
+        <file>Resources/images/checked.png</file>
     </qresource>
 </RCC>
