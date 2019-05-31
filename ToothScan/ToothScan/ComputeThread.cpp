@@ -1214,26 +1214,26 @@ void ComputeThread::GPAMeshing()
 		return;
 	emit progressBarSetSignal(0, 0,  true);
 	//vector<vector<double>> points_target;
-	int TotalIterNum = 30;
+	//int TotalIterNum = 30;
 	{
 		if (pScanTask->m_mModel.size() > 1)
 		{
-			vector<cv::Mat> rt_matrixs;
-			clock_t time1, time2, time3, time4;
-			time1 = clock();
+			//vector<cv::Mat> rt_matrixs;
+			clock_t /*time1, time2,*/ time3, time4;
+			//time1 = clock();
 
-			//cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
-			//vector<cv::Mat> rt_matrixs(pScanTask->m_mModel.size(), rteye);
-			gpa.GpaRegistrationGPU(pScanTask->m_mModel, rt_matrixs, TotalIterNum);
-			time2 = clock();
-			cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
-			cout << "GPA is finished..." << endl;
+			////cv::Mat rteye = cv::Mat::eye(4, 4, CV_64FC1);
+			////vector<cv::Mat> rt_matrixs(pScanTask->m_mModel.size(), rteye);
+			//gpa.GpaRegistrationGPU(pScanTask->m_mModel, rt_matrixs, TotalIterNum);
+			//time2 = clock();
+			//cout << "The GPU time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s;" << endl;
+			//cout << "GPA is finished..." << endl;
 
-			/*------------------------------------------------------ reconstruction change ---------------------------------------------------*/
-			for (int mesh_index = 0; mesh_index < pScanTask->m_mModel.size(); mesh_index++)
-			{
-				g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &pScanTask->m_mModel[mesh_index]);
-			}
+			///*------------------------------------------------------ reconstruction change ---------------------------------------------------*/
+			//for (int mesh_index = 0; mesh_index < pScanTask->m_mModel.size(); mesh_index++)
+			//{
+			//	g_unwarp.MeshRot((double*)rt_matrixs[mesh_index].data, &pScanTask->m_mModel[mesh_index]);
+			//}
 
 			orth::MeshModel totalMeshModel, totalMeshModel_copy;
 			PoissonReconstruction fsp;
