@@ -304,7 +304,7 @@ public:
 "color: rgb(255, 255, 255);\n"
 "border:0px groove gray;border-radius:5px;"));
         QIcon icon4;
-        icon4.addFile(QStringLiteral("../../../../../QTProject/qtwidgettest11/qtwidgettest/qtwidgettest/Resources/images/scan.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QStringLiteral(":/MainWidget/Resources/images/scan.png"), QSize(), QIcon::Normal, QIcon::Off);
         scanPushButton->setIcon(icon4);
         scanPushButton->setIconSize(QSize(22, 22));
         moulageGroupBox = new QGroupBox(orderScanGroupBox);
@@ -470,11 +470,11 @@ public:
         aboutTextLabel = new QLabel(aboutGroupBox);
         aboutTextLabel->setObjectName(QStringLiteral("aboutTextLabel"));
         aboutTextLabel->setGeometry(QRect(560, 432, 671, 16));
-        settingGroupBox->raise();
         aboutGroupBox->raise();
         calibrationGroupBox->raise();
         mainGroupBox->raise();
         orderInforGroupBox->raise();
+        settingGroupBox->raise();
 
         retranslateUi(TabMainGUI);
 

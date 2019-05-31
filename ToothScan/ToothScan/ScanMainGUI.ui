@@ -14,7 +14,7 @@
    <string>ScanMainGUI</string>
   </property>
   <property name="toolTip">
-   <string>确认选择</string>
+   <string/>
   </property>
   <widget class="QGroupBox" name="ScanJawGroup">
    <property name="enabled">
@@ -6322,6 +6322,7 @@ background-color:rgba(248,250,250,0);</string>
    <zorder>teethNoLabel8</zorder>
    <zorder>teethNoLabel6</zorder>
    <zorder>teethNoLabel7</zorder>
+   <zorder>cameraGroupBox</zorder>
   </widget>
   <widget class="QGroupBox" name="TeethStitchingPanel">
    <property name="enabled">
@@ -9178,8 +9179,8 @@ background-color:rgba(248,250,250,0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/11.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/11.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/11.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>11</string>
@@ -9201,8 +9202,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/12.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/12.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/12.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>12</string>
@@ -9224,8 +9225,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/13.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/13.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/13.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>13</string>
@@ -9247,8 +9248,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/14.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/14.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/14.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>14</string>
@@ -9270,8 +9271,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/15.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/15.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/15.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>15</string>
@@ -9293,8 +9294,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/16.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/16.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/16.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>16</string>
@@ -9316,8 +9317,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/17.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/17.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/17.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>17</string>
@@ -9339,8 +9340,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/18.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>18</string>
@@ -9362,8 +9363,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/21.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/21.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/21.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>21</string>
@@ -9385,8 +9386,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/22.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/22.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/22.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>22</string>
@@ -9408,8 +9409,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/23.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/23.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/23.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>23</string>
@@ -9431,8 +9432,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/24.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/24.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/24.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>24</string>
@@ -9454,8 +9455,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/25.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/25.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/25.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>25</string>
@@ -9477,8 +9478,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/26.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/26.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/26.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>26</string>
@@ -9500,8 +9501,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/27.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/27.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/27.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>27</string>
@@ -9523,11 +9524,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/28.png);
-background-color: rgba(255, 255, 255, 0);
-border-color:rgba(255, 255, 255, 0);
-selection-color: rgba(255, 255, 255, 0);
-selection-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/28.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/28.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>28</string>
@@ -9562,8 +9560,8 @@ selection-background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/31.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/31.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/31.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>31</string>
@@ -9585,8 +9583,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/32.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/32.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/32.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>32</string>
@@ -9608,8 +9606,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/33.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/33.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/33.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>33</string>
@@ -9631,8 +9629,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/34.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/34.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/34.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>34</string>
@@ -9654,8 +9652,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/36.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/36.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/36.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>36</string>
@@ -9677,8 +9675,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/37.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/37.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/37.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>37</string>
@@ -9700,8 +9698,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/38.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/38.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/38.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>38</string>
@@ -9723,8 +9721,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/41.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/41.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/41.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>41</string>
@@ -9746,8 +9744,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/42.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/42.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/42.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>42</string>
@@ -9769,8 +9767,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/43.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/43.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/43.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>43</string>
@@ -9792,8 +9790,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/44.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/44.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/44.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>44</string>
@@ -9815,8 +9813,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/45.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/45.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/45.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>45</string>
@@ -9838,14 +9836,17 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/46.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/46.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/46.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>46</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QToolButton" name="teethBtn_47">
@@ -9861,14 +9862,17 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/47.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/47.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/47.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>47</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QToolButton" name="teethBtn_48">
@@ -9884,8 +9888,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/48.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/48.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/48.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>48</string>
@@ -9907,8 +9911,8 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/35.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/35.png);\nbackground-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>35</string>
@@ -10777,7 +10781,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -10849,7 +10853,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -10858,7 +10862,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -10914,7 +10918,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -10986,7 +10990,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -10995,7 +10999,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -11051,7 +11055,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -11123,7 +11127,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -11132,7 +11136,7 @@ border:0px;border-radius:0px;</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="0">
          <red>248</red>
          <green>250</green>
          <blue>250</blue>
@@ -11182,8 +11186,8 @@ border:0px;border-radius:0px;</string>
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);
-background-color:rgb(248,250,250);</string>
+    <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgba(128, 128, 128,0);
+background-color:rgba(248,250,250,0);</string>
    </property>
    <property name="title">
     <string/>
@@ -11265,7 +11269,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11274,7 +11278,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Base">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11283,7 +11287,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Window">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11303,7 +11307,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11312,7 +11316,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Base">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11321,7 +11325,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Window">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11341,7 +11345,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11350,7 +11354,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Base">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11359,7 +11363,7 @@ background-color:rgb(248,250,250);</string>
        </colorrole>
        <colorrole role="Window">
         <brush brushstyle="SolidPattern">
-         <color alpha="255">
+         <color alpha="0">
           <red>248</red>
           <green>250</green>
           <blue>250</blue>
@@ -11387,22 +11391,14 @@ background-color:rgb(248,250,250);</string>
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>1240</y>
+     <y>1000</y>
      <width>400</width>
      <height>30</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QProgressBar{
-        border: none;
-        color: white;
-        text-align: center;
-        background: rgb(68, 69, 73);
-}
-QProgressBar::chunk {
-        border: none;
-        background: rgb(0, 160, 230);
-}</string>
+    <string notr="true">QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}
+QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}</string>
    </property>
    <property name="value">
     <number>0</number>
@@ -11424,6 +11420,7 @@ QProgressBar::chunk {
   <zorder>cameraGroupBox</zorder>
   <zorder>DentalImplantFinishPanel</zorder>
   <zorder>progressBar</zorder>
+  <zorder>OralSubstitutePanel_2</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

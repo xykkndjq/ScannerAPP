@@ -181,7 +181,7 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.ScanJawScanBtn->setGraphicsEffect(defaultShadow);
 	setWindowFlags(Qt::FramelessWindowHint);
 	styleControl2(this);
-	ui.progressBar->setVisible(false);
+	//ui.progressBar->setVisible(false);
 	// 	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(ui.CutJawPanel);
 	// 	shadow_effect->setOffset(-5, 5);
 	// 	shadow_effect->setColor(Qt::gray);
@@ -989,7 +989,7 @@ void ScanMainGUI::resetValue()
 	m_pUpperJawGingvaModel = nullptr;
 	m_pLowJawGingvaModel = nullptr;
 	m_bsplitModelFlag = false;
-	ui.progressBar->hide();
+//	ui.progressBar->setVisible(false);
 	hideAllPanel();
 }
 
@@ -1620,7 +1620,6 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 		emit gpaTaskMeshSignal();
 		return;
 	}
-	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
 		m_pallTeethModel = pCurrentTask->pTeethModel;
 	}
@@ -1629,6 +1628,9 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 		showDentalImplantPanel();
 		return;
 	}
+	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
+
+
 
 	if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
 		if (pCurrentTask->Get_Gingiva() == true) {
@@ -2000,6 +2002,7 @@ void ScanMainGUI::showDentalImplantPanel(bool bBack) {
 		QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
 		if (pButton) {
 			pButton->setDisabled(true);
+			pButton->setChecked(false);
 		}
 	}
 	if (pCurrentTask->Get_ScanType() == eUpperJawScan)	//上颌
@@ -2036,6 +2039,24 @@ void ScanMainGUI::meshFinishSlot()
 	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
 		m_pallTeethModel = pCurrentTask->pTeethModel;
 	}
+
+	if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+		if (pCurrentTask->Get_Gingiva() == true) {
+			m_pUpperJawGingvaModel = pCurrentTask->pTeethModel;
+		}
+		else {
+			m_pupperTeethModel = pCurrentTask->pTeethModel;
+		}
+	}
+	else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+		if (pCurrentTask->Get_Gingiva() == true) {			//带牙龈//不带扫描杆
+			m_pLowJawGingvaModel = pCurrentTask->pTeethModel;
+		}
+		else {			//不带牙龈
+			m_plowerTeethModel = pCurrentTask->pTeethModel;
+		}
+	}
+
 	saveModelFile(pCurrentTask);
 	if (pCurrentTask->Get_Gingiva() == false&& pCurrentTask->Get_DentalImplant() == true) {//种植体
 		showDentalImplantPanel();
@@ -2045,43 +2066,6 @@ void ScanMainGUI::meshFinishSlot()
 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 
 	if (!pNextTask&&pCurrentTask) {
-		ui.CutJawPanel->setVisible(false);
-		ui.StitchingFinishPanel->setVisible(true);
-		QString str;
-		ui.stitchingUpperJawBtn->setVisible(false);
-		ui.stitchingLowerJawBtn->setVisible(false);
-		if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
-			if (pCurrentTask->Get_Gingiva() == true) {
-				m_pUpperJawGingvaModel = pCurrentTask->pTeethModel;
-			}
-			else {
-				m_pupperTeethModel = pCurrentTask->pTeethModel;
-			}
-			if (pCurrentTask->Get_DentalImplant() == true) {//种植体
-				glWidget->mm = pCurrentTask->m_dentalImplantMeshModel;
-				m_pUpperDentalImplantModel = glWidget->makeObject();
-				m_pUpperDentalImplantModel->Set_Visible(false);
-			}
-			//m_pupperTeethModel = pCurrentTask->pTeethModel;
-// 			ui.stitchingUpperJawBtn->setChecked(true);
-// 			ui.stitchingUpperJawBtn->setVisible(true);
-		}
-		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
-			if (pCurrentTask->Get_Gingiva() == true) {			//带牙龈//不带扫描杆
-				m_pLowJawGingvaModel = pCurrentTask->pTeethModel;
-			}
-			else {			//不带牙龈
-				m_plowerTeethModel = pCurrentTask->pTeethModel;
-			}
-			if (pCurrentTask->Get_DentalImplant() == true) {//种植体
-				glWidget->mm = pCurrentTask->m_dentalImplantMeshModel;
-				m_pLowerDentalImplantModel = glWidget->makeObject();
-				m_pLowerDentalImplantModel->Set_Visible(false);
-			}
-			//m_plowerTeethModel = pCurrentTask->pTeethModel;
-// 			ui.stitchingLowerJawBtn->setChecked(true);
-// 			ui.stitchingLowerJawBtn->setVisible(true);
-		}
 		showStitchingFinishPanel();
 		//str = QString::fromLocal8Bit("可以通过工具栏修剪") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("数据");
 		//ui.CutJawFinishPanelTips->setText(str);

@@ -656,8 +656,8 @@ border:0px groove gray;border-radius:5px;</string>
       <string>扫描</string>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>../../../../../QTProject/qtwidgettest11/qtwidgettest/qtwidgettest/Resources/images/scan.png</normaloff>../../../../../QTProject/qtwidgettest11/qtwidgettest/qtwidgettest/Resources/images/scan.png</iconset>
+      <iconset resource="mainwidget.qrc">
+       <normaloff>:/MainWidget/Resources/images/scan.png</normaloff>:/MainWidget/Resources/images/scan.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -1216,15 +1216,16 @@ border:0px groove gray;border-radius:5px;</string>
     </property>
    </widget>
   </widget>
-  <zorder>settingGroupBox</zorder>
   <zorder>aboutGroupBox</zorder>
   <zorder>calibrationGroupBox</zorder>
   <zorder>mainGroupBox</zorder>
   <zorder>orderInforGroupBox</zorder>
+  <zorder>settingGroupBox</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="mainwidget.qrc"/>
+  <include location="C:/Users/CAMNODE06/.designer/backup/mainwidget.qrc"/>
  </resources>
  <connections/>
 </ui>
