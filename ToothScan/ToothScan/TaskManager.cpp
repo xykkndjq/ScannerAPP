@@ -90,6 +90,8 @@ void CScanTask::StreamValue(datastream& kData, bool bSend)
 	//qDebug() << m_eTaskPro << endl;
 	Stream_VALUEEx(int, m_eTaskType);
 	Stream_VALUE(m_vtTeeth);
+	Stream_VALUE(m_bGingiva);;
+	Stream_VALUE(m_bDentalImplant);
 //	qDebug() << m_eTaskType << endl;
 }
 

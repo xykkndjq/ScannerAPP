@@ -28,7 +28,6 @@
         <file>Resources/images/upperjaw_yes.png</file>
         <file>Resources/images/white.png</file>
         <file>Resources/images/btnClose.png</file>
-        <file>Resources/images/check.png</file>
         <file>Resources/images/uncheck.png</file>
         <file>Resources/images/1/11.png</file>
         <file>Resources/images/1/12.png</file>
@@ -259,5 +258,15 @@
         <file>Resources/images/shrink.png</file>
         <file>Resources/images/TopView.png</file>
         <file>Resources/images/background-grey3.png</file>
+        <file>Resources/images/checked.png</file>
+        <file>Resources/images/cutbox.fs</file>
+        <file>Resources/images/cutbox.vs</file>
+        <file>Resources/images/Moulage1_no.png</file>
+        <file>Resources/images/Moulage1_yes.png</file>
+        <file>Resources/images/Moulage2_no.png</file>
+        <file>Resources/images/Moulage2_yes.png</file>
+        <file>Resources/images/Moulage3_no.png</file>
+        <file>Resources/images/Moulage3_yes.png</file>
+        <file>Resources/images/orderIconCheck.gif</file>
     </qresource>
 </RCC>

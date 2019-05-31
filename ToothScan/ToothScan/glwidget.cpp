@@ -213,6 +213,7 @@ GLWidget::GLWidget(QWidget *parent)
 	motor_rot_y = 0;
 	m_cutToothIndex = -1;
 	m_pIglWidget = dynamic_cast<IGlWidget*>(parent);
+	m_cutboxModel = nullptr;
 	//project1 = cv::Mat::eye(4, 4, CV_32FC1);
 }
 
@@ -674,186 +675,200 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
 	int screen_x = event->globalX();
 	int screen_y = event->globalY();
-	if (QApplication::keyboardModifiers() == Qt::ShiftModifier)
-	{
-		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
-		if (event->button() == Qt::LeftButton)
-		{
-			qDebug() << "ShiftKey + MOuseLeftButton";
-			m_cutboxModel->movement_type = BoxMovement::Trans;
-
-			//int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, m_model, m_view, m_projection);
-			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
-
-			if (face_index == 0 || face_index == 1)
-			{
-				m_cutboxModel->face_index = BoxFace::x_p;
+	int face_index = -1;
+	if (m_cutToothIndex != -1) {
+		map<int, pCCutBoxObject>::iterator mapIter = m_cutBoxesMap.begin();
+		for (; mapIter != m_cutBoxesMap.end(); mapIter++) {
+			face_index = mapIter->second->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mapIter->second->new_box);
+			if (face_index != -1) {
+				m_cutboxModel = mapIter->second;
+				break;
 			}
-			if (face_index == 6 || face_index == 7)
-			{
-				m_cutboxModel->face_index = BoxFace::x_n;
-			}
-
-			if (face_index == 2 || face_index == 3)
-			{
-				m_cutboxModel->face_index = BoxFace::y_p;
-			}
-			if (face_index == 8 || face_index == 9)
-			{
-				m_cutboxModel->face_index = BoxFace::y_n;
-			}
-
-			if (face_index == 4 || face_index == 5)
-			{
-				m_cutboxModel->face_index = BoxFace::z_p;
-			}
-			if (face_index == 10 || face_index == 11)
-			{
-				m_cutboxModel->face_index = BoxFace::z_n;
-			}
-
-			m_cutboxModel->UpdateCutBoxObject();
-			
-			this->update();
-
-			return;
+			m_cutboxModel = nullptr;
 		}
-	}
-	if (QApplication::keyboardModifiers() == Qt::ControlModifier)
-	{
-		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
-		if (event->button() == Qt::LeftButton)
-		{
-			qDebug() << "ControlKey + MOuseLeftButton";
-			m_cutboxModel->movement_type = BoxMovement::Rot;
-
-			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
-
-			if (face_index == 0 || face_index == 1)
+		if (m_cutboxModel != NULL) {
+			if (QApplication::keyboardModifiers() == Qt::ShiftModifier)
 			{
-				m_cutboxModel->face_index = BoxFace::x_p;
-			}
-			if (face_index == 6 || face_index == 7)
-			{
-				m_cutboxModel->face_index = BoxFace::x_n;
-			}
+				m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+				if (event->button() == Qt::LeftButton)
+				{
+					qDebug() << "ShiftKey + MOuseLeftButton";
+					m_cutboxModel->movement_type = BoxMovement::Trans;
 
-			if (face_index == 2 || face_index == 3)
-			{
-				m_cutboxModel->face_index = BoxFace::y_p;
-			}
-			if (face_index == 8 || face_index == 9)
-			{
-				m_cutboxModel->face_index = BoxFace::y_n;
-			}
+					//int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, m_model, m_view, m_projection);
+//					int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
 
-			if (face_index == 4 || face_index == 5)
-			{
-				m_cutboxModel->face_index = BoxFace::z_p;
-			}
-			if (face_index == 10 || face_index == 11)
-			{
-				m_cutboxModel->face_index = BoxFace::z_n;
-			}
+					if (face_index == 0 || face_index == 1)
+					{
+						m_cutboxModel->face_index = BoxFace::x_p;
+					}
+					if (face_index == 6 || face_index == 7)
+					{
+						m_cutboxModel->face_index = BoxFace::x_n;
+					}
 
-			m_cutboxModel->UpdateCutBoxObject();
+					if (face_index == 2 || face_index == 3)
+					{
+						m_cutboxModel->face_index = BoxFace::y_p;
+					}
+					if (face_index == 8 || face_index == 9)
+					{
+						m_cutboxModel->face_index = BoxFace::y_n;
+					}
 
-			this->update();
+					if (face_index == 4 || face_index == 5)
+					{
+						m_cutboxModel->face_index = BoxFace::z_p;
+					}
+					if (face_index == 10 || face_index == 11)
+					{
+						m_cutboxModel->face_index = BoxFace::z_n;
+					}
 
-			return;
-		}
-	}
-	if (QApplication::keyboardModifiers() == Qt::AltModifier)
-	{
-		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
-		if (event->button() == Qt::LeftButton)
-		{
-			qDebug() << "AltKey + MOuseLeftButton";
-			m_cutboxModel->movement_type = BoxMovement::Stretch;
+					m_cutboxModel->UpdateCutBoxObject();
 
-			int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+					this->update();
 
-			if (face_index == 0 || face_index == 1)
-			{
-				m_cutboxModel->face_index = BoxFace::x_p;
-			}
-			if (face_index == 6 || face_index == 7)
-			{
-				m_cutboxModel->face_index = BoxFace::x_n;
-			}
-
-			if (face_index == 2 || face_index == 3)
-			{
-				m_cutboxModel->face_index = BoxFace::y_p;
-			}
-			if (face_index == 8 || face_index == 9)
-			{
-				m_cutboxModel->face_index = BoxFace::y_n;
-			}
-
-			if (face_index == 4 || face_index == 5)
-			{
-				m_cutboxModel->face_index = BoxFace::z_p;
-			}
-			if (face_index == 10 || face_index == 11)
-			{
-				m_cutboxModel->face_index = BoxFace::z_n;
-			}
-
-			m_cutboxModel->UpdateCutBoxObject();
-
-			this->update();
-
-			return;
-		}
-	}
-	if (event->button() == Qt::MiddleButton)
-	{
-		m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
-		if (QApplication::keyboardModifiers() == Qt::ControlModifier)
-		{
-			qDebug() << "CtrlKey + MiddleButton";
-
-			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
-			for (; iter != m_ModelsVt.end(); iter++) {
-				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-				if (pModel) {
-					m_cutboxModel->CutModelInBox(pModel->m_model);
-					pModel->makeObject();
+					return;
 				}
 			}
+			if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+			{
+				m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+				if (event->button() == Qt::LeftButton)
+				{
+					qDebug() << "ControlKey + MOuseLeftButton";
+					m_cutboxModel->movement_type = BoxMovement::Rot;
 
-			update();
+					//int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+
+					if (face_index == 0 || face_index == 1)
+					{
+						m_cutboxModel->face_index = BoxFace::x_p;
+					}
+					if (face_index == 6 || face_index == 7)
+					{
+						m_cutboxModel->face_index = BoxFace::x_n;
+					}
+
+					if (face_index == 2 || face_index == 3)
+					{
+						m_cutboxModel->face_index = BoxFace::y_p;
+					}
+					if (face_index == 8 || face_index == 9)
+					{
+						m_cutboxModel->face_index = BoxFace::y_n;
+					}
+
+					if (face_index == 4 || face_index == 5)
+					{
+						m_cutboxModel->face_index = BoxFace::z_p;
+					}
+					if (face_index == 10 || face_index == 11)
+					{
+						m_cutboxModel->face_index = BoxFace::z_n;
+					}
+
+					m_cutboxModel->UpdateCutBoxObject();
+
+					this->update();
+
+					return;
+				}
+			}
+			if (QApplication::keyboardModifiers() == Qt::AltModifier)
+			{
+				m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+				if (event->button() == Qt::LeftButton)
+				{
+					qDebug() << "AltKey + MOuseLeftButton";
+					m_cutboxModel->movement_type = BoxMovement::Stretch;
+
+					//int face_index = m_cutboxModel->ChoseFace((float)screen_x, (float)screen_y, SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), m_cutboxModel->new_box);
+
+					if (face_index == 0 || face_index == 1)
+					{
+						m_cutboxModel->face_index = BoxFace::x_p;
+					}
+					if (face_index == 6 || face_index == 7)
+					{
+						m_cutboxModel->face_index = BoxFace::x_n;
+					}
+
+					if (face_index == 2 || face_index == 3)
+					{
+						m_cutboxModel->face_index = BoxFace::y_p;
+					}
+					if (face_index == 8 || face_index == 9)
+					{
+						m_cutboxModel->face_index = BoxFace::y_n;
+					}
+
+					if (face_index == 4 || face_index == 5)
+					{
+						m_cutboxModel->face_index = BoxFace::z_p;
+					}
+					if (face_index == 10 || face_index == 11)
+					{
+						m_cutboxModel->face_index = BoxFace::z_n;
+					}
+
+					m_cutboxModel->UpdateCutBoxObject();
+
+					this->update();
+
+					return;
+				}
+			}
+			if (event->button() == Qt::MiddleButton)
+			{
+				m_cutboxModel->SetPos(pixelPosToViewPos(event->globalPos()));
+				if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+				{
+					qDebug() << "CtrlKey + MiddleButton";
+
+					vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+					for (; iter != m_ModelsVt.end(); iter++) {
+						pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+						if (pModel) {
+							m_cutboxModel->CutModelInBox(pModel->m_model);
+							pModel->makeObject();
+						}
+					}
+
+					update();
+				}
+				else
+				{
+
+					//orth::MeshModel mm2;
+					m_cutboxModel->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
+					m_cutboxModel->Set_Visible(true);
+					this->update();
+				}
+			}
+			return;
 		}
-		else
-		{
-
-			//orth::MeshModel mm2;
-			m_cutboxModel->ChosePoints2((float)(screen_x - SCR_WIDTH / 2.0), (float)-1 * (screen_y - SCR_HEIGHT / 2.0), SCR_WIDTH, SCR_HEIGHT, cv::Mat(4, 4, CV_32F, m_model.data()), cv::Mat(4, 4, CV_32F, m_view.data()), cv::Mat(4, 4, CV_32F, m_projection.data()), mm);
-			m_cutboxModel->Set_Visible(true);
-			this->update();
+	}
+	if (getSelectReginValue()) {
+		if (event->buttons()&Qt::LeftButton) {
+			m_drawRectClickPosition = QPoint(event->globalX(), SCR_HEIGHT - event->globalY());
 		}
 	}
 	else {
-		if (getSelectReginValue()) {
-			if (event->buttons()&Qt::LeftButton) {
-				m_drawRectClickPosition = QPoint(event->globalX(), SCR_HEIGHT - event->globalY());
-			}
-		}
-		else {
-			lastPos = event->pos();
-			QQuaternion trans;
-			float xRot = 0, yRot = 0;
-			m_trackBallTest.push(pixelPosToViewPos(event->pos()), trans);
-			GetRotateMotorRot(xRot, yRot, m_trackBallTest);
-			//if (abs(xRot - m_xRotLim) >= 0 || abs(yRot - m_yRotLim) >= 0)
-			if (xRot > m_xMaxRotLim || xRot<m_xMinRotLim)
-				return;
+		lastPos = event->pos();
+		QQuaternion trans;
+		float xRot = 0, yRot = 0;
+		m_trackBallTest.push(pixelPosToViewPos(event->pos()), trans);
+		GetRotateMotorRot(xRot, yRot, m_trackBallTest);
+		//if (abs(xRot - m_xRotLim) >= 0 || abs(yRot - m_yRotLim) >= 0)
+		if (xRot > m_xMaxRotLim || xRot < m_xMinRotLim)
+			return;
 
-			//m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
-			//m_trackBallTest = m_trackBall;
-		}
+		//m_trackBall.push(pixelPosToViewPos(event->pos()), trans);
+		//m_trackBallTest = m_trackBall;
 	}
+
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -864,7 +879,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 			for (; iter != m_ModelsVt.end(); iter++) {
 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-				if (pModel) {
+				if (pModel&&pModel->Get_Visible()) {
 					pModel->setRectSelectRegion(m_drawRectClickPosition, m_drawRectEndPosition);
 				}
 			}
@@ -887,66 +902,63 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		//		program->executeRotateOperation(event->globalX(), event->globalY());
 		//	}
 		//}
-
-		if (QApplication::keyboardModifiers() == Qt::AltModifier|| QApplication::keyboardModifiers() == Qt::ControlModifier|| QApplication::keyboardModifiers() == Qt::ShiftModifier)
-		{
-			if (m_cutboxModel->movement_type == BoxMovement::Trans)
+		if (m_cutboxModel != nullptr && m_cutToothIndex != -1) {
+			if (QApplication::keyboardModifiers() == Qt::AltModifier || QApplication::keyboardModifiers() == Qt::ControlModifier || QApplication::keyboardModifiers() == Qt::ShiftModifier)
 			{
-				m_cutboxModel->BoxTrans(dx, dy);
+				if (m_cutboxModel->movement_type == BoxMovement::Trans)
+				{
+					m_cutboxModel->BoxTrans(dx, dy);
+				}
+				if (m_cutboxModel->movement_type == BoxMovement::Stretch)
+				{
+					m_cutboxModel->BoxStretch(dx, dy);
+				}
+				if (m_cutboxModel->movement_type == BoxMovement::Rot)
+				{
+					m_cutboxModel->BoxRot(pixelPosToViewPos(event->globalPos()));
+				}
+				m_cutboxModel->UpdateCutBoxObject();
+				this->update();
+				lastPos = event->globalPos();
+				return;
 			}
-			if (m_cutboxModel->movement_type == BoxMovement::Stretch)
-			{
-				m_cutboxModel->BoxStretch(dx, dy);
-			}
-			if (m_cutboxModel->movement_type == BoxMovement::Rot)
-			{
-				m_cutboxModel->BoxRot(pixelPosToViewPos(event->globalPos()));
-			}
-			m_cutboxModel->UpdateCutBoxObject();
-			this->update();
-			lastPos = event->globalPos();
-
-		}
-		else
-		{
-			if (event->buttons() & Qt::LeftButton) {
-				rotateBy(dy, dx, 0);
-			}
-			else if (event->buttons() & Qt::RightButton) {
-				//translateBy(dx, dy, 0);
-			}
-			if (event->buttons() & Qt::LeftButton) {
-				float xRot = 0, yRot = 0;
-				TrackBall trackBallTest;
-				trackBallTest = m_trackBallTest;
-				QQuaternion trans;
-				trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
-				GetRotateMotorRot(xRot, yRot, trackBallTest);
-				if (xRot> m_xMaxRotLim || xRot < m_xMinRotLim)
-					return;
-
-				//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
-				//m_trackBallTest = m_trackBall;
-				m_trackBallTest = trackBallTest;
-				m_trackBall = m_trackBallTest;
-				// 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
-				// 			for (; iter != m_ModelsVt.end(); iter++) {
-				// 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-				// 				if (pModel) {
-				// 					pModel->rotate(m_trackBall.rotation());
-				// 				}
-				// 			}
-				// 			m_groundModel->rotate(m_trackBall.rotation());
-				// 			m_axisMode->rotate(m_trackBall.rotation());
-			}
-			else {
-				QQuaternion trans;
-				m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
-			}
-			lastPos = event->pos();
 		}
 
+		if (event->buttons() & Qt::LeftButton) {
+			rotateBy(dy, dx, 0);
+		}
+		else if (event->buttons() & Qt::RightButton) {
+			//translateBy(dx, dy, 0);
+		}
+		if (event->buttons() & Qt::LeftButton) {
+			float xRot = 0, yRot = 0;
+			TrackBall trackBallTest;
+			trackBallTest = m_trackBallTest;
+			QQuaternion trans;
+			trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
+			GetRotateMotorRot(xRot, yRot, trackBallTest);
+			if (xRot > m_xMaxRotLim || xRot < m_xMinRotLim)
+				return;
 
+			//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
+			//m_trackBallTest = m_trackBall;
+			m_trackBallTest = trackBallTest;
+			m_trackBall = m_trackBallTest;
+			// 			vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
+			// 			for (; iter != m_ModelsVt.end(); iter++) {
+			// 				pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
+			// 				if (pModel) {
+			// 					pModel->rotate(m_trackBall.rotation());
+			// 				}
+			// 			}
+			// 			m_groundModel->rotate(m_trackBall.rotation());
+			// 			m_axisMode->rotate(m_trackBall.rotation());
+		}
+		else {
+			QQuaternion trans;
+			m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
+		}
+		lastPos = event->pos();
 	}
 }
 
@@ -1327,7 +1339,7 @@ void GLWidget::delSelected()
 	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 	for (; iter != m_ModelsVt.end(); iter++) {
 		pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-		if (pModel) {
+		if (pModel&&pModel->Get_Visible()) {
 			pModel->delSelPoints();
 		}
 	}
@@ -1658,7 +1670,7 @@ void GLWidget::cutModelUnderBg()
 	vector<pBaseModel>::iterator iter = m_ModelsVt.begin();
 	for (; iter != m_ModelsVt.end(); iter++) {
 		pCTeethModel pModel = static_pointer_cast<CTeethModel>(*iter);
-		if (pModel) {
+		if (pModel && pModel->Get_Visible()) {
 			pModel->cutModelUnderBg(m_bgGroundModelPos);
 		}
 	}
