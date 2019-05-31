@@ -1687,116 +1687,113 @@ public:
         teethBtn_11->setObjectName(QStringLiteral("teethBtn_11"));
         teethBtn_11->setGeometry(QRect(100, 10, 40, 36));
         teethBtn_11->setAutoFillBackground(false);
-        teethBtn_11->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/11.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_11->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/11.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/11.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_11->setCheckable(true);
         teethBtn_12 = new QToolButton(upperJawGroupBox);
         teethBtn_12->setObjectName(QStringLiteral("teethBtn_12"));
         teethBtn_12->setGeometry(QRect(74, 23, 34, 32));
         teethBtn_12->setAutoFillBackground(false);
-        teethBtn_12->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/12.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_12->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/12.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/12.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_12->setCheckable(true);
         teethBtn_13 = new QToolButton(upperJawGroupBox);
         teethBtn_13->setObjectName(QStringLiteral("teethBtn_13"));
         teethBtn_13->setGeometry(QRect(45, 40, 38, 40));
         teethBtn_13->setAutoFillBackground(false);
-        teethBtn_13->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/13.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_13->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/13.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/13.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_13->setCheckable(true);
         teethBtn_14 = new QToolButton(upperJawGroupBox);
         teethBtn_14->setObjectName(QStringLiteral("teethBtn_14"));
         teethBtn_14->setGeometry(QRect(20, 70, 46, 38));
         teethBtn_14->setAutoFillBackground(false);
-        teethBtn_14->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/14.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_14->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/14.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/14.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_14->setCheckable(true);
         teethBtn_15 = new QToolButton(upperJawGroupBox);
         teethBtn_15->setObjectName(QStringLiteral("teethBtn_15"));
         teethBtn_15->setGeometry(QRect(10, 105, 44, 40));
         teethBtn_15->setAutoFillBackground(false);
-        teethBtn_15->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/15.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_15->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/15.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/15.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_15->setCheckable(true);
         teethBtn_16 = new QToolButton(upperJawGroupBox);
         teethBtn_16->setObjectName(QStringLiteral("teethBtn_16"));
         teethBtn_16->setGeometry(QRect(6, 143, 38, 42));
         teethBtn_16->setAutoFillBackground(false);
-        teethBtn_16->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/16.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_16->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/16.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/16.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_16->setCheckable(true);
         teethBtn_17 = new QToolButton(upperJawGroupBox);
         teethBtn_17->setObjectName(QStringLiteral("teethBtn_17"));
         teethBtn_17->setGeometry(QRect(5, 183, 38, 40));
         teethBtn_17->setAutoFillBackground(false);
-        teethBtn_17->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/17.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_17->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/17.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/17.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_17->setCheckable(true);
         teethBtn_18 = new QToolButton(upperJawGroupBox);
         teethBtn_18->setObjectName(QStringLiteral("teethBtn_18"));
         teethBtn_18->setGeometry(QRect(6, 220, 40, 42));
         teethBtn_18->setAutoFillBackground(false);
-        teethBtn_18->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/18.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_18->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_18->setCheckable(true);
         teethBtn_21 = new QToolButton(upperJawGroupBox);
         teethBtn_21->setObjectName(QStringLiteral("teethBtn_21"));
         teethBtn_21->setGeometry(QRect(141, 10, 40, 36));
         teethBtn_21->setAutoFillBackground(false);
-        teethBtn_21->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/21.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_21->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/21.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/21.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_21->setCheckable(true);
         teethBtn_22 = new QToolButton(upperJawGroupBox);
         teethBtn_22->setObjectName(QStringLiteral("teethBtn_22"));
         teethBtn_22->setGeometry(QRect(182, 20, 34, 32));
         teethBtn_22->setAutoFillBackground(false);
-        teethBtn_22->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/22.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_22->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/22.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/22.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_22->setCheckable(true);
         teethBtn_23 = new QToolButton(upperJawGroupBox);
         teethBtn_23->setObjectName(QStringLiteral("teethBtn_23"));
         teethBtn_23->setGeometry(QRect(211, 41, 36, 34));
         teethBtn_23->setAutoFillBackground(false);
-        teethBtn_23->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/23.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_23->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/23.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/23.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_23->setCheckable(true);
         teethBtn_24 = new QToolButton(upperJawGroupBox);
         teethBtn_24->setObjectName(QStringLiteral("teethBtn_24"));
         teethBtn_24->setGeometry(QRect(229, 65, 42, 38));
         teethBtn_24->setAutoFillBackground(false);
-        teethBtn_24->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/24.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_24->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/24.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/24.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_24->setCheckable(true);
         teethBtn_25 = new QToolButton(upperJawGroupBox);
         teethBtn_25->setObjectName(QStringLiteral("teethBtn_25"));
         teethBtn_25->setGeometry(QRect(242, 100, 44, 40));
         teethBtn_25->setAutoFillBackground(false);
-        teethBtn_25->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/25.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_25->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/25.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/25.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_25->setCheckable(true);
         teethBtn_26 = new QToolButton(upperJawGroupBox);
         teethBtn_26->setObjectName(QStringLiteral("teethBtn_26"));
         teethBtn_26->setGeometry(QRect(250, 137, 40, 42));
         teethBtn_26->setAutoFillBackground(false);
-        teethBtn_26->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/26.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_26->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/26.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/26.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_26->setCheckable(true);
         teethBtn_27 = new QToolButton(upperJawGroupBox);
         teethBtn_27->setObjectName(QStringLiteral("teethBtn_27"));
         teethBtn_27->setGeometry(QRect(256, 177, 34, 36));
         teethBtn_27->setAutoFillBackground(false);
-        teethBtn_27->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/27.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_27->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/27.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/27.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_27->setCheckable(true);
         teethBtn_28 = new QToolButton(upperJawGroupBox);
         teethBtn_28->setObjectName(QStringLiteral("teethBtn_28"));
         teethBtn_28->setGeometry(QRect(257, 213, 40, 42));
         teethBtn_28->setAutoFillBackground(false);
-        teethBtn_28->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/28.png);\n"
-"background-color: rgba(255, 255, 255, 0);\n"
-"border-color:rgba(255, 255, 255, 0);\n"
-"selection-color: rgba(255, 255, 255, 0);\n"
-"selection-background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_28->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/28.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/28.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_28->setCheckable(true);
         lowerJawGroupBox = new QGroupBox(DentalImplantPanel);
         lowerJawGroupBox->setObjectName(QStringLiteral("lowerJawGroupBox"));
@@ -1805,113 +1802,115 @@ public:
         teethBtn_31->setObjectName(QStringLiteral("teethBtn_31"));
         teethBtn_31->setGeometry(QRect(163, 435, 40, 34));
         teethBtn_31->setAutoFillBackground(false);
-        teethBtn_31->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/31.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_31->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/31.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/31.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_31->setCheckable(true);
         teethBtn_32 = new QToolButton(lowerJawGroupBox);
         teethBtn_32->setObjectName(QStringLiteral("teethBtn_32"));
         teethBtn_32->setGeometry(QRect(192, 420, 40, 34));
         teethBtn_32->setAutoFillBackground(false);
-        teethBtn_32->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/32.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_32->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/32.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/32.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_32->setCheckable(true);
         teethBtn_33 = new QToolButton(lowerJawGroupBox);
         teethBtn_33->setObjectName(QStringLiteral("teethBtn_33"));
         teethBtn_33->setGeometry(QRect(222, 406, 40, 34));
         teethBtn_33->setAutoFillBackground(false);
-        teethBtn_33->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/33.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_33->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/33.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/33.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_33->setCheckable(true);
         teethBtn_34 = new QToolButton(lowerJawGroupBox);
         teethBtn_34->setObjectName(QStringLiteral("teethBtn_34"));
         teethBtn_34->setGeometry(QRect(240, 380, 40, 34));
         teethBtn_34->setAutoFillBackground(false);
-        teethBtn_34->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/34.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_34->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/34.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/34.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_34->setCheckable(true);
         teethBtn_36 = new QToolButton(lowerJawGroupBox);
         teethBtn_36->setObjectName(QStringLiteral("teethBtn_36"));
         teethBtn_36->setGeometry(QRect(256, 294, 44, 52));
         teethBtn_36->setAutoFillBackground(false);
-        teethBtn_36->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/36.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_36->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/36.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/36.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_36->setCheckable(true);
         teethBtn_37 = new QToolButton(lowerJawGroupBox);
         teethBtn_37->setObjectName(QStringLiteral("teethBtn_37"));
         teethBtn_37->setGeometry(QRect(257, 243, 44, 52));
         teethBtn_37->setAutoFillBackground(false);
-        teethBtn_37->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/37.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_37->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/37.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/37.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_37->setCheckable(true);
         teethBtn_38 = new QToolButton(lowerJawGroupBox);
         teethBtn_38->setObjectName(QStringLiteral("teethBtn_38"));
         teethBtn_38->setGeometry(QRect(257, 191, 44, 52));
         teethBtn_38->setAutoFillBackground(false);
-        teethBtn_38->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/38.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_38->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/38.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/38.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_38->setCheckable(true);
         teethBtn_41 = new QToolButton(lowerJawGroupBox);
         teethBtn_41->setObjectName(QStringLiteral("teethBtn_41"));
         teethBtn_41->setGeometry(QRect(123, 434, 40, 34));
         teethBtn_41->setAutoFillBackground(false);
-        teethBtn_41->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/41.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_41->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/41.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/41.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_41->setCheckable(true);
         teethBtn_42 = new QToolButton(lowerJawGroupBox);
         teethBtn_42->setObjectName(QStringLiteral("teethBtn_42"));
         teethBtn_42->setGeometry(QRect(86, 424, 40, 34));
         teethBtn_42->setAutoFillBackground(false);
-        teethBtn_42->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/42.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_42->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/42.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/42.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_42->setCheckable(true);
         teethBtn_43 = new QToolButton(lowerJawGroupBox);
         teethBtn_43->setObjectName(QStringLiteral("teethBtn_43"));
         teethBtn_43->setGeometry(QRect(57, 403, 40, 34));
         teethBtn_43->setAutoFillBackground(false);
-        teethBtn_43->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/43.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_43->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/43.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/43.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_43->setCheckable(true);
         teethBtn_44 = new QToolButton(lowerJawGroupBox);
         teethBtn_44->setObjectName(QStringLiteral("teethBtn_44"));
         teethBtn_44->setGeometry(QRect(39, 379, 40, 34));
         teethBtn_44->setAutoFillBackground(false);
-        teethBtn_44->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/44.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_44->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/44.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/44.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_44->setCheckable(true);
         teethBtn_45 = new QToolButton(lowerJawGroupBox);
         teethBtn_45->setObjectName(QStringLiteral("teethBtn_45"));
         teethBtn_45->setGeometry(QRect(23, 351, 40, 34));
         teethBtn_45->setAutoFillBackground(false);
-        teethBtn_45->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/45.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_45->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/45.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/45.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_45->setCheckable(true);
         teethBtn_46 = new QToolButton(lowerJawGroupBox);
         teethBtn_46->setObjectName(QStringLiteral("teethBtn_46"));
         teethBtn_46->setGeometry(QRect(7, 305, 44, 52));
         teethBtn_46->setAutoFillBackground(false);
-        teethBtn_46->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/46.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_46->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/46.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/46.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_46->setCheckable(true);
+        teethBtn_46->setChecked(false);
         teethBtn_47 = new QToolButton(lowerJawGroupBox);
         teethBtn_47->setObjectName(QStringLiteral("teethBtn_47"));
         teethBtn_47->setGeometry(QRect(3, 251, 44, 52));
         teethBtn_47->setAutoFillBackground(false);
-        teethBtn_47->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/47.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_47->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/47.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/47.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_47->setCheckable(true);
+        teethBtn_47->setChecked(false);
         teethBtn_48 = new QToolButton(lowerJawGroupBox);
         teethBtn_48->setObjectName(QStringLiteral("teethBtn_48"));
         teethBtn_48->setGeometry(QRect(3, 200, 44, 52));
         teethBtn_48->setAutoFillBackground(false);
-        teethBtn_48->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/48.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_48->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/48.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/48.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_48->setCheckable(true);
         teethBtn_35 = new QToolButton(lowerJawGroupBox);
         teethBtn_35->setObjectName(QStringLiteral("teethBtn_35"));
         teethBtn_35->setGeometry(QRect(252, 343, 40, 40));
         teethBtn_35->setAutoFillBackground(false);
-        teethBtn_35->setStyleSheet(QLatin1String("border-image: url(:/MainWidget/Resources/images/0/35.png);\n"
-"background-color: rgba(255, 255, 255, 0);"));
+        teethBtn_35->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/35.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
+"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
         teethBtn_35->setCheckable(true);
         lowerJawGroupBox->raise();
         DentalImplantNextBtn->raise();
@@ -2071,9 +2070,7 @@ public:
         DentalImplantFinishPanel->setGeometry(QRect(1570, 10, 300, 821));
         QPalette palette31;
         palette31.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        QBrush brush18(QColor(248, 250, 250, 255));
-        brush18.setStyle(Qt::SolidPattern);
-        palette31.setBrush(QPalette::Active, QPalette::Button, brush18);
+        palette31.setBrush(QPalette::Active, QPalette::Button, brush1);
         palette31.setBrush(QPalette::Active, QPalette::Light, brush6);
         palette31.setBrush(QPalette::Active, QPalette::Midlight, brush13);
         palette31.setBrush(QPalette::Active, QPalette::Dark, brush14);
@@ -2081,14 +2078,14 @@ public:
         palette31.setBrush(QPalette::Active, QPalette::Text, brush);
         palette31.setBrush(QPalette::Active, QPalette::BrightText, brush6);
         palette31.setBrush(QPalette::Active, QPalette::ButtonText, brush);
-        palette31.setBrush(QPalette::Active, QPalette::Base, brush18);
-        palette31.setBrush(QPalette::Active, QPalette::Window, brush18);
+        palette31.setBrush(QPalette::Active, QPalette::Base, brush1);
+        palette31.setBrush(QPalette::Active, QPalette::Window, brush1);
         palette31.setBrush(QPalette::Active, QPalette::Shadow, brush);
         palette31.setBrush(QPalette::Active, QPalette::AlternateBase, brush13);
         palette31.setBrush(QPalette::Active, QPalette::ToolTipBase, brush8);
         palette31.setBrush(QPalette::Active, QPalette::ToolTipText, brush);
         palette31.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette31.setBrush(QPalette::Inactive, QPalette::Button, brush18);
+        palette31.setBrush(QPalette::Inactive, QPalette::Button, brush1);
         palette31.setBrush(QPalette::Inactive, QPalette::Light, brush6);
         palette31.setBrush(QPalette::Inactive, QPalette::Midlight, brush13);
         palette31.setBrush(QPalette::Inactive, QPalette::Dark, brush14);
@@ -2096,14 +2093,14 @@ public:
         palette31.setBrush(QPalette::Inactive, QPalette::Text, brush);
         palette31.setBrush(QPalette::Inactive, QPalette::BrightText, brush6);
         palette31.setBrush(QPalette::Inactive, QPalette::ButtonText, brush);
-        palette31.setBrush(QPalette::Inactive, QPalette::Base, brush18);
-        palette31.setBrush(QPalette::Inactive, QPalette::Window, brush18);
+        palette31.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette31.setBrush(QPalette::Inactive, QPalette::Window, brush1);
         palette31.setBrush(QPalette::Inactive, QPalette::Shadow, brush);
         palette31.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush13);
         palette31.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush8);
         palette31.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush);
         palette31.setBrush(QPalette::Disabled, QPalette::WindowText, brush14);
-        palette31.setBrush(QPalette::Disabled, QPalette::Button, brush18);
+        palette31.setBrush(QPalette::Disabled, QPalette::Button, brush1);
         palette31.setBrush(QPalette::Disabled, QPalette::Light, brush6);
         palette31.setBrush(QPalette::Disabled, QPalette::Midlight, brush13);
         palette31.setBrush(QPalette::Disabled, QPalette::Dark, brush14);
@@ -2111,16 +2108,16 @@ public:
         palette31.setBrush(QPalette::Disabled, QPalette::Text, brush14);
         palette31.setBrush(QPalette::Disabled, QPalette::BrightText, brush6);
         palette31.setBrush(QPalette::Disabled, QPalette::ButtonText, brush14);
-        palette31.setBrush(QPalette::Disabled, QPalette::Base, brush18);
-        palette31.setBrush(QPalette::Disabled, QPalette::Window, brush18);
+        palette31.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette31.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         palette31.setBrush(QPalette::Disabled, QPalette::Shadow, brush);
         palette31.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush16);
         palette31.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush8);
         palette31.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
         DentalImplantFinishPanel->setPalette(palette31);
         DentalImplantFinishPanel->setAutoFillBackground(false);
-        DentalImplantFinishPanel->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);\n"
-"background-color:rgb(248,250,250);"));
+        DentalImplantFinishPanel->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgba(128, 128, 128,0);\n"
+"background-color:rgba(248,250,250,0);"));
         DentalImplantFinishNextBtn = new QPushButton(DentalImplantFinishPanel);
         DentalImplantFinishNextBtn->setObjectName(QStringLiteral("DentalImplantFinishNextBtn"));
         DentalImplantFinishNextBtn->setGeometry(QRect(50, 740, 221, 40));
@@ -2136,33 +2133,25 @@ public:
         DentalImplantFinishPanelTips->setGeometry(QRect(10, 10, 281, 61));
         QPalette palette32;
         palette32.setBrush(QPalette::Active, QPalette::WindowText, brush17);
-        palette32.setBrush(QPalette::Active, QPalette::Button, brush18);
-        palette32.setBrush(QPalette::Active, QPalette::Base, brush18);
-        palette32.setBrush(QPalette::Active, QPalette::Window, brush18);
+        palette32.setBrush(QPalette::Active, QPalette::Button, brush1);
+        palette32.setBrush(QPalette::Active, QPalette::Base, brush1);
+        palette32.setBrush(QPalette::Active, QPalette::Window, brush1);
         palette32.setBrush(QPalette::Inactive, QPalette::WindowText, brush17);
-        palette32.setBrush(QPalette::Inactive, QPalette::Button, brush18);
-        palette32.setBrush(QPalette::Inactive, QPalette::Base, brush18);
-        palette32.setBrush(QPalette::Inactive, QPalette::Window, brush18);
+        palette32.setBrush(QPalette::Inactive, QPalette::Button, brush1);
+        palette32.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette32.setBrush(QPalette::Inactive, QPalette::Window, brush1);
         palette32.setBrush(QPalette::Disabled, QPalette::WindowText, brush12);
-        palette32.setBrush(QPalette::Disabled, QPalette::Button, brush18);
-        palette32.setBrush(QPalette::Disabled, QPalette::Base, brush18);
-        palette32.setBrush(QPalette::Disabled, QPalette::Window, brush18);
+        palette32.setBrush(QPalette::Disabled, QPalette::Button, brush1);
+        palette32.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette32.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         DentalImplantFinishPanelTips->setPalette(palette32);
         DentalImplantFinishPanelTips->setFont(font2);
         DentalImplantFinishPanelTips->setWordWrap(true);
         progressBar = new QProgressBar(ScanMainGUI);
         progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(760, 1240, 400, 30));
-        progressBar->setStyleSheet(QLatin1String("QProgressBar{\n"
-"        border: none;\n"
-"        color: white;\n"
-"        text-align: center;\n"
-"        background: rgb(68, 69, 73);\n"
-"}\n"
-"QProgressBar::chunk {\n"
-"        border: none;\n"
-"        background: rgb(0, 160, 230);\n"
-"}"));
+        progressBar->setGeometry(QRect(760, 1000, 400, 30));
+        progressBar->setStyleSheet(QLatin1String("QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}\n"
+"QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}"));
         progressBar->setValue(0);
         TipPanel->raise();
         compensationScanPanel->raise();
@@ -2180,6 +2169,7 @@ public:
         cameraGroupBox->raise();
         DentalImplantFinishPanel->raise();
         progressBar->raise();
+        OralSubstitutePanel_2->raise();
 
         retranslateUi(ScanMainGUI);
 
@@ -2190,7 +2180,7 @@ public:
     {
         ScanMainGUI->setWindowTitle(QApplication::translate("ScanMainGUI", "ScanMainGUI", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        ScanMainGUI->setToolTip(QApplication::translate("ScanMainGUI", "\347\241\256\350\256\244\351\200\211\346\213\251", Q_NULLPTR));
+        ScanMainGUI->setToolTip(QString());
 #endif // QT_NO_TOOLTIP
         ScanJawGroup->setTitle(QString());
         ScanJawGroupTipImage->setText(QString());
