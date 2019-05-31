@@ -92,7 +92,7 @@ public:
 	void InitParameters();
 	void setFlage(bool flag = true);  //?????,???????
 
-
+	orth::MeshModel curTotalModel;//合并出当前整个MeshModel便于后续用于补扫配准
 
 	
 public:
@@ -103,8 +103,8 @@ public:
 	void pointcloudrotationandtotalmesh(orth::PointCloudD &pointCloud, orth::PointNormal &pointNormal, orth::PointColor &pointColor, cv::Mat &RT, orth::MeshModel &totalMeshModel);
 	void pointcloudrotation(vector<double> &pointcloud, cv::Mat &RT);
 	void Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot);
-	bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index, scan::Registration & reg);
-	bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg);
+	//bool chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int scan_index, scan::Registration & reg);
+	//bool chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg);
 	
 	void writefile(orth::MeshModel totalMeshModel, string name);
 	void writefile(vector<double> cloud, string name);
