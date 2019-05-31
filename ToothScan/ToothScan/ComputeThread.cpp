@@ -246,134 +246,134 @@ void ComputeThread::pointcloudrotation(orth::PointCloudD &pointCloud, orth::Poin
 	pointNormal2.swap(pointNormal);
 }
 
-bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int index, scan::Registration & reg)
-{
-	vector<double> points_2;
-	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
-
-	vector<cv::Mat> rt_matrixs;
-
-	orth::MeshModel mModel;
-	cv::Mat rt_curr = cv::Mat::eye(4,4,CV_64FC1);
-
-	if (chooseJawIndex == 3) {
-		Motor2Rot(ALLJAWX_SCAN_ROTATE_DEGREE2[index], ALLJAWY_SCAN_ROTATE_DEGREE2[index], rt_curr);
-	}
-	else {
-		Motor2Rot(SMX_SCAN_ROTATE_DEGREE2[index], SMY_SCAN_ROTATE_DEGREE2[index], rt_curr);
-	}
-
-	cout << "********************************" << endl;
-	cout << rt_curr << endl;
-	cout << "---------------------------------" << endl;
-	//double rate = matched_pixel_image.size() / 3;
-
-	//vector<double> pointcloud;
-	//for (size_t u = 0; u < matched_pixel_image.cols; u++)
-	//{
-
-	//	for (size_t v = 0; v < matched_pixel_image.rows; v++)
-	//	{
-	//		cv::Vec3d point = matched_pixel_image.at<cv::Vec3d>(v, u);
-	//		if (point[0]!=0)
-	//		{
-	//			pointcloud.push_back(point[0]);
-	//			pointcloud.push_back(point[1]);
-	//			pointcloud.push_back(point[2]);
-	//		}
-	//	}
-	//}
-	//ColoredPoints(pointcloud, 3);
-
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-		 //mModel.SmallModelFilter(300);
-	 //mModel.S.clear();
-	//mModel.NormalSmooth(1);
-	if (chooseJawIndex == 1)
-	{
-		int scan_index = upper_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
-			orth::ModelIO finish_model_io(&mModel);
-			std::string modelNameStr = QString::number(index).toStdString() + "_upper.stl";
-			cout << "pathname: " << modelNameStr << endl;
-			finish_model_io.writeModel(modelNameStr, "stlb");
-		}
-
-		if (reg.NearRegist(upper_mModel, mModel))
-		{
-
-			upper_mModel.push_back(mModel);
-		}
-		else
-		{
-			cout << "NearRegistration is failure" << endl;
-		}
-		time2 = clock();
-		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	else if (chooseJawIndex == 2)
-	{
-		int scan_index = lower_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
-			orth::ModelIO finish_model_io(&mModel);
-			std::string modelNameStr = QString::number(index).toStdString() + "_lower.stl";
-			cout << "pathname: " << modelNameStr << endl;
-			finish_model_io.writeModel(modelNameStr, "stlb");
-		}
-
-		if (reg.NearRegist(lower_mModel, mModel))
-		{
-
-			lower_mModel.push_back(mModel);
-		}
-		else
-		{
-			cout << "NearRegistration is failure" << endl;
-		}
-		time2 = clock();
-		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	else if (chooseJawIndex == 3)
-	{
-		int scan_index = all_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
-			orth::ModelIO finish_model_io(&mModel);
-			std::string modelNameStr = QString::number(index).toStdString() + "_all.stl";
-			cout << "pathname: " << modelNameStr << endl;
-			finish_model_io.writeModel(modelNameStr, "stlb");
-		}
-
-		if (reg.NearRegist(all_mModel, mModel))
-		{
-
-			all_mModel.push_back(mModel);
-		}
-		else
-		{
-			cout << "NearRegistration is failure" << endl;
-		}
-		time2 = clock();
-		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	return true;
-}
+//bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, int index, scan::Registration & reg)
+//{
+//	vector<double> points_2;
+//	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
+//
+//	vector<cv::Mat> rt_matrixs;
+//
+//	orth::MeshModel mModel;
+//	cv::Mat rt_curr = cv::Mat::eye(4,4,CV_64FC1);
+//
+//	if (chooseJawIndex == 3) {
+//		Motor2Rot(ALLJAWX_SCAN_ROTATE_DEGREE2[index], ALLJAWY_SCAN_ROTATE_DEGREE2[index], rt_curr);
+//	}
+//	else {
+//		Motor2Rot(SMX_SCAN_ROTATE_DEGREE2[index], SMY_SCAN_ROTATE_DEGREE2[index], rt_curr);
+//	}
+//
+//	cout << "********************************" << endl;
+//	cout << rt_curr << endl;
+//	cout << "---------------------------------" << endl;
+//	//double rate = matched_pixel_image.size() / 3;
+//
+//	//vector<double> pointcloud;
+//	//for (size_t u = 0; u < matched_pixel_image.cols; u++)
+//	//{
+//
+//	//	for (size_t v = 0; v < matched_pixel_image.rows; v++)
+//	//	{
+//	//		cv::Vec3d point = matched_pixel_image.at<cv::Vec3d>(v, u);
+//	//		if (point[0]!=0)
+//	//		{
+//	//			pointcloud.push_back(point[0]);
+//	//			pointcloud.push_back(point[1]);
+//	//			pointcloud.push_back(point[2]);
+//	//		}
+//	//	}
+//	//}
+//	//ColoredPoints(pointcloud, 3);
+//
+//	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+//		 //mModel.SmallModelFilter(300);
+//	 //mModel.S.clear();
+//	//mModel.NormalSmooth(1);
+//	if (chooseJawIndex == 1)
+//	{
+//		int scan_index = upper_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//
+//		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+//			orth::ModelIO finish_model_io(&mModel);
+//			std::string modelNameStr = QString::number(index).toStdString() + "_upper.stl";
+//			cout << "pathname: " << modelNameStr << endl;
+//			finish_model_io.writeModel(modelNameStr, "stlb");
+//		}
+//
+//		if (reg.NearRegist(upper_mModel, mModel))
+//		{
+//
+//			upper_mModel.push_back(mModel);
+//		}
+//		else
+//		{
+//			cout << "NearRegistration is failure" << endl;
+//		}
+//		time2 = clock();
+//		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		int scan_index = lower_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+//			orth::ModelIO finish_model_io(&mModel);
+//			std::string modelNameStr = QString::number(index).toStdString() + "_lower.stl";
+//			cout << "pathname: " << modelNameStr << endl;
+//			finish_model_io.writeModel(modelNameStr, "stlb");
+//		}
+//
+//		if (reg.NearRegist(lower_mModel, mModel))
+//		{
+//
+//			lower_mModel.push_back(mModel);
+//		}
+//		else
+//		{
+//			cout << "NearRegistration is failure" << endl;
+//		}
+//		time2 = clock();
+//		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		int scan_index = all_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//
+//		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+//			orth::ModelIO finish_model_io(&mModel);
+//			std::string modelNameStr = QString::number(index).toStdString() + "_all.stl";
+//			cout << "pathname: " << modelNameStr << endl;
+//			finish_model_io.writeModel(modelNameStr, "stlb");
+//		}
+//
+//		if (reg.NearRegist(all_mModel, mModel))
+//		{
+//
+//			all_mModel.push_back(mModel);
+//		}
+//		else
+//		{
+//			cout << "NearRegistration is failure" << endl;
+//		}
+//		time2 = clock();
+//		cout << "The ICP time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	return true;
+//}
 
 
 
@@ -726,94 +726,94 @@ void ComputeThread::Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot)
 	cout << Rot << endl;
 }
 
-bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg)
-{
-	vector<double> points_2;
-
-	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
-	cv::Mat rt_curr;
-	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
-
-	orth::MeshModel mModel;
-	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
-	//mModel.SmallModelFilter(300);
-	mModel.NormalSmooth(1);
-
-	if (chooseJawIndex == 1)
-	{
-		//int scan_index = upper_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		orth::MeshModel totalUpperModel;
-		orth::MergeModels(upper_mModel, totalUpperModel);
-
-		if (reg.CompenNearRegist(totalUpperModel, mModel))
-		{
-			upper_mModel.push_back(mModel);
-			++addUpperCompensationNum;
-		}
-		else
-		{
-			cout << "Compensiation Registration is failure" << endl;
-		}
-
-		time2 = clock();
-
-		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	else if (chooseJawIndex == 2)
-	{
-		//int scan_index = lower_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		orth::MeshModel totalLowerModel;
-		orth::MergeModels(lower_mModel, totalLowerModel);
-
-		if (reg.CompenNearRegist(totalLowerModel, mModel))
-		{
-			lower_mModel.push_back(mModel);
-			++addLowerCompensationNum;
-		}
-		else
-		{
-			cout << "Compensiation Registration is failure" << endl;
-		}
-
-		time2 = clock();
-
-		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	else if (chooseJawIndex == 3)
-	{
-		//int scan_index = all_mModel.size();
-		clock_t time1, time2;
-		time1 = clock();
-		cv::Mat cloudrot = rt_curr;
-		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-
-		orth::MeshModel totalAllModel;
-		orth::MergeModels(all_mModel, totalAllModel);
-		if (reg.CompenNearRegist(totalAllModel, mModel))
-		{
-			all_mModel.push_back(mModel);
-			++addAllCompensationNum;
-		}
-		else
-		{
-			cout << "Compensiation Registration is failure" << endl;
-		}
-		time2 = clock();
-
-		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
-	}
-	return true;
-}
+//bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, int chooseJawIndex, scan::Registration & reg)
+//{
+//	vector<double> points_2;
+//
+//	cv::Mat rt_icp = cv::Mat::eye(4, 4, CV_64FC1);
+//	cv::Mat rt_curr;
+//	Motor2Rot(c_scan_x, c_scan_y, rt_curr);
+//
+//	orth::MeshModel mModel;
+//	rs->delaunayAlgorithm(matched_pixel_image, image_rgb, rt_r, color_red_parameter, color_green_parameter, color_blue_parameter, 1.0, mModel, 4000, points_2);
+//	//mModel.SmallModelFilter(300);
+//	mModel.NormalSmooth(1);
+//
+//	if (chooseJawIndex == 1)
+//	{
+//		//int scan_index = upper_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//
+//		orth::MeshModel totalUpperModel;
+//		orth::MergeModels(upper_mModel, totalUpperModel);
+//
+//		if (reg.CompenNearRegist(totalUpperModel, mModel))
+//		{
+//			upper_mModel.push_back(mModel);
+//			++addUpperCompensationNum;
+//		}
+//		else
+//		{
+//			cout << "Compensiation Registration is failure" << endl;
+//		}
+//
+//		time2 = clock();
+//
+//		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	else if (chooseJawIndex == 2)
+//	{
+//		//int scan_index = lower_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//
+//		orth::MeshModel totalLowerModel;
+//		orth::MergeModels(lower_mModel, totalLowerModel);
+//
+//		if (reg.CompenNearRegist(totalLowerModel, mModel))
+//		{
+//			lower_mModel.push_back(mModel);
+//			++addLowerCompensationNum;
+//		}
+//		else
+//		{
+//			cout << "Compensiation Registration is failure" << endl;
+//		}
+//
+//		time2 = clock();
+//
+//		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	else if (chooseJawIndex == 3)
+//	{
+//		//int scan_index = all_mModel.size();
+//		clock_t time1, time2;
+//		time1 = clock();
+//		cv::Mat cloudrot = rt_curr;
+//		unwarp->MeshRot((double*)cloudrot.data, &mModel);
+//
+//		orth::MeshModel totalAllModel;
+//		orth::MergeModels(all_mModel, totalAllModel);
+//		if (reg.CompenNearRegist(totalAllModel, mModel))
+//		{
+//			all_mModel.push_back(mModel);
+//			++addAllCompensationNum;
+//		}
+//		else
+//		{
+//			cout << "Compensiation Registration is failure" << endl;
+//		}
+//		time2 = clock();
+//
+//		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
+//	}
+//	return true;
+//}
 
 bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv::Mat> image_rgb, scan::Unwarp *unwarp, scan::Registration & reg, pCScanTask pScanTask)
 {
@@ -852,10 +852,11 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 // 			// 				//return false;
 // 			// 			}
 // 		}
-		orth::MeshModel totalModel;
-		orth::MergeModels(pScanTask->m_mModel, totalModel);
-		if (reg.CompenNearRegist(totalModel, mModel))
+		if (reg.CompenNearRegist(curTotalModel, mModel))
 		{
+			PoissonReconstruction recon;
+			recon.RedundancyFilter(curTotalModel,mModel,0.3);
+
 			pScanTask->m_mModel.push_back(mModel);
 			pScanTask->m_nAddModel++;
 			cloudrot = rt_icp;
@@ -865,6 +866,12 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 			pScanTask->m_points_cloud_globle.push_back(points_2);
 			pScanTask->m_points_cloud_end.insert(pScanTask->m_points_cloud_end.end(), points_2.begin(), points_2.end());
 			pScanTask->m_points_cloud_end_addSize.push_back(points_2.size());
+
+			vector<orth::MeshModel> newModelV;
+			newModelV.push_back(curTotalModel);
+			newModelV.push_back(mModel);
+			curTotalModel.Clear();
+			orth::MergeModels(newModelV, curTotalModel);
 		}
 		else
 		{
@@ -1255,7 +1262,7 @@ void ComputeThread::GPAMeshing()
 			//{
 			//	pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
 			//}
-			//time3 = clock();
+			time3 = clock();
 
 			//orth::MeshModel totalMeshModel_copy;
 			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
@@ -1345,9 +1352,15 @@ void ComputeThread::taskTeethSitit()
 // 		}
 // 	}
 	if (l_vtSucModel.size() > 0) {
-		l_vtSucModel.push_back(l_dstModel);
+		PoissonReconstruction recon;
+		double error_threshold = 0.5;
+	
+		//l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
-		orth::MergeModels(l_vtSucModel, dstAllModel);
+		recon.MergeWithoutRedundancy(l_dstModel, l_vtSucModel, dstAllModel, error_threshold);
+
+		//orth::MergeModels(l_vtSucModel, dstAllModel);
+		
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
 // 		orth::ModelIO merge_io(&dstAllModel);
 // 		merge_io.writeModel("merge_models.stl", "stlb");
@@ -1690,6 +1703,9 @@ void ComputeThread::normalComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
+			curTotalModel.Clear();
+			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
+
 			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
