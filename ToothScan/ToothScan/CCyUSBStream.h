@@ -73,7 +73,7 @@ namespace Communication
 
 										//trigger模式取一个角度数据
 			 bool TriggerModeFunction();//改为trigger模式获取数据
-			 bool SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
+			 bool SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, bool v_bprojection, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set);
 			//控制电机旋转
 			//v_ddeg_x：大电机旋转角度； v_bpositiveOrien_x：大电机是否正转（true为正转，false为反转）；
 			//v_ddeg_y：小电机旋转角度； v_bpositiveOrien_y：小电机是否正转（true为正转，false为反转）； 

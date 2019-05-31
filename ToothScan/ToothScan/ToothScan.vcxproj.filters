@@ -164,12 +164,6 @@
     <ClCompile Include="HeaderBtn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ScanTipWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ScanTipWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwidget.h">
@@ -217,9 +211,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_TabMainGUI.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="octree.hpp">
@@ -279,8 +270,8 @@
     <ClInclude Include="HeaderBtn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_ScanTipWidget.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

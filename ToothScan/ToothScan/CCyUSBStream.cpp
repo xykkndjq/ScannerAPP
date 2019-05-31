@@ -1032,7 +1032,7 @@ namespace Communication
 		}
 	}
 
-	bool CCyUSBStream::SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set)
+	bool CCyUSBStream::SMRotOneDegFunction(double v_ddeg_x, double v_ddeg_y, bool v_bcali, bool v_bprojection, vector<cv::Mat> &img_L_set, vector<cv::Mat> &img_R_set)
 	{
 		SMRotOneDeg[4] = 0X00;
 
@@ -1057,14 +1057,25 @@ namespace Communication
 
 		if (v_bcali == false)
 		{
-			SMRotOneDeg[4] = SMRotOneDeg[4] | 0X10;
-			triggerScanImageStream();
+			if (v_bprojection)
+			{
+				SMRotOneDeg[4] = SMRotOneDeg[4] | 0X10;
+				triggerScanImageStream();
+			}
+			else
+			{
+				SMRotOneDeg[4] = SMRotOneDeg[4] | 0X30;
+				LONG length = 9;
+				bool rotationflag = m_EndPtOut->XferData(SMRotOneDeg, length);
+				cout << "rotationflag = " << rotationflag << endl;
+			}
+
 		}
 		else
 		{
 			triggerCalibImageStream();
 		}
-
+		cout << "SMRotOneDegFunction" << endl;
 		img_L_set.swap(m_img_L_set);
 		img_R_set.swap(m_img_R_set);
 		m_img_L_set.clear();

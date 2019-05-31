@@ -447,18 +447,14 @@ void ControlThread::allJawScan()
 		
 
 		vector<cv::Mat> imgL_set, imgR_set;
-
-		time1 = clock();
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-		time2 = clock();
-
-
 		if (scan_index == SCAN_ALLJAW_POS - 1)
 		{
-
+			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
 			continue;
 		}
-
+		time1 = clock();
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
+		time2 = clock();
 
 		if (imgL_set.size() < 19 || imgR_set.size() < 19)
 		{
@@ -481,14 +477,14 @@ void ControlThread::allJawScan()
 		{
 
 			ostringstream filename_L;
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 
 			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 
 			ostringstream filename_R;
-			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+			//cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
 
 			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
@@ -577,13 +573,15 @@ void ControlThread::controlCalibrationScan()
 		//cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
 		//SMRotDegAnalysis(d_scan_x, d_scan_y, true);
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-
-
 		if (scan_index == CALI_ROTATE_POS_CNT2 - 1)
 		{
+			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
 			continue;
 		}
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
+
+
+	
 		if (imgL_set.size() < 31 || imgR_set.size() < 31)
 		{
 			cout << "USB has a problem, because of insufficient data..." << endl;
@@ -601,7 +599,7 @@ void ControlThread::controlCalibrationScan()
 		vector<cv::Mat> group;
 		for (size_t j = 0; j < 31; j++)
 		{
-			cv::flip(imgL_set[j], imgL_set[j], -1);
+			//cv::flip(imgL_set[j], imgL_set[j], -1);
 			group.push_back(imgL_set[j]);
 			if (j == 0)
 			{
@@ -615,7 +613,7 @@ void ControlThread::controlCalibrationScan()
 		}
 		for (size_t j = 0; j < 31; j++)
 		{
-			cv::flip(imgR_set[j], imgR_set[j], -1);
+			//cv::flip(imgR_set[j], imgR_set[j], -1);
 			group.push_back(imgR_set[j]);
 			if (j == 0)
 			{
@@ -782,7 +780,7 @@ void ControlThread::compensationControlScan()
 	cout << "SM Rot。。。 x = " << d_scan_x << " , y = " << d_scan_y << /*" , z = " << d_scan_z <<*/ endl;
 
 	///**************************************扫描过程*****************************************/
-	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
+	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
 
 	if (imgL_set.size() < 19 || imgR_set.size() < 19)
 	{
@@ -801,13 +799,13 @@ void ControlThread::compensationControlScan()
 	int imageBias = 0;
 	for (int image_index = 0; image_index < 19; image_index++)
 	{
-		cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+		//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "L" << ".png";
 
 		//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
-		cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+		//cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 		ostringstream filename_R;
 		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "R" << ".png";
 
@@ -837,7 +835,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 	}
-	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_y, l_bcali, imgL_set, imgR_set);
+	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_y, l_bcali, false, imgL_set, imgR_set);
 
 	//3、关闭DLP
 #ifdef DEPLOY
@@ -895,13 +893,14 @@ void ControlThread::normalScan()
 
 		vector<cv::Mat> imgL_set, imgR_set;
 		//2、电机旋转
-		time1 = clock();
-		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, imgL_set, imgR_set);
-		time2 = clock();
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
+			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
 			continue;
 		}
+		time1 = clock();
+		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
+		time2 = clock();
 		if (imgL_set.size() < 19 || imgR_set.size() < 19)
 		{
 			cout << "USB has a problem, because of insufficient data..." << endl;
@@ -924,7 +923,7 @@ void ControlThread::normalScan()
 
 			ostringstream filename_L;
 
-			cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
+			//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 			filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "L" << ".png";
 
 			cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
@@ -934,7 +933,7 @@ void ControlThread::normalScan()
 
 			ostringstream filename_R;
 
-			cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
+			//cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 			filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << scan_index << "_" << image_index << "_" << "R" << ".png";
 			cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 			if (image_index == 0)
