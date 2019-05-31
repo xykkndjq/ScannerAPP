@@ -1601,43 +1601,6 @@ background-color:rgba(248,250,250,0);</string>
      <string>撤销补扫</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>-250</x>
-      <y>330</y>
-      <width>400</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QProgressBar{
-        border: none;
-        color: white;
-        text-align: center;
-        background: rgb(68, 69, 73);
-}
-QProgressBar::chunk {
-        border: none;
-        background: rgb(0, 160, 230);
-}</string>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
-   <zorder>label_2</zorder>
-   <zorder>compensationScanPanelNextBtn</zorder>
-   <zorder>compensationScanPanelBackBtn</zorder>
-   <zorder>compensationScanPanelTipLabel</zorder>
-   <zorder>label_3</zorder>
-   <zorder>rotationLineEdit</zorder>
-   <zorder>waverLineEdit</zorder>
-   <zorder>label_4</zorder>
-   <zorder>compensationBtn</zorder>
-   <zorder>discardBtn</zorder>
-   <zorder>progressBar</zorder>
-   <zorder>progressBar</zorder>
   </widget>
   <widget class="QGroupBox" name="CutJawPanel">
    <property name="enabled">
@@ -7651,7 +7614,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>710</y>
+      <y>694</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -7670,7 +7633,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>860</y>
+      <y>844</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -7716,7 +7679,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/48.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/48.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7738,7 +7701,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/36.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/36.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7760,7 +7723,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/26.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/26.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7782,7 +7745,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/33.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/33.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7804,7 +7767,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/14.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/14.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7826,7 +7789,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/11.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/11.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7848,7 +7811,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/32.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/32.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7870,7 +7833,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/44.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/44.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7892,7 +7855,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/42.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/42.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7914,7 +7877,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/24.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/24.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7936,7 +7899,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/28.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/28.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7958,7 +7921,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/35.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/35.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -7980,7 +7943,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/22.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/22.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8002,7 +7965,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/15.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/15.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8024,7 +7987,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/17.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/17.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8046,7 +8009,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/43.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/43.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8068,7 +8031,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/16.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/16.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8090,7 +8053,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/45.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/45.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8112,7 +8075,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/27.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/27.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8134,7 +8097,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/18.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/18.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8156,7 +8119,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/37.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/37.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8178,7 +8141,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/46.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/46.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8200,7 +8163,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/31.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/31.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8222,29 +8185,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/23.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_38">
-     <property name="geometry">
-      <rect>
-       <x>244</x>
-       <y>276</y>
-       <width>44</width>
-       <height>52</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background:transparent</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>Resources/images/teeth/38.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/23.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8266,7 +8207,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/12.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/12.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8288,7 +8229,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/47.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/47.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8310,7 +8251,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/21.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/21.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8332,7 +8273,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/25.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/25.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8354,7 +8295,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/34.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/34.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8376,7 +8317,7 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/13.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/13.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8398,7 +8339,29 @@ background-color:rgba(248,250,250,0);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>Resources/images/teeth/41.png</pixmap>
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/41.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_38">
+     <property name="geometry">
+      <rect>
+       <x>249</x>
+       <y>273</y>
+       <width>44</width>
+       <height>52</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background:transparent</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="mainwidget.qrc">:/MainWidget/Resources/images/0/38.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -8470,7 +8433,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>760</y>
+      <y>744</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8489,7 +8452,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>810</y>
+      <y>794</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8508,7 +8471,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>910</y>
+      <y>894</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8527,7 +8490,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="geometry">
      <rect>
       <x>37</x>
-      <y>960</y>
+      <y>944</y>
       <width>221</width>
       <height>40</height>
      </rect>
@@ -8565,8 +8528,8 @@ background-color:rgba(248,250,250,0);</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>1270</x>
-     <y>690</y>
+     <x>1240</x>
+     <y>570</y>
      <width>300</width>
      <height>821</height>
     </rect>
@@ -9202,7 +9165,7 @@ background-color:rgba(248,250,250,0);</string>
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="teethBtn_11">
+    <widget class="QToolButton" name="teethBtn_11">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -9215,7 +9178,7 @@ background-color:rgba(248,250,250,0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/11.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/11.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9225,7 +9188,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_12">
+    <widget class="QToolButton" name="teethBtn_12">
      <property name="geometry">
       <rect>
        <x>74</x>
@@ -9238,7 +9201,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/12.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/12.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9248,7 +9211,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_13">
+    <widget class="QToolButton" name="teethBtn_13">
      <property name="geometry">
       <rect>
        <x>45</x>
@@ -9261,7 +9224,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/13.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/13.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9271,7 +9234,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_14">
+    <widget class="QToolButton" name="teethBtn_14">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -9284,7 +9247,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/14.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/14.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9294,7 +9257,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_15">
+    <widget class="QToolButton" name="teethBtn_15">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -9307,7 +9270,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/15.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/15.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9317,7 +9280,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_16">
+    <widget class="QToolButton" name="teethBtn_16">
      <property name="geometry">
       <rect>
        <x>6</x>
@@ -9330,7 +9293,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/16.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/16.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9340,7 +9303,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_17">
+    <widget class="QToolButton" name="teethBtn_17">
      <property name="geometry">
       <rect>
        <x>5</x>
@@ -9353,7 +9316,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/17.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/17.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9363,7 +9326,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_18">
+    <widget class="QToolButton" name="teethBtn_18">
      <property name="geometry">
       <rect>
        <x>6</x>
@@ -9376,7 +9339,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/18.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/18.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9386,7 +9349,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_21">
+    <widget class="QToolButton" name="teethBtn_21">
      <property name="geometry">
       <rect>
        <x>141</x>
@@ -9399,7 +9362,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/21.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/21.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9409,7 +9372,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_22">
+    <widget class="QToolButton" name="teethBtn_22">
      <property name="geometry">
       <rect>
        <x>182</x>
@@ -9422,7 +9385,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/22.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/22.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9432,7 +9395,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_23">
+    <widget class="QToolButton" name="teethBtn_23">
      <property name="geometry">
       <rect>
        <x>211</x>
@@ -9445,7 +9408,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/23.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/23.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9455,7 +9418,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_24">
+    <widget class="QToolButton" name="teethBtn_24">
      <property name="geometry">
       <rect>
        <x>229</x>
@@ -9468,7 +9431,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/24.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/24.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9478,7 +9441,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_25">
+    <widget class="QToolButton" name="teethBtn_25">
      <property name="geometry">
       <rect>
        <x>242</x>
@@ -9491,7 +9454,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/25.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/25.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9501,7 +9464,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_26">
+    <widget class="QToolButton" name="teethBtn_26">
      <property name="geometry">
       <rect>
        <x>250</x>
@@ -9514,7 +9477,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/26.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/26.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9524,7 +9487,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_27">
+    <widget class="QToolButton" name="teethBtn_27">
      <property name="geometry">
       <rect>
        <x>256</x>
@@ -9537,7 +9500,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/27.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/27.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9547,7 +9510,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_28">
+    <widget class="QToolButton" name="teethBtn_28">
      <property name="geometry">
       <rect>
        <x>257</x>
@@ -9560,8 +9523,11 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/28.png);
-background-color: rgba(255, 255, 255, 0);</string>
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/28.png);
+background-color: rgba(255, 255, 255, 0);
+border-color:rgba(255, 255, 255, 0);
+selection-color: rgba(255, 255, 255, 0);
+selection-background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
       <string>28</string>
@@ -9583,7 +9549,7 @@ background-color: rgba(255, 255, 255, 0);</string>
     <property name="title">
      <string/>
     </property>
-    <widget class="QPushButton" name="teethBtn_31">
+    <widget class="QToolButton" name="teethBtn_31">
      <property name="geometry">
       <rect>
        <x>163</x>
@@ -9596,7 +9562,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/31.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/31.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9606,7 +9572,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_32">
+    <widget class="QToolButton" name="teethBtn_32">
      <property name="geometry">
       <rect>
        <x>192</x>
@@ -9619,7 +9585,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/32.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/32.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9629,7 +9595,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_33">
+    <widget class="QToolButton" name="teethBtn_33">
      <property name="geometry">
       <rect>
        <x>222</x>
@@ -9642,7 +9608,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/33.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/33.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9652,7 +9618,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_34">
+    <widget class="QToolButton" name="teethBtn_34">
      <property name="geometry">
       <rect>
        <x>240</x>
@@ -9665,7 +9631,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/34.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/34.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9675,7 +9641,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_36">
+    <widget class="QToolButton" name="teethBtn_36">
      <property name="geometry">
       <rect>
        <x>256</x>
@@ -9688,7 +9654,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/36.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/36.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9698,7 +9664,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_37">
+    <widget class="QToolButton" name="teethBtn_37">
      <property name="geometry">
       <rect>
        <x>257</x>
@@ -9711,7 +9677,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/37.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/37.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9721,7 +9687,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_38">
+    <widget class="QToolButton" name="teethBtn_38">
      <property name="geometry">
       <rect>
        <x>257</x>
@@ -9734,7 +9700,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/38.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/38.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9744,7 +9710,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_41">
+    <widget class="QToolButton" name="teethBtn_41">
      <property name="geometry">
       <rect>
        <x>123</x>
@@ -9757,7 +9723,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/41.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/41.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9767,7 +9733,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_42">
+    <widget class="QToolButton" name="teethBtn_42">
      <property name="geometry">
       <rect>
        <x>86</x>
@@ -9780,7 +9746,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/42.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/42.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9790,7 +9756,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_43">
+    <widget class="QToolButton" name="teethBtn_43">
      <property name="geometry">
       <rect>
        <x>57</x>
@@ -9803,7 +9769,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/43.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/43.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9813,7 +9779,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_44">
+    <widget class="QToolButton" name="teethBtn_44">
      <property name="geometry">
       <rect>
        <x>39</x>
@@ -9826,7 +9792,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/44.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/44.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9836,7 +9802,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_45">
+    <widget class="QToolButton" name="teethBtn_45">
      <property name="geometry">
       <rect>
        <x>23</x>
@@ -9849,7 +9815,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/45.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/45.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9859,7 +9825,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_46">
+    <widget class="QToolButton" name="teethBtn_46">
      <property name="geometry">
       <rect>
        <x>7</x>
@@ -9872,7 +9838,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/46.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/46.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9882,7 +9848,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_47">
+    <widget class="QToolButton" name="teethBtn_47">
      <property name="geometry">
       <rect>
        <x>3</x>
@@ -9895,7 +9861,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/47.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/47.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9905,7 +9871,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_48">
+    <widget class="QToolButton" name="teethBtn_48">
      <property name="geometry">
       <rect>
        <x>3</x>
@@ -9918,7 +9884,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/48.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/48.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -9928,7 +9894,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="teethBtn_35">
+    <widget class="QToolButton" name="teethBtn_35">
      <property name="geometry">
       <rect>
        <x>252</x>
@@ -9941,7 +9907,7 @@ background-color: rgba(255, 255, 255, 0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-image: url(:/MainWidget/Resources/images/teeth/35.png);
+      <string notr="true">border-image: url(:/MainWidget/Resources/images/0/35.png);
 background-color: rgba(255, 255, 255, 0);</string>
      </property>
      <property name="text">
@@ -10785,7 +10751,6 @@ border:0px;border-radius:0px;</string>
    <zorder>topCameraLabel</zorder>
    <zorder>cameraImageLabel</zorder>
   </widget>
-  <zorder>TipPanel</zorder>
   <widget class="QGroupBox" name="DentalImplantFinishPanel">
    <property name="enabled">
     <bool>true</bool>
@@ -11418,6 +11383,32 @@ background-color:rgb(248,250,250);</string>
     </property>
    </widget>
   </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>1240</y>
+     <width>400</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QProgressBar{
+        border: none;
+        color: white;
+        text-align: center;
+        background: rgb(68, 69, 73);
+}
+QProgressBar::chunk {
+        border: none;
+        background: rgb(0, 160, 230);
+}</string>
+   </property>
+   <property name="value">
+    <number>0</number>
+   </property>
+  </widget>
+  <zorder>TipPanel</zorder>
   <zorder>compensationScanPanel</zorder>
   <zorder>ScanJawGroup</zorder>
   <zorder>CutJawFinishPanel</zorder>
@@ -11432,6 +11423,7 @@ background-color:rgb(248,250,250);</string>
   <zorder>btnClose</zorder>
   <zorder>cameraGroupBox</zorder>
   <zorder>DentalImplantFinishPanel</zorder>
+  <zorder>progressBar</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

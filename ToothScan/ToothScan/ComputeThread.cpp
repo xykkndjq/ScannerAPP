@@ -420,12 +420,6 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 		//pointcloudrotation(mModel.P, mModel.N, cloudrot);
 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
 		timeTest.Print("unwarp->MeshRot finish");
-		if(CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true"){
-			orth::ModelIO finish_model_io(&mModel);
-			std::string modelNameStr = QString::number(index).toStdString() + ".stl";
-			cout << "pathname: " << modelNameStr << endl;
-			finish_model_io.writeModel(modelNameStr, "stlb");
-		}
 		//pointcloudrotation(points_2, cloudrot);
 // 		if (pScanTask->m_points_cloud_globle.size())
 // 		{
@@ -1223,6 +1217,22 @@ void ComputeThread::GPAMeshing()
 	//vector<vector<double>> points_target;
 	//int TotalIterNum = 30;
 	{
+		if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
+			for (int i = 0; i < pScanTask->m_mModel.size();i++) {
+#ifdef MODELPLY
+				tinyply::plyio io;
+				std::string modelNameStr = QString::number(i).toStdString() + ".ply";
+				cout << "pathname: " << modelNameStr << endl;
+				io.write_ply_example(modelNameStr, pScanTask->m_mModel[i], true);
+#else
+				orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
+				std::string modelNameStr = QString::number(i).toStdString() + ".stl";
+				cout << "pathname: " << modelNameStr << endl;
+				finish_model_io.writeModel(modelNameStr, "stlb");
+#endif
+
+			}
+		}
 		if (pScanTask->m_mModel.size() > 1)
 		{
 			//vector<cv::Mat> rt_matrixs;

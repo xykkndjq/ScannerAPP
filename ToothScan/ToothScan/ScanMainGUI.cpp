@@ -2,7 +2,7 @@
 #include "TaskManager.h"
 #include "plyio.h"
 #define NUITEST
-#define MODELPLY
+
 void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
 	orth::MeshModel meshModel;
 	//pTask->pTeethModel->getMeshModel(meshModel);
@@ -42,7 +42,7 @@ bool ScanMainGUI::isModelFileExit(pCScanTask &pTask) {
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
 #endif
-	return QFile::exists(modelNameStr.c_str());
+	return QFile::exists(QString::fromLocal8Bit(modelNameStr.c_str()));
 }
 void ScanMainGUI::loadModelFile(pCScanTask &pTask) {
 	orth::MeshModel meshModel;
@@ -527,7 +527,7 @@ void ScanMainGUI::setConnections()
 	for (int i = 0; i < 32; i++)
 	{
 		QString strWidgetName = "teethBtn_" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10);
-		QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+		QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
 		if (pButton) {
 			pButton->setCheckable(true);
 			cout << pButton->metaObject()->className() << endl;
@@ -1181,8 +1181,8 @@ void ScanMainGUI::ToothButtonListPress()
 	QString strObjectName = sender()->objectName();
 	strObjectName = strObjectName.right(2);
 	int toothButtonIndex = strObjectName.toInt();
-	QString strWidgetName = "teethBtn_" + QString::number((toothButtonIndex / 8 + 1) * 10 + toothButtonIndex % 8 + 1, 10);
-	QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
+	QString strWidgetName = "teethBtn_" + QString::number(toothButtonIndex, 10);
+	QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
 	if (pButton) {
 		glWidget->m_cutToothIndex = toothButtonIndex;
 	}
@@ -1619,29 +1619,46 @@ void ScanMainGUI::cutPaneNextStepBtnClick() {
 		glWidget->update();
 		emit gpaTaskMeshSignal();
 		return;
-	}	
+	}
 	pCScanTask pNextTask = CTaskManager::getInstance()->getNextTask();
 	if (pCurrentTask->Get_ScanType() == eAllJawScan) {
 		m_pallTeethModel = pCurrentTask->pTeethModel;
 	}
 	saveModelFile(pCurrentTask);
+	if (pCurrentTask->Get_Gingiva() == false && pCurrentTask->Get_DentalImplant() == true) {//种植体
+		showDentalImplantPanel();
+		return;
+	}
+
+	if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
+		if (pCurrentTask->Get_Gingiva() == true) {
+			m_pUpperJawGingvaModel = pCurrentTask->pTeethModel;
+		}
+		else {
+			m_pupperTeethModel = pCurrentTask->pTeethModel;
+		}
+		if (pCurrentTask->Get_DentalImplant() == true) {//种植体
+			glWidget->mm = pCurrentTask->m_dentalImplantMeshModel;
+			m_pUpperDentalImplantModel = glWidget->makeObject();
+			m_pUpperDentalImplantModel->Set_Visible(false);
+		}
+	}
+	else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+		if (pCurrentTask->Get_Gingiva() == true) {			//带牙龈//不带扫描杆
+			m_pLowJawGingvaModel = pCurrentTask->pTeethModel;
+		}
+		else {			//不带牙龈
+			m_plowerTeethModel = pCurrentTask->pTeethModel;
+		}
+		if (pCurrentTask->Get_DentalImplant() == true) {//种植体
+			glWidget->mm = pCurrentTask->m_dentalImplantMeshModel;
+			m_pLowerDentalImplantModel = glWidget->makeObject();
+			m_pLowerDentalImplantModel->Set_Visible(false);
+		}
+	}	
 
 	if (!pNextTask&&pCurrentTask) {
-		ui.CutJawPanel->setVisible(false);
-		ui.StitchingFinishPanel->setVisible(true);
-		QString str;
-		ui.stitchingUpperJawBtn->setVisible(false);
-		ui.stitchingLowerJawBtn->setVisible(false);
-		if (pCurrentTask->Get_ScanType() == eUpperJawScan) {
-			m_pupperTeethModel = pCurrentTask->pTeethModel;
-			ui.stitchingUpperJawBtn->setChecked(true);
-			ui.stitchingUpperJawBtn->setVisible(true);
-		}
-		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
-			m_plowerTeethModel = pCurrentTask->pTeethModel;
-			ui.stitchingLowerJawBtn->setChecked(true);
-			ui.stitchingLowerJawBtn->setVisible(true);
-		}
+		showStitchingFinishPanel();
 		//str = QString::fromLocal8Bit("可以通过工具栏修剪") + QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("数据");
 		//ui.CutJawFinishPanelTips->setText(str);
 	}
@@ -1747,6 +1764,7 @@ void ScanMainGUI::DentalImplantNextBtnClick() {
 		m_pLowerDentalImplantModel->Set_Visible(true);
 		m_plowerTeethModel = pCurrentTask->pTeethModel;
 	}
+	glWidget->m_cutBoxesMap.clear();
 	glWidget->update();
 	ui.DentalImplantFinishPanel->show();
 }
@@ -1967,7 +1985,39 @@ void ScanMainGUI::updateTaskModel()
 		}
 	}
 }
-
+void ScanMainGUI::showDentalImplantPanel(bool bBack) {
+	hideAllPanel();
+	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
+	if (!pCurrentTask) {
+		return;
+	}
+	ui.DentalImplantPanel->setVisible(true);
+	glWidget->m_cutBoxesMap.clear();
+	ui.lowerJawGroupBox->setVisible(false);
+	ui.upperJawGroupBox->setVisible(false);
+	for (int i = 0; i < 32; i++) {
+		QString strWidgetName = "teethBtn_" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10);
+		QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
+		if (pButton) {
+			pButton->setDisabled(true);
+		}
+	}
+	if (pCurrentTask->Get_ScanType() == eUpperJawScan)	//上颌
+	{
+		ui.upperJawGroupBox->setVisible(true);
+	}
+	else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
+		ui.lowerJawGroupBox->setVisible(true);
+	}
+	for (int i = 0; i < pCurrentTask->m_vtTeeth.size(); i++) {
+		QString strWidgetName = "teethBtn_" + QString::number((pCurrentTask->m_vtTeeth[i] / 8 + 1) * 10 + pCurrentTask->m_vtTeeth[i] % 8 + 1, 10);
+		QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
+		if (pButton) {
+			pButton->setEnabled(true);
+		}
+	}
+	ui.DentalImplantNextBtn->setDisabled(true);
+}
 void ScanMainGUI::meshFinishSlot()
 {
 	hideAllPanel();
@@ -1988,32 +2038,7 @@ void ScanMainGUI::meshFinishSlot()
 	}
 	saveModelFile(pCurrentTask);
 	if (pCurrentTask->Get_Gingiva() == false&& pCurrentTask->Get_DentalImplant() == true) {//种植体
-		ui.DentalImplantPanel->setVisible(true);
-		glWidget->m_cutBoxesMap.clear();
-		ui.lowerJawGroupBox->setVisible(false);
-		ui.upperJawGroupBox->setVisible(false);
-		for (int i = 0; i < 32;i++) {
-			QString strWidgetName = "teethBtn_" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10);
-			QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
-			if (pButton) {
-				pButton->setDisabled(true);
-			}
-		}
-		if (pCurrentTask->Get_ScanType() == eUpperJawScan)	//上颌
-		{
-			ui.upperJawGroupBox->setVisible(true);
-		}
-		else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
-			ui.lowerJawGroupBox->setVisible(true);
-		}
-		for (int i = 0; i < pCurrentTask->m_vtTeeth.size();i++) {
-			QString strWidgetName = "teethBtn_" + QString::number((pCurrentTask->m_vtTeeth[i] / 8 + 1) * 10 + pCurrentTask->m_vtTeeth[i] % 8 + 1, 10);
-			QPushButton * pButton = findChild<QPushButton*>(strWidgetName);
-			if (pButton) {
-				pButton->setEnabled(true);
-			}
-		}
-		ui.DentalImplantNextBtn->setDisabled(true);
+		showDentalImplantPanel();
 		return;
 	}
 
@@ -2253,7 +2278,7 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 		for (int i = 0; i < 32;i++) {
 			chooseID = orderInfo.eTeethScanType[i];
 			QString dstpath = ":/MainWidget/Resources/images/" + QString::number(chooseID + 1, 10) + QString::number(chooseID+1, 10) + ".png",
-				srcPath = "./Resources/images/teeth/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";;
+				srcPath = ":/MainWidget/Resources/images/0/" + QString::number((i / 8 + 1) * 10 + i % 8 + 1, 10) + ".png";;
 			QImage resultImage, destinationImage, sourceImage;
 			if (chooseID == eDentalImplantScan) {
 				bDen = true;

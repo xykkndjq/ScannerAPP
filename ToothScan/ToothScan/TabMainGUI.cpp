@@ -243,7 +243,7 @@ void TabMainGUI::setConnections()
 	/*----------------------打开设置子页面------------------------*/
 	connect(m_settingMgrBtn, SIGNAL(clicked()), this, SLOT(showSettingGroupBox()));//打开设置子页面
 	//connect(ui.checkBoxGroupBox, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
-	connect(ui.saveSpliteModelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(saveSpliteModelCheckBoxClicked(int)));
+	connect(ui.saveSpliteModelCheckBox, SIGNAL(clicked()), this, SLOT(saveSpliteModelCheckBoxClicked()));
 	connect(ui.choosePathPushButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
 
 	/*----------------------打开关于子页面------------------------*/
@@ -769,22 +769,25 @@ void TabMainGUI::newButtonClickedSlot() {
 bool TabMainGUI::judgePatientSaveFlag()
 {
 	coTimeCout ccTimeout;
-	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL) &&
+	if ((orderDate != NULL && orderNumber != NULL && orderPatientName != NULL && orderDoctorName != NULL&& orderOperatorName != NULL) &&
 		(unMoulageFlag == true || doMoulageFlag == true || splitModelFlag == true))
 	{
-		QString tempFilePath = filePath + "/" + orderNumber;
+		QString tempFilePath = filePath + "/" + orderNumber+"_"+ orderDoctorName+"_"+orderPatientName;
 		std::cout << "tempFilePath is " << tempFilePath.toStdString() << std::endl;
 		bool creatFlag = isDirExist(tempFilePath);
 		fileQStr = tempFilePath + "/";
 		std::cout << "fileQStr is " << fileQStr.toStdString() << std::endl;
-		QByteArray orderPN = ToChineseStr(orderPatientName);
-		std::string filePathStr = fileQStr.toStdString() + orderPN.data() + ".OI";
+		QString strOrderDate = orderDate;
+		strOrderDate.replace(":", "").replace(" ", "").replace("/", "");
+		QByteArray orderPN = ToChineseStr(strOrderDate);
+		std::string filePathStr = Qstring2String(fileQStr)+ orderPN.data() + ".OI";
 		std::cout << "string filepath is " << filePathStr << std::endl;
 		cv::FileStorage fwrite(filePathStr.c_str(), cv::FileStorage::WRITE);
 		fwrite << "Order Date" << orderDate.toStdString()
 			<< "Order Number" << orderNumber.toStdString()
-			<< "Patient Name" << orderPN.data()
+			<< "Patient Name" << ToChineseStr(orderPatientName).data()
 			<< "Doctor Name" << ToChineseStr(orderDoctorName).data()
+			<<"Operator Name"<< ToChineseStr(orderOperatorName).data()
 			<< "Addition" << ToChineseStr(orderAddition).data()
 			<< "splitModelFlag" << splitModelFlag;
 
@@ -855,7 +858,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < lossToothList.size(); i++)
 						{
-							fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
+							//fwrite << "lossTooth" << lossToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -877,7 +880,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < facingList.size(); i++)
 						{
-							fwrite << "facing" << facingList[i]->text().toStdString();
+							//fwrite << "facing" << facingList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -888,7 +891,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < waxTypeList.size(); i++)
 						{
-							fwrite << "waxType" << waxTypeList[i]->text().toStdString();
+							//fwrite << "waxType" << waxTypeList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -899,7 +902,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < implantList.size(); i++)
 						{
-							fwrite << "implant" << implantList[i]->text().toStdString();
+							//fwrite << "implant" << implantList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -910,7 +913,7 @@ bool TabMainGUI::judgePatientSaveFlag()
 					{
 						for (int i = 0; i < jawToothList.size(); i++)
 						{
-							fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
+							//fwrite << "jawTooth" << jawToothList[i]->text().toStdString();
 						}
 					}
 					break;
@@ -1973,9 +1976,9 @@ void TabMainGUI::readFileStorage(QString fPath)
 	orderAddition = QString::fromLocal8Bit(fRead["Addition"].string().c_str());
 	orderOperatorName = QString::fromLocal8Bit(fRead["Operator Name"].string().c_str());
 	bool bsplitModelFlag = int(fRead["splitModelFlag"]);
-	QDateTime orderDateTime =QDateTime::fromString(orderDate, "yyyy/MM/dd hh:mm:ss");
-	QString orderDateTimeStr = orderDateTime.toString("yyyy/MM/dd/hh:mm:ss");
-	ui.orderDateLineEdit->setText(orderDateTimeStr);
+	//QDateTime orderDateTime =QDateTime::fromString(orderDate, "yyyy/MM/dd hh:mm:ss");
+	//QString orderDateTimeStr = orderDateTime.toString("yyyy/MM/dd/hh:mm:ss");
+	ui.orderDateLineEdit->setText(orderDate);
 	ui.orderNumLineEdit->setText(orderNumber);
 	ui.patientNameLineEdit->setText(orderPatientName);
 	ui.doctorNameLineEdit->setText(orderDoctorName);
@@ -2077,10 +2080,15 @@ void TabMainGUI::readFileStorage(QString fPath)
 					m_eScanType = pScanTask->Get_ScanType();
 					toothList[pScanTask->Get_TeethId()]->clicked();
 					break;
-				case eDentalImplantScan:
-					chooseID = pScanTask->Get_ScanType() + 1;
-					m_eScanType = pScanTask->Get_ScanType();
-					toothList[pScanTask->Get_TeethId()]->clicked();
+				case eLowerJawScan:
+				case eUpperJawScan:
+					if (pScanTask->Get_DentalImplant()) {
+						chooseID = eDentalImplantScan + 1;
+						m_eScanType = eDentalImplantScan;
+						for (int i = 0; i < pScanTask->m_vtTeeth.size();i++) {
+							toothList[pScanTask->m_vtTeeth[i]]->clicked();
+						}						
+					}
 					break;
 				}
 // 				switch (pScanTask->Get_TaskType())
@@ -2115,7 +2123,8 @@ void TabMainGUI::readFileStorage(QString fPath)
 				splitModelFlag = true;
 			}
 		}
-		rightTabWidget->setCurrentIndex(1);
+		ui.spliteModelPushButton->click();
+	//	rightTabWidget->setCurrentIndex(1);
 	}
 }
 
@@ -2168,9 +2177,9 @@ void TabMainGUI::openDirectoryDialogSlot()
 //	}
 //}
 
-void TabMainGUI::saveSpliteModelCheckBoxClicked(int nState)
+void TabMainGUI::saveSpliteModelCheckBoxClicked()
 {
-	QCheckBox * pCheckBox = static_cast<QCheckBox *> (sender());
+	QPushButton * pCheckBox = static_cast<QPushButton *> (sender());
 	if (!pCheckBox)
 		return;
 	CSystemConfig::shareInstance()->setValue(B_SAVESPLITEMODEL,pCheckBox->isChecked()?"true":"false");

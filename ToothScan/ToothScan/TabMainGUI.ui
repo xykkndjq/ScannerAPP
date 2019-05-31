@@ -1216,11 +1216,11 @@ border:0px groove gray;border-radius:5px;</string>
     </property>
    </widget>
   </widget>
+  <zorder>settingGroupBox</zorder>
   <zorder>aboutGroupBox</zorder>
   <zorder>calibrationGroupBox</zorder>
   <zorder>mainGroupBox</zorder>
   <zorder>orderInforGroupBox</zorder>
-  <zorder>settingGroupBox</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

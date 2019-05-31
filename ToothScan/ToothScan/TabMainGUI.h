@@ -239,7 +239,7 @@ public slots:
 
 	//void settingButtonClicked(QAbstractButton *button);
 
-	void saveSpliteModelCheckBoxClicked(int);
+	void saveSpliteModelCheckBoxClicked();
 	
 	/*标定子页面*/
 	void showCalibrationGroupBox();

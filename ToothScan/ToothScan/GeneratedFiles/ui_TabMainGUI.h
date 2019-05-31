@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TabMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.2
+** Created by: Qt User Interface Compiler version 5.9.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -470,11 +470,11 @@ public:
         aboutTextLabel = new QLabel(aboutGroupBox);
         aboutTextLabel->setObjectName(QStringLiteral("aboutTextLabel"));
         aboutTextLabel->setGeometry(QRect(560, 432, 671, 16));
+        settingGroupBox->raise();
         aboutGroupBox->raise();
         calibrationGroupBox->raise();
         mainGroupBox->raise();
         orderInforGroupBox->raise();
-        settingGroupBox->raise();
 
         retranslateUi(TabMainGUI);
 

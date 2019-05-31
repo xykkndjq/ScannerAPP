@@ -243,4 +243,6 @@ ModelManifest.xml
 /ToothScan/ToothScan/ScanData
 /ToothScan/ToothScan/data
 /ToothScan/ToothScan/log
-/ToothScan/ToothScan/GeneratedFiles/ui_ScanMainGUI11.h
+/ToothScan/ToothScan/merge_models.stl
+/ToothScan/ToothScan/external_parameter.yml
+/ToothScan/deploy
