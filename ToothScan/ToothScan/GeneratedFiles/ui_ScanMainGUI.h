@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ScanMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.9.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -202,7 +202,6 @@ public:
     QGroupBox *TipPanel;
     QGroupBox *cameraGroupBox;
     QLabel *topCameraLabel;
-    QLabel *bottomCameraLabel;
     QLabel *cameraImageLabel;
     QGroupBox *DentalImplantFinishPanel;
     QPushButton *DentalImplantFinishNextBtn;
@@ -1930,70 +1929,83 @@ public:
         topWatchButton->setObjectName(QStringLiteral("topWatchButton"));
         topWatchButton->setGeometry(QRect(20, 20, 60, 60));
         topWatchButton->setFont(font);
-        topWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/TopView.png);"));
+        topWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/topWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}\n"
+""));
         bottomWatchButton = new QPushButton(toolsGroupBox);
         bottomWatchButton->setObjectName(QStringLiteral("bottomWatchButton"));
         bottomWatchButton->setGeometry(QRect(100, 20, 60, 60));
         bottomWatchButton->setFont(font);
-        bottomWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/BottomView.png);\n"
+        bottomWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/bottomWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}\n"
 ""));
         leftWatchButton = new QPushButton(toolsGroupBox);
         leftWatchButton->setObjectName(QStringLiteral("leftWatchButton"));
         leftWatchButton->setGeometry(QRect(20, 180, 60, 60));
         leftWatchButton->setFont(font);
-        leftWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/LeftView.png);"));
+        leftWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/leftWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}"));
         rightWatchButton = new QPushButton(toolsGroupBox);
         rightWatchButton->setObjectName(QStringLiteral("rightWatchButton"));
         rightWatchButton->setGeometry(QRect(100, 180, 60, 60));
         rightWatchButton->setFont(font);
-        rightWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/RightView.png);"));
+        rightWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/rightWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}"));
         frontWatchButton = new QPushButton(toolsGroupBox);
         frontWatchButton->setObjectName(QStringLiteral("frontWatchButton"));
         frontWatchButton->setGeometry(QRect(20, 100, 60, 60));
         frontWatchButton->setFont(font);
-        frontWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/FrontView.png);"));
+        frontWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/frontWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}"));
         backWatchButton = new QPushButton(toolsGroupBox);
         backWatchButton->setObjectName(QStringLiteral("backWatchButton"));
         backWatchButton->setGeometry(QRect(100, 100, 60, 60));
         backWatchButton->setFont(font);
-        backWatchButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/BackView.png);"));
+        backWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/backWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}"));
         enlargeButton = new QPushButton(toolsGroupBox);
         enlargeButton->setObjectName(QStringLiteral("enlargeButton"));
         enlargeButton->setGeometry(QRect(20, 260, 60, 60));
         enlargeButton->setFont(font);
-        enlargeButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/enlarge.png);"));
+        enlargeButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/enlargeButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}"));
         shrinkButton = new QPushButton(toolsGroupBox);
         shrinkButton->setObjectName(QStringLiteral("shrinkButton"));
         shrinkButton->setGeometry(QRect(100, 260, 60, 60));
         shrinkButton->setFont(font);
-        shrinkButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/shrink.png);"));
+        shrinkButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/shrinkButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}"));
         selectRegionButton = new QPushButton(toolsGroupBox);
         selectRegionButton->setObjectName(QStringLiteral("selectRegionButton"));
         selectRegionButton->setGeometry(QRect(20, 340, 60, 60));
         selectRegionButton->setFont(font);
-        selectRegionButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/SelectRegion.png);"));
+        selectRegionButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/selectRegionButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}"));
         deleteModelButton = new QPushButton(toolsGroupBox);
         deleteModelButton->setObjectName(QStringLiteral("deleteModelButton"));
         deleteModelButton->setGeometry(QRect(100, 340, 60, 60));
         deleteModelButton->setFont(font);
-        deleteModelButton->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);\n"
-"border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);"));
+        deleteModelButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/deleteModelButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
+"QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}\n"
+"QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}"));
         TipPanel = new QGroupBox(ScanMainGUI);
         TipPanel->setObjectName(QStringLiteral("TipPanel"));
         TipPanel->setEnabled(true);
         TipPanel->setGeometry(QRect(1560, 0, 360, 1280));
         QPalette palette30;
         palette30.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        palette30.setBrush(QPalette::Active, QPalette::Button, brush6);
+        QBrush brush18(QColor(255, 255, 255, 100));
+        brush18.setStyle(Qt::SolidPattern);
+        palette30.setBrush(QPalette::Active, QPalette::Button, brush18);
         palette30.setBrush(QPalette::Active, QPalette::Light, brush6);
         palette30.setBrush(QPalette::Active, QPalette::Midlight, brush13);
         palette30.setBrush(QPalette::Active, QPalette::Dark, brush14);
@@ -2001,14 +2013,14 @@ public:
         palette30.setBrush(QPalette::Active, QPalette::Text, brush);
         palette30.setBrush(QPalette::Active, QPalette::BrightText, brush6);
         palette30.setBrush(QPalette::Active, QPalette::ButtonText, brush);
-        palette30.setBrush(QPalette::Active, QPalette::Base, brush6);
-        palette30.setBrush(QPalette::Active, QPalette::Window, brush6);
+        palette30.setBrush(QPalette::Active, QPalette::Base, brush18);
+        palette30.setBrush(QPalette::Active, QPalette::Window, brush18);
         palette30.setBrush(QPalette::Active, QPalette::Shadow, brush);
         palette30.setBrush(QPalette::Active, QPalette::AlternateBase, brush13);
         palette30.setBrush(QPalette::Active, QPalette::ToolTipBase, brush8);
         palette30.setBrush(QPalette::Active, QPalette::ToolTipText, brush);
         palette30.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette30.setBrush(QPalette::Inactive, QPalette::Button, brush6);
+        palette30.setBrush(QPalette::Inactive, QPalette::Button, brush18);
         palette30.setBrush(QPalette::Inactive, QPalette::Light, brush6);
         palette30.setBrush(QPalette::Inactive, QPalette::Midlight, brush13);
         palette30.setBrush(QPalette::Inactive, QPalette::Dark, brush14);
@@ -2016,14 +2028,14 @@ public:
         palette30.setBrush(QPalette::Inactive, QPalette::Text, brush);
         palette30.setBrush(QPalette::Inactive, QPalette::BrightText, brush6);
         palette30.setBrush(QPalette::Inactive, QPalette::ButtonText, brush);
-        palette30.setBrush(QPalette::Inactive, QPalette::Base, brush6);
-        palette30.setBrush(QPalette::Inactive, QPalette::Window, brush6);
+        palette30.setBrush(QPalette::Inactive, QPalette::Base, brush18);
+        palette30.setBrush(QPalette::Inactive, QPalette::Window, brush18);
         palette30.setBrush(QPalette::Inactive, QPalette::Shadow, brush);
         palette30.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush13);
         palette30.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush8);
         palette30.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush);
         palette30.setBrush(QPalette::Disabled, QPalette::WindowText, brush14);
-        palette30.setBrush(QPalette::Disabled, QPalette::Button, brush6);
+        palette30.setBrush(QPalette::Disabled, QPalette::Button, brush18);
         palette30.setBrush(QPalette::Disabled, QPalette::Light, brush6);
         palette30.setBrush(QPalette::Disabled, QPalette::Midlight, brush13);
         palette30.setBrush(QPalette::Disabled, QPalette::Dark, brush14);
@@ -2031,15 +2043,15 @@ public:
         palette30.setBrush(QPalette::Disabled, QPalette::Text, brush14);
         palette30.setBrush(QPalette::Disabled, QPalette::BrightText, brush6);
         palette30.setBrush(QPalette::Disabled, QPalette::ButtonText, brush14);
-        palette30.setBrush(QPalette::Disabled, QPalette::Base, brush6);
-        palette30.setBrush(QPalette::Disabled, QPalette::Window, brush6);
+        palette30.setBrush(QPalette::Disabled, QPalette::Base, brush18);
+        palette30.setBrush(QPalette::Disabled, QPalette::Window, brush18);
         palette30.setBrush(QPalette::Disabled, QPalette::Shadow, brush);
         palette30.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush16);
         palette30.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush8);
         palette30.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
         TipPanel->setPalette(palette30);
         TipPanel->setStyleSheet(QLatin1String("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(255, 255, 255);\n"
-"background-color:rgb(255,255,255);"));
+"background-color:rgba(255,255,255,100);"));
         cameraGroupBox = new QGroupBox(ScanMainGUI);
         cameraGroupBox->setObjectName(QStringLiteral("cameraGroupBox"));
         cameraGroupBox->setGeometry(QRect(0, 0, 341, 321));
@@ -2047,23 +2059,17 @@ public:
 "background-color:rgba(248,250,250,0);"));
         topCameraLabel = new QLabel(cameraGroupBox);
         topCameraLabel->setObjectName(QStringLiteral("topCameraLabel"));
-        topCameraLabel->setGeometry(QRect(10, 12, 290, 31));
-        topCameraLabel->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        topCameraLabel->setGeometry(QRect(10, 12, 290, 280));
+        topCameraLabel->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgba(255, 255,255,100);color:rgb(128,128,128);"));
         topCameraLabel->setScaledContents(true);
-        bottomCameraLabel = new QLabel(cameraGroupBox);
-        bottomCameraLabel->setObjectName(QStringLiteral("bottomCameraLabel"));
-        bottomCameraLabel->setGeometry(QRect(10, 268, 290, 24));
-        bottomCameraLabel->setStyleSheet(QStringLiteral("border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);"));
+        topCameraLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         cameraImageLabel = new QLabel(cameraGroupBox);
         cameraImageLabel->setObjectName(QStringLiteral("cameraImageLabel"));
-        cameraImageLabel->setGeometry(QRect(10, 40, 290, 232));
+        cameraImageLabel->setGeometry(QRect(10, 40, 290, 234));
         cameraImageLabel->setStyleSheet(QLatin1String("background-color: rgb(0, 0, 0);\n"
 "border:0px;border-radius:0px;"));
         cameraImageLabel->setTextFormat(Qt::PlainText);
         cameraImageLabel->setScaledContents(true);
-        bottomCameraLabel->raise();
-        topCameraLabel->raise();
-        cameraImageLabel->raise();
         DentalImplantFinishPanel = new QGroupBox(ScanMainGUI);
         DentalImplantFinishPanel->setObjectName(QStringLiteral("DentalImplantFinishPanel"));
         DentalImplantFinishPanel->setEnabled(true);
@@ -2169,7 +2175,6 @@ public:
         cameraGroupBox->raise();
         DentalImplantFinishPanel->raise();
         progressBar->raise();
-        OralSubstitutePanel_2->raise();
 
         retranslateUi(ScanMainGUI);
 
@@ -2471,7 +2476,6 @@ public:
         TipPanel->setTitle(QString());
         cameraGroupBox->setTitle(QString());
         topCameraLabel->setText(QApplication::translate("ScanMainGUI", "\347\233\270\346\234\272\346\230\276\347\244\272", Q_NULLPTR));
-        bottomCameraLabel->setText(QString());
         cameraImageLabel->setText(QString());
         DentalImplantFinishPanel->setTitle(QString());
 #ifndef QT_NO_TOOLTIP

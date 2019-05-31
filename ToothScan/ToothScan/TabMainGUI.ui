@@ -56,9 +56,10 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(40, 138, 237, 255);
-color: rgb(255, 255, 255);
-border:0px groove gray;border-radius:5px;</string>
+      <string notr="true">QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); 
+border:0px groove gray;border-radius:5px;}
+QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}</string>
      </property>
      <property name="text">
       <string> 新建</string>
@@ -73,6 +74,9 @@ border:0px groove gray;border-radius:5px;</string>
        <height>22</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QPushButton" name="openPushButton">
      <property name="geometry">
@@ -84,9 +88,10 @@ border:0px groove gray;border-radius:5px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(40, 138, 237, 255);
-color: rgb(255, 255, 255);
-border:0px groove gray;border-radius:5px;</string>
+      <string notr="true">QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); 
+border:0px groove gray;border-radius:5px;}
+QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}</string>
      </property>
      <property name="text">
       <string>导入</string>
@@ -101,6 +106,9 @@ border:0px groove gray;border-radius:5px;</string>
        <height>22</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QPushButton" name="watchPushButton">
      <property name="geometry">
@@ -112,9 +120,10 @@ border:0px groove gray;border-radius:5px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(40, 138, 237, 255);
-color: rgb(255, 255, 255);
-border:0px groove gray;border-radius:5px;</string>
+      <string notr="true">QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); 
+border:0px groove gray;border-radius:5px;}
+QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}</string>
      </property>
      <property name="text">
       <string>预览</string>
@@ -128,6 +137,9 @@ border:0px groove gray;border-radius:5px;</string>
        <width>22</width>
        <height>22</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QGroupBox" name="orderDateGroupBox">
@@ -448,9 +460,10 @@ color: rgb(160, 160, 160);
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(40, 138, 237, 255);
-color: rgb(255, 255, 255);
-border:0px groove gray;border-radius:5px;</string>
+      <string notr="true">QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); 
+border:0px groove gray;border-radius:5px;}
+QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}
+QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}</string>
      </property>
      <property name="text">
       <string>保存</string>
@@ -464,6 +477,9 @@ border:0px groove gray;border-radius:5px;</string>
        <width>22</width>
        <height>22</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -1225,7 +1241,6 @@ border:0px groove gray;border-radius:5px;</string>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="mainwidget.qrc"/>
-  <include location="C:/Users/CAMNODE06/.designer/backup/mainwidget.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -53,7 +53,6 @@
         <file>Resources/images/1/36.png</file>
         <file>Resources/images/1/37.png</file>
         <file>Resources/images/1/38.png</file>
-        <file>Resources/images/1/40.png</file>
         <file>Resources/images/1/41.png</file>
         <file>Resources/images/1/42.png</file>
         <file>Resources/images/1/43.png</file>
@@ -85,7 +84,6 @@
         <file>Resources/images/2/36.png</file>
         <file>Resources/images/2/37.png</file>
         <file>Resources/images/2/38.png</file>
-        <file>Resources/images/2/40.png</file>
         <file>Resources/images/2/41.png</file>
         <file>Resources/images/2/42.png</file>
         <file>Resources/images/2/43.png</file>
@@ -117,7 +115,6 @@
         <file>Resources/images/3/36.png</file>
         <file>Resources/images/3/37.png</file>
         <file>Resources/images/3/38.png</file>
-        <file>Resources/images/3/40.png</file>
         <file>Resources/images/3/41.png</file>
         <file>Resources/images/3/42.png</file>
         <file>Resources/images/3/43.png</file>
@@ -149,7 +146,6 @@
         <file>Resources/images/4/36.png</file>
         <file>Resources/images/4/37.png</file>
         <file>Resources/images/4/38.png</file>
-        <file>Resources/images/4/40.png</file>
         <file>Resources/images/4/41.png</file>
         <file>Resources/images/4/42.png</file>
         <file>Resources/images/4/43.png</file>
@@ -181,7 +177,6 @@
         <file>Resources/images/5/36.png</file>
         <file>Resources/images/5/37.png</file>
         <file>Resources/images/5/38.png</file>
-        <file>Resources/images/5/40.png</file>
         <file>Resources/images/5/41.png</file>
         <file>Resources/images/5/42.png</file>
         <file>Resources/images/5/43.png</file>
@@ -247,17 +242,6 @@
         <file>Resources/images/upperjaw.png</file>
         <file>Resources/images/alljaw.png</file>
         <file>Resources/images/daixingpan.png</file>
-        <file>Resources/images/BackView.png</file>
-        <file>Resources/images/BottomView.png</file>
-        <file>Resources/images/DeleteSelected.png</file>
-        <file>Resources/images/enlarge.png</file>
-        <file>Resources/images/FrontView.png</file>
-        <file>Resources/images/LeftView.png</file>
-        <file>Resources/images/RightView.png</file>
-        <file>Resources/images/SelectRegion.png</file>
-        <file>Resources/images/shrink.png</file>
-        <file>Resources/images/TopView.png</file>
-        <file>Resources/images/background-grey3.png</file>
         <file>Resources/images/checked.png</file>
         <file>Resources/images/cutbox.fs</file>
         <file>Resources/images/cutbox.vs</file>
@@ -268,5 +252,37 @@
         <file>Resources/images/Moulage3_no.png</file>
         <file>Resources/images/Moulage3_yes.png</file>
         <file>Resources/images/orderIconCheck.gif</file>
+        <file>Resources/images/background-grey.png</file>
+        <file>Resources/images/background-purple.png</file>
+        <file>Resources/images/normal/backWatchButton_normal.png</file>
+        <file>Resources/images/normal/bottomWatchButton_normal.png</file>
+        <file>Resources/images/normal/deleteModelButton_normal.png</file>
+        <file>Resources/images/normal/enlargeButton_normal.png</file>
+        <file>Resources/images/normal/frontWatchButton_normal.png</file>
+        <file>Resources/images/normal/leftWatchButton_normal.png</file>
+        <file>Resources/images/normal/rightWatchButton_normal.png</file>
+        <file>Resources/images/normal/selectRegionButton_normal.png</file>
+        <file>Resources/images/normal/shrinkButton_normal.png</file>
+        <file>Resources/images/normal/topWatchButton_normal.png</file>
+        <file>Resources/images/checked/backWatchButton_checked.png</file>
+        <file>Resources/images/checked/bottomWatchButton_checked.png</file>
+        <file>Resources/images/checked/deleteModelButton_checked.png</file>
+        <file>Resources/images/checked/enlargeButton_checked.png</file>
+        <file>Resources/images/checked/frontWatchButton_checked.png</file>
+        <file>Resources/images/checked/leftWatchButton_checked.png</file>
+        <file>Resources/images/checked/rightWatchButton_checked.png</file>
+        <file>Resources/images/checked/selectRegionButton_checked.png</file>
+        <file>Resources/images/checked/shrinkButton_checked.png</file>
+        <file>Resources/images/checked/topWatchButton_checked.png</file>
+        <file>Resources/images/disable/backWatchButton_disable.png</file>
+        <file>Resources/images/disable/bottomWatchButton_disable.png</file>
+        <file>Resources/images/disable/deleteModelButton_disable.png</file>
+        <file>Resources/images/disable/enlargeButton_disable.png</file>
+        <file>Resources/images/disable/frontWatchButton_disable.png</file>
+        <file>Resources/images/disable/leftWatchButton_disable.png</file>
+        <file>Resources/images/disable/rightWatchButton_disable.png</file>
+        <file>Resources/images/disable/selectRegionButton_disable.png</file>
+        <file>Resources/images/disable/shrinkButton_disable.png</file>
+        <file>Resources/images/disable/topWatchButton_disable.png</file>
     </qresource>
 </RCC>

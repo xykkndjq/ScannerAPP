@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TabMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.9.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -104,33 +104,39 @@ public:
         newPushButton = new QPushButton(orderGroupBox);
         newPushButton->setObjectName(QStringLiteral("newPushButton"));
         newPushButton->setGeometry(QRect(25, 45, 97, 48));
-        newPushButton->setStyleSheet(QLatin1String("background-color: rgba(40, 138, 237, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"border:0px groove gray;border-radius:5px;"));
+        newPushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); \n"
+"border:0px groove gray;border-radius:5px;}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
         QIcon icon;
         icon.addFile(QStringLiteral(":/MainWidget/Resources/images/new.png"), QSize(), QIcon::Normal, QIcon::Off);
         newPushButton->setIcon(icon);
         newPushButton->setIconSize(QSize(22, 22));
+        newPushButton->setCheckable(true);
         openPushButton = new QPushButton(orderGroupBox);
         openPushButton->setObjectName(QStringLiteral("openPushButton"));
         openPushButton->setGeometry(QRect(132, 45, 97, 48));
-        openPushButton->setStyleSheet(QLatin1String("background-color: rgba(40, 138, 237, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"border:0px groove gray;border-radius:5px;"));
+        openPushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); \n"
+"border:0px groove gray;border-radius:5px;}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
         QIcon icon1;
         icon1.addFile(QStringLiteral(":/MainWidget/Resources/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
         openPushButton->setIcon(icon1);
         openPushButton->setIconSize(QSize(22, 22));
+        openPushButton->setCheckable(true);
         watchPushButton = new QPushButton(orderGroupBox);
         watchPushButton->setObjectName(QStringLiteral("watchPushButton"));
         watchPushButton->setGeometry(QRect(239, 45, 97, 48));
-        watchPushButton->setStyleSheet(QLatin1String("background-color: rgba(40, 138, 237, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"border:0px groove gray;border-radius:5px;"));
+        watchPushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); \n"
+"border:0px groove gray;border-radius:5px;}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
         QIcon icon2;
         icon2.addFile(QStringLiteral(":/MainWidget/Resources/images/preview.png"), QSize(), QIcon::Normal, QIcon::Off);
         watchPushButton->setIcon(icon2);
         watchPushButton->setIconSize(QSize(22, 22));
+        watchPushButton->setCheckable(true);
         orderDateGroupBox = new QGroupBox(orderGroupBox);
         orderDateGroupBox->setObjectName(QStringLiteral("orderDateGroupBox"));
         orderDateGroupBox->setGeometry(QRect(43, 177, 389, 55));
@@ -235,13 +241,15 @@ public:
         savePushButton = new QPushButton(orderGroupBox);
         savePushButton->setObjectName(QStringLiteral("savePushButton"));
         savePushButton->setGeometry(QRect(346, 45, 97, 48));
-        savePushButton->setStyleSheet(QLatin1String("background-color: rgba(40, 138, 237, 255);\n"
-"color: rgb(255, 255, 255);\n"
-"border:0px groove gray;border-radius:5px;"));
+        savePushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(40, 138, 237, 255); color: rgba(255, 255, 255, 255); \n"
+"border:0px groove gray;border-radius:5px;}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
         QIcon icon3;
         icon3.addFile(QStringLiteral(":/MainWidget/Resources/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
         savePushButton->setIcon(icon3);
         savePushButton->setIconSize(QSize(22, 22));
+        savePushButton->setCheckable(true);
         orderScanGroupBox = new QGroupBox(orderInforGroupBox);
         orderScanGroupBox->setObjectName(QStringLiteral("orderScanGroupBox"));
         orderScanGroupBox->setGeometry(QRect(470, 0, 1450, 980));

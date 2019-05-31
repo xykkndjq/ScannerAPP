@@ -6322,7 +6322,6 @@ background-color:rgba(248,250,250,0);</string>
    <zorder>teethNoLabel8</zorder>
    <zorder>teethNoLabel6</zorder>
    <zorder>teethNoLabel7</zorder>
-   <zorder>cameraGroupBox</zorder>
   </widget>
   <widget class="QGroupBox" name="TeethStitchingPanel">
    <property name="enabled">
@@ -9981,8 +9980,10 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);\n
      <string>仰视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/TopView.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/topWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}
+</string>
     </property>
     <property name="text">
      <string/>
@@ -10009,8 +10010,9 @@ border-image: url(:/MainWidget/Resources/images/TopView.png);</string>
      <string>俯视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/BottomView.png);
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/bottomWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}
 </string>
     </property>
     <property name="text">
@@ -10038,8 +10040,9 @@ border-image: url(:/MainWidget/Resources/images/BottomView.png);
      <string>左视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/LeftView.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/leftWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10066,8 +10069,9 @@ border-image: url(:/MainWidget/Resources/images/LeftView.png);</string>
      <string>右视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/RightView.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/rightWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10094,8 +10098,9 @@ border-image: url(:/MainWidget/Resources/images/RightView.png);</string>
      <string>前视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/FrontView.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/frontWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10122,8 +10127,9 @@ border-image: url(:/MainWidget/Resources/images/FrontView.png);</string>
      <string>后视图</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/BackView.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/backWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10150,8 +10156,9 @@ border-image: url(:/MainWidget/Resources/images/BackView.png);</string>
      <string>放大</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/enlarge.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/enlargeButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10178,8 +10185,9 @@ border-image: url(:/MainWidget/Resources/images/enlarge.png);</string>
      <string>缩小</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/shrink.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/shrinkButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10206,8 +10214,9 @@ border-image: url(:/MainWidget/Resources/images/shrink.png);</string>
      <string>框选工具</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/SelectRegion.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/selectRegionButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10234,8 +10243,9 @@ border-image: url(:/MainWidget/Resources/images/SelectRegion.png);</string>
      <string>删除框选</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);
-border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
+     <string notr="true">QPushButton{border-image: url(:/MainWidget/Resources/images/normal/deleteModelButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}
+QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}
+QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}</string>
     </property>
     <property name="text">
      <string/>
@@ -10268,7 +10278,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10340,7 +10350,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10349,7 +10359,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10405,7 +10415,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10477,7 +10487,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10486,7 +10496,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10542,7 +10552,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10614,7 +10624,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10623,7 +10633,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
-        <color alpha="255">
+        <color alpha="100">
          <red>255</red>
          <green>255</green>
          <blue>255</blue>
@@ -10671,7 +10681,7 @@ border-image: url(:/MainWidget/Resources/images/DeleteSelected.png);</string>
    </property>
    <property name="styleSheet">
     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(255, 255, 255);
-background-color:rgb(255,255,255);</string>
+background-color:rgba(255,255,255,100);</string>
    </property>
    <property name="title">
     <string/>
@@ -10699,11 +10709,11 @@ background-color:rgba(248,250,250,0);</string>
       <x>10</x>
       <y>12</y>
       <width>290</width>
-      <height>31</height>
+      <height>280</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);</string>
+     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgba(255, 255,255,100);color:rgb(128,128,128);</string>
     </property>
     <property name="text">
      <string>相机显示</string>
@@ -10711,21 +10721,8 @@ background-color:rgba(248,250,250,0);</string>
     <property name="scaledContents">
      <bool>true</bool>
     </property>
-   </widget>
-   <widget class="QLabel" name="bottomCameraLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>268</y>
-      <width>290</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border:0px groove gray;border-radius:5px;padding:2px 4px;border-color: rgb(128, 128, 128);background: rgb(255, 255, 255);color:rgb(128,128,128);</string>
-    </property>
-    <property name="text">
-     <string/>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
     </property>
    </widget>
    <widget class="QLabel" name="cameraImageLabel">
@@ -10734,7 +10731,7 @@ background-color:rgba(248,250,250,0);</string>
       <x>10</x>
       <y>40</y>
       <width>290</width>
-      <height>232</height>
+      <height>234</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -10751,9 +10748,6 @@ border:0px;border-radius:0px;</string>
      <bool>true</bool>
     </property>
    </widget>
-   <zorder>bottomCameraLabel</zorder>
-   <zorder>topCameraLabel</zorder>
-   <zorder>cameraImageLabel</zorder>
   </widget>
   <widget class="QGroupBox" name="DentalImplantFinishPanel">
    <property name="enabled">
@@ -11420,7 +11414,6 @@ QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}</string>
   <zorder>cameraGroupBox</zorder>
   <zorder>DentalImplantFinishPanel</zorder>
   <zorder>progressBar</zorder>
-  <zorder>OralSubstitutePanel_2</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
