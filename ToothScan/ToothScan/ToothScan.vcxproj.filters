@@ -213,9 +213,6 @@
     <ClInclude Include="GeneratedFiles\ui_TabMainGUI.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_ScanMainGUI.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="octree.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
