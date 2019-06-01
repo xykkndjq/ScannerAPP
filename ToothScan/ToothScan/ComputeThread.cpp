@@ -1353,7 +1353,7 @@ void ComputeThread::taskTeethSitit()
 // 	}
 	if (l_vtSucModel.size() > 0) {
 		PoissonReconstruction recon;
-		double error_threshold = 0.5;
+		double error_threshold = 0.3;
 	
 		//l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
