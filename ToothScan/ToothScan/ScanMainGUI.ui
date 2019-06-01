@@ -9988,6 +9988,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/topW
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="bottomWatchButton">
     <property name="geometry">
@@ -10018,6 +10021,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/bott
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="leftWatchButton">
     <property name="geometry">
@@ -10046,6 +10052,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/left
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="rightWatchButton">
@@ -10076,6 +10085,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/righ
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="frontWatchButton">
     <property name="geometry">
@@ -10104,6 +10116,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/fron
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="backWatchButton">
@@ -10134,6 +10149,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/back
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="enlargeButton">
     <property name="geometry">
@@ -10162,6 +10180,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/enla
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="shrinkButton">
@@ -10192,6 +10213,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/shri
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="selectRegionButton">
     <property name="geometry">
@@ -10221,6 +10245,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/sele
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QPushButton" name="deleteModelButton">
     <property name="geometry">
@@ -10249,6 +10276,9 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/dele
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

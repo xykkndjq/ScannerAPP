@@ -1933,6 +1933,7 @@ public:
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/topWatchButton_checked.png);}\n"
 ""));
+        topWatchButton->setCheckable(true);
         bottomWatchButton = new QPushButton(toolsGroupBox);
         bottomWatchButton->setObjectName(QStringLiteral("bottomWatchButton"));
         bottomWatchButton->setGeometry(QRect(100, 20, 60, 60));
@@ -1941,6 +1942,7 @@ public:
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/bottomWatchButton_checked.png);}\n"
 ""));
+        bottomWatchButton->setCheckable(true);
         leftWatchButton = new QPushButton(toolsGroupBox);
         leftWatchButton->setObjectName(QStringLiteral("leftWatchButton"));
         leftWatchButton->setGeometry(QRect(20, 180, 60, 60));
@@ -1948,6 +1950,7 @@ public:
         leftWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/leftWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/leftWatchButton_checked.png);}"));
+        leftWatchButton->setCheckable(true);
         rightWatchButton = new QPushButton(toolsGroupBox);
         rightWatchButton->setObjectName(QStringLiteral("rightWatchButton"));
         rightWatchButton->setGeometry(QRect(100, 180, 60, 60));
@@ -1955,6 +1958,7 @@ public:
         rightWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/rightWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/rightWatchButton_checked.png);}"));
+        rightWatchButton->setCheckable(true);
         frontWatchButton = new QPushButton(toolsGroupBox);
         frontWatchButton->setObjectName(QStringLiteral("frontWatchButton"));
         frontWatchButton->setGeometry(QRect(20, 100, 60, 60));
@@ -1962,6 +1966,7 @@ public:
         frontWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/frontWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/frontWatchButton_checked.png);}"));
+        frontWatchButton->setCheckable(true);
         backWatchButton = new QPushButton(toolsGroupBox);
         backWatchButton->setObjectName(QStringLiteral("backWatchButton"));
         backWatchButton->setGeometry(QRect(100, 100, 60, 60));
@@ -1969,6 +1974,7 @@ public:
         backWatchButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/backWatchButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/backWatchButton_checked.png);}"));
+        backWatchButton->setCheckable(true);
         enlargeButton = new QPushButton(toolsGroupBox);
         enlargeButton->setObjectName(QStringLiteral("enlargeButton"));
         enlargeButton->setGeometry(QRect(20, 260, 60, 60));
@@ -1976,6 +1982,7 @@ public:
         enlargeButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/enlargeButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/enlargeButton_checked.png);}"));
+        enlargeButton->setCheckable(true);
         shrinkButton = new QPushButton(toolsGroupBox);
         shrinkButton->setObjectName(QStringLiteral("shrinkButton"));
         shrinkButton->setGeometry(QRect(100, 260, 60, 60));
@@ -1983,6 +1990,7 @@ public:
         shrinkButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/shrinkButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/shrinkButton_checked.png);}"));
+        shrinkButton->setCheckable(true);
         selectRegionButton = new QPushButton(toolsGroupBox);
         selectRegionButton->setObjectName(QStringLiteral("selectRegionButton"));
         selectRegionButton->setGeometry(QRect(20, 340, 60, 60));
@@ -1990,6 +1998,7 @@ public:
         selectRegionButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/selectRegionButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/selectRegionButton_checked.png);}"));
+        selectRegionButton->setCheckable(true);
         deleteModelButton = new QPushButton(toolsGroupBox);
         deleteModelButton->setObjectName(QStringLiteral("deleteModelButton"));
         deleteModelButton->setGeometry(QRect(100, 340, 60, 60));
@@ -1997,6 +2006,7 @@ public:
         deleteModelButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/deleteModelButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}"));
+        deleteModelButton->setCheckable(true);
         TipPanel = new QGroupBox(ScanMainGUI);
         TipPanel->setObjectName(QStringLiteral("TipPanel"));
         TipPanel->setEnabled(true);
