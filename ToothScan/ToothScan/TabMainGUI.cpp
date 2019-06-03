@@ -380,7 +380,7 @@ void TabMainGUI::initVariable()
 	inlayButton->setCheckable(true);
 
 
-	jawToothButton = new CImageBtn("./Resources/images/inlay.png", QColor(255, 0, 234, 100), QStringLiteral("¶Ôò¢ÑÀ"));
+	jawToothButton = new CImageBtn("./Resources/images/inlay.png", QColor(0, 253, 255, 100), QStringLiteral("¶Ôò¢ÑÀ"));
 	jawToothButton->setCheckable(true);
 
 	facingButton = new QCheckBox(QStringLiteral("           ÌùÃæ"));
@@ -720,9 +720,9 @@ void TabMainGUI::constructIHM()
 
 	totalCrownButton->setGeometry(420, 100, 200, 50);
 	toothCrownButton->setGeometry(420, 180, 200, 50);
-	lossToothButton->setGeometry(420, 260, 200, 50);
-	inlayButton->setGeometry(420, 340, 200, 50);
-	jawToothButton->setGeometry(420, 420, 200, 50);
+	lossToothButton->setGeometry(420, 420, 200, 50);
+	inlayButton->setGeometry(420, 260, 200, 50);
+	jawToothButton->setGeometry(420, 340, 200, 50);
 
 
 }
@@ -1134,18 +1134,22 @@ void TabMainGUI::PatientInformationSave()
 				allJawScanTask = make_shared<CScanTask>();
 				allJawScanTask->Set_ScanType(eAllJawScan);
 				allJawScanTask->Set_TaskName((g_strScanName[eAllJawScan]));
-				pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
-				pUpperStitcing->Set_TaskType(eUpperStitching);
-				pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
-				pUpperStitcing->m_pSrcTask = upperScanTask;
-				pUpperStitcing->m_pDstTask = allJawScanTask;
-				CTaskManager::getInstance()->AddTask(pUpperStitcing, true);
-				pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
-				pLowerSitcing->Set_TaskType(eLowerStitching);
-				pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
-				pLowerSitcing->m_pSrcTask = lowerJawScanTask;
-				pLowerSitcing->m_pDstTask = allJawScanTask;
-				CTaskManager::getInstance()->AddTask(pLowerSitcing, true);
+				if(upperScanTask->Get_DentalImplant() != true){
+					pCStitchingTask pUpperStitcing = make_shared<CStitchingTask>();
+					pUpperStitcing->Set_TaskType(eUpperStitching);
+					pUpperStitcing->Set_TaskName((g_strScanName[eUpperJawScan]));
+					pUpperStitcing->m_pSrcTask = upperScanTask;
+					pUpperStitcing->m_pDstTask = allJawScanTask;
+					CTaskManager::getInstance()->AddTask(pUpperStitcing, true);
+				}
+				if(lowerJawScanTask->Get_DentalImplant() != true){
+					pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
+					pLowerSitcing->Set_TaskType(eLowerStitching);
+					pLowerSitcing->Set_TaskName((g_strScanName[eLowerJawScan]));
+					pLowerSitcing->m_pSrcTask = lowerJawScanTask;
+					pLowerSitcing->m_pDstTask = allJawScanTask;
+					CTaskManager::getInstance()->AddTask(pLowerSitcing, true);
+				}
 				if (pLowerJawGingivaScanTask) {
 					pCStitchingTask pLowerSitcing = make_shared<CStitchingTask>();
 					pLowerSitcing->Set_TaskType(eLowerStitching);
@@ -1164,15 +1168,17 @@ void TabMainGUI::PatientInformationSave()
 				}
 			}
 		}
-		if (upperScanTask)
+		if (upperScanTask) {
 			CTaskManager::getInstance()->AddTask(upperScanTask, true);
-		if (lowerJawScanTask)
-			CTaskManager::getInstance()->AddTask(lowerJawScanTask, true);
-		if (pUpperJawGingvaScanTask) {
-			CTaskManager::getInstance()->AddTask(pUpperJawGingvaScanTask, true);
+			if (pUpperJawGingvaScanTask) {
+				CTaskManager::getInstance()->AddTask(pUpperJawGingvaScanTask, true);
+			}
 		}
-		if (pLowerJawGingivaScanTask) {
-			CTaskManager::getInstance()->AddTask(pLowerJawGingivaScanTask, true);
+		if (lowerJawScanTask) {
+			CTaskManager::getInstance()->AddTask(lowerJawScanTask, true);
+			if (pLowerJawGingivaScanTask) {
+				CTaskManager::getInstance()->AddTask(pLowerJawGingivaScanTask, true);
+			}
 		}
 		if (allJawScanTask)
 			CTaskManager::getInstance()->AddTask(allJawScanTask, true);
@@ -1297,16 +1303,16 @@ void TabMainGUI::UpperJawPress()
 
 	if (upperJawButtonFlag == false)
 	{
-		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
+	//	ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_yes.png);}");
 		upperJawButtonFlag = true;
 		unMoulageFlag = true;
 
 		//doMoulage
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
 		MoulageFlag1 = false;
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
 		MoulageFlag2 = false;
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
 		MoulageFlag3 = false;
 		doMoulageFlag = false;
 		//spllitModel
@@ -1314,7 +1320,7 @@ void TabMainGUI::UpperJawPress()
 	}
 	else
 	{
-		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+	//	ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
 		upperJawButtonFlag = false;
 		if (lowerJawButtonFlag == false)
 		{
@@ -1327,16 +1333,19 @@ void TabMainGUI::LowerJawPress()
 {
 	if (lowerJawButtonFlag == false)
 	{
-		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
+	//	ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_yes.png);}");
 		lowerJawButtonFlag = true;
 		unMoulageFlag = true;
 
 		//doMoulage
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		ui.moulagePushButton_1->setChecked(false);
 		MoulageFlag1 = false;
-		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+	//	ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		ui.moulagePushButton_2->setChecked(false);
 		MoulageFlag2 = false;
-		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+//		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		ui.moulagePushButton_3->setChecked(false);
 		MoulageFlag3 = false;
 
 		doMoulageFlag = false;
@@ -1345,7 +1354,8 @@ void TabMainGUI::LowerJawPress()
 	}
 	else
 	{
-		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+	//	ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setChecked(false);
 		lowerJawButtonFlag = false;
 		if (upperJawButtonFlag == false)
 		{
@@ -1358,19 +1368,24 @@ void TabMainGUI::MoulagePress1()
 {
 	if (MoulageFlag1 == false)
 	{
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_yes.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_yes.png);}");
+		ui.moulagePushButton_1->setChecked(false);
 		MoulageFlag1 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+	//	ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		ui.moulagePushButton_2->setChecked(false);
 		MoulageFlag2 = false;
-		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+	//	ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		ui.moulagePushButton_3->setChecked(false);
 		MoulageFlag3 = false;
 		//unMoulage
-		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+	//	ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setChecked(false);
 		upperJawButtonFlag = false;
-		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+	//	ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setChecked(false);
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1379,7 +1394,8 @@ void TabMainGUI::MoulagePress1()
 	}
 	else if (MoulageFlag1 == true && MoulageFlag2 == false && MoulageFlag3 == false)
 	{
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+	//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		ui.moulagePushButton_1->setChecked(false);
 		MoulageFlag1 = false;
 		doMoulageFlag = false;
 	}
@@ -1389,19 +1405,24 @@ void TabMainGUI::MoulagePress2()
 {
 	if (MoulageFlag2 == false)
 	{
-		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_yes.png);}");
+		//ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_yes.png);}");
+		ui.moulagePushButton_2->setChecked(false);
 		MoulageFlag2 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		//ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		ui.moulagePushButton_1->setChecked(false);
 		MoulageFlag1 = false;
-		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		//ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		ui.moulagePushButton_3->setChecked(false);
 		MoulageFlag3 = false;
 		//unMoulage
-		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		//ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setChecked(false);
 		upperJawButtonFlag = false;
-		ui.lowerJawPushButton ->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		//ui.lowerJawPushButton ->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setChecked(false);
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1410,7 +1431,8 @@ void TabMainGUI::MoulagePress2()
 	}
 	else if (MoulageFlag2 == true && MoulageFlag1 == false && MoulageFlag3 == false)
 	{
-		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		//ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		ui.moulagePushButton_2->setChecked(false);
 		MoulageFlag2 = false;
 		doMoulageFlag = false;
 	}
@@ -1420,19 +1442,24 @@ void TabMainGUI::MoulagePress3()
 {
 	if (MoulageFlag3 == false)
 	{
-		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_yes.png);}");
+		//ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_yes.png);}");
+		ui.moulagePushButton_3->setChecked(false);
 		MoulageFlag3 = true;
 		doMoulageFlag = true;
 
 		//doMoulage
-		ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		//ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		ui.moulagePushButton_1->setChecked(false);
 		MoulageFlag1 = false;
-		ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		//ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		ui.moulagePushButton_2->setChecked(false);
 		MoulageFlag2 = false;
 		//unMoulage
-		ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		//ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		ui.upperJawPushButton->setChecked(false);
 		upperJawButtonFlag = false;
-		ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		//ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		ui.lowerJawPushButton->setChecked(false);
 		lowerJawButtonFlag = false;
 
 		unMoulageFlag = false;
@@ -1441,7 +1468,8 @@ void TabMainGUI::MoulagePress3()
 	}
 	else if (MoulageFlag3 == true && MoulageFlag1 == false && MoulageFlag2 == false)
 	{
-		ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		//ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		ui.moulagePushButton_3->setChecked(false);
 		MoulageFlag3 = false;
 		doMoulageFlag = false;
 	}
@@ -1500,6 +1528,7 @@ void TabMainGUI::ToothGroupClicked(int id)
 {
 	chooseID = id;
 	m_eScanType = (eScanType)(id -1);
+	return;
 	switch (id)
 	{
 	case 1:
@@ -1739,18 +1768,23 @@ void TabMainGUI::ToothButtonListPress()
 			toothFlagList[toothButtonIndex] = true;
 			toothID[toothButtonIndex] = chooseID;
 			//doMoulage
-			ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+		//	ui.moulagePushButton_1->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage1_no.png);}");
+			ui.moulagePushButton_1->setChecked(false);
 			MoulageFlag1 = false;
-			ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+		//	ui.moulagePushButton_2->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage2_no.png);}");
+			ui.moulagePushButton_2->setChecked(false);
 			MoulageFlag2 = false;
-			ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+		//	ui.moulagePushButton_3->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/moulage3_no.png);}");
+			ui.moulagePushButton_3->setChecked(false);
 			MoulageFlag3 = false;
 
 			doMoulageFlag = false;
 			//unMoulage
-			ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+		//	ui.upperJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/upperjaw_no.png);}");
+			ui.upperJawPushButton->setChecked(false);
 			upperJawButtonFlag = false;
-			ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+		//	ui.lowerJawPushButton->setStyleSheet("QPushButton{border-image: url(:/MainWidget/Resources/images/lowerjaw_no.png);}");
+			ui.lowerJawPushButton->setChecked(false);
 			lowerJawButtonFlag = false;
 
 			unMoulageFlag = false;

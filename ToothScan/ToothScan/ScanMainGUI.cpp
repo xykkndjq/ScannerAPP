@@ -181,7 +181,7 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.ScanJawScanBtn->setGraphicsEffect(defaultShadow);
 	setWindowFlags(Qt::FramelessWindowHint);
 	styleControl2(this);
-	//ui.progressBar->setVisible(false);
+	ui.progressBar->setVisible(false);
 	// 	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(ui.CutJawPanel);
 	// 	shadow_effect->setOffset(-5, 5);
 	// 	shadow_effect->setColor(Qt::gray);
@@ -1000,7 +1000,7 @@ void ScanMainGUI::resetValue()
 	m_pUpperJawGingvaModel = nullptr;
 	m_pLowJawGingvaModel = nullptr;
 	m_bsplitModelFlag = false;
-//	ui.progressBar->setVisible(false);
+	ui.progressBar->setVisible(false);
 	hideAllPanel();
 }
 
