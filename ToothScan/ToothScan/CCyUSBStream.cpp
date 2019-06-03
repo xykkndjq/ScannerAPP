@@ -735,14 +735,14 @@ namespace Communication
 		return minDLPFlag;
 	}
 
-	bool CCyUSBStream::SetScanDLPLight()
+	/*bool CCyUSBStream::SetScanDLPLight()
 	{
 		LONG length = 11;
 		bool adjustDLPFlag = m_EndPtOut->XferData(ScanDLPLight, length);
 		_sleep(1000);
 		cout << "adjustDLPFlag = " << adjustDLPFlag << endl;
 		return adjustDLPFlag;
-	}
+	}*/
 
 	bool CCyUSBStream::initRealTimeParameter()
 	{

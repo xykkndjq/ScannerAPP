@@ -39,7 +39,7 @@ namespace Communication
 	static uchar MaxDLPLight[5] = { 0XAA, 0XBB, 0X05, 0X07, 0X00 };//最亮
 	static uchar MidDLPLight[5] = { 0XAA, 0XBB, 0X05, 0X07, 0X01 };//中等
 	static uchar MinDLPLight[5] = { 0XAA, 0XBB, 0X05, 0X07, 0X02 };//最弱
-	static uchar ScanDLPLight[11] = { 0XAA, 0XBB, 0X0B, 0X07, 0X03, 0X50, 0X00, 0X60, 0X00, 0X5D, 0X00 };//最弱
+	//static uchar ScanDLPLight[11] = { 0XAA, 0XBB, 0X0B, 0X07, 0X03, 0X50, 0X00, 0X60, 0X00, 0X5D, 0X00 };//最弱
 
 	static uchar SMReset[4] = { 0XAA, 0XBB, 0X04, 0X03};
 	static uchar SMRotOneDeg[9] = { 0XAA, 0XBB, 0X09, 0X02, 0X00, 0X00, 0X00, 0X00, 0X00 };
@@ -64,7 +64,7 @@ namespace Communication
 			 bool SetMaxDLPLight();//设置光机最亮
 			 bool SetMidDLPLight();//设置光机中等
 			 bool SetMinDLPLight();//设置光机最弱
-			 bool SetScanDLPLight();//设置光机扫描亮度
+			//bool SetScanDLPLight();//设置光机扫描亮度
 									//实时显示
 			 bool RealModeFuction();//实时获取数据
 			 bool initRealTimeParameter();//实时初始化

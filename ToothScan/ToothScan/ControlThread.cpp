@@ -425,7 +425,8 @@ void ControlThread::allJawScan()
 	_sleep(4000);
 #endif
 
-	l_usbStream.SetScanDLPLight();
+	//l_usbStream.SetScanDLPLight();
+	l_usbStream.SetMinDLPLight();
 	clock_t time1, time2, time3, time4;
 	for (int scan_index = 0; scan_index < SCAN_ALLJAW_POS; scan_index++)
 	{
@@ -869,7 +870,8 @@ void ControlThread::normalScan()
 	_sleep(4000);
 #endif
 
-	l_usbStream.SetScanDLPLight();//设置光机亮度
+	//l_usbStream.SetScanDLPLight();//设置光机亮度
+	l_usbStream.SetMinDLPLight();
 
 	clock_t time1, time2, time3, time4, time5, time6;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)

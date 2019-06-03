@@ -559,17 +559,23 @@ void ScanMainGUI::ToothCalibrateSlot()
 {
 	if (m_usbDeviceState)
 	{
-		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("开始标定!"));
-		box.setStandardButtons(QMessageBox::Yes);
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("开始标定!"), QMessageBox::Yes | QMessageBox::No, NULL);
+		//box.setStandardButtons(QMessageBox::Yes);
 		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-		box.exec();
-		if (controlScanQThread->isRunning() == false)
+		box.setButtonText(QMessageBox::No, QStringLiteral("返 回"));
+		//box.exec();
+
+		if (box.exec() == QMessageBox::Yes)
 		{
-			//启动子线程，但没有启动线程处理函数
-			controlScanQThread->start();
-			ControlScanThread->setFlage(false);
+			if (controlScanQThread->isRunning() == false)
+			{
+				//启动子线程，但没有启动线程处理函数
+				controlScanQThread->start();
+				ControlScanThread->setFlage(false);
+			}
+			emit startControlCalibrationSignal();
 		}
-		emit startControlCalibrationSignal();
+		
 	}
 	else
 	{
