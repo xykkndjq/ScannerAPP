@@ -18,7 +18,7 @@ void CSplitModelBtn::paintEvent(QPaintEvent * qevent)
 {
 //	Q_UNUSED(event);
 	QPainter painter(this);
-	painter.begin(this);
+//	painter.begin(this);
 	QRect dirtyRect = qevent->rect();
 	//QImage resultImage;
 	//resultImage = QImage(QSize(dirtyRect.width(),dirtyRect.height()), QImage::Format_ARGB32_Premultiplied);
@@ -52,5 +52,5 @@ void CSplitModelBtn::paintEvent(QPaintEvent * qevent)
 // 		painter.drawImage(0, 0, resultImage);
 	}
 	
-	painter.end();
+	//painter.end();
 }

@@ -2,7 +2,7 @@
 #include "TaskManager.h"
 #include "plyio.h"
 #define NUITEST
-
+float g_xMinRotLim = -21.7f, g_yMinRotLim = -180.0f, g_xMaxRotLim = 158.3f, g_yMaxRotLim = 180.0f;
 void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
 	orth::MeshModel meshModel;
 	//pTask->pTeethModel->getMeshModel(meshModel);
@@ -400,9 +400,9 @@ void ScanMainGUI::setConnections()
 	//MeshandGpa
 	//connect(this, SIGNAL(gpaMeshSignal(int)), ControlComputeThread, SLOT(GPAMeshing(int)));
 	//保存切割后模型
-	connect(this, SIGNAL(saveCutModelSignal()), this, SLOT(saveCutModelSlot()));
+	//connect(this, SIGNAL(saveCutModelSignal()), this, SLOT(saveCutModelSlot()));
 	//保存所有模型到文件
-	connect(this, SIGNAL(saveModeltoFileSignal()), this, SLOT(saveModeltoFileSlot()));
+	//connect(this, SIGNAL(saveModeltoFileSignal()), this, SLOT(saveModeltoFileSlot()));
 
 	//远距离配准，将上颌、下颌以及全颌进行配准
 	connect(this, SIGNAL(farRegistrationSignal()), ControlComputeThread, SLOT(FarRegistrationSlot()));
@@ -1231,8 +1231,8 @@ void ScanMainGUI::setRotationWaverSlot()
 
 	ui.rotationLineEdit->setText(QString("%1").arg(ay));
 	ui.waverLineEdit->setText(QString("%1").arg(ax));
-
 	ax -= 68.3;
+	
 }
 
 void ScanMainGUI::updateCamera()
@@ -1462,6 +1462,16 @@ void ScanMainGUI::ShowLastScanTask(bool bCurrentTaskSame)
 
 void ScanMainGUI::compensationBtnClick()
 {
+	float rotx = 0.0f, roty = 0.0f;
+	glWidget->GetMotorRot(rotx, roty);
+	if (rotx>g_xMaxRotLim|| rotx<g_xMinRotLim|| roty>g_yMaxRotLim|| roty<g_yMinRotLim) {
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("超过电机旋转角度，请换个角度补扫!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+		return;
+	}
+
 	ui.compensationScanPanel->setVisible(false);
 	ui.discardBtn->setEnabled(true);
 	compensationFlag = true;

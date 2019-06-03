@@ -284,5 +284,7 @@
         <file>Resources/images/disable/selectRegionButton_disable.png</file>
         <file>Resources/images/disable/shrinkButton_disable.png</file>
         <file>Resources/images/disable/topWatchButton_disable.png</file>
+        <file>Resources/images/loading.gif</file>
+        <file>Resources/images/progressbarchunk.png</file>
     </qresource>
 </RCC>

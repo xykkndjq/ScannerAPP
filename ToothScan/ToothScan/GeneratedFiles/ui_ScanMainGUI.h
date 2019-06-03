@@ -1735,8 +1735,8 @@ public:
         teethBtn_18->setObjectName(QStringLiteral("teethBtn_18"));
         teethBtn_18->setGeometry(QRect(6, 220, 40, 42));
         teethBtn_18->setAutoFillBackground(false);
-        teethBtn_18->setStyleSheet(QLatin1String("QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);\\nbackground-color: rgba(255, 255, 255, 0)}\n"
-"QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);\\nbackground-color: rgba(255, 255, 255, 0)}"));
+        teethBtn_18->setStyleSheet(QLatin1String("QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}\n"
+"QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/4/18.png);}"));
         teethBtn_18->setCheckable(true);
         teethBtn_21 = new QToolButton(upperJawGroupBox);
         teethBtn_21->setObjectName(QStringLiteral("teethBtn_21"));
@@ -2166,9 +2166,9 @@ public:
         progressBar = new QProgressBar(ScanMainGUI);
         progressBar->setObjectName(QStringLiteral("progressBar"));
         progressBar->setGeometry(QRect(760, 1000, 400, 30));
-        progressBar->setStyleSheet(QLatin1String("QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}\n"
-"QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}"));
-        progressBar->setValue(0);
+        progressBar->setStyleSheet(QLatin1String("QProgressBar{border: none;color: rgb(128,128,128);text-align: center;   background: rgb(255, 255, 255,100);}\n"
+"QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/progressbarchunk.png);}"));
+        progressBar->setValue(20);
         TipPanel->raise();
         compensationScanPanel->raise();
         ScanJawGroup->raise();
