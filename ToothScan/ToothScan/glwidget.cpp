@@ -1847,10 +1847,11 @@ void GLWidget::makeBackGround()
 		-1.0f,1.0f,-1.0f ,  0.0f,1.0f
 	};
 	m_backgroundModel = make_shared<CBackGroundObject>(":/MainWidget/background.vs", ":/MainWidget/background.fs", this);
-	QString name_ = ":/MainWidget/Resources/images/background-grey3.png";
+	//QString name_ = ":/MainWidget/Resources/images/background-grey.png";
+	QString name_ = ":/MainWidget/Resources/images/background-purple.png";
 	m_backgroundModel->readPicture(name_);
 	m_backgroundModel->makeObject(vertData, 4);
-	m_backgroundModel->Set_Visible(false);
+	m_backgroundModel->Set_Visible(true);
 	//m_ToolsModelsVt.push_back(m_backgroundModel);
 	this->update();
 }

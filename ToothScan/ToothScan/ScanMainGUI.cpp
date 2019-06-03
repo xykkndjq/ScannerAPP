@@ -162,7 +162,7 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.DentalImplantFinishPanel->move(1600, 50);
 	ui.DentalImplantPanel->move(1600, 50);
 	addShadow2(ui.topCameraLabel);
-	addShadow2(ui.bottomCameraLabel);
+	//addShadow2(ui.bottomCameraLabel);
 	// 	ui.ScanJawGroup->setStyleSheet("background-color:rgb(225,225,225);");
 	// 	ui.CutJawFinishPanel->setStyleSheet("background-color:rgb(215,215,215);");
 	// 	ui.CutJawPanel->setStyleSheet("background-color:rgb(215,215,215);");
@@ -427,6 +427,7 @@ void ScanMainGUI::setConnections()
 
 	/*----------------------Calibrate标定子页面---------------------*/
 	connect(tabMainPage->ui.calibrationPushButton, SIGNAL(clicked()), this, SLOT(ToothCalibrateSlot()));
+
 	connect(this, SIGNAL(startControlCalibrationSignal()), ControlScanThread, SLOT(controlCalibrationScan()));
 	//connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
 	connect(ControlScanThread, SIGNAL(calibImageSignal(int)), this, SLOT(calibImageCameraSlot(int)));//展示标定照片
@@ -556,17 +557,27 @@ void ScanMainGUI::closeBtnClicked()
 
 void ScanMainGUI::ToothCalibrateSlot()
 {
-	QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("开始标定!"));
-	box.setStandardButtons(QMessageBox::Yes);
-	box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-	box.exec();
-	if (controlScanQThread->isRunning() == false)
+	if (m_usbDeviceState)
 	{
-		//启动子线程，但没有启动线程处理函数
-		controlScanQThread->start();
-		ControlScanThread->setFlage(false);
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("开始标定!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+		if (controlScanQThread->isRunning() == false)
+		{
+			//启动子线程，但没有启动线程处理函数
+			controlScanQThread->start();
+			ControlScanThread->setFlage(false);
+		}
+		emit startControlCalibrationSignal();
 	}
-	emit startControlCalibrationSignal();
+	else
+	{
+		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备未与电脑连接!"));
+		box.setStandardButtons(QMessageBox::Yes);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.exec();
+	}
 }
 
 //void ScanMainGUI::GlobalCalibrateSlot()
@@ -730,7 +741,7 @@ void ScanMainGUI::doScanDialogSlot(QJsonObject scanObj)
 	controlComputeQThread->start();
 	{
 		ui.topCameraLabel->setVisible(true);
-		ui.bottomCameraLabel->setVisible(true);
+		//ui.bottomCameraLabel->setVisible(true);
 		ui.cameraImageLabel->setVisible(true);
 	}
 	
@@ -2248,7 +2259,7 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	tabMainPage->hide();
 	{
 		ui.topCameraLabel->setVisible(false);
-		ui.bottomCameraLabel->setVisible(false);
+		//ui.bottomCameraLabel->setVisible(false);
 		ui.cameraImageLabel->setVisible(false);
 	}
 	this->ui.orderInfoPanel->setVisible(true);
