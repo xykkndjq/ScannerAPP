@@ -937,8 +937,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 			QQuaternion trans;
 			trackBallTest.move(pixelPosToViewPos(event->pos()), trans);
 			GetRotateMotorRot(xRot, yRot, trackBallTest);
-			if (xRot > m_xMaxRotLim || xRot < m_xMinRotLim)
-				return;
+// 			if (xRot > m_xMaxRotLim || xRot < m_xMinRotLim)
+// 				return;
 
 			//m_trackBall.move(pixelPosToViewPos(event->pos()), trans);
 			//m_trackBallTest = m_trackBall;
@@ -1005,8 +1005,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *  event)
 		QQuaternion trans;
 		trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
 		GetRotateMotorRot(xRot, yRot, trackBallTest);
-		if (xRot > m_xMaxRotLim || xRot  < m_xMinRotLim )
-			return;
+// 		if (xRot > m_xMaxRotLim || xRot  < m_xMinRotLim )
+// 			return;
 		m_trackBallTest.release(pixelPosToViewPos(event->pos()), trans);
 	}
 

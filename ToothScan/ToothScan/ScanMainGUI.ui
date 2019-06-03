@@ -6322,7 +6322,6 @@ background-color:rgba(248,250,250,0);</string>
    <zorder>teethNoLabel8</zorder>
    <zorder>teethNoLabel6</zorder>
    <zorder>teethNoLabel7</zorder>
-   <zorder>cameraGroupBox</zorder>
   </widget>
   <widget class="QGroupBox" name="TeethStitchingPanel">
    <property name="enabled">
@@ -9340,8 +9339,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/17.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}
+QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/4/18.png);}</string>
      </property>
      <property name="text">
       <string>18</string>
@@ -11397,11 +11396,11 @@ background-color:rgba(248,250,250,0);</string>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QProgressBar{border: none;color: white;text-align: center;   background: rgb(68, 69, 73);}
-QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}</string>
+    <string notr="true">QProgressBar{border: none;color: rgb(128,128,128);text-align: center;   background: rgb(255, 255, 255,100);}
+QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/progressbarchunk.png);}</string>
    </property>
    <property name="value">
-    <number>0</number>
+    <number>20</number>
    </property>
   </widget>
   <zorder>TipPanel</zorder>
@@ -11420,7 +11419,6 @@ QProgressBar::chunk {border: none;background: rgb(0, 160, 230);}</string>
   <zorder>cameraGroupBox</zorder>
   <zorder>DentalImplantFinishPanel</zorder>
   <zorder>progressBar</zorder>
-  <zorder>OralSubstitutePanel_2</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

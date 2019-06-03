@@ -36,7 +36,7 @@ CHeaderCheckBtn::~CHeaderCheckBtn()
 void CHeaderCheckBtn::paintEvent(QPaintEvent * qEvent)
 {
 	QPainter pPainter(this);
-	pPainter.begin(this);
+	//pPainter.begin(this);
 	QRect rtBtn = qEvent->rect();
 	QString strIcon;
 	QColor crBgColor = m_unCheckBgColor, crFontColor;
@@ -70,5 +70,5 @@ void CHeaderCheckBtn::paintEvent(QPaintEvent * qEvent)
 		pPainter.setBrush(brush);
 		pPainter.drawRoundedRect(QRect(0,rtBtn.height()-8,rtBtn.width(),8),5,5);
 	}
-	pPainter.end();
+	//pPainter.end();
 }

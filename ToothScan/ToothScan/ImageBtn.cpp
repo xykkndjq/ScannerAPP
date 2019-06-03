@@ -20,7 +20,7 @@ void CImageBtn::paintEvent(QPaintEvent * qEvent)
 	QPainter pPainter(this);
 	QRect rtBtn = qEvent->rect();
 	pPainter.setRenderHint(QPainter::Antialiasing, true);
-	pPainter.begin(this);
+	//pPainter.begin(this);
 	pPainter.setBackgroundMode(Qt::BGMode::TransparentMode);
 	pPainter.setCompositionMode(QPainter::CompositionMode_Source);
 	//pPainter.fillRect(rtBtn, QColor(255, 255, 255, 255));
@@ -48,7 +48,7 @@ void CImageBtn::paintEvent(QPaintEvent * qEvent)
 	}
 	pPainter.setPen(orginPen);
 	pPainter.setBrush(orginBrush);
-	pPainter.end();
+	//pPainter.end();
 }
 
 
@@ -85,13 +85,13 @@ void CTeethImgBtn::paintEvent(QPaintEvent * qEvent)
 {
 	QPainter pPainter(this);
 	QRect rtBtn = qEvent->rect();
-	pPainter.begin(this);
+	//pPainter.begin(this);
 	pPainter.setBackgroundMode(Qt::BGMode::TransparentMode);
 	pPainter.drawImage(rtBtn, m_imBgImg);
 	QTextOption option;
 	option.setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
 	pPainter.drawText(rtBtn, text(), option);
-	pPainter.end();
+	//pPainter.end();
 }
 
 void CTeethImgBtn::mouseMoveEvent(QMouseEvent *e)

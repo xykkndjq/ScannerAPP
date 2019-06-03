@@ -268,5 +268,7 @@
         <file>Resources/images/Moulage3_no.png</file>
         <file>Resources/images/Moulage3_yes.png</file>
         <file>Resources/images/orderIconCheck.gif</file>
+        <file>Resources/images/loading.gif</file>
+        <file>Resources/images/progressbarchunk.png</file>
     </qresource>
 </RCC>
