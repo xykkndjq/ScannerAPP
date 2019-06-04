@@ -1054,7 +1054,7 @@ void GLWidget::glUseProgram(GLuint program)
 	QOpenGLFunctions::glUseProgram(program);
 }
 
-pCTeethModel GLWidget::makeObject()
+pCTeethModel GLWidget::makeObject(float fMaterialType)
 {
 	/*point_.setX(mm.P[mm.F[0].x].x / 1.0);
 	point_.setY(mm.P[mm.F[0].x].y / 1.0);
@@ -1145,6 +1145,7 @@ pCTeethModel GLWidget::makeObject()
 	// 	vbo->allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
 
 	pCTeethModel l_TeethModel = make_shared<CTeethModel>(program, vbo, mm);
+	l_TeethModel->setMaterialType(fMaterialType);
 	l_TeethModel->makeObject();
 	m_ModelsVt.push_back(l_TeethModel);
 	this->update();
@@ -1181,7 +1182,7 @@ void GLWidget::TeethSegmentRun(const std::string label_file_path)
 
 void GLWidget::reSetValue()
 {
-	FOV = 20;
+	FOV = 30;
 	xRot = 0;
 	yRot = 0;
 	zRot = 0;
@@ -1876,16 +1877,16 @@ void GLWidget::makeAxisObject()
 	m_ToolsModelsVt.push_back(m_axisMode);
 }
 
-void GLWidget::bgGroundmoveDown()
+void GLWidget::bgGroundmoveDown(int nStep)
 {
-	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() - 1);
+	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() - nStep);
 	m_groundModel->translate(m_bgGroundModelPos);
 	update();
 }
 
-void GLWidget::bgGroundmoveUp()
+void GLWidget::bgGroundmoveUp(int nStep)
 {
-	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() + 1);
+	m_bgGroundModelPos.setY(m_bgGroundModelPos.y() + nStep);
 	m_groundModel->translate(m_bgGroundModelPos);
 	update();
 }

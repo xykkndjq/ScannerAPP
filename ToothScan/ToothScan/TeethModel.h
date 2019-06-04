@@ -22,12 +22,15 @@ public:
 	void cutModelUnderBg(QVector3D bgGroundModelPos);
 	void getMeshModel(orth::MeshModel &meshModel);
 	orth::MeshModel m_model;
+	void setMaterialType(float fMaterialType) {
+		m_fMaterialType = fMaterialType;
+	}
 private:
 	QPoint m_drawRectClickPosition;
 	QPoint m_drawRectEndPosition;
 	float m_xTrans;
 	float m_yTrans;
-	
+	float m_fMaterialType;
 	QVector<GLfloat> m_vertData;
 	orth::PointLabel m_Selected;
 };

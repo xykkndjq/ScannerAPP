@@ -1263,7 +1263,6 @@ void ComputeThread::GPAMeshing()
 			//	pointcloudrotationandtotalmesh(pScanTask->m_mModel[data_index].P, pScanTask->m_mModel[data_index].N, pScanTask->m_mModel[data_index].C, rt_matrixs[data_index], totalMeshModel);
 			//}
 			time3 = clock();
-
 			//orth::MeshModel totalMeshModel_copy;
 			//totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
@@ -1275,6 +1274,15 @@ void ComputeThread::GPAMeshing()
 			/*--------------------------------------------------------------------------------------------------------------------------------*/
 			time4 = clock();
 			pScanTask->m_mAllModel = totalMeshModel;
+			if (pScanTask->Get_DentalImplant() == true) {	//Æ´½Ó
+				pCScanTask pallJawTask = CTaskManager::getInstance()->getTask(eAllJawScan);
+				if (pallJawTask) {
+					orth::MeshModel l_tmpModel, l_dstModel;
+					scan::Registration reg(1.0, 15.0, 50);
+					pallJawTask->pTeethModel->getMeshModel(l_dstModel);
+					reg.FarRegist(l_dstModel, pScanTask->m_mAllModel);
+				}
+			}
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
 			cout << "reconstruction is finished..." << endl;
 		}
@@ -1420,13 +1428,13 @@ void ComputeThread::Stitching()
 	else {
 		cout << "The registration of one Jaw is failure..." << endl;
 	}
-	if (pSrcTask->Get_DentalImplant() == true) {
-		if (reg.FarRegist(l_tmpModel, pSrcTask->m_dentalImplantMeshModel)) {
-			//reg.FarRegist(l_dstModel, l_tmpModel);
-			//l_vtSucModel.push_back(l_tmpModel);
-			//pSrcTask->m_mAllModel = l_tmpModel;
-		}
-	}
+// 	if (pSrcTask->Get_DentalImplant() == true) {
+// 		if (reg.FarRegist(l_tmpModel, pSrcTask->m_dentalImplantMeshModel)) {
+// 			//reg.FarRegist(l_dstModel, l_tmpModel);
+// 			//l_vtSucModel.push_back(l_tmpModel);
+// 			//pSrcTask->m_mAllModel = l_tmpModel;
+// 		}
+// 	}
 // 	if (l_vtSucModel.size() > 0) {
 // 		l_vtSucModel.push_back(l_dstModel);
 // 		orth::MeshModel dstAllModel;

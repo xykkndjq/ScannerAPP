@@ -104,7 +104,7 @@ public:
 	//13 获取x y 角度
 	void GetMotorRot(float &xrot, float &yrot);
 	void CutModelInBox(orth::MeshModel &meshModel);
-	pCTeethModel makeObject();
+	pCTeethModel makeObject(float fMaterialType = 0.0f);
 
 	vector<float> vertices_in;
 	vector<float> normal_in;
@@ -143,7 +143,7 @@ private:
 
 	unsigned int SCR_WIDTH = 1920;
 	unsigned int SCR_HEIGHT = 1080;
-	float FOV = 20.0f;
+	float FOV = 30.0f;
 
     QColor clearColor;
     QPoint lastPos;
@@ -246,8 +246,8 @@ public:
 	void setbkGroundShowValue(bool bShow);
 	bool getbkGroundShowValue();
 	//上下移动
-	void bgGroundmoveDown();
-	void bgGroundmoveUp();
+	void bgGroundmoveDown(int nStep);
+	void bgGroundmoveUp(int nStep);
 	void showBkGround(bool bShow);
 	void cutModelUnderBg();
 	void setBgColor(QVector4D color);

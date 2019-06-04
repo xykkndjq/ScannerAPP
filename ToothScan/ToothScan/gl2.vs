@@ -37,7 +37,7 @@ void main()
 		{sflag = 0.0;}
 	else
 		{sflag = 1.0;}
-	if(selectedAreaEnd.x - selectedAreaBegin.x > 0 && selectedAreaEnd.y > selectedAreaBegin.y > 0)
+	if(selectedAreaEnd.x - selectedAreaBegin.x > 0 && selectedAreaEnd.y - selectedAreaBegin.y > 0)
 	{
 		if(p_2.x/p_2.w > selectedAreaBegin.x && p_2.y/p_2.w > selectedAreaBegin.y	&& p_2.x/p_2.w < selectedAreaEnd.x && p_2.y/p_2.w < selectedAreaEnd.y)
 		{

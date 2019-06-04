@@ -182,6 +182,14 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	setWindowFlags(Qt::FramelessWindowHint);
 	styleControl2(this);
 	ui.progressBar->setVisible(false);
+	QButtonGroup *toothRadioButtonGroup = new QButtonGroup();
+	toothRadioButtonGroup->setExclusive(true);
+	toothRadioButtonGroup->addButton(ui.topWatchButton);
+	toothRadioButtonGroup->addButton(ui.bottomWatchButton);
+	toothRadioButtonGroup->addButton(ui.frontWatchButton);
+	toothRadioButtonGroup->addButton(ui.backWatchButton);
+	toothRadioButtonGroup->addButton(ui.leftWatchButton);
+	toothRadioButtonGroup->addButton(ui.rightWatchButton);
 	// 	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(ui.CutJawPanel);
 	// 	shadow_effect->setOffset(-5, 5);
 	// 	shadow_effect->setColor(Qt::gray);
@@ -890,35 +898,47 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 		ui.stitchingUpperJawBtn->setVisible(true);
 		ui.stitchingUpperJawBtn->setChecked(true);
 		m_pupperTeethModel->Set_Visible(true);
+		m_pupperTeethModel->setMaterialType(0.0f);
+		m_pupperTeethModel->makeObject();
 		glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
 	}
 	if (m_plowerTeethModel) {
 		ui.stitchingLowerJawBtn->setVisible(true);
 		ui.stitchingLowerJawBtn->setChecked(true);
+		m_plowerTeethModel->setMaterialType(0.0f);
+		m_plowerTeethModel->makeObject();
 		m_plowerTeethModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
 	}
 	if (m_pLowerDentalImplantModel) {
 		ui.stitchingLowerJawDenBtn->setVisible(true);
 		ui.stitchingLowerJawDenBtn->setChecked(true);
+		m_pLowerDentalImplantModel->setMaterialType(0.0f);
+		m_pLowerDentalImplantModel->makeObject();
 		m_pLowerDentalImplantModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pLowerDentalImplantModel);
 	}
 	if (m_pUpperDentalImplantModel) {
 		ui.stitchingUpperJawDenBtn->setVisible(true);
 		ui.stitchingUpperJawDenBtn->setChecked(true);
+		m_pUpperDentalImplantModel->setMaterialType(0.0f);
+		m_pUpperDentalImplantModel->makeObject();
 		m_pUpperDentalImplantModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pUpperDentalImplantModel);
 	}
 	if (m_pLowJawGingvaModel) {
 		ui.stitchingLowerJawGingivaBtn->setVisible(true);
 		ui.stitchingLowerJawGingivaBtn->setChecked(true);
+		m_pLowJawGingvaModel->setMaterialType(0.0f);
+		m_pLowJawGingvaModel->makeObject();
 		m_pLowJawGingvaModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pLowJawGingvaModel);
 	}
 	if (m_pUpperJawGingvaModel) {
 		ui.stitchingUpperJawGingivaBtn->setVisible(true);
 		ui.stitchingUpperJawGingivaBtn->setChecked(true);
+		m_pUpperJawGingvaModel->setMaterialType(0.0f);
+		m_pUpperJawGingvaModel->makeObject();
 		m_pUpperJawGingvaModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pUpperJawGingvaModel);
 	}
@@ -1163,15 +1183,15 @@ void ScanMainGUI::showCutSurfaceSlot(bool bShow)
 void ScanMainGUI::movecutHeightSpinBoxSlot()
 {
 	int curValue = ui.cutHeightSpinBox->value();
-	ui.cutHeightSpinBox->setValue(curValue);
+//	ui.cutHeightSpinBox->setValue(curValue);
 	if (curValue > globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveUp();
+		glWidget->bgGroundmoveUp(curValue - globalSpinCutValue);
 		globalSpinCutValue = curValue;
 	}
 	else if (curValue < globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveDown();
+		glWidget->bgGroundmoveDown(globalSpinCutValue - curValue);
 		globalSpinCutValue = curValue;
 	}
 
@@ -1180,15 +1200,15 @@ void ScanMainGUI::movecutHeightSpinBoxSlot()
 void ScanMainGUI::movecutHeightSliderSlot()
 {
 	int curValue = ui.cutHeightSlider->value();
-	ui.cutHeightSpinBox->setValue(curValue);
+	//ui.cutHeightSpinBox->setValue(curValue);
 	if (curValue > globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveUp();
+		glWidget->bgGroundmoveUp(curValue - globalSpinCutValue);
 		globalSpinCutValue = curValue;
 	}
 	else if (curValue < globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveDown();
+		glWidget->bgGroundmoveDown(globalSpinCutValue - curValue);
 		globalSpinCutValue = curValue;
 	}
 }
@@ -2007,10 +2027,19 @@ void ScanMainGUI::updateTaskModel()
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
 		if(pCurrentTask->m_mModel.size()>0){
-			int scan_index = pCurrentTask->m_mModel.size() - 1;
-			glWidget->mm = pCurrentTask->m_mModel[scan_index];
-			glWidget->makeObject();
-			glWidget->update();
+			glWidget->m_ModelsVt.clear();
+			for (int i = 0; i < pCurrentTask->m_mModel.size();i++) {
+				glWidget->mm = pCurrentTask->m_mModel[i];
+				if (i == pCurrentTask->m_mModel.size() - 1)
+					glWidget->makeObject(1.0f);
+				else
+					glWidget->makeObject();
+				glWidget->update();
+			}
+// 			int scan_index = pCurrentTask->m_mModel.size() - 1;
+// 			glWidget->mm = pCurrentTask->m_mModel[scan_index];
+// 			glWidget->makeObject(1.0f);
+// 			glWidget->update();
 		}
 	}
 }
@@ -2151,7 +2180,7 @@ void ScanMainGUI::StitchFinishSlot()
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 			//if (pTask->m_mAllModel.size() > 0) {
 				glWidget->mm = pSrcTask->m_mAllModel;
-				pSrcTask->pTeethModel = glWidget->makeObject();
+				pSrcTask->pTeethModel = glWidget->makeObject(1.0f);
 				if(m_pallTeethModel){
 					glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 					m_pallTeethModel->Set_Visible(true);
@@ -2220,7 +2249,7 @@ void ScanMainGUI::taskTeethSititFinishSlot()
 			glWidget->m_ModelsVt.clear();
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 			glWidget->mm = pDstTask->m_mRegistrationModels.back();
-			pDstTask->pTeethModel = glWidget->makeObject();
+			pDstTask->pTeethModel = glWidget->makeObject(1.0f);
 			if (pCurrentTask->Get_TaskType() == eUpperTeethStit) {		//ÉÏò¢Æ´½Ó
 				//pDstTask->pTeethModel->makeObject();
 				m_pupperTeethModel = pDstTask->pTeethModel;
