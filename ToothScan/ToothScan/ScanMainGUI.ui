@@ -6307,7 +6307,7 @@ background-color:rgba(248,250,250,0);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>C:/Users/CAMNODE06/.designer/backup/Resources/images/daixingpan.png</pixmap>
+     <pixmap>Resources/images/daixingpan.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -10300,7 +10300,7 @@ QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/dele
      <string/>
     </property>
     <property name="checkable">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

@@ -112,7 +112,7 @@ public:
         icon.addFile(QStringLiteral(":/MainWidget/Resources/images/new.png"), QSize(), QIcon::Normal, QIcon::Off);
         newPushButton->setIcon(icon);
         newPushButton->setIconSize(QSize(22, 22));
-        newPushButton->setCheckable(true);
+        newPushButton->setCheckable(false);
         openPushButton = new QPushButton(orderGroupBox);
         openPushButton->setObjectName(QStringLiteral("openPushButton"));
         openPushButton->setGeometry(QRect(132, 45, 97, 48));
@@ -124,7 +124,7 @@ public:
         icon1.addFile(QStringLiteral(":/MainWidget/Resources/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
         openPushButton->setIcon(icon1);
         openPushButton->setIconSize(QSize(22, 22));
-        openPushButton->setCheckable(true);
+        openPushButton->setCheckable(false);
         watchPushButton = new QPushButton(orderGroupBox);
         watchPushButton->setObjectName(QStringLiteral("watchPushButton"));
         watchPushButton->setGeometry(QRect(239, 45, 97, 48));
@@ -136,7 +136,7 @@ public:
         icon2.addFile(QStringLiteral(":/MainWidget/Resources/images/preview.png"), QSize(), QIcon::Normal, QIcon::Off);
         watchPushButton->setIcon(icon2);
         watchPushButton->setIconSize(QSize(22, 22));
-        watchPushButton->setCheckable(true);
+        watchPushButton->setCheckable(false);
         orderDateGroupBox = new QGroupBox(orderGroupBox);
         orderDateGroupBox->setObjectName(QStringLiteral("orderDateGroupBox"));
         orderDateGroupBox->setGeometry(QRect(43, 177, 389, 55));
@@ -249,7 +249,7 @@ public:
         icon3.addFile(QStringLiteral(":/MainWidget/Resources/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
         savePushButton->setIcon(icon3);
         savePushButton->setIconSize(QSize(22, 22));
-        savePushButton->setCheckable(true);
+        savePushButton->setCheckable(false);
         orderScanGroupBox = new QGroupBox(orderInforGroupBox);
         orderScanGroupBox->setObjectName(QStringLiteral("orderScanGroupBox"));
         orderScanGroupBox->setGeometry(QRect(470, 0, 1450, 980));

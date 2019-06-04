@@ -26,7 +26,7 @@ namespace tinyply
 		__declspec (dllexport) plyio();
 		__declspec (dllexport) ~plyio();
 
-		void __declspec (dllexport) write_ply_example(const std::string & filename, orth::MeshModel &mm, const bool is_binary);
+		void __declspec (dllexport) write_ply_file(const std::string & filename, orth::MeshModel &mm, const bool is_binary);
 
 		void __declspec (dllexport) read_ply_file(const std::string & filepath, orth::MeshModel &mm);
 

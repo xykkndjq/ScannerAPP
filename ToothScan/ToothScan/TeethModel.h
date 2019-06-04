@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseModel.h"
+#include "commondefine.h"
 #include "./include/3DScan.h"
 
 class CTeethModel:public BaseModel
@@ -33,6 +34,7 @@ private:
 	float m_fMaterialType;
 	QVector<GLfloat> m_vertData;
 	orth::PointLabel m_Selected;
+	PARAMDEFINE(string, str, ModelFileName);
 };
 SharedPtr(CTeethModel);
 

@@ -1152,7 +1152,7 @@ public:
         ScanJawGroupTipImage_2 = new QLabel(OralSubstitutePanel);
         ScanJawGroupTipImage_2->setObjectName(QStringLiteral("ScanJawGroupTipImage_2"));
         ScanJawGroupTipImage_2->setGeometry(QRect(0, 110, 300, 300));
-        ScanJawGroupTipImage_2->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/daixingpan.png")));
+        ScanJawGroupTipImage_2->setPixmap(QPixmap(QString::fromUtf8("Resources/images/daixingpan.png")));
         ScanJawGroupTipImage_2->setScaledContents(true);
         ScanJawGroupTipImage_2->raise();
         CutJawFinishPanelTips_4->raise();
@@ -2026,7 +2026,7 @@ public:
         deleteModelButton->setStyleSheet(QLatin1String("QPushButton{border-image: url(:/MainWidget/Resources/images/normal/deleteModelButton_normal.png);border:0px groove gray;border-radius:5px;padding:2px 4px;background: rgb(255, 255, 255);}\n"
 "QPushButton:hover{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}\n"
 "QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked/deleteModelButton_checked.png);}"));
-        deleteModelButton->setCheckable(true);
+        deleteModelButton->setCheckable(false);
         TipPanel = new QGroupBox(ScanMainGUI);
         TipPanel->setObjectName(QStringLiteral("TipPanel"));
         TipPanel->setEnabled(true);

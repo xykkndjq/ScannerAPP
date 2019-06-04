@@ -47,6 +47,9 @@ public:
 	pCTeethModel lowerTeethModel;
 	pCTeethModel allTeethModel;
 
+	bool m_bShowOrderInfo;
+	std::string m_strOrderInfoPath;
+
 	int globalTipIndex = 0;
 	/*globalTipStep解释
 	globalTipIndex = 1；"上颌"
@@ -236,6 +239,7 @@ private:
 	void stitchingFinishPanelBackBtnClick();	
 	void teethStitchingPanelNextBtnClick();
 	void saveModelFile(pCScanTask pTask);
+	void saveModelFile(std::string strPath, pCTeethModel pTask);
 	void saveDenModelFile(pCScanTask pTask);//种植体
 	bool isModelFileExit(pCScanTask &pTask);
 	void loadModelFile(pCScanTask &pTask);

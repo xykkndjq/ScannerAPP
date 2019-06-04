@@ -6,7 +6,7 @@
 #include "commonFun.h"
 #include "PoissonRecon.h"
 #include "SystemConfig.h"
-
+#include "stlio.h"
 // #include "NearestNeighborSearches.h"
 // #include <pcl/visualization/cloud_viewer.h>
 // #include <vtkRenderWindow.h>
@@ -1225,10 +1225,12 @@ void ComputeThread::GPAMeshing()
 				cout << "pathname: " << modelNameStr << endl;
 				io.write_ply_example(modelNameStr, pScanTask->m_mModel[i], true);
 #else
-				orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
-				std::string modelNameStr = QString::number(i).toStdString() + ".stl";
-				cout << "pathname: " << modelNameStr << endl;
-				finish_model_io.writeModel(modelNameStr, "stlb");
+// 				orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
+ 				std::string modelNameStr = QString::number(i).toStdString() + ".stl";
+				tinystl::stlio io;
+				io.write_stl_file(modelNameStr.c_str(), pScanTask->m_mModel[i], true);
+				//cout << "pathname: " << modelNameStr << endl;
+				//finish_model_io.writeModel(modelNameStr, "stlb");
 #endif
 
 			}
@@ -1328,22 +1330,25 @@ void ComputeThread::taskTeethSitit()
 	emit progressBarSetSignal(0, 3,  true);
 	orth::MeshModel l_tmpModel, l_dstModel;
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
-	if (pDstTask->m_mRegistrationModels.size() == 0)
-		pDstTask->pTeethModel->getMeshModel(l_dstModel);
-	else
-		l_dstModel = pDstTask->m_mRegistrationModels.back();
+	pDstTask->pTeethModel->getMeshModel(l_dstModel);
+// 	if (pDstTask->m_mRegistrationModels.size() == 0)
+// 		pDstTask->pTeethModel->getMeshModel(l_dstModel);
+// 	else
+// 		l_dstModel = pDstTask->m_mRegistrationModels.back();
 	vector<orth::MeshModel> l_vtSucModel;
 	scan::Registration reg(1.0, 15.0, 50);
 	//reg.SetSearchDepth(40);
 	vector<orth::MeshModel> l_vtModel;
 	l_tmpModel.ModelSplit(l_vtModel,5000);
 	emit progressBarSetValueSignal(1);
+	pDstTask->m_mModel.clear();
 	for (int i = 0; i < l_vtModel.size(); i++) {
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
-		orth::ModelIO merge_io(&l_vtModel[i]);
-		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
-		merge_io.writeModel(strModelname.toStdString(), "stlb");
+// 		orth::ModelIO merge_io(&l_vtModel[i]);
+// 		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
+// 		merge_io.writeModel(strModelname.toStdString(), "stlb");
 		if (reg.ToothFarRegist(l_dstModel, l_vtModel[i])) {
+			pDstTask->m_mModel.push_back(l_vtModel[i]);
 		//reg.FarRegist(l_dstModel, l_tmpModel);
 			l_vtSucModel.push_back(l_vtModel[i]);
 		}
