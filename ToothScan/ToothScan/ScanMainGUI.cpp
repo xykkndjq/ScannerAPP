@@ -18,8 +18,8 @@ void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + "den.stl";
 // 	orth::ModelIO finish_model_io(&meshModel);
 // 	finish_model_io.writeModel(modelNameStr, "stlb");
-	tinystl::stlio io;
-	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
+ 	tinystl::stlio io;
+ 	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
 	cout << "saveModelFile finish" << endl;
 }
@@ -31,14 +31,14 @@ void ScanMainGUI::saveModelFile(pCScanTask pTask) {
 	tinyply::plyio io;
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
 	cout << "pathname: " << modelNameStr << endl;
-	io.write_ply_example(modelNameStr, meshModel, true);
+	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
 	pTask->pTeethModel->Set_ModelFileName(pTask->Get_ModelFileName());
 // 	orth::ModelIO finish_model_io(&meshModel);
 // 	finish_model_io.writeModel(modelNameStr, "stlb");
-	tinystl::stlio io;
-	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
+ 	tinystl::stlio io;
+ 	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
 	cout << "saveModelFile finish" << endl;
 }
@@ -50,7 +50,7 @@ void ScanMainGUI::saveModelFile(std::string strPath, pCTeethModel pTask) {
 	tinyply::plyio io;
 	std::string modelNameStr = strPath + pTask->Get_ModelFileName() + ".ply";
 	cout << "pathname: " << modelNameStr << endl;
-	io.write_ply_example(modelNameStr, meshModel, true);
+	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = strPath+ pTask->Get_ModelFileName() + ".stl";
 	// 	orth::ModelIO finish_model_io(&meshModel);

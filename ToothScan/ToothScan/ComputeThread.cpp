@@ -1223,7 +1223,7 @@ void ComputeThread::GPAMeshing()
 				tinyply::plyio io;
 				std::string modelNameStr = QString::number(i).toStdString() + ".ply";
 				cout << "pathname: " << modelNameStr << endl;
-				io.write_ply_example(modelNameStr, pScanTask->m_mModel[i], true);
+				io.write_ply_file(modelNameStr, pScanTask->m_mModel[i], true);
 #else
 // 				orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
  				std::string modelNameStr = QString::number(i).toStdString() + ".stl";
@@ -1539,6 +1539,10 @@ void ComputeThread::allJawComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
+
+			curTotalModel.Clear();
+			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
+
 			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
