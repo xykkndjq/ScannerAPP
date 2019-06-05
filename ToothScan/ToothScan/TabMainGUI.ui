@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>TabMainGUI</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="mainwidget.qrc">
+    <normaloff>:/MainWidget/Resources/images/systemicon.png</normaloff>:/MainWidget/Resources/images/systemicon.png</iconset>
+  </property>
   <widget class="QGroupBox" name="orderInforGroupBox">
    <property name="enabled">
     <bool>true</bool>
@@ -874,6 +878,22 @@ border:0px;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">border-image: url(:/MainWidget/Resources/images/btnClose.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMin">
+    <property name="geometry">
+     <rect>
+      <x>1840</x>
+      <y>40</y>
+      <width>14</width>
+      <height>14</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/MainWidget/Resources/images/minBtn.png);</string>
     </property>
     <property name="text">
      <string/>

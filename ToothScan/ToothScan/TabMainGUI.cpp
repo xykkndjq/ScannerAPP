@@ -10,6 +10,7 @@
 #include <QGraphicsDropShadowEffect>
 #include "commonFun.h"
 #include "SystemConfig.h"
+QWidget *g_pCurrentWidget = nullptr;
 string Qstring2String(QString qString) {
 	QByteArray cdata = qString.toLocal8Bit();
 	return string(cdata);
@@ -193,6 +194,7 @@ TabMainGUI::TabMainGUI(QWidget *parent)
 
 TabMainGUI::~TabMainGUI()
 {
+	
 }
 
 void TabMainGUI::setConnections()
@@ -200,6 +202,7 @@ void TabMainGUI::setConnections()
 	/*-----------------------------------------------------------update tabMainGui:begin-------------------------------------------------*/
 	/*----------------------关闭软件------------------------*/
 	connect(ui.btnClose, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));//关闭
+	connect(ui.btnMin, SIGNAL(clicked()), this, SLOT(btnMinClicked()));//关闭
 	
 	/*----------------------打开订单管理子页面------------------------*/
 	connect(m_orderMgrBtn, SIGNAL(clicked()), this, SLOT(showOrderInforGroupBox()));//打开设置子页面
@@ -455,7 +458,9 @@ void TabMainGUI::initVariable()
 //		implantButton->setVisible(false);
 //		//jawToothButton->setVisible(false);
 //	}
+	g_pCurrentWidget = this;
 }
+
 
 void TabMainGUI::constructIHM()
 {
@@ -963,6 +968,10 @@ bool TabMainGUI::judgePatientSaveFlag()
 void TabMainGUI::closeBtnClicked() {
 	QApplication* app;
 	app->quit();
+}
+void TabMainGUI::btnMinClicked() {
+	this->showMinimized();
+	g_pCurrentWidget = this;
 }
 void TabMainGUI::PatientInformationSave()
 {

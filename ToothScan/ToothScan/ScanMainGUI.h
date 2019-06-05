@@ -111,6 +111,7 @@ public:
 	void setDentalImplantNextBtnEnable(bool bEnable) {
 		ui.DentalImplantNextBtn->setEnabled(true);
 	}
+	QSystemTrayIcon * m_mSysTrayIcon;
 signals:
 	//void startControlNormalScan(int chooseJawIndex);//控制正常扫描信号signals
 	//void startAllJawNormalScan();
@@ -163,6 +164,7 @@ private:
 	bool m_bsplitModelFlag;	//分模
 	private slots:
 	void closeBtnClicked();
+	void btnMinClicked();
 	//标定
 	void ToothCalibrateSlot();
 	//void GlobalCalibrateSlot();
@@ -275,10 +277,12 @@ private:
 	
 
 	void progressBarSetSlot(int min, int max, bool bVisible);
+	void minBtnSetVisible(bool bVisible);
 	
 	void usbDeviceSlot();//软件打开时，提示是否USB连接成功
 						 //扫描
 	void JawScanFinish();
+	void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason); //打开路径下文件
 };
 
 #endif

@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1280</height>
+    <height>1281</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>ScanMainGUI</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="mainwidget.qrc">
+    <normaloff>:/MainWidget/Resources/images/systemicon.png</normaloff>:/MainWidget/Resources/images/systemicon.png</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -9182,9 +9186,9 @@ background-color:rgba(248,250,250,0);</string>
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/11.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/11.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/11.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/11.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/11.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/11.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>11</string>
@@ -9206,9 +9210,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/11.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/12.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/12.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/12.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/12.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/12.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/12.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>12</string>
@@ -9230,9 +9234,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/12.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/13.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/13.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/13.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/13.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/13.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/13.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>13</string>
@@ -9254,9 +9258,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/13.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/14.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/14.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/14.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/14.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/14.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/14.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>14</string>
@@ -9278,9 +9282,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/14.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/15.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/15.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/15.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/15.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/15.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/15.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>15</string>
@@ -9302,9 +9306,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/15.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/16.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/16.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/16.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/16.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/16.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/16.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>16</string>
@@ -9326,9 +9330,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/16.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/17.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/17.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/17.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/17.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/17.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/17.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>17</string>
@@ -9350,9 +9354,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/17.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/18.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/18.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/18.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/18.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>18</string>
@@ -9374,9 +9378,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/18.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/21.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/21.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/21.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/21.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/21.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/21.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>21</string>
@@ -9398,9 +9402,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/21.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/22.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/22.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/22.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/22.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/22.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/22.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>22</string>
@@ -9422,9 +9426,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/22.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/23.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/23.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/23.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/23.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/23.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/23.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>23</string>
@@ -9446,9 +9450,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/23.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/24.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/24.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/24.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/24.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/24.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/24.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>24</string>
@@ -9470,9 +9474,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/24.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/25.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/25.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/25.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/25.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/25.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/25.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>25</string>
@@ -9494,9 +9498,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/25.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/26.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/26.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/26.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/26.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/26.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/26.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>26</string>
@@ -9518,9 +9522,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/26.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/27.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/27.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/27.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/27.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/27.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/27.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>27</string>
@@ -9542,9 +9546,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/27.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/28.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/28.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/28.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/28.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/28.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/28.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>28</string>
@@ -9579,9 +9583,9 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/28.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/31.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/31.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/31.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/31.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/31.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/31.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>31</string>
@@ -9603,8 +9607,8 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/31.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/32.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/32.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/32.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/32.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/32.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/32.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>32</string>
@@ -9626,8 +9630,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/32.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/33.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/33.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/33.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/33.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/33.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/33.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>33</string>
@@ -9649,9 +9653,9 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/33.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/34.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/34.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/34.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/34.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/34.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/34.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>34</string>
@@ -9673,8 +9677,8 @@ QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/34.png);\
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/36.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/36.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/36.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/36.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/36.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/36.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>36</string>
@@ -9696,8 +9700,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/36.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/37.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/37.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/37.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/37.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/37.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/37.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>37</string>
@@ -9719,8 +9723,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/37.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/38.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/38.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/38.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/38.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/38.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/38.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>38</string>
@@ -9742,8 +9746,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/38.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/41.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/41.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/41.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/41.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/41.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/41.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>41</string>
@@ -9765,8 +9769,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/41.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/42.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/42.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/42.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/42.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/42.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/42.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>42</string>
@@ -9788,8 +9792,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/42.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/43.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/43.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/43.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/43.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/43.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/43.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>43</string>
@@ -9811,8 +9815,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/43.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/44.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/44.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/44.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/44.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/44.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/44.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>44</string>
@@ -9834,8 +9838,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/44.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/45.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/45.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/45.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/45.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/45.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/45.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>45</string>
@@ -9857,8 +9861,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/45.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/46.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/46.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/46.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/46.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/46.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/46.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>46</string>
@@ -9883,8 +9887,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/46.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/47.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/47.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/47.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/47.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/47.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/47.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>47</string>
@@ -9909,8 +9913,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/47.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/48.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/48.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/48.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/48.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/48.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/48.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>48</string>
@@ -9932,8 +9936,8 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/48.png);\n
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/35.png);\nbackground-color: rgba(255, 255, 255, 0)}
-QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);\nbackground-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/35.png);\nbackground-color: rgba(255, 255, 255, 0)}</string>
+      <string notr="true">QToolButton{border-image: url(:/MainWidget/Resources/images/0/35.png);background-color: rgba(255, 255, 255, 0)}
+QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);background-color: rgba(255, 255, 255, 0)}QToolButton:disabled{border-image: url(:/MainWidget/Resources/images/1/35.png);background-color: rgba(255, 255, 255, 0)}</string>
      </property>
      <property name="text">
       <string>35</string>
@@ -9949,7 +9953,7 @@ QToolButton:checked{border-image: url(:/MainWidget/Resources/images/4/35.png);\n
    <zorder>DentalImplantPanelTips</zorder>
    <zorder>upperJawGroupBox</zorder>
   </widget>
-  <widget class="QPushButton" name="btnClose">
+  <widget class="QToolButton" name="btnClose">
    <property name="geometry">
     <rect>
      <x>1850</x>
@@ -11450,6 +11454,22 @@ QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/progres
     <number>20</number>
    </property>
   </widget>
+  <widget class="QToolButton" name="btnMin">
+   <property name="geometry">
+    <rect>
+     <x>1820</x>
+     <y>30</y>
+     <width>14</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/MainWidget/Resources/images/minBtn.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>TipPanel</zorder>
   <zorder>compensationScanPanel</zorder>
   <zorder>ScanJawGroup</zorder>
@@ -11466,11 +11486,11 @@ QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/progres
   <zorder>cameraGroupBox</zorder>
   <zorder>DentalImplantFinishPanel</zorder>
   <zorder>progressBar</zorder>
+  <zorder>btnMin</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="mainwidget.qrc"/>
-  <include location="C:/Users/CAMNODE06/.designer/backup/mainwidget.qrc"/>
  </resources>
  <connections/>
 </ui>

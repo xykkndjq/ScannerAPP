@@ -126,6 +126,7 @@ signals:
 	void progressBarsetOrientation(Qt::Orientation);
 	void progressBarVisibleSignal(bool visible);
 	void progressBarSetSignal(int min,int max, bool bVisible);
+	void toolsGroupBoxSetVisible(bool bVisible);
 public slots:
 	void FarRegistrationSlot();//??????????
 	//void normalAllJawComputeScan();
