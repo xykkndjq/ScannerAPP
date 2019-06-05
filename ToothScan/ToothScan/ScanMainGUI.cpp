@@ -1463,8 +1463,8 @@ void ScanMainGUI::scanJawScanBtnClick()
 		pCurrentTask->m_mModel.clear();
 	
 		QMessageBox box(QMessageBox::Information, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描？"), QMessageBox::Yes | QMessageBox::No, NULL);
-		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-		box.setButtonText(QMessageBox::No, QStringLiteral("返 回"));
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("是"));
+		box.setButtonText(QMessageBox::No, QStringLiteral("否"));
 		if (isModelFileExit(pCurrentTask) &&  box.exec()== QMessageBox::No) {
 			//加载模型
 			loadModelFile(pCurrentTask);
@@ -2009,7 +2009,11 @@ void ScanMainGUI::OralSubstitutePanelNextBtnClick() {
 	ui.OralSubstitutePanel->setVisible(false);
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
-		if (isModelFileExit(pCurrentTask) && QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+		QMessageBox box(QMessageBox::Information, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描？"), QMessageBox::Yes | QMessageBox::No, NULL);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("是"));
+		box.setButtonText(QMessageBox::No, QStringLiteral("否"));
+
+		if (isModelFileExit(pCurrentTask) && box.exec() == QMessageBox::No) {
 			//加载模型
 			loadModelFile(pCurrentTask);
 			//cutPaneNextStepBtnClick();

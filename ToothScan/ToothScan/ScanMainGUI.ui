@@ -11470,7 +11470,6 @@ QProgressBar::chunk {background-image: url(:/MainWidget/Resources/images/progres
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="mainwidget.qrc"/>
-  <include location="C:/Users/CAMNODE06/.designer/backup/mainwidget.qrc"/>
  </resources>
  <connections/>
 </ui>

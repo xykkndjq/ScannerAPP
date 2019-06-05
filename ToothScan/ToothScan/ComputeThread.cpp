@@ -22,7 +22,7 @@ HINSTANCE g_hdll = NULL;
 void poissonRecon(orth::MeshModel& totalMeshModel)
 {
 	PoissonReconstruction fsp;
-	fsp.run(totalMeshModel, 10, 0.4);
+	fsp.run(totalMeshModel, 9, 0.4);
 // 	int  argc;
 // 	char *argv[9];
 // 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
@@ -1369,11 +1369,10 @@ void ComputeThread::taskTeethSitit()
 	if (l_vtSucModel.size() > 0) {
 		PoissonReconstruction recon;
 		double error_threshold = 0.3;
-	
+
 		//l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
 		recon.MergeWithoutRedundancy(l_dstModel, l_vtSucModel, dstAllModel, error_threshold);
-
 		//orth::MergeModels(l_vtSucModel, dstAllModel);
 		
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
