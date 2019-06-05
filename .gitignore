@@ -245,5 +245,9 @@ ModelManifest.xml
 /ToothScan/ToothScan/log
 /ToothScan/ToothScan/merge_models.stl
 /ToothScan/ToothScan/external_parameter.yml
+/ToothScan/ToothScan/SystemCalibration.yml
 /ToothScan/deploy
 /ToothScan/ToothScan/GeneratedFiles/ui_ScanMainGUI11.h
+/a_property_release
+/ToothScan/ToothScan/ModelSplit0.stl
+/ToothScan/ToothScan/PR_a17964
