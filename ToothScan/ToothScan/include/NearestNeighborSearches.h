@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include "basetype.h"
-#include "orthio.h"
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <thrust/device_ptr.h>
@@ -14,14 +13,14 @@
 
 void newTakeDimCaller(double *CloudSet_src, int CloudsPointsSize, double *XDim_dst, double *YDim_dst, double *ZDim_dst, double *MinMax_p);
 
-void newCloudHashCaller(double *CloudSet_src, int *CloudSize_p, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int SIZE);
-void newClosestSearchCaller(double *CloudSet_src, int *CloudSize_src, int *CloudSize_p, int *StartIndex_src, int *CellSize_src, double *MinMax_src, int CloudsPointsSize, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *IndexValue_dst, const int SIZE);
+void newCloudHashCaller(double *CloudSet_src, int *CloudSize_p, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int treeSize);
+void newClosestSearchCaller(double *CloudSet_src, int *CloudSize_src, int *CloudSize_p, int *StartIndex_src, int *CellSize_src, double *MinMax_src, int CloudsPointsSize, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *IndexValue_dst, const int treeSize);
 
 int divUp(int total, int grain);
 
 __global__ void newTakeDimKernel(double *CloudSet_src, double *XDim_dst, double *YDim_dst, double *ZDim_dst, int CloudsPointsSize);
-__global__ void newCloudHashKernel(double *CloudSet_src, int CloudPointSize, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int SIZE, int dataBias);
-__global__ void newClosestSearchKernel(double *CloudSet_src, int *CloudSize_src, int *StartIndex_src, int *CellSize_src, double *MinMax_src, int CloudsPointsSize, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *IndexValue_dst, const int SIZE);
+__global__ void newCloudHashKernel(double *CloudSet_src, int CloudPointSize, double *MinMax_src, int *CloudsHashCode_dst, int *IndexValue_dst, const int treeSize, int dataBias);
+__global__ void newClosestSearchKernel(double *CloudSet_src, int *CloudSize_src, int *StartIndex_src, int *CellSize_src, double *MinMax_src, int CloudsPointsSize, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *IndexValue_dst, const int treeSize);
 
 class GPUNNS {
 public:
@@ -33,7 +32,7 @@ public:
 	void MinMaxCuda(double *CloudSet_src, int CloudsPointsSize, double *MinMax_p);
 
 	//ClosestMatrixVector
-	void CloudClosestCuda(double *CloudSet_src, double *MinMax_src, int *CloudSize_src, int *CloudSize_p, int CloudsPointsSize, int CloudNum, int *CloudsHashCode_dst, int *IndexValue_dst, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *StartIndex_src, int *CellSize_src, const int SIZE);
+	void CloudClosestCuda(double *CloudSet_src, double *MinMax_src, int *CloudSize_src, int *CloudSize_p, int CloudsPointsSize, int CloudNum, int *CloudsHashCode_dst, int *IndexValue_dst, int *ClosestPointIndexV_dst, double *ClosestPointDistanceV_dst, int *radius_dst, int *StartIndex_src, int *CellSize_src, const int treeSize);
 };
 
 class NearestNeighborSearches

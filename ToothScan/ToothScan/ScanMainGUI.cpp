@@ -1,6 +1,7 @@
 #include "ScanMainGUI.h"
 #include "TaskManager.h"
 #include "plyio.h"
+#include "stlio.h"
 #define NUITEST
 float g_xMinRotLim = -21.7f, g_yMinRotLim = -180.0f, g_xMaxRotLim = 158.3f, g_yMaxRotLim = 180.0f;
 void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
@@ -12,11 +13,13 @@ void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
 	tinyply::plyio io;
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + "den.ply";
 	cout << "pathname: " << modelNameStr << endl;
-	io.write_ply_example(modelNameStr, meshModel, true);
+	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + "den.stl";
-	orth::ModelIO finish_model_io(&meshModel);
-	finish_model_io.writeModel(modelNameStr, "stlb");
+	//orth::ModelIO finish_model_io(&meshModel);
+	//finish_model_io.writeModel(modelNameStr, "stlb");
+	tinystl::stlio io;
+	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
 	cout << "saveModelFile finish" << endl;
 }
@@ -28,11 +31,13 @@ void ScanMainGUI::saveModelFile(pCScanTask pTask) {
 	tinyply::plyio io;
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
 	cout << "pathname: " << modelNameStr << endl;
-	io.write_ply_example(modelNameStr, meshModel, true);
+	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
-	orth::ModelIO finish_model_io(&meshModel);
-	finish_model_io.writeModel(modelNameStr, "stlb");
+	//orth::ModelIO finish_model_io(&meshModel);
+	//finish_model_io.writeModel(modelNameStr, "stlb");
+	tinystl::stlio io;
+	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
 	cout << "saveModelFile finish" << endl;
 }
@@ -52,8 +57,10 @@ void ScanMainGUI::loadModelFile(pCScanTask &pTask) {
 	io.read_ply_file(modelNameStr, meshModel);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
-	orth::ModelIO finish_model_io(&meshModel);
-	finish_model_io.loadModel(modelNameStr);
+	//orth::ModelIO finish_model_io(&meshModel);
+	//finish_model_io.loadModel(modelNameStr);
+	tinystl::stlio io;
+	io.read_stl_file(modelNameStr.c_str(), meshModel);
 #endif
 
 
@@ -1390,7 +1397,11 @@ void ScanMainGUI::scanJawScanBtnClick()
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
 		pCurrentTask->m_mModel.clear();
-		if (isModelFileExit(pCurrentTask) && QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描"), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes) == QMessageBox::No) {
+	
+		QMessageBox box(QMessageBox::Information, QStringLiteral("提示"), QStringLiteral("模型已经存在是否重新扫描？"), QMessageBox::Yes | QMessageBox::No, NULL);
+		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+		box.setButtonText(QMessageBox::No, QStringLiteral("返 回"));
+		if (isModelFileExit(pCurrentTask) &&  box.exec()== QMessageBox::No) {
 			//加载模型
 			loadModelFile(pCurrentTask);
 			//cutPaneNextStepBtnClick();
@@ -2370,8 +2381,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 		tinyply::plyio io;
 		io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-		orth::ModelIO finish_model_io(&meshModel);
-		finish_model_io.loadModel(strUpperModelNameStr);
+		//orth::ModelIO finish_model_io(&meshModel);
+		//finish_model_io.loadModel(strUpperModelNameStr);
+		tinystl::stlio io;
+		io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 		glWidget->mm = meshModel;
 		m_pupperTeethModel = glWidget->makeObject();
@@ -2385,8 +2398,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
  		tinyply::plyio io;
  		io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-		orth::ModelIO finish_model_io(&meshModel);
-		finish_model_io.loadModel(strLowerModelNameStr);
+		//orth::ModelIO finish_model_io(&meshModel);
+		//finish_model_io.loadModel(strLowerModelNameStr);
+		tinystl::stlio io;
+		io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 		glWidget->mm = meshModel;
 		m_plowerTeethModel = glWidget->makeObject();
@@ -2403,8 +2418,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-				orth::ModelIO finish_model_io(&meshModel);
-				finish_model_io.loadModel(strUpperModelNameStr);
+				//orth::ModelIO finish_model_io(&meshModel);
+				//finish_model_io.loadModel(strUpperModelNameStr);
+				tinystl::stlio io;
+				io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pUpperJawGingvaModel = glWidget->makeObject();
@@ -2418,8 +2435,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-				orth::ModelIO finish_model_io(&meshModel);
-				finish_model_io.loadModel(strLowerModelNameStr);
+				//orth::ModelIO finish_model_io(&meshModel);
+				//finish_model_io.loadModel(strLowerModelNameStr);
+				tinystl::stlio io;
+				io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pLowJawGingvaModel = glWidget->makeObject();
@@ -2435,8 +2454,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-				orth::ModelIO finish_model_io(&meshModel);
-				finish_model_io.loadModel(strUpperModelNameStr);
+				//orth::ModelIO finish_model_io(&meshModel);
+				//finish_model_io.loadModel(strUpperModelNameStr);
+				tinystl::stlio io;
+				io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pUpperDentalImplantModel = glWidget->makeObject();
@@ -2450,8 +2471,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-				orth::ModelIO finish_model_io(&meshModel);
-				finish_model_io.loadModel(strLowerModelNameStr);
+				//orth::ModelIO finish_model_io(&meshModel);
+				//finish_model_io.loadModel(strLowerModelNameStr);
+				tinystl::stlio io;
+				io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pLowerDentalImplantModel = glWidget->makeObject();

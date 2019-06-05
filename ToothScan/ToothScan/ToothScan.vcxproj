@@ -151,7 +151,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>GPA.lib;3DScan_cuda.lib;3DScan.lib;assimp.lib;assimp-vc140-mt.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Registration.lib;Qt5Widgets.lib;opengl32.lib;GPUNearestNeighborSearches.lib;plyio.lib;PoissonRecon.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>stlio.lib;GPA.lib;3DScan_cuda.lib;3DScan.lib;assimp.lib;assimp-vc140-mt.lib;qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Registration.lib;Qt5Widgets.lib;opengl32.lib;GPUNearestNeighborSearches.lib;plyio.lib;PoissonRecon.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

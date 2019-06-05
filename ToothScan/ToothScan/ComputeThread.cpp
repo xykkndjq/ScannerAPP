@@ -7,6 +7,8 @@
 #include "PoissonRecon.h"
 #include "SystemConfig.h"
 
+#include "stlio.h"
+
 // #include "NearestNeighborSearches.h"
 // #include <pcl/visualization/cloud_viewer.h>
 // #include <vtkRenderWindow.h>
@@ -1223,12 +1225,15 @@ void ComputeThread::GPAMeshing()
 				tinyply::plyio io;
 				std::string modelNameStr = QString::number(i).toStdString() + ".ply";
 				cout << "pathname: " << modelNameStr << endl;
-				io.write_ply_example(modelNameStr, pScanTask->m_mModel[i], true);
+				io.write_ply_file(modelNameStr, pScanTask->m_mModel[i], true);
 #else
-				orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
+				//orth::ModelIO finish_model_io(&pScanTask->m_mModel[i]);
 				std::string modelNameStr = QString::number(i).toStdString() + ".stl";
 				cout << "pathname: " << modelNameStr << endl;
-				finish_model_io.writeModel(modelNameStr, "stlb");
+				//finish_model_io.writeModel(modelNameStr, "stlb");
+
+				tinystl::stlio io;
+				io.write_stl_file(modelNameStr.c_str(), pScanTask->m_mModel[i], true);
 #endif
 
 			}
@@ -1526,6 +1531,10 @@ void ComputeThread::allJawComputeScan()
 			//	finish_model_io.writeModel(modelNameStr, "stl");
 			//	//writefile(upper_mModel[i], name);
 			//}
+
+			curTotalModel.Clear();
+			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
+
 			emit progressBarVisibleSignal(false);
 			emit computeFinish();
 		}
