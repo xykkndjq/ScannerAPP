@@ -75,7 +75,7 @@ QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 
       </size>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="openPushButton">
@@ -107,7 +107,7 @@ QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 
       </size>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="watchPushButton">
@@ -139,7 +139,7 @@ QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 
       </size>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QGroupBox" name="orderDateGroupBox">
@@ -479,7 +479,7 @@ QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 
       </size>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
    </widget>

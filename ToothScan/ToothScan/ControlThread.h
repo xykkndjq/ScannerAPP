@@ -11,7 +11,7 @@
 
 //#include "VTK_render.h"
 #include "./include/3DScan.h"
-#define MODELPLYn
+#define MODELPLY
 //#include "3DScan_cuda.cuh"
 //#include "Spinnaker.h"
 //#include "SpinGenApi/SpinnakerGenApi.h"

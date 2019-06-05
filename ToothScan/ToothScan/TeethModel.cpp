@@ -6,10 +6,11 @@
 
 
 CTeethModel::CTeethModel(shared_ptr<QOpenGLShaderProgram> v_Program,
-	shared_ptr<QOpenGLBuffer> v_Vbo, orth::MeshModel &mm):BaseModel(v_Program,v_Vbo),
+	shared_ptr<QOpenGLBuffer> v_Vbo, orth::MeshModel &mm) :BaseModel(v_Program, v_Vbo),
 	m_xTrans(0),
 	m_yTrans(0),
-	m_model(mm)
+	m_model(mm),
+	m_fMaterialType(0.0)
 {
 	m_program->bindAttributeLocation("aPos", PROGRAM_VERTEX_ATTRIBUTE);
 	m_program->bindAttributeLocation("aNormal", PROGRAM_NORMAL_ATTRIBUTE);
@@ -113,10 +114,10 @@ void CTeethModel::doPaint(QMatrix4x4 v_Projection, QMatrix4x4 v_View, IParentInt
 	m_program->setUniformValue("material1.specular", 0.4f, 0.17f, 0.32f);
 	m_program->setUniformValue("material1.shininess", 0.978125f);
 
-	m_program->setUniformValue("material2.ambient", 0.95f, 0.95f, 0.95f);
+	m_program->setUniformValue("material2.ambient", 0.05f, 0.05f, 0.05f);
 	m_program->setUniformValue("material2.diffuse", 0.6f, 0.6f, 0.6f);
-	m_program->setUniformValue("material2.specular", 1.2f, 1.2f, 1.2f);
-	m_program->setUniformValue("material2.shininess", 32.0f);
+	m_program->setUniformValue("material2.specular", 0.02f, 0.67f, 0.31f);
+	m_program->setUniformValue("material2.shininess", 0.978125f);
 
 	m_program->setUniformValue("material3.ambient", 0.0f, 0.5f, 0.0f);
 	m_program->setUniformValue("material3.diffuse", 0.5f, 0.4f, 0.4f);
@@ -334,30 +335,29 @@ void CTeethModel::makeObject()
 			m_vertData.append(m_model.P[m_model.F[i].x].y);
 			m_vertData.append(m_model.P[m_model.F[i].x].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].x]);
-			m_vertData.append(0.0f);
+			m_vertData.append(m_fMaterialType);
 			m_vertData.append(m_model.N[m_model.F[i].x].x);
 			m_vertData.append(m_model.N[m_model.F[i].x].y);
 			m_vertData.append(m_model.N[m_model.F[i].x].z);
-			m_vertData.append(0.0);
+			m_vertData.append(0.0f);
 			m_vertData.append(m_model.P[m_model.F[i].y].x);
 			m_vertData.append(m_model.P[m_model.F[i].y].y);
 			m_vertData.append(m_model.P[m_model.F[i].y].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].y]);
-			m_vertData.append(0.0f);
+			m_vertData.append(m_fMaterialType);
 			m_vertData.append(m_model.N[m_model.F[i].y].x);
 			m_vertData.append(m_model.N[m_model.F[i].y].y);
 			m_vertData.append(m_model.N[m_model.F[i].y].z);
-			m_vertData.append(0.0);
+			m_vertData.append(0.0f);
 			m_vertData.append(m_model.P[m_model.F[i].z].x);
 			m_vertData.append(m_model.P[m_model.F[i].z].y);
 			m_vertData.append(m_model.P[m_model.F[i].z].z);
 			//m_vertData.append((float)m_model.L[m_model.F[i].z]);
-			m_vertData.append(0.0f);
+			m_vertData.append(m_fMaterialType);
 			m_vertData.append(m_model.N[m_model.F[i].z].x);
 			m_vertData.append(m_model.N[m_model.F[i].z].y);
 			m_vertData.append(m_model.N[m_model.F[i].z].z);
-			m_vertData.append(0.0);
-
+			m_vertData.append(0.0f);
 		}
 	}
 	BaseModel::makeObject(m_vertData, m_model.F.size());

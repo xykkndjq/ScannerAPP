@@ -16,10 +16,10 @@ void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
 	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + "den.stl";
-	//orth::ModelIO finish_model_io(&meshModel);
-	//finish_model_io.writeModel(modelNameStr, "stlb");
-	tinystl::stlio io;
-	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
+// 	orth::ModelIO finish_model_io(&meshModel);
+// 	finish_model_io.writeModel(modelNameStr, "stlb");
+ 	tinystl::stlio io;
+ 	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
 	cout << "saveModelFile finish" << endl;
 }
@@ -34,8 +34,27 @@ void ScanMainGUI::saveModelFile(pCScanTask pTask) {
 	io.write_ply_file(modelNameStr, meshModel, true);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
-	//orth::ModelIO finish_model_io(&meshModel);
-	//finish_model_io.writeModel(modelNameStr, "stlb");
+	pTask->pTeethModel->Set_ModelFileName(pTask->Get_ModelFileName());
+// 	orth::ModelIO finish_model_io(&meshModel);
+// 	finish_model_io.writeModel(modelNameStr, "stlb");
+ 	tinystl::stlio io;
+ 	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
+#endif
+	cout << "saveModelFile finish" << endl;
+}
+void ScanMainGUI::saveModelFile(std::string strPath, pCTeethModel pTask) {
+	orth::MeshModel meshModel;
+	pTask->getMeshModel(meshModel);
+	int mModelVSize = meshModel.size();
+#ifdef MODELPLY
+	tinyply::plyio io;
+	std::string modelNameStr = strPath + pTask->Get_ModelFileName() + ".ply";
+	cout << "pathname: " << modelNameStr << endl;
+	io.write_ply_file(modelNameStr, meshModel, true);
+#else
+	std::string modelNameStr = strPath+ pTask->Get_ModelFileName() + ".stl";
+	// 	orth::ModelIO finish_model_io(&meshModel);
+	// 	finish_model_io.writeModel(modelNameStr, "stlb");
 	tinystl::stlio io;
 	io.write_stl_file(modelNameStr.c_str(), meshModel, true);
 #endif
@@ -57,8 +76,8 @@ void ScanMainGUI::loadModelFile(pCScanTask &pTask) {
 	io.read_ply_file(modelNameStr, meshModel);
 #else
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".stl";
-	//orth::ModelIO finish_model_io(&meshModel);
-	//finish_model_io.loadModel(modelNameStr);
+// 	orth::ModelIO finish_model_io(&meshModel);
+// 	finish_model_io.loadModel(modelNameStr);
 	tinystl::stlio io;
 	io.read_stl_file(modelNameStr.c_str(), meshModel);
 #endif
@@ -188,7 +207,15 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.ScanJawScanBtn->setGraphicsEffect(defaultShadow);
 	setWindowFlags(Qt::FramelessWindowHint);
 	styleControl2(this);
-	//ui.progressBar->setVisible(false);
+	ui.progressBar->setVisible(false);
+	QButtonGroup *toothRadioButtonGroup = new QButtonGroup();
+	toothRadioButtonGroup->setExclusive(true);
+	toothRadioButtonGroup->addButton(ui.topWatchButton);
+	toothRadioButtonGroup->addButton(ui.bottomWatchButton);
+	toothRadioButtonGroup->addButton(ui.frontWatchButton);
+	toothRadioButtonGroup->addButton(ui.backWatchButton);
+	toothRadioButtonGroup->addButton(ui.leftWatchButton);
+	toothRadioButtonGroup->addButton(ui.rightWatchButton);
 	// 	QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(ui.CutJawPanel);
 	// 	shadow_effect->setOffset(-5, 5);
 	// 	shadow_effect->setColor(Qt::gray);
@@ -559,6 +586,29 @@ void ScanMainGUI::closeBtnClicked()
 	controlScanQThread->wait();
 	tabMainPage->show();
 	tabMainPage->showMaximized();
+
+	if (m_bShowOrderInfo) {
+		std::string strPath = m_strOrderInfoPath;
+		if (m_pupperTeethModel) {
+			saveModelFile(strPath, m_pupperTeethModel);
+		}
+		if (m_plowerTeethModel) {
+			saveModelFile(strPath, m_plowerTeethModel);
+		}
+
+		if (m_pLowerDentalImplantModel) {
+			saveModelFile(strPath, m_pLowerDentalImplantModel);
+		}
+		if (m_pUpperDentalImplantModel) {
+			saveModelFile(strPath, m_pUpperDentalImplantModel);
+		}
+		if (m_pUpperJawGingvaModel) {
+			saveModelFile(strPath, m_pUpperJawGingvaModel);
+		}
+		if (m_pLowJawGingvaModel) {
+			saveModelFile(strPath, m_pLowJawGingvaModel);
+		}
+	}
 	this->hide();
 }
 
@@ -897,35 +947,47 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 		ui.stitchingUpperJawBtn->setVisible(true);
 		ui.stitchingUpperJawBtn->setChecked(true);
 		m_pupperTeethModel->Set_Visible(true);
+		m_pupperTeethModel->setMaterialType(0.0f);
+		m_pupperTeethModel->makeObject();
 		glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
 	}
 	if (m_plowerTeethModel) {
 		ui.stitchingLowerJawBtn->setVisible(true);
 		ui.stitchingLowerJawBtn->setChecked(true);
+		m_plowerTeethModel->setMaterialType(0.0f);
+		m_plowerTeethModel->makeObject();
 		m_plowerTeethModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
 	}
 	if (m_pLowerDentalImplantModel) {
 		ui.stitchingLowerJawDenBtn->setVisible(true);
 		ui.stitchingLowerJawDenBtn->setChecked(true);
+		m_pLowerDentalImplantModel->setMaterialType(0.0f);
+		m_pLowerDentalImplantModel->makeObject();
 		m_pLowerDentalImplantModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pLowerDentalImplantModel);
 	}
 	if (m_pUpperDentalImplantModel) {
 		ui.stitchingUpperJawDenBtn->setVisible(true);
 		ui.stitchingUpperJawDenBtn->setChecked(true);
+		m_pUpperDentalImplantModel->setMaterialType(0.0f);
+		m_pUpperDentalImplantModel->makeObject();
 		m_pUpperDentalImplantModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pUpperDentalImplantModel);
 	}
 	if (m_pLowJawGingvaModel) {
 		ui.stitchingLowerJawGingivaBtn->setVisible(true);
 		ui.stitchingLowerJawGingivaBtn->setChecked(true);
+		m_pLowJawGingvaModel->setMaterialType(0.0f);
+		m_pLowJawGingvaModel->makeObject();
 		m_pLowJawGingvaModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pLowJawGingvaModel);
 	}
 	if (m_pUpperJawGingvaModel) {
 		ui.stitchingUpperJawGingivaBtn->setVisible(true);
 		ui.stitchingUpperJawGingivaBtn->setChecked(true);
+		m_pUpperJawGingvaModel->setMaterialType(0.0f);
+		m_pUpperJawGingvaModel->makeObject();
 		m_pUpperJawGingvaModel->Set_Visible(true);
 		glWidget->m_ModelsVt.push_back(m_pUpperJawGingvaModel);
 	}
@@ -1013,7 +1075,9 @@ void ScanMainGUI::resetValue()
 	m_pUpperJawGingvaModel = nullptr;
 	m_pLowJawGingvaModel = nullptr;
 	m_bsplitModelFlag = false;
-//	ui.progressBar->setVisible(false);
+	ui.progressBar->setVisible(false);
+	m_bShowOrderInfo = false;
+	m_strOrderInfoPath = "";
 	hideAllPanel();
 }
 
@@ -1170,15 +1234,15 @@ void ScanMainGUI::showCutSurfaceSlot(bool bShow)
 void ScanMainGUI::movecutHeightSpinBoxSlot()
 {
 	int curValue = ui.cutHeightSpinBox->value();
-	ui.cutHeightSpinBox->setValue(curValue);
+//	ui.cutHeightSpinBox->setValue(curValue);
 	if (curValue > globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveUp();
+		glWidget->bgGroundmoveUp(curValue - globalSpinCutValue);
 		globalSpinCutValue = curValue;
 	}
 	else if (curValue < globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveDown();
+		glWidget->bgGroundmoveDown(globalSpinCutValue - curValue);
 		globalSpinCutValue = curValue;
 	}
 
@@ -1187,15 +1251,15 @@ void ScanMainGUI::movecutHeightSpinBoxSlot()
 void ScanMainGUI::movecutHeightSliderSlot()
 {
 	int curValue = ui.cutHeightSlider->value();
-	ui.cutHeightSpinBox->setValue(curValue);
+	//ui.cutHeightSpinBox->setValue(curValue);
 	if (curValue > globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveUp();
+		glWidget->bgGroundmoveUp(curValue - globalSpinCutValue);
 		globalSpinCutValue = curValue;
 	}
 	else if (curValue < globalSpinCutValue)
 	{
-		glWidget->bgGroundmoveDown();
+		glWidget->bgGroundmoveDown(globalSpinCutValue - curValue);
 		globalSpinCutValue = curValue;
 	}
 }
@@ -1798,11 +1862,13 @@ void ScanMainGUI::DentalImplantNextBtnClick() {
 		m_pUpperDentalImplantModel = glWidget->makeObject();
 		m_pUpperDentalImplantModel->Set_Visible(true);
 		m_pupperTeethModel = pCurrentTask->pTeethModel;
+		m_pUpperDentalImplantModel->Set_ModelFileName(pCurrentTask->Get_ModelFileName() + "den");
 	}
 	else if (pCurrentTask->Get_ScanType() == eLowerJawScan) {
 		m_pLowerDentalImplantModel = glWidget->makeObject();
 		m_pLowerDentalImplantModel->Set_Visible(true);
 		m_plowerTeethModel = pCurrentTask->pTeethModel;
+		m_pLowerDentalImplantModel->Set_ModelFileName(pCurrentTask->Get_ModelFileName() + "den");
 	}
 	glWidget->m_cutBoxesMap.clear();
 	glWidget->update();
@@ -1847,7 +1913,8 @@ void ScanMainGUI::DentalImplantPanelBackBtnClick() {
 	ShowLastScanTask();
 }
 void ScanMainGUI::DentalImplantFinishBackBtnClick() {
-	ShowLastScanTask();
+	//ShowLastScanTask();
+	showDentalImplantPanel();
 }
 
 void ScanMainGUI::progressBarSetSlot(int min, int max, bool bVisible)
@@ -1902,18 +1969,30 @@ void ScanMainGUI::stitchingFNextBtnClick() {
 	ui.OralSubstitutePanel->setVisible(true);
 	return;
 #endif
+	std::string strPath = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data();
 	if (m_pupperTeethModel) {
-		pCScanTask ptask = CTaskManager::getInstance()->getTask(eUpperJawScan);
-		if (ptask) {
-			saveModelFile(ptask);
-		}
+		saveModelFile(strPath, m_pupperTeethModel);
 	}
 	if (m_plowerTeethModel) {
-		pCScanTask ptask = CTaskManager::getInstance()->getTask(eLowerJawScan);
-		if (ptask) {
-			saveModelFile(ptask);
-		}
+		saveModelFile(strPath, m_plowerTeethModel);
 	}
+	
+	if (m_pLowerDentalImplantModel) {
+		saveModelFile(strPath,m_pLowerDentalImplantModel);
+	}
+	if (m_pUpperDentalImplantModel) {
+		saveModelFile(strPath, m_pUpperDentalImplantModel);
+	}
+	if (m_pUpperJawGingvaModel) {
+		saveModelFile(strPath, m_pUpperJawGingvaModel);
+	}
+	if (m_pLowJawGingvaModel) {
+		saveModelFile(strPath, m_pLowJawGingvaModel);
+	}
+
+
+
+
 	tabMainPage->show();
 	tabMainPage->showMaximized();
 	this->hide();
@@ -1993,8 +2072,19 @@ void ScanMainGUI::CutJawFinishPanelNextStepBtnClick() {
 	pCScanTask pDstTask = pTask->m_pDstTask, pSrcTask = pTask->m_pSrcTask;
 	if (!pDstTask || !pSrcTask)
 		return;
-	if(pCurrentTask->Get_TaskType() == eUpperTeethStit || pCurrentTask->Get_TaskType() == eLowerTeethStit)
+	if (pCurrentTask->Get_TaskType() == eUpperTeethStit || pCurrentTask->Get_TaskType() == eLowerTeethStit) {
+		glWidget->m_ModelsVt.clear();
+		glWidget->mm = pDstTask->m_mRegistrationModels.back();
+		pDstTask->pTeethModel = glWidget->makeObject();
+		if (pCurrentTask->Get_TaskType() == eUpperTeethStit) {		//上颌拼接
+			m_pupperTeethModel = pDstTask->pTeethModel;
+		}
+		else if (pCurrentTask->Get_TaskType() == eLowerTeethStit) {	//下颌拼接
+			m_plowerTeethModel = pDstTask->pTeethModel;
+		}
+		glWidget->update();
 		saveModelFile(pDstTask);
+	}
 	else if (pCurrentTask->Get_TaskType() == eUpperStitching || pCurrentTask->Get_TaskType() == eLowerStitching) {
 		saveModelFile(pSrcTask);
 	}
@@ -2018,10 +2108,19 @@ void ScanMainGUI::updateTaskModel()
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (pCurrentTask) {
 		if(pCurrentTask->m_mModel.size()>0){
-			int scan_index = pCurrentTask->m_mModel.size() - 1;
-			glWidget->mm = pCurrentTask->m_mModel[scan_index];
-			glWidget->makeObject();
-			glWidget->update();
+			glWidget->m_ModelsVt.clear();
+			for (int i = 0; i < pCurrentTask->m_mModel.size();i++) {
+				glWidget->mm = pCurrentTask->m_mModel[i];
+				if (i == pCurrentTask->m_mModel.size() - 1)
+					glWidget->makeObject(1.0f);
+				else
+					glWidget->makeObject();
+				glWidget->update();
+			}
+// 			int scan_index = pCurrentTask->m_mModel.size() - 1;
+// 			glWidget->mm = pCurrentTask->m_mModel[scan_index];
+// 			glWidget->makeObject(1.0f);
+// 			glWidget->update();
 		}
 	}
 }
@@ -2031,6 +2130,13 @@ void ScanMainGUI::showDentalImplantPanel(bool bBack) {
 	if (!pCurrentTask) {
 		return;
 	}
+	glWidget->m_ModelsVt.clear();
+	glWidget->m_ModelsVt.push_back(pCurrentTask->pTeethModel);
+	orth::MeshModel meshModel;
+	pCurrentTask->pTeethModel->getMeshModel(meshModel);
+	glWidget->mm = meshModel;
+	glWidget->update();
+	pCurrentTask->pTeethModel->Set_Visible(true);
 	ui.DentalImplantPanel->setVisible(true);
 	glWidget->m_cutBoxesMap.clear();
 	ui.lowerJawGroupBox->setVisible(false);
@@ -2162,7 +2268,7 @@ void ScanMainGUI::StitchFinishSlot()
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 			//if (pTask->m_mAllModel.size() > 0) {
 				glWidget->mm = pSrcTask->m_mAllModel;
-				pSrcTask->pTeethModel = glWidget->makeObject();
+				pSrcTask->pTeethModel = glWidget->makeObject(1.0f);
 				if(m_pallTeethModel){
 					glWidget->m_ModelsVt.push_back(m_pallTeethModel);
 					m_pallTeethModel->Set_Visible(true);
@@ -2229,24 +2335,31 @@ void ScanMainGUI::taskTeethSititFinishSlot()
 			str = QString::fromLocal8Bit(pCurrentTask->Get_TaskName().c_str()) + QString::fromLocal8Bit("拼接完成");
 			ui.CutJawFinishPanelLabel->setText(str);
 			glWidget->m_ModelsVt.clear();
+
+			for (int i = 0; i < pDstTask->m_mModel.size();i++) {
+				glWidget->mm = pDstTask->m_mModel[i];
+				glWidget->makeObject(1.0f);
+			}
 			//glWidget->m_ModelsVt.push_back(m_pallTeethModel);
-			glWidget->mm = pDstTask->m_mRegistrationModels.back();
-			pDstTask->pTeethModel = glWidget->makeObject();
-			if (pCurrentTask->Get_TaskType() == eUpperTeethStit) {		//上颌拼接
-				//pDstTask->pTeethModel->makeObject();
-				m_pupperTeethModel = pDstTask->pTeethModel;
-				//glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
-			//	m_pupperTeethModel = pDstTask->pTeethModel;
-			//	glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
-				//m_pallTeethModel = pSrcTask->pTeethModel;
-			}
-			else if (pCurrentTask->Get_TaskType() == eLowerTeethStit) {	//下颌拼接
-			//	m_plowerTeethModel = pDstTask->pTeethModel;
-			//	glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
-				//pDstTask->pTeethModel->makeObject();
-				m_plowerTeethModel = pDstTask->pTeethModel;
-				//glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
-			}
+			glWidget->mm = pDstTask->m_mAllModel;
+			glWidget->makeObject();
+// 			glWidget->mm = pDstTask->m_mRegistrationModels.back();
+// 			pDstTask->pTeethModel = glWidget->makeObject();
+// 			if (pCurrentTask->Get_TaskType() == eUpperTeethStit) {		//上颌拼接
+// 				//pDstTask->pTeethModel->makeObject();
+// 				m_pupperTeethModel = pDstTask->pTeethModel;
+// 				//glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
+// 			//	m_pupperTeethModel = pDstTask->pTeethModel;
+// 			//	glWidget->m_ModelsVt.push_back(m_pupperTeethModel);
+// 				//m_pallTeethModel = pSrcTask->pTeethModel;
+// 			}
+// 			else if (pCurrentTask->Get_TaskType() == eLowerTeethStit) {	//下颌拼接
+// 			//	m_plowerTeethModel = pDstTask->pTeethModel;
+// 			//	glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
+// 				//pDstTask->pTeethModel->makeObject();
+// 				m_plowerTeethModel = pDstTask->pTeethModel;
+// 				//glWidget->m_ModelsVt.push_back(m_plowerTeethModel);
+// 			}
 			//saveModelFile(pDstTask);
 			glWidget->update();
 		}
@@ -2270,6 +2383,7 @@ void ScanMainGUI::recallWindow()
 void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 {
 	resetValue();
+	m_bShowOrderInfo = true;
 	glWidget->m_ModelsVt.clear();
 	m_plowerTeethModel = nullptr;
 	m_pupperTeethModel = nullptr;
@@ -2294,6 +2408,10 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	ui.teethGroupBox->setVisible(false);
 	ui.jawGroupBox->setVisible(false);
 	bool bDen = false;	//种植牙
+	string strfileEnd = ".stl";
+#ifdef MODELPLY
+	strfileEnd = ".ply";
+#endif
 	if (orderInfo.eorderType == esplitModel) {//分模
 		ui.teethGroupBox->setVisible(true);
 		int chooseID = -1;
@@ -2349,11 +2467,11 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	else if (orderInfo.eorderType == eunMoulage) {
 		ui.jawGroupBox->setVisible(true);
 		bool bAllJaw = false, bUpperjaw = false, blowerJaw = false;
-		std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strUpperJawModelName + ".ply";
+		std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strUpperJawModelName + strfileEnd;
 		if (QFile::exists(QString::fromLocal8Bit(strUpperModelNameStr.c_str()))) {
 			bUpperjaw = true;
 		}
-		string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strLowerJawModelName + ".ply";
+		string strLowerModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strLowerJawModelName + strfileEnd;
 		if (QFile::exists(QString::fromLocal8Bit(strLowerModelNameStr.c_str()))) {
 			blowerJaw = true;
 		}
@@ -2370,24 +2488,23 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 			ui.jawImage->setPixmap(QPixmap::fromImage(image));
 		}
 	}
-	string strfileEnd = ".stl";
-#ifdef MODELPLY
-	strfileEnd = ".ply";
-#endif
+
 	std::string strUpperModelNameStr = orderInfo.strFilePath + orderInfo.strOderDate + orderInfo.strUpperJawModelName + strfileEnd;
+	m_strOrderInfoPath = orderInfo.strFilePath + orderInfo.strOderDate;
 	if (QFile::exists(QString::fromLocal8Bit(strUpperModelNameStr.c_str()))) {
 		orth::MeshModel meshModel;
 #ifdef MODELPLY
 		tinyply::plyio io;
 		io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-		//orth::ModelIO finish_model_io(&meshModel);
-		//finish_model_io.loadModel(strUpperModelNameStr);
+// 		orth::ModelIO finish_model_io(&meshModel);
+// 		finish_model_io.loadModel(strUpperModelNameStr);
 		tinystl::stlio io;
 		io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 		glWidget->mm = meshModel;
 		m_pupperTeethModel = glWidget->makeObject();
+		m_pupperTeethModel->Set_ModelFileName(orderInfo.strUpperJawModelName);
 		ui.upperJawBtn->setVisible(true);
 		ui.upperJawBtn->setChecked(true);
 	}
@@ -2398,13 +2515,14 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
  		tinyply::plyio io;
  		io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-		//orth::ModelIO finish_model_io(&meshModel);
-		//finish_model_io.loadModel(strLowerModelNameStr);
+// 		orth::ModelIO finish_model_io(&meshModel);
+// 		finish_model_io.loadModel(strLowerModelNameStr);
 		tinystl::stlio io;
 		io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 		glWidget->mm = meshModel;
 		m_plowerTeethModel = glWidget->makeObject();
+		m_plowerTeethModel->Set_ModelFileName(orderInfo.strLowerJawModelName);
 		ui.lowJawBtn->setVisible(true);
 		ui.lowJawBtn->setChecked(true);
 	}
@@ -2418,13 +2536,14 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-				//orth::ModelIO finish_model_io(&meshModel);
-				//finish_model_io.loadModel(strUpperModelNameStr);
+// 				orth::ModelIO finish_model_io(&meshModel);
+// 				finish_model_io.loadModel(strUpperModelNameStr);
 				tinystl::stlio io;
 				io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pUpperJawGingvaModel = glWidget->makeObject();
+				m_pUpperJawGingvaModel->Set_ModelFileName(orderInfo.strUpperJawModelName + "gingiva");
 				ui.upperJawGinBtn->setVisible(true);
 				ui.upperJawGinBtn->setChecked(true);
 			}
@@ -2435,13 +2554,14 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-				//orth::ModelIO finish_model_io(&meshModel);
-				//finish_model_io.loadModel(strLowerModelNameStr);
+// 				orth::ModelIO finish_model_io(&meshModel);
+// 				finish_model_io.loadModel(strLowerModelNameStr);
 				tinystl::stlio io;
 				io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pLowJawGingvaModel = glWidget->makeObject();
+				m_pLowJawGingvaModel->Set_ModelFileName(orderInfo.strLowerJawModelName + "gingiva");
 				ui.lowJawGinBtn->setVisible(true);
 				ui.lowJawGinBtn->setChecked(true);
 			}
@@ -2454,13 +2574,14 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strUpperModelNameStr, meshModel);
 #else
-				//orth::ModelIO finish_model_io(&meshModel);
-				//finish_model_io.loadModel(strUpperModelNameStr);
+// 				orth::ModelIO finish_model_io(&meshModel);
+// 				finish_model_io.loadModel(strUpperModelNameStr);
 				tinystl::stlio io;
 				io.read_stl_file(strUpperModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pUpperDentalImplantModel = glWidget->makeObject();
+				m_pUpperDentalImplantModel->Set_ModelFileName(orderInfo.strUpperJawModelName + "den");
 				ui.upperJawDenBtn->setVisible(true);
 				ui.upperJawDenBtn->setChecked(true);
 			}
@@ -2471,13 +2592,14 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 				tinyply::plyio io;
 				io.read_ply_file(strLowerModelNameStr, meshModel);
 #else
-				//orth::ModelIO finish_model_io(&meshModel);
-				//finish_model_io.loadModel(strLowerModelNameStr);
+// 				orth::ModelIO finish_model_io(&meshModel);
+// 				finish_model_io.loadModel(strLowerModelNameStr);
 				tinystl::stlio io;
 				io.read_stl_file(strLowerModelNameStr.c_str(), meshModel);
 #endif
 				glWidget->mm = meshModel;
 				m_pLowerDentalImplantModel = glWidget->makeObject();
+				m_pLowerDentalImplantModel->Set_ModelFileName(orderInfo.strLowerJawModelName + "den");
 				ui.lowJawDenBtn->setVisible(true);
 				ui.lowJawDenBtn->setChecked(true);
 			}
