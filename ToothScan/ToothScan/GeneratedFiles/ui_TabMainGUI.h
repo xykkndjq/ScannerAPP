@@ -66,6 +66,7 @@ public:
     QGroupBox *mainGroupBox;
     QLabel *logoLabel;
     QPushButton *btnClose;
+    QPushButton *btnMin;
     QGroupBox *settingGroupBox;
     QLabel *textureLabel;
     QLabel *calibrationPointLabel;
@@ -92,6 +93,9 @@ public:
         if (TabMainGUI->objectName().isEmpty())
             TabMainGUI->setObjectName(QStringLiteral("TabMainGUI"));
         TabMainGUI->resize(2222, 1011);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/MainWidget/Resources/images/systemicon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        TabMainGUI->setWindowIcon(icon);
         orderInforGroupBox = new QGroupBox(TabMainGUI);
         orderInforGroupBox->setObjectName(QStringLiteral("orderInforGroupBox"));
         orderInforGroupBox->setEnabled(true);
@@ -108,9 +112,9 @@ public:
 "border:0px groove gray;border-radius:5px;}\n"
 "QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/MainWidget/Resources/images/new.png"), QSize(), QIcon::Normal, QIcon::Off);
-        newPushButton->setIcon(icon);
+        QIcon icon1;
+        icon1.addFile(QStringLiteral(":/MainWidget/Resources/images/new.png"), QSize(), QIcon::Normal, QIcon::Off);
+        newPushButton->setIcon(icon1);
         newPushButton->setIconSize(QSize(22, 22));
         newPushButton->setCheckable(false);
         openPushButton = new QPushButton(orderGroupBox);
@@ -120,9 +124,9 @@ public:
 "border:0px groove gray;border-radius:5px;}\n"
 "QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
-        QIcon icon1;
-        icon1.addFile(QStringLiteral(":/MainWidget/Resources/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
-        openPushButton->setIcon(icon1);
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/MainWidget/Resources/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+        openPushButton->setIcon(icon2);
         openPushButton->setIconSize(QSize(22, 22));
         openPushButton->setCheckable(false);
         watchPushButton = new QPushButton(orderGroupBox);
@@ -132,9 +136,9 @@ public:
 "border:0px groove gray;border-radius:5px;}\n"
 "QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
-        QIcon icon2;
-        icon2.addFile(QStringLiteral(":/MainWidget/Resources/images/preview.png"), QSize(), QIcon::Normal, QIcon::Off);
-        watchPushButton->setIcon(icon2);
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/MainWidget/Resources/images/preview.png"), QSize(), QIcon::Normal, QIcon::Off);
+        watchPushButton->setIcon(icon3);
         watchPushButton->setIconSize(QSize(22, 22));
         watchPushButton->setCheckable(false);
         orderDateGroupBox = new QGroupBox(orderGroupBox);
@@ -245,9 +249,9 @@ public:
 "border:0px groove gray;border-radius:5px;}\n"
 "QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}"));
-        QIcon icon3;
-        icon3.addFile(QStringLiteral(":/MainWidget/Resources/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
-        savePushButton->setIcon(icon3);
+        QIcon icon4;
+        icon4.addFile(QStringLiteral(":/MainWidget/Resources/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        savePushButton->setIcon(icon4);
         savePushButton->setIconSize(QSize(22, 22));
         savePushButton->setCheckable(false);
         orderScanGroupBox = new QGroupBox(orderInforGroupBox);
@@ -311,9 +315,9 @@ public:
         scanPushButton->setStyleSheet(QLatin1String("background-color: rgba(40, 138, 237, 255);\n"
 "color: rgb(255, 255, 255);\n"
 "border:0px groove gray;border-radius:5px;"));
-        QIcon icon4;
-        icon4.addFile(QStringLiteral(":/MainWidget/Resources/images/scan.png"), QSize(), QIcon::Normal, QIcon::Off);
-        scanPushButton->setIcon(icon4);
+        QIcon icon5;
+        icon5.addFile(QStringLiteral(":/MainWidget/Resources/images/scan.png"), QSize(), QIcon::Normal, QIcon::Off);
+        scanPushButton->setIcon(icon5);
         scanPushButton->setIconSize(QSize(22, 22));
         moulageGroupBox = new QGroupBox(orderScanGroupBox);
         moulageGroupBox->setObjectName(QStringLiteral("moulageGroupBox"));
@@ -380,6 +384,10 @@ public:
         btnClose->setObjectName(QStringLiteral("btnClose"));
         btnClose->setGeometry(QRect(1870, 40, 14, 14));
         btnClose->setStyleSheet(QStringLiteral("border-image: url(:/MainWidget/Resources/images/btnClose.png);"));
+        btnMin = new QPushButton(mainGroupBox);
+        btnMin->setObjectName(QStringLiteral("btnMin"));
+        btnMin->setGeometry(QRect(1840, 40, 14, 14));
+        btnMin->setStyleSheet(QStringLiteral("background-image: url(:/MainWidget/Resources/images/minBtn.png);"));
         settingGroupBox = new QGroupBox(TabMainGUI);
         settingGroupBox->setObjectName(QStringLiteral("settingGroupBox"));
         settingGroupBox->setGeometry(QRect(530, 99, 775, 500));
@@ -533,6 +541,7 @@ public:
         mainGroupBox->setTitle(QString());
         logoLabel->setText(QString());
         btnClose->setText(QString());
+        btnMin->setText(QString());
         settingGroupBox->setTitle(QString());
         textureLabel->setText(QApplication::translate("TabMainGUI", "\347\272\271\347\220\206", Q_NULLPTR));
         calibrationPointLabel->setText(QApplication::translate("TabMainGUI", "\346\240\207\345\277\227\347\202\271", Q_NULLPTR));

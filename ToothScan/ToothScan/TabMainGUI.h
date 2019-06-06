@@ -32,8 +32,10 @@
 #include "TaskManager.h"
 #include "ImageBtn.h"
 #include "HeaderBtn.h"
-
+#include <QSystemTrayIcon>
 #define TOOTHNUM 32
+
+extern QWidget *g_pCurrentWidget;			//当前最小化窗口
 
 class TabMainGUI : public QWidget
 {
@@ -190,7 +192,7 @@ public:
 	CHeaderCheckBtn * m_aboutMgrBtn;
 	//右侧
 	QButtonGroup *rightButtonGroup;
-
+	
 
 signals:
 	void scanDataSignal(QJsonObject scanObj);
@@ -208,6 +210,7 @@ signals:
 	void exportThirdMoulageSignal();
 
 public slots:
+	void openDirectoryDialogSlot();
 	/*订单管理页面*/
 	void showOrderInforGroupBox();//打开订单管理子页面
 	void newButtonClickedSlot();//新建文件
@@ -216,6 +219,7 @@ public slots:
 	void PatientInformationSave();
 	void OrderPreview();
 	void closeBtnClicked();
+	void btnMinClicked();
     //未分模
 	void showUnModelGroupBox();//选择未分模功能
 	void UpperJawPress();
@@ -249,7 +253,5 @@ public slots:
 
 	/*设置子页面*/
 	void showSettingGroupBox();//打开设置子页面
-								 
-	void openDirectoryDialogSlot(); //打开路径下文件
 };
 #endif

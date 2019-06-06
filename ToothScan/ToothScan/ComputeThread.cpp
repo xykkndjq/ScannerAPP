@@ -1312,6 +1312,7 @@ void ComputeThread::GPAMeshing()
 	//emit showModeltoGlSingel(2);
 	//emit computeFinish();
 	emit progressBarVisibleSignal(false);
+	emit toolsGroupBoxSetVisible(true);
 	emit meshFinish();
 }
 //ÑÀ³ÝÅä×¼
@@ -1392,7 +1393,7 @@ void ComputeThread::taskTeethSitit()
 	emit progressBarSetValueSignal(3);
 	emit progressBarVisibleSignal(false);
 	emit taskTeethSititFinish();
-
+	emit toolsGroupBoxSetVisible(true);
 // 	//vector<orth::MeshModel>::iterator iter = l_vtModel.begin();
 // 	//for (; iter != l_vtModel.end(); iter++) {
 // 	for (int i = 0; i < l_vtModel.size();i++) {
@@ -1454,6 +1455,7 @@ void ComputeThread::Stitching()
 // 
 // 	}
 	emit progressBarVisibleSignal(false);
+	emit toolsGroupBoxSetVisible(true);
 	emit StitchFinish();
 }
 
@@ -1545,6 +1547,7 @@ void ComputeThread::allJawComputeScan()
 			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
 
 			emit progressBarVisibleSignal(false);
+			emit toolsGroupBoxSetVisible(true);
 			emit computeFinish();
 		}
 	}
@@ -1725,6 +1728,7 @@ void ComputeThread::normalComputeScan()
 			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
 
 			emit progressBarVisibleSignal(false);
+			emit toolsGroupBoxSetVisible(true);
 			emit computeFinish();
 		}
 	}
@@ -1808,6 +1812,7 @@ void ComputeThread::compensationCompute()
 
 	emit cameraShowSignal();
 	emit progressBarVisibleSignal(false);
+	emit toolsGroupBoxSetVisible(true);
 	emit computeFinish();
 }
 

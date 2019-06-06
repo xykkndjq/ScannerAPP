@@ -30,6 +30,7 @@ void ScanMainGUI::saveModelFile(pCScanTask pTask) {
 #ifdef MODELPLY
 	tinyply::plyio io;
 	std::string modelNameStr = string(tabMainPage->ToChineseStr(filePath).data()) + tabMainPage->ToChineseStr(patientNameQStr).data() + pTask->Get_ModelFileName() + ".ply";
+	pTask->pTeethModel->Set_ModelFileName(pTask->Get_ModelFileName());
 	cout << "pathname: " << modelNameStr << endl;
 	io.write_ply_file(modelNameStr, meshModel, true);
 #else
@@ -187,6 +188,11 @@ ScanMainGUI::ScanMainGUI(QWidget *parent)
 	ui.orderInfoPanel->move(1600, 50);
 	ui.DentalImplantFinishPanel->move(1600, 50);
 	ui.DentalImplantPanel->move(1600, 50);
+	ui.manualStitchingBtn->setVisible(false);
+	ui.CutJawFinishPanelTips_8->setVisible(false);
+	ui.CutJawFinishPanelTips_3->setVisible(false);	
+	ui.CutJawFinishPanelTips_4->setVisible(false);
+	ui.toolsGroupBox->setVisible(false);
 	addShadow2(ui.topCameraLabel);
 	//addShadow2(ui.bottomCameraLabel);
 	// 	ui.ScanJawGroup->setStyleSheet("background-color:rgb(225,225,225);");
@@ -237,6 +243,7 @@ ScanMainGUI::~ScanMainGUI()
 		controlComputeQThread->quit();
 	}
 	controlComputeQThread->wait();
+	m_mSysTrayIcon->hide();
 }
 
 void ScanMainGUI::initVariable()
@@ -291,6 +298,16 @@ void ScanMainGUI::initVariable()
 	//m_closeBtn = new CTeethImgBtn(":/MainWidget/Resources/images/btnclose.png", "", this);
 	//m_closeBtn->setFixedSize(30, 30);
 	//m_closeBtn->move(1880,20);
+	//当鼠标移动到托盘上的图标时，会显示此处设置的内容
+	m_mSysTrayIcon = new QSystemTrayIcon(this);
+	QIcon icon = QIcon(":/MainWidget/Resources/images/systemicon.png");
+	//将icon设到QSystemTrayIcon对象中
+	m_mSysTrayIcon->setIcon(icon);
+	m_mSysTrayIcon->setToolTip(QString::fromLocal8Bit("Alpha Box"));
+	//给QSystemTrayIcon添加槽函数
+
+	//在系统托盘显示此对象
+	m_mSysTrayIcon->show();
 }
 
 void ScanMainGUI::constructIHM()
@@ -425,6 +442,7 @@ void ScanMainGUI::setConnections()
 
 	/*----------------------关闭软件------------------------*/
 	connect(ui.btnClose, SIGNAL(clicked()), this, SLOT(closeBtnClicked()));//关闭
+	connect(ui.btnMin, SIGNAL(clicked()), this, SLOT(btnMinClicked()));//关闭
 	//软件打开时，提示是否USB连接成功
 	connect(this, SIGNAL(usbDeviceSignal()), this, SLOT(usbDeviceSlot()));
 	/*----------------订单信息管理子页面---------------*/
@@ -558,6 +576,7 @@ void ScanMainGUI::setConnections()
 	connect(ControlComputeThread, SIGNAL(progressBarSetValueSignal(int)), ui.progressBar, SLOT(setValue(int)));
 	connect(ControlComputeThread, SIGNAL(progressBarsetOrientation(Qt::Orientation)), ui.progressBar, SLOT(setOrientation(Qt::Orientation)));
 	connect(ControlComputeThread, SIGNAL(progressBarVisibleSignal(bool)), ui.progressBar, SLOT(setVisible(bool)));
+	connect(ControlComputeThread, SIGNAL(progressBarVisibleSignal(bool)), this, SLOT(minBtnSetVisible(bool)));
 	connect(ControlComputeThread, SIGNAL(progressBarSetSignal(int, int,  bool)), this, SLOT(progressBarSetSlot(int, int, bool)));
 	for (int i = 0; i < 32; i++)
 	{
@@ -565,13 +584,14 @@ void ScanMainGUI::setConnections()
 		QToolButton * pButton = findChild<QToolButton*>(strWidgetName);
 		if (pButton) {
 			pButton->setCheckable(true);
-			cout << pButton->metaObject()->className() << endl;
 			connect(pButton, SIGNAL(clicked()), this, SLOT(ToothButtonListPress()));
 		}
 	}
 
 	connect(timer, SIGNAL(timeout()), this, SLOT(setRotationWaverSlot()));
+	connect(ControlComputeThread, SIGNAL(toolsGroupBoxSetVisible(bool)), ui.toolsGroupBox, SLOT(setVisible(bool)));
 	timer->start(1000);
+	connect(m_mSysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason)));
 // 	void progressBarSetMinSignal(int min);
 // 	void progressBarSetMaxSignal(int max);
 // 	void progressBarSetValueSignal(int value);
@@ -580,10 +600,10 @@ void ScanMainGUI::setConnections()
 
 void ScanMainGUI::closeBtnClicked()
 {
-	controlScanQThread->terminate();
-	controlComputeQThread->terminate();
-	controlComputeQThread->wait();
-	controlScanQThread->wait();
+// 	controlScanQThread->terminate();
+// 	controlComputeQThread->terminate();
+// 	controlComputeQThread->wait();
+// 	controlScanQThread->wait();
 	tabMainPage->show();
 	tabMainPage->showMaximized();
 
@@ -610,6 +630,11 @@ void ScanMainGUI::closeBtnClicked()
 		}
 	}
 	this->hide();
+}
+void ScanMainGUI::btnMinClicked()
+{
+	this->showMinimized();
+	g_pCurrentWidget = this;
 }
 
 void ScanMainGUI::ToothCalibrateSlot()
@@ -941,6 +966,8 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 	ui.stitchingUpperJawGingivaBtn->hide();
 	ui.stitchingLowerJawDenBtn->hide();
 	ui.stitchingLowerJawGingivaBtn->hide();
+	ui.selectRegionButton->setEnabled(true);
+	ui.selectRegionButton->setEnabled(true);
 	//pCurrentTask->Set_TaskPro(eProgressScan);
 	glWidget->m_ModelsVt.clear();
 	if (m_pupperTeethModel) {
@@ -1079,6 +1106,16 @@ void ScanMainGUI::resetValue()
 	m_bShowOrderInfo = false;
 	m_strOrderInfoPath = "";
 	hideAllPanel();
+	ui.topWatchButton->setChecked(false);
+	ui.bottomWatchButton->setChecked(false);
+	ui.leftWatchButton->setChecked(false);
+	ui.rightWatchButton->setChecked(false);
+	ui.frontWatchButton->setChecked(false);
+	ui.backWatchButton->setChecked(false);
+	ui.enlargeButton->setChecked(false);
+	ui.shrinkButton->setChecked(false);
+	ui.selectRegionButton->setChecked(false);
+	ui.deleteModelButton->setChecked(false);
 }
 
 //void ScanMainGUI::compensationScan()
@@ -1924,6 +1961,13 @@ void ScanMainGUI::progressBarSetSlot(int min, int max, bool bVisible)
 	ui.progressBar->setMaximum(max);
 	//ui.progressBar->setOrientation(tation);
 	ui.progressBar->setVisible(bVisible);
+	ui.toolsGroupBox->setVisible(false);
+	ui.btnClose->setVisible(false);
+	ui.btnMin->setVisible(false);
+}
+void ScanMainGUI::minBtnSetVisible(bool bVisible) {
+	ui.btnClose->setVisible(!bVisible);
+	ui.btnMin->setVisible(!bVisible);
 }
 
 void ScanMainGUI::stitchingUpperJawBtnClick() {
@@ -2172,6 +2216,8 @@ void ScanMainGUI::showDentalImplantPanel(bool bBack) {
 void ScanMainGUI::meshFinishSlot()
 {
 	hideAllPanel();
+	ui.selectRegionButton->setEnabled(false);
+	ui.selectRegionButton->setEnabled(false);
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pCurrentTask) {
 		return;
@@ -2876,3 +2922,20 @@ void ScanMainGUI::usbDeviceSlot()
 	}
 }
 
+void ScanMainGUI::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason) {
+	switch (reason) {
+	case QSystemTrayIcon::Trigger:
+		//单击托盘图标
+		break;
+	case QSystemTrayIcon::DoubleClick:
+		//双击托盘图标
+		//双击后显示主程序窗口
+		if (g_pCurrentWidget){
+				g_pCurrentWidget->showMaximized();
+			//g_pCurrentWidget->raise();
+		}
+		break;
+	default:
+		break;
+	}
+}
