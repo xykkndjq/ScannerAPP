@@ -886,6 +886,7 @@ void ScanMainGUI::showScanJawGroup(bool bBack) {
 		ui.ScanJawBackStepBtn->setVisible(false);
 		//ui.ScanJawGroupTipImage->
 		QString l_strLabelImagePath = "";
+		QImage image;
 		switch (pCurrentTask->Get_ScanType())
 		{
 		case eUpperJawScan:
@@ -900,6 +901,9 @@ void ScanMainGUI::showScanJawGroup(bool bBack) {
 		default:
 			break;
 		}
+		image.load(l_strLabelImagePath);
+		//ui.ScanJawGroupTipImage->setFixedSize(image.width()/(2.5),image.height()/2.5);
+		ui.ScanJawGroupTipImage->setGeometry((300 - image.width() / 2.5) / 2, 180, image.width() / (2.5), image.height() / 2.5);
 		ui.ScanJawGroupTipImage->setPixmap(QPixmap(l_strLabelImagePath));
 		ui.noticeTipsLabel->setVisible(false);
 		QString str;

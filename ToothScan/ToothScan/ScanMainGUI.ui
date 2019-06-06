@@ -457,9 +457,9 @@ background-color:rgba(248,250,250,0);</string>
    <widget class="QLabel" name="ScanJawGroupTipImage">
     <property name="geometry">
      <rect>
-      <x>55</x>
+      <x>0</x>
       <y>180</y>
-      <width>180</width>
+      <width>300</width>
       <height>91</height>
      </rect>
     </property>
@@ -471,6 +471,9 @@ background-color:rgba(248,250,250,0);</string>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="ScanJawScanBtn">
