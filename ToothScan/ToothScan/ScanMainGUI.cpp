@@ -2801,6 +2801,8 @@ bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, 
 			bPnP_Removal = false;
 			bPnP_DevNodeChange = false;
 
+			this->setDisabled(true);
+		
 			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB被拔出请重新连接!"));
 			box.setStandardButtons(QMessageBox::Yes);
 			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
@@ -2825,6 +2827,9 @@ bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, 
 			box.setStandardButtons(QMessageBox::Yes);
 			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
 			box.exec();
+
+			this->setEnabled(true);
+
 			void *handle = (void *)winId();
 			ControlScanThread->l_usbStream.OpenUSB(handle);
 			if (!m_usbDeviceState)
