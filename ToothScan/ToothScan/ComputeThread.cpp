@@ -1728,7 +1728,7 @@ void ComputeThread::normalComputeScan()
 			orth::MergeModels(pScanTask->m_mModel, curTotalModel);
 
 			emit progressBarVisibleSignal(false);
-			emit toolsGroupBoxSetVisible(true);
+
 			emit computeFinish();
 		}
 	}
@@ -1812,7 +1812,6 @@ void ComputeThread::compensationCompute()
 
 	emit cameraShowSignal();
 	emit progressBarVisibleSignal(false);
-	emit toolsGroupBoxSetVisible(true);
 	emit computeFinish();
 }
 

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ScanMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.2
+** Created by: Qt User Interface Compiler version 5.9.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -460,7 +460,7 @@ public:
         compensationScanPanelTipLabel->setWordWrap(true);
         label_3 = new QLabel(compensationScanPanel);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(8, 190, 61, 31));
+        label_3->setGeometry(QRect(8, 190, 81, 31));
         rotationLineEdit = new QLineEdit(compensationScanPanel);
         rotationLineEdit->setObjectName(QStringLiteral("rotationLineEdit"));
         rotationLineEdit->setGeometry(QRect(132, 190, 90, 31));
@@ -469,7 +469,7 @@ public:
         waverLineEdit->setGeometry(QRect(132, 240, 90, 31));
         label_4 = new QLabel(compensationScanPanel);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(8, 240, 61, 31));
+        label_4->setGeometry(QRect(8, 240, 81, 31));
         compensationBtn = new QPushButton(compensationScanPanel);
         compensationBtn->setObjectName(QStringLiteral("compensationBtn"));
         compensationBtn->setGeometry(QRect(30, 290, 221, 40));
