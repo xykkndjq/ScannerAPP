@@ -550,11 +550,16 @@ void ControlThread::controlCalibrationScan()
 	_sleep(4000);
 #endif
 
-
-	l_usbStream.SetMidDLPLight();
+	l_usbStream.SetDLPLight(1);
+	//l_usbStream.SetMidDLPLight();
 	vector<vector<cv::Mat>> image_groups;
 	for (int scan_index = 0; scan_index < CALI_ROTATE_POS_CNT2; scan_index++)
 	{
+		if (scan_index == 1)
+		{
+			l_usbStream.SetDLPLight(2);
+		}
+
 		c_scan_x = SMX_CALI_ROTATE_DEGREE2[scan_index];
 		c_scan_y = SMY_CALI_ROTATE_DEGREE2[scan_index];
 
@@ -870,12 +875,11 @@ void ControlThread::normalScan()
 	_sleep(4000);
 #endif
 
-	//l_usbStream.SetScanDLPLight();//设置光机亮度
-	l_usbStream.SetMinDLPLight();
-
+	l_usbStream.SetMinDLPLight();//设置光机亮度
 	clock_t time1, time2, time3, time4, time5, time6;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
 	{
+		
 		double d_scan_x = 0.0;
 		double d_scan_y = 0.0;
 		c_scan_x = SMX_SCAN_ROTATE_DEGREE2[scan_index];

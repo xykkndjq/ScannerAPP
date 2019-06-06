@@ -64,6 +64,7 @@ namespace Communication
 			 bool SetMaxDLPLight();//设置光机最亮
 			 bool SetMidDLPLight();//设置光机中等
 			 bool SetMinDLPLight();//设置光机最弱
+			 bool SetDLPLight(int lightNum);//设置标定光机亮度：lightNum  = 1 高亮，lightNum  = 2 中亮，lightNum  = 3 低亮
 			//bool SetScanDLPLight();//设置光机扫描亮度
 									//实时显示
 			 bool RealModeFuction();//实时获取数据

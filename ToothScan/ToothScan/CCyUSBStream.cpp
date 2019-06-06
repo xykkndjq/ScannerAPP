@@ -735,6 +735,27 @@ namespace Communication
 		return minDLPFlag;
 	}
 
+	bool CCyUSBStream::SetDLPLight(int lightNum)
+	{
+		LONG length = 5;
+		bool DLPFlag;
+		if (lightNum == 1)
+		{
+			DLPFlag = m_EndPtOut->XferData(MaxDLPLight, length);
+		}
+		else if (lightNum == 2)
+		{
+			DLPFlag = m_EndPtOut->XferData(MidDLPLight, length);
+		}
+		else
+		{
+			DLPFlag = m_EndPtOut->XferData(MinDLPLight, length);
+		}
+		_sleep(1000);
+		cout << "DLPFlag = " << DLPFlag << endl;
+		return DLPFlag;
+	}
+
 	/*bool CCyUSBStream::SetScanDLPLight()
 	{
 		LONG length = 11;
