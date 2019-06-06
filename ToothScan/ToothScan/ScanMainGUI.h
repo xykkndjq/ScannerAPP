@@ -170,6 +170,8 @@ private:
 	//void GlobalCalibrateSlot();
 	void calibImageCameraSlot(int endFlag);//更新标定相机照片
 
+	void calibTipSlot(QString errorStr);//标定结束提示
+
 	//展示模型
 	//void updateMeshModel(int refreshIndex);
 	//void updateModelsVtSlot();
@@ -283,6 +285,8 @@ private:
 						 //扫描
 	void JawScanFinish();
 	void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason); //打开路径下文件
+
+
 };
 
 #endif

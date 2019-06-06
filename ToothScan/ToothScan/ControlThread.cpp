@@ -662,6 +662,10 @@ void ControlThread::controlCalibrationScan()
 	orth::Point3d error;
 	rs->SystemCalibration("SystemCalibration.yml", error);
 	cout << error << endl;
+	string errorStr = std::to_string(error.x) + ", " + std::to_string(error.y) + ", " + std::to_string(error.z) + "¡£";
+	QString errorQstr = QString::QString::fromStdString(errorStr);
+	emit calibFinishSignal(errorQstr);
+
 	InitParameters();
 }
 

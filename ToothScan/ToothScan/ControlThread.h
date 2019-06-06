@@ -125,6 +125,7 @@ public:
 	vector<cv::Mat> calibImageCamera;
 signals:
 	void calibImageSignal(int endFlag);
+	void calibFinishSignal(QString errorStr);
 public slots:
 	//void normalControlScan();
 	//void normalAllJawControlScan();

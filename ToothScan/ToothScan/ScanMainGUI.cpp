@@ -484,6 +484,8 @@ void ScanMainGUI::setConnections()
 	//connect(tabMainPage->globalCaliPushButton, SIGNAL(clicked()), this, SLOT(GlobalCalibrateSlot()));
 	connect(ControlScanThread, SIGNAL(calibImageSignal(int)), this, SLOT(calibImageCameraSlot(int)));//展示标定照片
 
+	connect(ControlScanThread, SIGNAL(calibFinishSignal(QString)), this, SLOT(calibTipSlot(QString)));//标定结束提示
+
 	//模型工具栏操作
 	connect(ui.topWatchButton, SIGNAL(clicked()), this, SLOT(topModelWatchSlot()));
 	connect(ui.bottomWatchButton, SIGNAL(clicked()), this, SLOT(bottomModelWatchSlot()));
@@ -2689,10 +2691,10 @@ void ScanMainGUI::calibImageCameraSlot(int endFlag)
 		tabMainPage->ui.rightCameraLable->setStyleSheet("background-color:rgb(0,0,0);");
 		tabMainPage->ui.leftCameraLable->update();
 		tabMainPage->ui.rightCameraLable->update();
-		QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("标定结束!"));
+		/*QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("标定结束!"));
 		box.setStandardButtons(QMessageBox::Yes);
 		box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-		box.exec();
+		box.exec();*/
 	}
 	tabMainPage->showMaximized();
 }
@@ -2942,4 +2944,12 @@ void ScanMainGUI::on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reas
 	default:
 		break;
 	}
+}
+
+void ScanMainGUI::calibTipSlot(QString errorStr)
+{
+	string tipInfor =  "标定结束，精度：" + errorStr.toStdString();
+	QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QString::fromLocal8Bit(tipInfor.c_str()), QMessageBox::Yes, NULL);
+	box.setButtonText(QMessageBox::Yes, QStringLiteral("确定"));
+	box.exec();
 }
