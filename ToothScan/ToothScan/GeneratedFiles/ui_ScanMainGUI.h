@@ -293,9 +293,10 @@ public:
 "background-color:rgba(248,250,250,0);"));
         ScanJawGroupTipImage = new QLabel(ScanJawGroup);
         ScanJawGroupTipImage->setObjectName(QStringLiteral("ScanJawGroupTipImage"));
-        ScanJawGroupTipImage->setGeometry(QRect(55, 180, 180, 91));
+        ScanJawGroupTipImage->setGeometry(QRect(0, 180, 300, 91));
         ScanJawGroupTipImage->setPixmap(QPixmap(QString::fromUtf8("C:/Users/CAMNODE06/.designer/backup/Resources/images/lowerjaw_yes.png")));
         ScanJawGroupTipImage->setScaledContents(true);
+        ScanJawGroupTipImage->setAlignment(Qt::AlignCenter);
         ScanJawScanBtn = new QPushButton(ScanJawGroup);
         ScanJawScanBtn->setObjectName(QStringLiteral("ScanJawScanBtn"));
         ScanJawScanBtn->setGeometry(QRect(40, 500, 221, 40));
@@ -600,7 +601,7 @@ public:
         cutHeightSlider->setOrientation(Qt::Horizontal);
         cutHeightSpinBox = new QSpinBox(CutJawPanel);
         cutHeightSpinBox->setObjectName(QStringLiteral("cutHeightSpinBox"));
-        cutHeightSpinBox->setGeometry(QRect(94, 226, 61, 22));
+        cutHeightSpinBox->setGeometry(QRect(94, 223, 61, 25));
         cutHeightSpinBox->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
 "border 1px;"));
         cutHeightSpinBox->setMinimum(-20);
