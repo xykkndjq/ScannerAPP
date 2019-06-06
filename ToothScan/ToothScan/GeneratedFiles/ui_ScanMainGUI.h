@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'ScanMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.9.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -600,7 +600,7 @@ public:
         cutHeightSlider->setOrientation(Qt::Horizontal);
         cutHeightSpinBox = new QSpinBox(CutJawPanel);
         cutHeightSpinBox->setObjectName(QStringLiteral("cutHeightSpinBox"));
-        cutHeightSpinBox->setGeometry(QRect(94, 226, 61, 30));
+        cutHeightSpinBox->setGeometry(QRect(94, 223, 61, 25));
         cutHeightSpinBox->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
 "border 1px;"));
         cutHeightSpinBox->setMinimum(-20);
