@@ -2029,14 +2029,21 @@ void TabMainGUI::readFileStorage(QString fPath)
 	ui.operatorNameLineEdit->setText(orderOperatorName);
 	if (fRead["scanModel"].real() == 1)
 	{
+		ui.unModelPushButton->click();
+		ui.upperJawPushButton->setChecked(true);
 		emit exportUpperJawSignal();
 	}
 	else if (fRead["scanModel"].real() == 2)
 	{
+		ui.unModelPushButton->click();
+		ui.lowerJawPushButton->setChecked(true);
 		emit exportLowerJawSignal();
 	}
 	else if (fRead["scanModel"].real() == 3)
 	{
+		ui.unModelPushButton->click();
+		ui.lowerJawPushButton->setChecked(true);
+		ui.upperJawPushButton->setChecked(true);
 		emit exportUpperJawSignal();
 		emit exportLowerJawSignal();
 	}
