@@ -2240,22 +2240,25 @@ void TabMainGUI::showOrderInforGroupBox()
 	ui.calibrationGroupBox->hide();
 	ui.aboutGroupBox->hide();
 	ui.orderInforGroupBox->show();
+	ui.orderInforGroupBox->update();
 }
 
 void TabMainGUI::showCalibrationGroupBox()
 {
 	ui.settingGroupBox->hide();
-	ui.calibrationGroupBox->show();
 	ui.aboutGroupBox->hide();
 	ui.orderInforGroupBox->hide();
+	ui.calibrationGroupBox->show();
+	ui.calibrationGroupBox->update();
 }
 
 void TabMainGUI::showAboutGroupBox()
 {
 	ui.settingGroupBox->hide();
 	ui.calibrationGroupBox->hide();
-	ui.aboutGroupBox->show();
 	ui.orderInforGroupBox->hide();
+	ui.aboutGroupBox->show();
+	ui.aboutGroupBox->update();
 }
 
 void TabMainGUI::showUnModelGroupBox()
