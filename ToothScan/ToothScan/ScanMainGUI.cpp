@@ -970,8 +970,8 @@ void ScanMainGUI::showStitchingFinishPanel(bool bBack) {
 	ui.stitchingUpperJawGingivaBtn->hide();
 	ui.stitchingLowerJawDenBtn->hide();
 	ui.stitchingLowerJawGingivaBtn->hide();
-	ui.selectRegionButton->setEnabled(true);
-	ui.selectRegionButton->setEnabled(true);
+// 	ui.selectRegionButton->setEnabled(true);
+// 	ui.selectRegionButton->setEnabled(true);
 	//pCurrentTask->Set_TaskPro(eProgressScan);
 	glWidget->m_ModelsVt.clear();
 	if (m_pupperTeethModel) {
@@ -2220,8 +2220,8 @@ void ScanMainGUI::showDentalImplantPanel(bool bBack) {
 void ScanMainGUI::meshFinishSlot()
 {
 	hideAllPanel();
-	ui.selectRegionButton->setEnabled(false);
-	ui.selectRegionButton->setEnabled(false);
+	//ui.selectRegionButton->setEnabled(false);
+	//ui.selectRegionButton->setEnabled(false);
 	pCScanTask pCurrentTask = CTaskManager::getInstance()->getCurrentTask();
 	if (!pCurrentTask) {
 		return;

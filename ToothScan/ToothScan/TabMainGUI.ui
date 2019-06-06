@@ -978,7 +978,7 @@ border-radius:5px;</string>
      </rect>
     </property>
     <property name="text">
-     <string>扫描路径：</string>
+     <string>订单路径：</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="scanPathGroupBox">

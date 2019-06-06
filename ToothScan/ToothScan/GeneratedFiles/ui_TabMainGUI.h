@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TabMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.2
+** Created by: Qt User Interface Compiler version 5.9.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -547,7 +547,7 @@ public:
         calibrationPointLabel->setText(QApplication::translate("TabMainGUI", "\346\240\207\345\277\227\347\202\271", Q_NULLPTR));
         jawFrameLabel->setText(QApplication::translate("TabMainGUI", "\351\242\214\346\236\266", Q_NULLPTR));
         saveSpliteModelLabel->setText(QApplication::translate("TabMainGUI", "\344\277\235\345\255\230\345\215\225\345\270\247\346\250\241\345\236\213", Q_NULLPTR));
-        scanpathLabel->setText(QApplication::translate("TabMainGUI", "\346\211\253\346\217\217\350\267\257\345\276\204\357\274\232", Q_NULLPTR));
+        scanpathLabel->setText(QApplication::translate("TabMainGUI", "\350\256\242\345\215\225\350\267\257\345\276\204\357\274\232", Q_NULLPTR));
         scanPathGroupBox->setTitle(QString());
         scanPathLineEdit->setInputMask(QString());
         scanPathLineEdit->setText(QApplication::translate("TabMainGUI", "./ScanData", Q_NULLPTR));
