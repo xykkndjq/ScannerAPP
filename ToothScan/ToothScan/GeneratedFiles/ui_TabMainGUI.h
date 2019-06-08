@@ -70,14 +70,14 @@ public:
     QGroupBox *settingGroupBox;
     QLabel *textureLabel;
     QLabel *calibrationPointLabel;
-    QLabel *jawFrameLabel;
+    QLabel *GPULabel;
     QLabel *saveSpliteModelLabel;
     QLabel *scanpathLabel;
     QGroupBox *scanPathGroupBox;
     QLineEdit *scanPathLineEdit;
     QPushButton *choosePathPushButton;
     QPushButton *saveSpliteModelCheckBox;
-    QPushButton *jawFrameCheckBox;
+    QPushButton *GPUCheckBox;
     QPushButton *calibrationPointCheckBox;
     QPushButton *textureCheckBox;
     QGroupBox *calibrationGroupBox;
@@ -399,9 +399,9 @@ public:
         calibrationPointLabel = new QLabel(settingGroupBox);
         calibrationPointLabel->setObjectName(QStringLiteral("calibrationPointLabel"));
         calibrationPointLabel->setGeometry(QRect(150, 125, 54, 34));
-        jawFrameLabel = new QLabel(settingGroupBox);
-        jawFrameLabel->setObjectName(QStringLiteral("jawFrameLabel"));
-        jawFrameLabel->setGeometry(QRect(150, 197, 54, 34));
+        GPULabel = new QLabel(settingGroupBox);
+        GPULabel->setObjectName(QStringLiteral("GPULabel"));
+        GPULabel->setGeometry(QRect(150, 197, 54, 34));
         saveSpliteModelLabel = new QLabel(settingGroupBox);
         saveSpliteModelLabel->setObjectName(QStringLiteral("saveSpliteModelLabel"));
         saveSpliteModelLabel->setGeometry(QRect(150, 269, 81, 34));
@@ -435,13 +435,13 @@ public:
 "QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }"));
         saveSpliteModelCheckBox->setCheckable(true);
         saveSpliteModelCheckBox->setChecked(false);
-        jawFrameCheckBox = new QPushButton(settingGroupBox);
-        jawFrameCheckBox->setObjectName(QStringLiteral("jawFrameCheckBox"));
-        jawFrameCheckBox->setGeometry(QRect(510, 188, 76, 34));
-        jawFrameCheckBox->setStyleSheet(QLatin1String("QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }\n"
+        GPUCheckBox = new QPushButton(settingGroupBox);
+        GPUCheckBox->setObjectName(QStringLiteral("GPUCheckBox"));
+        GPUCheckBox->setGeometry(QRect(510, 188, 76, 34));
+        GPUCheckBox->setStyleSheet(QLatin1String("QPushButton:checked{border-image: url(:/MainWidget/Resources/images/checked.png); }\n"
 "QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }"));
-        jawFrameCheckBox->setCheckable(true);
-        jawFrameCheckBox->setChecked(false);
+        GPUCheckBox->setCheckable(true);
+        GPUCheckBox->setChecked(false);
         calibrationPointCheckBox = new QPushButton(settingGroupBox);
         calibrationPointCheckBox->setObjectName(QStringLiteral("calibrationPointCheckBox"));
         calibrationPointCheckBox->setGeometry(QRect(510, 116, 76, 34));
@@ -545,7 +545,7 @@ public:
         settingGroupBox->setTitle(QString());
         textureLabel->setText(QApplication::translate("TabMainGUI", "\347\272\271\347\220\206", Q_NULLPTR));
         calibrationPointLabel->setText(QApplication::translate("TabMainGUI", "\346\240\207\345\277\227\347\202\271", Q_NULLPTR));
-        jawFrameLabel->setText(QApplication::translate("TabMainGUI", "\351\242\214\346\236\266", Q_NULLPTR));
+        GPULabel->setText(QApplication::translate("TabMainGUI", "GPU", Q_NULLPTR));
         saveSpliteModelLabel->setText(QApplication::translate("TabMainGUI", "\344\277\235\345\255\230\345\215\225\345\270\247\346\250\241\345\236\213", Q_NULLPTR));
         scanpathLabel->setText(QApplication::translate("TabMainGUI", "\350\256\242\345\215\225\350\267\257\345\276\204\357\274\232", Q_NULLPTR));
         scanPathGroupBox->setTitle(QString());
@@ -553,7 +553,7 @@ public:
         scanPathLineEdit->setText(QApplication::translate("TabMainGUI", "./ScanData", Q_NULLPTR));
         choosePathPushButton->setText(QApplication::translate("TabMainGUI", "\351\200\211\346\213\251\350\267\257\345\276\204", Q_NULLPTR));
         saveSpliteModelCheckBox->setText(QString());
-        jawFrameCheckBox->setText(QString());
+        GPUCheckBox->setText(QString());
         calibrationPointCheckBox->setText(QString());
         textureCheckBox->setText(QString());
         calibrationGroupBox->setTitle(QString());

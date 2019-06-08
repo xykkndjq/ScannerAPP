@@ -942,7 +942,7 @@ border-radius:5px;</string>
      <string>标志点</string>
     </property>
    </widget>
-   <widget class="QLabel" name="jawFrameLabel">
+   <widget class="QLabel" name="GPULabel">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -952,7 +952,7 @@ border-radius:5px;</string>
      </rect>
     </property>
     <property name="text">
-     <string>颌架</string>
+     <string>GPU</string>
     </property>
    </widget>
    <widget class="QLabel" name="saveSpliteModelLabel">
@@ -1068,7 +1068,7 @@ QPushButton{border-image: url(:/MainWidget/Resources/images/uncheck.png); }</str
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="jawFrameCheckBox">
+   <widget class="QPushButton" name="GPUCheckBox">
     <property name="geometry">
      <rect>
       <x>510</x>

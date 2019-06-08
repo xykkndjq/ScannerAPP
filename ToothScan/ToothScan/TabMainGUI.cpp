@@ -246,8 +246,9 @@ void TabMainGUI::setConnections()
 	/*----------------------打开设置子页面------------------------*/
 	connect(m_settingMgrBtn, SIGNAL(clicked()), this, SLOT(showSettingGroupBox()));//打开设置子页面
 	//connect(ui.checkBoxGroupBox, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
-	connect(ui.saveSpliteModelCheckBox, SIGNAL(clicked()), this, SLOT(saveSpliteModelCheckBoxClicked()));
+	connect(ui.saveSpliteModelCheckBox, SIGNAL(clicked()), this, SLOT(saveSpliteModelCheckBoxClicked()));//保存单帧数据
 	connect(ui.choosePathPushButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
+	connect(ui.GPUCheckBox, SIGNAL(clicked()), this, SLOT(doGPUClicked()));//使用GPU运行程序
 
 	/*----------------------打开关于子页面------------------------*/
 	connect(m_aboutMgrBtn, SIGNAL(clicked()), this, SLOT(showAboutGroupBox()));//打开设置子页面
@@ -2233,6 +2234,20 @@ void TabMainGUI::saveSpliteModelCheckBoxClicked()
 	if (!pCheckBox)
 		return;
 	CSystemConfig::shareInstance()->setValue(B_SAVESPLITEMODEL,pCheckBox->isChecked()?"true":"false");
+}
+
+void TabMainGUI::doGPUClicked()
+{
+	QPushButton * pCheckBox = static_cast<QPushButton *> (sender());
+	if (pCheckBox->isChecked())
+	{
+		doGPUFlag = true;
+	}
+	else
+	{
+		doGPUFlag = false;
+	}
+	cout << "doGPUFlag = " << doGPUFlag <<endl;
 }
 
 void TabMainGUI::showSettingGroupBox()
