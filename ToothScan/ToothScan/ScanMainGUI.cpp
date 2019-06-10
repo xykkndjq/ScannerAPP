@@ -449,6 +449,9 @@ void ScanMainGUI::setConnections()
 	connect(tabMainPage, SIGNAL(scanDataSignal(QJsonObject)), this, SLOT(doScanDialogSlot(QJsonObject)));
 	connect(tabMainPage, SIGNAL(showOrderInfoSignal(COrderInfo)), this, SLOT(showOrderInfo(COrderInfo)));
 
+	/*----------------设置子页面---------------*/
+	connect(tabMainPage->ui.GPUCheckBox, SIGNAL(clicked()), this, SLOT(doGPUClicked()));//使用GPU运行程序
+
 	//MeshandGpa
 	//connect(this, SIGNAL(gpaMeshSignal(int)), ControlComputeThread, SLOT(GPAMeshing(int)));
 	//保存切割后模型
@@ -598,6 +601,20 @@ void ScanMainGUI::setConnections()
 // 	void progressBarSetMaxSignal(int max);
 // 	void progressBarSetValueSignal(int value);
 // 	void progressBarsetOrientation(Qt::Orientation);
+}
+
+void ScanMainGUI::doGPUClicked()
+{
+	QPushButton * pCheckBox = static_cast<QPushButton *> (sender());
+	if (pCheckBox->isChecked())
+	{
+		ControlComputeThread->doGPUFlag = true;
+	}
+	else
+	{
+		ControlComputeThread->doGPUFlag = false;
+	}
+	cout << "doGPUFlag = " << ControlComputeThread->doGPUFlag << endl;
 }
 
 void ScanMainGUI::closeBtnClicked()

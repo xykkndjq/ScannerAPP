@@ -4,8 +4,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/ocl.hpp>
 #include <opencv2/features2d.hpp>
-
-#include <orthio.h>
+#include <math.h>
+#include "basetype.h"
 #include <iostream>
 
 #include <windows.h>
@@ -17,6 +17,11 @@
 #define cali_width 11.0f
 #define cali_height 9.0f
 #define cali_size 10.0f
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846   // pi
+#endif
+
 
 using cv::Mat;
 using std::cout;
@@ -198,6 +203,13 @@ namespace scan
 
 		void __declspec (dllexport) PlaneRTCalculate(vector<cv::Mat> &left_circle_images, vector<cv::Mat> &right_circle_images, const string RT_file_name, vector<double> &totle_mask_point);
 
+		void __declspec(dllexport) Motor2Rot(const float pitch, const float yaw, cv::Mat &Rot);
+
+		void __declspec(dllexport) SystemCompensation(static int* scan_x, static int* scan_y, int scan_number, vector<cv::Mat> &RT_matrixs);
+
+		void __declspec(dllexport) PointCloudCalculateCuda2(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, double *normal_image, double* depth_image, double dis_threshold);
+
+
 		void PatternsComp(vector<Mat> &pimg);
 
 		void CompensatePhase(const Mat &phi1, const Mat &phi2, Mat &phi_out);
@@ -237,6 +249,7 @@ namespace scan
 
 	private:
 
+		inline double  ToRad(const double &a) { return M_PI*a / 180.0; }
 		//const int kN = 6;
 		//const float kF = 16;
 		const cv::Size kPatternSize = cv::Size(1024, 768);

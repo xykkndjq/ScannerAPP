@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	}
 	std::ofstream log(logPath.toStdString() + QString("/toothscan.log").toStdString()+ m_DateTime.currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz").toStdString());
 
-	//std::streambuf * oldbuf = std::cout.rdbuf(log.rdbuf());
+	std::streambuf * oldbuf = std::cout.rdbuf(log.rdbuf());
 	QApplication::addLibraryPath("./plugins");
 	//RunCrashHandler();
 	SetUnhandledExceptionFilter(ExceptionFilter);

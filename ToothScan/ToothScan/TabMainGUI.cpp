@@ -2236,19 +2236,7 @@ void TabMainGUI::saveSpliteModelCheckBoxClicked()
 	CSystemConfig::shareInstance()->setValue(B_SAVESPLITEMODEL,pCheckBox->isChecked()?"true":"false");
 }
 
-void TabMainGUI::doGPUClicked()
-{
-	QPushButton * pCheckBox = static_cast<QPushButton *> (sender());
-	if (pCheckBox->isChecked())
-	{
-		doGPUFlag = true;
-	}
-	else
-	{
-		doGPUFlag = false;
-	}
-	cout << "doGPUFlag = " << doGPUFlag <<endl;
-}
+
 
 void TabMainGUI::showSettingGroupBox()
 {

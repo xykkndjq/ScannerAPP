@@ -183,8 +183,6 @@ public:
 	pCScanTask m_pTeethScanTaskArray[32];
 	eScanType m_eScanType;
 
-	bool doGPUFlag = false;
-
 	/*订单管理页面*/
 	//顶部
 	QButtonGroup *headerButtonGroup;
@@ -249,8 +247,6 @@ public slots:
 	
 	/*标定子页面*/
 	void showCalibrationGroupBox();
-	
-	void doGPUClicked();
 
 	/*关于子页面*/
 	void showAboutGroupBox();

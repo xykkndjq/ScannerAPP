@@ -19,44 +19,54 @@ typedef void(*Dllfun2)(orth::MeshModel &mm_target, orth::MeshModel &mm_source, c
 Dllfun2 g_icp = NULL;
 HINSTANCE g_hdll = NULL;
 
-void poissonRecon(orth::MeshModel& totalMeshModel)
-{
-	PoissonReconstruction fsp;
-	fsp.run(totalMeshModel, 9, 0.4);
-// 	int  argc;
-// 	char *argv[9];
-// 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
-// 	Dllfun pRecon;
-// 	HINSTANCE hdll;
-// 	argc = 7;
-// 
-// 	argv[0] = "111";
-// 	argv[1] = "--in";
-// 	argv[2] = "12.ply";
-// 	argv[3] = "--out";
-// 	argv[4] = "123.ply";
-// 	argv[5] = "--depth";
-// 	argv[6] = "9";
-// // 	argv[7] = "--bType";
-// // 	argv[8] = "1";
-// 	hdll = LoadLibrary(L"PoissonRecon.dll");
-// 	if (hdll == NULL)
-// 	{
-// 		FreeLibrary(hdll);
-// 	}
-// 	pRecon = (Dllfun)GetProcAddress(hdll, "reconstruction");
-// 	if (pRecon == NULL)
-// 	{
-// 		FreeLibrary(hdll);
-// 	}
-// 
-// 	pRecon(argc, argv, totalMeshModel);
-// 
-// 
-// 	FreeLibrary(hdll);
-}
+//void poissonRecon(orth::MeshModel& totalMeshModel)
+//{
+//	PoissonReconstruction fsp;
+//	//fsp.run(totalMeshModel, 9, 0.4);
+//	if (doGPUFlag)
+//	{
+//		fsp.run(totalMeshModel, totalMeshModel, 9, 0.4);
+//	}
+//	else
+//	{
+//		fsp.run_cpu(totalMeshModel, totalMeshModel, 9, 0.4);
+//	}
+//
+//// 	int  argc;
+//// 	char *argv[9];
+//// 	typedef void(*Dllfun)(int argc, char* argv[], orth::MeshModel& mm);
+//// 	Dllfun pRecon;
+//// 	HINSTANCE hdll;
+//// 	argc = 7;
+//// 
+//// 	argv[0] = "111";
+//// 	argv[1] = "--in";
+//// 	argv[2] = "12.ply";
+//// 	argv[3] = "--out";
+//// 	argv[4] = "123.ply";
+//// 	argv[5] = "--depth";
+//// 	argv[6] = "9";
+//// // 	argv[7] = "--bType";
+//// // 	argv[8] = "1";
+//// 	hdll = LoadLibrary(L"PoissonRecon.dll");
+//// 	if (hdll == NULL)
+//// 	{
+//// 		FreeLibrary(hdll);
+//// 	}
+//// 	pRecon = (Dllfun)GetProcAddress(hdll, "reconstruction");
+//// 	if (pRecon == NULL)
+//// 	{
+//// 		FreeLibrary(hdll);
+//// 	}
+//// 
+//// 	pRecon(argc, argv, totalMeshModel);
+//// 
+//// 
+//// 	FreeLibrary(hdll);
+//}
 
 scan::Unwarp g_unwarp;
+scan::RasterScan c_unwarp;
 ComputeThread::ComputeThread(QObject *parent)
 	: QObject(parent)
 {
@@ -447,15 +457,32 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 // 
 // 		cloudrot = rt_icp;
 // 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
-		if (reg.NearRegist(pScanTask->m_mModel,mModel))
-		{
 
-			pScanTask->m_mModel.push_back(mModel);
+		if (doGPUFlag)
+		{
+			if (reg.NearRegistGPU(pScanTask->m_mModel, mModel))
+			{
+
+				pScanTask->m_mModel.push_back(mModel);
+			}
+			else
+			{
+				cout << " NearRegistration is failure" << endl;
+			}
 		}
 		else
 		{
-			cout << " NearRegistration is failure" << endl;
+			if (reg.NearRegistCPU(pScanTask->m_mModel, mModel))
+			{
+
+				pScanTask->m_mModel.push_back(mModel);
+			}
+			else
+			{
+				cout << " NearRegistration is failure" << endl;
+			}
 		}
+		
 		timeTest.Print("NearRegist finish");
 		
 		//pointcloudrotation(pScanTask->m_mModel[scan_index].P, pScanTask->m_mModel[scan_index].N, cloudrot);
@@ -854,31 +881,64 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 // 			// 				//return false;
 // 			// 			}
 // 		}
-		if (reg.CompenNearRegist(curTotalModel, mModel))
+		if (doGPUFlag)
 		{
-			PoissonReconstruction recon;
-			recon.RedundancyFilter(curTotalModel,mModel,0.3);
+			if (reg.CompenNearRegistGPU(curTotalModel, mModel))
+			{
+				PoissonReconstruction recon;
+				cout << "RedundancyFilter" << endl;
+				recon.RedundancyFilter(curTotalModel, mModel, 0.3);
+				cout << "RedundancyFilter is end" << endl;
+				pScanTask->m_mModel.push_back(mModel);
+				pScanTask->m_nAddModel++;
+				cloudrot = rt_icp;
+				//g_unwarp.MeshRot((double*)cloudrot.data, &pScanTask->m_mModel[scan_index]);
+				//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+				//pointcloudrotation(points_2, cloudrot);
+				pScanTask->m_points_cloud_globle.push_back(points_2);
+				pScanTask->m_points_cloud_end.insert(pScanTask->m_points_cloud_end.end(), points_2.begin(), points_2.end());
+				pScanTask->m_points_cloud_end_addSize.push_back(points_2.size());
 
-			pScanTask->m_mModel.push_back(mModel);
-			pScanTask->m_nAddModel++;
-			cloudrot = rt_icp;
-			//g_unwarp.MeshRot((double*)cloudrot.data, &pScanTask->m_mModel[scan_index]);
-			//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
-			//pointcloudrotation(points_2, cloudrot);
-			pScanTask->m_points_cloud_globle.push_back(points_2);
-			pScanTask->m_points_cloud_end.insert(pScanTask->m_points_cloud_end.end(), points_2.begin(), points_2.end());
-			pScanTask->m_points_cloud_end_addSize.push_back(points_2.size());
-
-			vector<orth::MeshModel> newModelV;
-			newModelV.push_back(curTotalModel);
-			newModelV.push_back(mModel);
-			curTotalModel.Clear();
-			orth::MergeModels(newModelV, curTotalModel);
+				vector<orth::MeshModel> newModelV;
+				newModelV.push_back(curTotalModel);
+				newModelV.push_back(mModel);
+				curTotalModel.Clear();
+				orth::MergeModels(newModelV, curTotalModel);
+			}
+			else
+			{
+				cout << "Compensiation Registration is failure" << endl;
+			}
 		}
 		else
 		{
-			cout << "Compensiation Registration is failure" << endl;
+			if (reg.CompenNearRegistCPU(curTotalModel, mModel))
+			{
+				PoissonReconstruction recon;
+				recon.RedundancyFilter(curTotalModel, mModel, 0.3);
+
+				pScanTask->m_mModel.push_back(mModel);
+				pScanTask->m_nAddModel++;
+				cloudrot = rt_icp;
+				//g_unwarp.MeshRot((double*)cloudrot.data, &pScanTask->m_mModel[scan_index]);
+				//pointcloudrotation(upper_mModel[scan_index].P, upper_mModel[scan_index].N, cloudrot);
+				//pointcloudrotation(points_2, cloudrot);
+				pScanTask->m_points_cloud_globle.push_back(points_2);
+				pScanTask->m_points_cloud_end.insert(pScanTask->m_points_cloud_end.end(), points_2.begin(), points_2.end());
+				pScanTask->m_points_cloud_end_addSize.push_back(points_2.size());
+
+				vector<orth::MeshModel> newModelV;
+				newModelV.push_back(curTotalModel);
+				newModelV.push_back(mModel);
+				curTotalModel.Clear();
+				orth::MergeModels(newModelV, curTotalModel);
+			}
+			else
+			{
+				cout << "Compensiation Registration is failure" << endl;
+			}
 		}
+		
 
 		time2 = clock();
 		cout << "The compensation time is " << (double)(time2 - time1) / CLOCKS_PER_SEC << " s." << endl;
@@ -1258,7 +1318,16 @@ void ComputeThread::GPAMeshing()
 
 			orth::MeshModel totalMeshModel, totalMeshModel_copy;
 			PoissonReconstruction fsp;
-			fsp.run(pScanTask->m_mModel, totalMeshModel, 9,0.4);
+
+			if (doGPUFlag)
+			{
+				fsp.run(pScanTask->m_mModel, totalMeshModel, 9, 0.4);
+			}
+			else
+			{
+				fsp.run_cpu(pScanTask->m_mModel, totalMeshModel, 9, 0.4);
+			}
+			
 			//ReductMesh(totalMeshModel, totalMeshModel);
 			/*--------------------------------------------------- old -----------------------------------------------*/
 			//orth::MeshModel totalMeshModel;
@@ -1284,7 +1353,14 @@ void ComputeThread::GPAMeshing()
 					orth::MeshModel l_tmpModel, l_dstModel;
 					scan::Registration reg(1.0, 15.0, 50);
 					pallJawTask->pTeethModel->getMeshModel(l_dstModel);
-					reg.FarRegist(l_dstModel, pScanTask->m_mAllModel);
+					if (doGPUFlag)
+					{
+						reg.FarRegistGPU(l_dstModel, pScanTask->m_mAllModel);
+					}
+					else
+					{
+						reg.FarRegistCPU(l_dstModel, pScanTask->m_mAllModel);
+					}
 				}
 			}
 			cout << "The reconstruction is " << (double)(time4 - time3) / CLOCKS_PER_SEC << " s;" << endl;
@@ -1300,9 +1376,18 @@ void ComputeThread::GPAMeshing()
 			orth::MeshModel totalMeshModel_copy;
 			totalMeshModel_copy.P.assign(totalMeshModel.P.begin(), totalMeshModel.P.end());
 
-			poissonRecon(totalMeshModel);
+			//poissonRecon(totalMeshModel);
+			PoissonReconstruction fsp;
+			if (doGPUFlag)
+			{
+				fsp.run(pScanTask->m_mModel, totalMeshModel, 9, 0.4);
+			}
+			else
+			{
+				fsp.run_cpu(pScanTask->m_mModel, totalMeshModel, 9, 0.4);
+			}
 
-			ReductMesh(totalMeshModel_copy, totalMeshModel);
+			//ReductMesh(totalMeshModel_copy, totalMeshModel);
 
 			pScanTask->m_mAllModel = totalMeshModel;
 			time2 = clock();
@@ -1350,14 +1435,31 @@ void ComputeThread::taskTeethSitit()
 // 		orth::ModelIO merge_io(&l_vtModel[i]);
 // 		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
 // 		merge_io.writeModel(strModelname.toStdString(), "stlb");
-		if (reg.ToothFarRegist(l_dstModel, l_vtModel[i])) {
-			pDstTask->m_mModel.push_back(l_vtModel[i]);
-		//reg.FarRegist(l_dstModel, l_tmpModel);
-			l_vtSucModel.push_back(l_vtModel[i]);
+
+		if (doGPUFlag)
+		{
+			if (reg.ToothFarRegistGPU(l_dstModel, l_vtModel[i])) {
+				pDstTask->m_mModel.push_back(l_vtModel[i]);
+				//reg.FarRegist(l_dstModel, l_tmpModel);
+				l_vtSucModel.push_back(l_vtModel[i]);
+			}
+			else {
+				cout << "The registration of one tooth is failure..." << endl;
+			}
 		}
-		else {
-			cout << "The registration of one tooth is failure..." << endl;
+		else
+		{
+			if (reg.ToothFarRegistCPU(l_dstModel, l_vtModel[i])) {
+				pDstTask->m_mModel.push_back(l_vtModel[i]);
+				//reg.FarRegist(l_dstModel, l_tmpModel);
+				l_vtSucModel.push_back(l_vtModel[i]);
+			}
+			else {
+				cout << "The registration of one tooth is failure..." << endl;
+			}
 		}
+
+		
 	}
 	emit progressBarSetValueSignal(2);
 // 	for (int i = 0; i < l_vtModel.size();i++) {
@@ -1427,14 +1529,29 @@ void ComputeThread::Stitching()
 // 	vector<orth::MeshModel> l_vtModel;
 // 	l_tmpModel.ModelSplit(l_vtModel,5000);
 
-	if (reg.FarRegist(l_dstModel, l_tmpModel)) {
-		//reg.FarRegist(l_dstModel, l_tmpModel);
-		l_vtSucModel.push_back(l_tmpModel);
-		pSrcTask->m_mAllModel = l_tmpModel;
+	if (doGPUFlag)
+	{
+		if (reg.FarRegistGPU(l_dstModel, l_tmpModel)) {
+			//reg.FarRegist(l_dstModel, l_tmpModel);
+			l_vtSucModel.push_back(l_tmpModel);
+			pSrcTask->m_mAllModel = l_tmpModel;
+		}
+		else {
+			cout << "The registration of one Jaw is failure..." << endl;
+		}
 	}
-	else {
-		cout << "The registration of one Jaw is failure..." << endl;
+	else
+	{
+		if (reg.FarRegistCPU(l_dstModel, l_tmpModel)) {
+			//reg.FarRegist(l_dstModel, l_tmpModel);
+			l_vtSucModel.push_back(l_tmpModel);
+			pSrcTask->m_mAllModel = l_tmpModel;
+		}
+		else {
+			cout << "The registration of one Jaw is failure..." << endl;
+		}
 	}
+	
 // 	if (pSrcTask->Get_DentalImplant() == true) {
 // 		if (reg.FarRegist(l_tmpModel, pSrcTask->m_dentalImplantMeshModel)) {
 // 			//reg.FarRegist(l_dstModel, l_tmpModel);
@@ -1521,7 +1638,14 @@ void ComputeThread::allJawComputeScan()
 		cv::Mat l_tmpimage = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_8UC1);
 		memcpy(l_tmpimage.data, im_l+(14*imageSize),imageSize);
 		cout << l_tmpimage.size()<<endl;
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+		if (doGPUFlag)
+		{
+			g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+		}
+		else
+		{
+			c_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+		}
 		HLogHelper::getInstance()->HLogTime("PointCloudCalculateCuda2 finish");
 		bool scanFlag = chooseJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp, scan_index,reg, pScanTask);
 		HLogHelper::getInstance()->HLogTime("chooseJawAndIcp finish");
@@ -1698,7 +1822,14 @@ void ComputeThread::normalComputeScan()
 		//cv::imshow("0", image_input);
 		//cv::waitKey(0);
 		//cv::imwrite("./ScanData/" + QString(scan_index).toStdString() + ".png", image_input);
-		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+		if (doGPUFlag)
+		{
+			g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+		}
+		else
+		{
+			c_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+		}
 		//cv::imshow("", matched_pixel_image);
 		//cv::waitKey();
 		cout << "pointcloud calculate done" << endl;
@@ -1778,8 +1909,14 @@ void ComputeThread::compensationCompute()
 			image_bias++;
 		}
 	}
-
-	g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data,(double*)depth_image.data, 1000.0);
+	if (doGPUFlag)
+	{
+		g_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+	}
+	else
+	{
+		c_unwarp.PointCloudCalculateCuda2(im_l, im_r, IMG_ROW, IMG_COL, (double*)rs->F.data, (double*)rs->Rot_l.data, (double*)rs->Rot_r.data, (double*)rs->tvec_l.data, (double*)rs->tvec_r.data, (double*)rs->intr1.data, (double*)rs->intr2.data, (double*)rs->distCoeffs[0].data, (double*)rs->distCoeffs[1].data, (double*)rs->c_p_system_r.data, (double*)matched_pixel_image.data, (double*)normal_image.data, (double*)depth_image.data, 1000.0);
+	}
 	emit progressBarSetValueSignal(1);
 	/*vector<double> points_;
 	vector<float> normal;
@@ -1907,30 +2044,62 @@ void ComputeThread::FarRegistrationSlot()
 	scan::Registration reg(1.0, 15.0, 50);
 	reg.SetSearchDepth(50);
 
-	if (reg.FarRegist(l_targetModel, l_sourceModel)) {
-		lower_mModel.push_back(l_sourceModel);
-		allRegModelV.push_back(l_sourceModel);
-		showLowerModelFlag = true;
-		regLowerModelFlag = true;
+	if (doGPUFlag)
+	{
+		if (reg.FarRegistGPU(l_targetModel, l_sourceModel)) {
+			lower_mModel.push_back(l_sourceModel);
+			allRegModelV.push_back(l_sourceModel);
+			showLowerModelFlag = true;
+			regLowerModelFlag = true;
+		}
+		else {
+			cout << "The registration of lower Jaw is failure..." << endl;
+			showLowerModelFlag = false;
+			regLowerModelFlag = false;
+		}
+
+		l_sourceModel = upper_mModel[upperSize - 1];
+		if (reg.FarRegistGPU(l_targetModel, l_sourceModel)) {
+			upper_mModel.push_back(l_sourceModel);
+			allRegModelV.push_back(l_sourceModel);
+			showUpperModelFlag = true;
+			regUpperModelFlag = true;
+		}
+		else {
+			cout << "The registration of upper Jaw is failure..." << endl;
+			showUpperModelFlag = false;
+			regUpperModelFlag = false;
+		}
 	}
-	else {
-		cout << "The registration of lower Jaw is failure..." << endl;
-		showLowerModelFlag = false;
-		regLowerModelFlag = false;
+	else
+	{
+		if (reg.FarRegistCPU(l_targetModel, l_sourceModel)) {
+			lower_mModel.push_back(l_sourceModel);
+			allRegModelV.push_back(l_sourceModel);
+			showLowerModelFlag = true;
+			regLowerModelFlag = true;
+		}
+		else {
+			cout << "The registration of lower Jaw is failure..." << endl;
+			showLowerModelFlag = false;
+			regLowerModelFlag = false;
+		}
+
+		l_sourceModel = upper_mModel[upperSize - 1];
+		if (reg.FarRegistCPU(l_targetModel, l_sourceModel)) {
+			upper_mModel.push_back(l_sourceModel);
+			allRegModelV.push_back(l_sourceModel);
+			showUpperModelFlag = true;
+			regUpperModelFlag = true;
+		}
+		else {
+			cout << "The registration of upper Jaw is failure..." << endl;
+			showUpperModelFlag = false;
+			regUpperModelFlag = false;
+		}
 	}
 
-	l_sourceModel = upper_mModel[upperSize - 1];
-	if (reg.FarRegist(l_targetModel, l_sourceModel)) {
-		upper_mModel.push_back(l_sourceModel);
-		allRegModelV.push_back(l_sourceModel);
-		showUpperModelFlag = true;
-		regUpperModelFlag = true;
-	}
-	else {
-		cout << "The registration of upper Jaw is failure..." << endl;
-		showUpperModelFlag = false;
-		regUpperModelFlag = false;
-	}
+	
 
 	if (allRegModelV.size() > 1)
 	{

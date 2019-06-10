@@ -286,6 +286,7 @@ private:
 	void JawScanFinish();
 	void on_activatedSysTrayIcon(QSystemTrayIcon::ActivationReason reason); //打开路径下文件
 
+	void doGPUClicked();//设置是否用GPU进行重建和配准
 
 };
 

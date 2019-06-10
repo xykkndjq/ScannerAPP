@@ -30,6 +30,9 @@ public:
 	ComputeThread(QObject *parent = 0);
 	~ComputeThread();
 
+	//是否做GPU运算标志
+	bool doGPUFlag = false;
+
 	//???,????????
 	bool showUpperModelFlag = false;
 	bool showLowerModelFlag = false;
