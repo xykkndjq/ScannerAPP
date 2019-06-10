@@ -190,11 +190,23 @@ TabMainGUI::TabMainGUI(QWidget *parent)
 	//styleControl(this);
 	setWindowFlags(Qt::FramelessWindowHint);
 	qRegisterMetaType<COrderInfo>();
+
+	CSystemConfig::shareInstance()->load();
+	if (CSystemConfig::shareInstance()->getValue(STR_SCANDATAPATH) != "") {
+		ui.scanPathLineEdit->setText(CSystemConfig::shareInstance()->getValue(STR_SCANDATAPATH).c_str());
+		filePath = CSystemConfig::shareInstance()->getValue(STR_SCANDATAPATH).c_str();
+		//ui.saveSpliteModelCheckBox->setChecked(true);
+	}
+	if (CSystemConfig::shareInstance()->getValue(B_GPU) != "") {
+		if (CSystemConfig::shareInstance()->getValue(B_GPU) == "true") {
+			ui.GPUCheckBox->click();
+		}
+	}
 }
 
 TabMainGUI::~TabMainGUI()
 {
-	
+	CSystemConfig::shareInstance()->save();
 }
 
 void TabMainGUI::setConnections()
@@ -2207,6 +2219,7 @@ void TabMainGUI::openDirectoryDialogSlot()
 	{
 		ui.scanPathLineEdit->setText(file_path);
 		filePath = file_path;
+		CSystemConfig::shareInstance()->setValue(STR_SCANDATAPATH, filePath.toStdString());
 	}
 	else {
 		QMessageBox::warning(this, QStringLiteral("路径"), QStringLiteral("您未选择任何路径。"));

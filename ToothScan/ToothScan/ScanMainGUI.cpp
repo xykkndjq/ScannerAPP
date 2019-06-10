@@ -2,6 +2,7 @@
 #include "TaskManager.h"
 #include "plyio.h"
 #include "stlio.h"
+#include "SystemConfig.h"
 #define NUITEST
 float g_xMinRotLim = -21.7f, g_yMinRotLim = -180.0f, g_xMaxRotLim = 158.3f, g_yMaxRotLim = 180.0f;
 void ScanMainGUI::saveDenModelFile(pCScanTask pTask) {
@@ -615,6 +616,7 @@ void ScanMainGUI::doGPUClicked()
 		ControlComputeThread->doGPUFlag = false;
 	}
 	cout << "doGPUFlag = " << ControlComputeThread->doGPUFlag << endl;
+	CSystemConfig::shareInstance()->setValue(B_GPU, pCheckBox->isChecked() ? "true" : "false");
 }
 
 void ScanMainGUI::closeBtnClicked()

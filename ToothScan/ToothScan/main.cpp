@@ -9,6 +9,7 @@
 #include<vld.h>
 #include "TaskManager.h"
 #include "SingleApplication.h"
+#include <SystemConfig.h>
 using namespace Communication;
 int main(int argc, char *argv[])
 {
@@ -62,5 +63,6 @@ int main(int argc, char *argv[])
 		nresult = a.exec();
 	}
 	CTaskManager::getInstance()->DelAllTasks();
+	CSystemConfig::shareInstance()->save();
 	return nresult;
 }
