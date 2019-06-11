@@ -3,6 +3,8 @@
 using namespace std;
 #include "commondefine.h"
 #define B_SAVESPLITEMODEL "bsaveSpliteModel"
+#define STR_SCANDATAPATH "strScanDataPath"
+#define B_GPU "bGPU"
 class CSystemConfig
 {
 public:
@@ -18,6 +20,8 @@ public:
 	void setValue(string strKey , string strValue) {
 		m_KeyValueMap[strKey] = strValue;
 	}
+	void save();
+	void load();
 private:
 	map<string, string> m_KeyValueMap;
 
