@@ -1430,11 +1430,21 @@ void ComputeThread::taskTeethSitit()
 	l_tmpModel.ModelSplit(l_vtModel,5000);
 	emit progressBarSetValueSignal(1);
 	pDstTask->m_mModel.clear();
+	cout << "l_vtModel.size() " << l_vtModel.size() << endl;
 	for (int i = 0; i < l_vtModel.size(); i++) {
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {
 // 		orth::ModelIO merge_io(&l_vtModel[i]);
 // 		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
 // 		merge_io.writeModel(strModelname.toStdString(), "stlb");
+
+		tinyply::plyio io;
+		std::string modelNameStr = QString::number(i).toStdString() + "beforeRegisJaw.ply";
+		cout << "pathname: " << modelNameStr << endl;
+		io.write_ply_file(modelNameStr, l_dstModel, true);
+
+		modelNameStr = QString::number(i).toStdString() + "beforeRegisTooth.ply";
+		cout << "pathname: " << modelNameStr << endl;
+		io.write_ply_file(modelNameStr, l_vtModel[i], true);
 
 		if (doGPUFlag)
 		{
@@ -1442,6 +1452,11 @@ void ComputeThread::taskTeethSitit()
 				pDstTask->m_mModel.push_back(l_vtModel[i]);
 				//reg.FarRegist(l_dstModel, l_tmpModel);
 				l_vtSucModel.push_back(l_vtModel[i]);
+
+				modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
+				cout << "pathname: " << modelNameStr << endl;
+				io.write_ply_file(modelNameStr, l_vtModel[i], true);
+
 			}
 			else {
 				cout << "The registration of one tooth is failure..." << endl;
@@ -1453,13 +1468,18 @@ void ComputeThread::taskTeethSitit()
 				pDstTask->m_mModel.push_back(l_vtModel[i]);
 				//reg.FarRegist(l_dstModel, l_tmpModel);
 				l_vtSucModel.push_back(l_vtModel[i]);
+
+				modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
+				cout << "pathname: " << modelNameStr << endl;
+				io.write_ply_file(modelNameStr, l_vtModel[i], true);
+
 			}
 			else {
 				cout << "The registration of one tooth is failure..." << endl;
 			}
 		}
 
-		
+		cout << "l_vtSucModel.size() " << l_vtSucModel.size() << endl;
 	}
 	emit progressBarSetValueSignal(2);
 // 	for (int i = 0; i < l_vtModel.size();i++) {
@@ -1475,7 +1495,14 @@ void ComputeThread::taskTeethSitit()
 
 		//l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
-		recon.MergeWithoutRedundancy(l_dstModel, l_vtSucModel, dstAllModel, error_threshold);
+		if (doGPUFlag)
+		{
+			recon.MergeWithoutRedundancy(l_dstModel, l_vtSucModel, dstAllModel, error_threshold);
+		}
+		else
+		{
+			recon.MergeWithoutRedundancy_cpu(l_dstModel, l_vtSucModel, dstAllModel, error_threshold);//cpu°æ
+		}
 		//orth::MergeModels(l_vtSucModel, dstAllModel);
 		
 		//if (CSystemConfig::shareInstance()->getValue(B_SAVESPLITEMODEL) == "true") {

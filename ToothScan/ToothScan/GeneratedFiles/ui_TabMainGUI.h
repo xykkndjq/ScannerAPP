@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TabMainGUI.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.9.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -263,7 +263,7 @@ public:
         spliteModelPushButton->setGeometry(QRect(626, 43, 200, 50));
         spliteModelPushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); \n"
 "border: 0px;border-style: outset;}\n"
-"QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }"));
         spliteModelPushButton->setIconSize(QSize(22, 22));
         spliteModelPushButton->setCheckable(true);
@@ -272,7 +272,7 @@ public:
         moulagePushButton->setGeometry(QRect(827, 43, 200, 50));
         moulagePushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); \n"
 "border: 0px;border-style: outset;}\n"
-"QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:hover{background-color:  rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }"));
         moulagePushButton->setIconSize(QSize(22, 22));
         moulagePushButton->setCheckable(true);
@@ -304,7 +304,7 @@ public:
         unModelPushButton->setGeometry(QRect(425, 43, 200, 50));
         unModelPushButton->setStyleSheet(QLatin1String("QPushButton{background-color: rgba(255, 255, 255, 255); color: rgba(40, 138, 237, 255); \n"
 "border: 0px;border-style: outset;}\n"
-"QPushButton:hover{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255);}\n"
+"QPushButton:hover{background-color: rgba(104, 169, 235, 255); color:rgba(255, 255, 255, 255);}\n"
 "QPushButton:checked{background-color: rgba(40, 138, 237, 255); color:rgba(255, 255, 255, 255); border-style: inset; }"));
         unModelPushButton->setIconSize(QSize(22, 22));
         unModelPushButton->setCheckable(true);
