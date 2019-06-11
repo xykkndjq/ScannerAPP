@@ -309,6 +309,17 @@ void ScanMainGUI::initVariable()
 
 	//在系统托盘显示此对象
 	m_mSysTrayIcon->show();
+
+	//设置子页面:根据本地保存选项状况决定是否用GPU
+	if (tabMainPage->ui.GPUCheckBox->isChecked())
+	{
+		ControlComputeThread->doGPUFlag = true;
+	}
+	else
+	{
+		ControlComputeThread->doGPUFlag = false;
+	}
+	cout << "init doGPUFlag = " << ControlComputeThread->doGPUFlag << endl;
 }
 
 void ScanMainGUI::constructIHM()

@@ -260,7 +260,6 @@ void TabMainGUI::setConnections()
 	//connect(ui.checkBoxGroupBox, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(settingButtonClicked(QAbstractButton*)));
 	connect(ui.saveSpliteModelCheckBox, SIGNAL(clicked()), this, SLOT(saveSpliteModelCheckBoxClicked()));//保存单帧数据
 	connect(ui.choosePathPushButton, SIGNAL(clicked()), this, SLOT(openDirectoryDialogSlot()));
-	connect(ui.GPUCheckBox, SIGNAL(clicked()), this, SLOT(doGPUClicked()));//使用GPU运行程序
 
 	/*----------------------打开关于子页面------------------------*/
 	connect(m_aboutMgrBtn, SIGNAL(clicked()), this, SLOT(showAboutGroupBox()));//打开设置子页面
@@ -418,6 +417,8 @@ void TabMainGUI::initVariable()
 	ui.unModelGroupBox->setVisible(true);
 	ui.spliteModelGroupBox->setVisible(false);
 	ui.moulageGroupBox->setVisible(false);
+
+
 
 
 //	//关于页面
