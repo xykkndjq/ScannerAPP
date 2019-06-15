@@ -108,7 +108,8 @@ public:
 
 	CCyUSBStream l_usbStream;
 
-	vector<vector<double>> points_cloud_globle;
+	//vector<vector<double>> points_cloud_globle;
+	int curModelSize;//记录当前模型数目
 
 	float l_scan_x;
 	float l_scan_y;

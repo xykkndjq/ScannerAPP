@@ -614,8 +614,7 @@ void ControlThread::controlCalibrationScan()
 
 			ostringstream filename_L;
 			filename_L << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "L" << ".png";
-
-			//cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
+			cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
 		}
 		for (size_t j = 0; j < 31; j++)
 		{
@@ -629,7 +628,7 @@ void ControlThread::controlCalibrationScan()
 			ostringstream filename_R;
 			filename_R << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "R" << ".png";
 
-			//cv::imwrite(filename_R.str().c_str(), imgR_set[j]);
+			cv::imwrite(filename_R.str().c_str(), imgR_set[j]);
 		}
 		image_groups.push_back(group);
 		//4、保存图片
@@ -783,6 +782,7 @@ void ControlThread::compensationControlScan()
 	}
 	CCon coc(freeSpace, usedSpace);
 	//freeSpace.acquire();
+
 	cout << "l_scan_x = " << l_scan_x << "; l_scan_y = " << l_scan_y << endl;
 
 	vector<cv::Mat> imgL_set, imgR_set;
@@ -811,13 +811,13 @@ void ControlThread::compensationControlScan()
 	{
 		//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 		ostringstream filename_L;
-		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "L" << ".png";
+		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << curModelSize << "_" << image_index << "_" << "L" << ".png";
 
 		//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 		//cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 		ostringstream filename_R;
-		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << points_cloud_globle.size() << "_" << image_index << "_" << "R" << ".png";
+		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << curModelSize << "_" << image_index << "_" << "R" << ".png";
 
 		//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 
@@ -845,6 +845,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 	}
+	curModelSize += 1;
 	l_usbStream.SMRotOneDegFunction(-d_scan_x, -d_scan_y, l_bcali, false, imgL_set, imgR_set);
 
 	//3、关闭DLP
@@ -881,6 +882,8 @@ void ControlThread::normalScan()
 
 	l_usbStream.SetMinDLPLight();//设置光机亮度
 	clock_t time1, time2, time3, time4, time5, time6;
+
+	curModelSize = 0;
 	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2; scan_index++)
 	{
 		
@@ -906,6 +909,7 @@ void ControlThread::normalScan()
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
 			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
+			curModelSize += (SCAN_ROTATE_POS_CNT2-1);
 			continue;
 		}
 		time1 = clock();
