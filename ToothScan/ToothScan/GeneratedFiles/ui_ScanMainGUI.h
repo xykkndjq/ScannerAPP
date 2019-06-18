@@ -602,6 +602,7 @@ public:
         cutHeightSpinBox = new QSpinBox(CutJawPanel);
         cutHeightSpinBox->setObjectName(QStringLiteral("cutHeightSpinBox"));
         cutHeightSpinBox->setGeometry(QRect(94, 223, 61, 25));
+        cutHeightSpinBox->setContextMenuPolicy(Qt::NoContextMenu);
         cutHeightSpinBox->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
 "border 1px;"));
         cutHeightSpinBox->setMinimum(-20);

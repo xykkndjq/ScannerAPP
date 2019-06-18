@@ -2418,6 +2418,9 @@ background-color:rgba(248,250,250,0);</string>
       <height>25</height>
      </rect>
     </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::NoContextMenu</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);
 border 1px;</string>
