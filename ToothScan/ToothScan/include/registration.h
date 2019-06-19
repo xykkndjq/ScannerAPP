@@ -2,7 +2,6 @@
 #define REGISTRATION_H
 
 #include <opencv2/opencv.hpp>
-#include <3DScan_cuda.h>
 #include <basetype.h>
 #include <iostream>
 #include <utility>
@@ -57,6 +56,7 @@ namespace scan
 		double MatchCalculateGPU(orth::MeshModel &pointcloud1, orth::MeshModel &pointcloud2);
 
 		void MeshRot(double *RT_src, orth::MeshModel *cloud_src, orth::MeshModel *cloud_dst);
+		void MeshRotGPU(double *RT, orth::MeshModel *cloudMeshRot);
 
 		std::vector<orth::MeshModel> *M_Models;
 		std::vector<cv::Mat> M_RotMatrix;
