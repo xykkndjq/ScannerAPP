@@ -458,6 +458,11 @@ bool ComputeThread::chooseJawAndIcp(cv::Mat matched_pixel_image,
 // 		cloudrot = rt_icp;
 // 		unwarp->MeshRot((double*)cloudrot.data, &mModel);
 
+		/*tinyply::plyio io;
+		std::string modelNameStr = "./ScanData/" + QString::number(index).toStdString() + ".ply";
+		cout << "pathname: " << modelNameStr << endl;
+		io.write_ply_file(modelNameStr, mModel, true);*/
+
 		if (doGPUFlag)
 		{
 			if (reg.NearRegistGPU(pScanTask->m_mModel, mModel))
@@ -887,7 +892,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 			{
 				PoissonReconstruction recon;
 				cout << "RedundancyFilter" << endl;
-				recon.RedundancyFilter(curTotalModel, mModel, 0.3);
+				recon.RedundancyFilter(curTotalModel, mModel, 0.1);
 				cout << "RedundancyFilter is end" << endl;
 				pScanTask->m_mModel.push_back(mModel);
 				pScanTask->m_nAddModel++;
@@ -915,7 +920,7 @@ bool ComputeThread::chooseCompenJawAndIcp(cv::Mat matched_pixel_image, vector<cv
 			if (reg.CompenNearRegistCPU(curTotalModel, mModel))
 			{
 				PoissonReconstruction recon;
-				recon.RedundancyFilter(curTotalModel, mModel, 0.3);
+				recon.RedundancyFilter(curTotalModel, mModel, 0.1);
 
 				pScanTask->m_mModel.push_back(mModel);
 				pScanTask->m_nAddModel++;
@@ -1351,7 +1356,7 @@ void ComputeThread::GPAMeshing()
 				pCScanTask pallJawTask = CTaskManager::getInstance()->getTask(eAllJawScan);
 				if (pallJawTask) {
 					orth::MeshModel l_tmpModel, l_dstModel;
-					scan::Registration reg(1.0, 15.0, 50);
+					scan::Registration reg(15.0, 50);
 					pallJawTask->pTeethModel->getMeshModel(l_dstModel);
 					if (doGPUFlag)
 					{
@@ -1424,7 +1429,7 @@ void ComputeThread::taskTeethSitit()
 // 	else
 // 		l_dstModel = pDstTask->m_mRegistrationModels.back();
 	vector<orth::MeshModel> l_vtSucModel;
-	scan::Registration reg(1.0, 15.0, 50);
+	scan::Registration reg(15.0, 50);
 	//reg.SetSearchDepth(40);
 	vector<orth::MeshModel> l_vtModel;
 	l_tmpModel.ModelSplit(l_vtModel,5000);
@@ -1437,14 +1442,14 @@ void ComputeThread::taskTeethSitit()
 // 		QString strModelname = "ModelSplit" + QString::number(i) + ".stl";
 // 		merge_io.writeModel(strModelname.toStdString(), "stlb");
 
-		tinyply::plyio io;
+		/*tinyply::plyio io;
 		std::string modelNameStr = QString::number(i).toStdString() + "beforeRegisJaw.ply";
 		cout << "pathname: " << modelNameStr << endl;
 		io.write_ply_file(modelNameStr, l_dstModel, true);
 
 		modelNameStr = QString::number(i).toStdString() + "beforeRegisTooth.ply";
 		cout << "pathname: " << modelNameStr << endl;
-		io.write_ply_file(modelNameStr, l_vtModel[i], true);
+		io.write_ply_file(modelNameStr, l_vtModel[i], true);*/
 
 		if (doGPUFlag)
 		{
@@ -1453,9 +1458,9 @@ void ComputeThread::taskTeethSitit()
 				//reg.FarRegist(l_dstModel, l_tmpModel);
 				l_vtSucModel.push_back(l_vtModel[i]);
 
-				modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
+				/*modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
 				cout << "pathname: " << modelNameStr << endl;
-				io.write_ply_file(modelNameStr, l_vtModel[i], true);
+				io.write_ply_file(modelNameStr, l_vtModel[i], true);*/
 
 			}
 			else {
@@ -1469,9 +1474,9 @@ void ComputeThread::taskTeethSitit()
 				//reg.FarRegist(l_dstModel, l_tmpModel);
 				l_vtSucModel.push_back(l_vtModel[i]);
 
-				modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
+				/*modelNameStr = QString::number(i).toStdString() + "afterRegisTooth.ply";
 				cout << "pathname: " << modelNameStr << endl;
-				io.write_ply_file(modelNameStr, l_vtModel[i], true);
+				io.write_ply_file(modelNameStr, l_vtModel[i], true);*/
 
 			}
 			else {
@@ -1491,7 +1496,7 @@ void ComputeThread::taskTeethSitit()
 // 	}
 	if (l_vtSucModel.size() > 0) {
 		PoissonReconstruction recon;
-		double error_threshold = 0.3;
+		double error_threshold = 0.1;
 
 		//l_vtSucModel.push_back(l_dstModel);
 		orth::MeshModel dstAllModel;
@@ -1551,7 +1556,7 @@ void ComputeThread::Stitching()
 	pSrcTask->pTeethModel->getMeshModel(l_tmpModel);
 	pDstTask->pTeethModel->getMeshModel(l_dstModel);
 	vector<orth::MeshModel> l_vtSucModel;
-	scan::Registration reg(1.0, 15.0, 50);
+	scan::Registration reg(15.0, 50);
 	//reg.SetSearchDepth(40);
 // 	vector<orth::MeshModel> l_vtModel;
 // 	l_tmpModel.ModelSplit(l_vtModel,5000);
@@ -1616,8 +1621,8 @@ void ComputeThread::allJawComputeScan()
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
-	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_ldata(im_l, UNWRAPING_IMAGE_NUMBER * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, UNWRAPING_IMAGE_NUMBER * imageSize);
 // 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 // 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
@@ -1629,7 +1634,7 @@ void ComputeThread::allJawComputeScan()
 	int bufferBias = 0;
 	//scan::Unwarp *unwarp = new scan::Unwarp();
 	int l_dataSize = SCAN_ALLJAW_POS - 1;
-	scan::Registration reg(1.0, 10.0, 50);
+	scan::Registration reg(10.0, 50);
 	reg.SetSearchDepth(40);
 // 	emit progressBarResetSignal();
 // 	emit progressBarSetMinSignal(0);
@@ -1644,7 +1649,7 @@ void ComputeThread::allJawComputeScan()
 		int image_bias = 0;
 		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 		image_bias++;
-		for (int j = 0; j < 15; j++)
+		for (int j = 0; j < UNWRAPING_IMAGE_NUMBER; j++)
 		{
 			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
@@ -1652,7 +1657,7 @@ void ComputeThread::allJawComputeScan()
 			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
 		}
-		if (image_bias > 30)
+		if (image_bias > UNWRAPING_IMAGE_NUMBER*2)
 		{
 			for (int i = 0; i < 3; i++)
 			{
@@ -1800,8 +1805,8 @@ void ComputeThread::normalComputeScan()
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
-	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_ldata(im_l, UNWRAPING_IMAGE_NUMBER * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, UNWRAPING_IMAGE_NUMBER * imageSize);
 	//im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 	//im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 
@@ -1812,11 +1817,11 @@ void ComputeThread::normalComputeScan()
 
 	int bufferBias = 0;
 	//scan::Unwarp *unwarp = new scan::Unwarp();
-	scan::Registration reg(1.0, 15.0, 50);
+	scan::Registration reg(15.0, 50);
 	reg.SetSearchDepth(40);
 	//reg.SetRegistError(0.3);
-	emit progressBarSetSignal(0, SCAN_ROTATE_POS_CNT2 - 2, true);
-	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2 - 1; scan_index++)
+	emit progressBarSetSignal(0, SCAN_ROTATE_POS_CNT2 - 1, true);
+	for (int scan_index = 0; scan_index < SCAN_ROTATE_POS_CNT2/* - 1*/; scan_index++)
 	{
 		cv::Mat matched_pixel_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
 		cv::Mat normal_image = cv::Mat::zeros(IMG_ROW, IMG_COL, CV_64FC3);
@@ -1825,7 +1830,7 @@ void ComputeThread::normalComputeScan()
 		int image_bias = 0;
 		memcpy(camera_image.data, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 		image_bias++;
-		for (int j = 0; j < 15; j++)
+		for (int j = 0; j < UNWRAPING_IMAGE_NUMBER; j++)
 		{
 			memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
@@ -1833,7 +1838,7 @@ void ComputeThread::normalComputeScan()
 			memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + bufferBias * 34 * imageSize + image_bias * imageSize, imageSize * sizeof(unsigned char));
 			image_bias++;
 		}
-		if (image_bias > 30)
+		if (image_bias > UNWRAPING_IMAGE_NUMBER*2)
 		{
 			for (int i = 0; i < 3; i++)
 			{
@@ -1872,7 +1877,7 @@ void ComputeThread::normalComputeScan()
 		HLogHelper::getInstance()->HLogTime("The ComputeThread: %d has finished", scan_index);
 		freeSpace.release();
 
-		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 2))
+		if (scan_index == (SCAN_ROTATE_POS_CNT2 - 1))
 		{
 			//for (int i = 0; i < 9; i++)
 			//{
@@ -1905,8 +1910,8 @@ void ComputeThread::compensationCompute()
 	vector<double> dis_;
 	unsigned char* im_l = 0;
 	unsigned char* im_r = 0;
-	SelfDeconstruction<unsigned char> im_ldata(im_l, 15 * imageSize);
-	SelfDeconstruction<unsigned char> im_rdata(im_r, 15 * imageSize);
+	SelfDeconstruction<unsigned char> im_ldata(im_l, UNWRAPING_IMAGE_NUMBER * imageSize);
+	SelfDeconstruction<unsigned char> im_rdata(im_r, UNWRAPING_IMAGE_NUMBER * imageSize);
 // 	im_l = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 // 	im_r = (unsigned char *)malloc(15 * imageSize * sizeof(unsigned char));
 	emit progressBarSetSignal(0, 3, true);
@@ -1920,7 +1925,7 @@ void ComputeThread::compensationCompute()
 	int image_bias = 0;
 	memcpy(camera_image.data, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
 	image_bias++;
-	for (int j = 0; j < 15; j++)
+	for (int j = 0; j < UNWRAPING_IMAGE_NUMBER; j++)
 	{
 		memcpy(im_l + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
 		image_bias++;
@@ -1928,7 +1933,7 @@ void ComputeThread::compensationCompute()
 		memcpy(im_r + j * imageSize, totalNormalScanImageBuffer + image_bias * imageSize, imageSize * sizeof(unsigned char));
 		image_bias++;
 	}
-	if (image_bias > 30)
+	if (image_bias > UNWRAPING_IMAGE_NUMBER*2)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -1951,7 +1956,7 @@ void ComputeThread::compensationCompute()
 	vector<double> points_2;
 	/*vector<unsigned char> points_color2;
 	vector<uint32_t> faces;*/
-	scan::Registration reg( 1.0, 15.0, 50);
+	scan::Registration reg(15.0, 50);
 	reg.SetSearchDepth(40);
 	bool scanFlag = chooseCompenJawAndIcp(matched_pixel_image, image_rgb, &g_unwarp,reg, pScanTask);
 	emit progressBarSetValueSignal(2);
@@ -2068,7 +2073,7 @@ void ComputeThread::FarRegistrationSlot()
 	l_targetModel = all_mModel[allSize - 1];
 	l_sourceModel = lower_mModel[lowerSize - 1];
 
-	scan::Registration reg(1.0, 15.0, 50);
+	scan::Registration reg(15.0, 50);
 	reg.SetSearchDepth(50);
 
 	if (doGPUFlag)

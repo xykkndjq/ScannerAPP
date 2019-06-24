@@ -69,8 +69,11 @@ static int SMX_CALI_ROTATE_DEGREE2[CALI_ROTATE_POS_CNT2] = { 0, 30,  30, 30, 20,
 static int SM_CALI_BRIGHTNESS2[CALI_ROTATE_POS_CNT2] = { 2,   2,    2,   2,  2,   2,   2,   2,   2,   2,    0 };//亮度等级，3最亮，1为默认
 
 																												//static int SMX_SCAN_ROTATE_DEGREE[SCAN_ROTATE_POS_CNT] = { 15, 30,   0,   0,   0,   0,   0,   0,    35, 0,  0, -80 };
-static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/*-60,   0,  60, -50,   0,  50,*/   0, -45, -90, -135,  179,  135, 90,45, 0 };
-static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,/* 30,  30,  30,  20,  20,  20,*/ -30, -30, -30,  -30, -30, -30, -30,-30, 0 };
+static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { /*-60,   0,  60, -50,   0,  50,*/   0, -40, -80, -120,  -160, 160,  120, 80,40, 0 };
+static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = {/* 30,  30,  30,  20,  20,  20,*/ -40, -40, -40,  -40, -40,-40, -40, -40,-40, 0 };
+
+//static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { /*-60,   0,  60, -50,   0,  50,*/0,   0, -45, -90, -135, 179,  135, 90,45, 0 };
+//static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = {/* 30,  30,  30,  20,  20,  20,*/ 0, -40, -40, -40,  -40, -40, -40, -40,-40, 0 };
 
 //static int SMY_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0,0,   -45,  -90, -135,   -180,  135,   90, 45, 0, 45,  90,  135, 180,-135, -90 ,-45,0};
 //static int SMX_SCAN_ROTATE_DEGREE2[SCAN_ROTATE_POS_CNT2] = { 0, -20,  -20,  -20,  -20,  -20,  -20, -20, -20, -40,  -40, -40, -40, -40,-40, -40,-40,0};

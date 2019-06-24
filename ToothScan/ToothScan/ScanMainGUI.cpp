@@ -2493,6 +2493,7 @@ void ScanMainGUI::showOrderInfo(COrderInfo orderInfo)
 	ui.lowJawGinBtn->setVisible(false);
 	ui.teethGroupBox->setVisible(false);
 	ui.jawGroupBox->setVisible(false);
+	ui.toolsGroupBox->setVisible(true);
 	bool bDen = false;	//种植牙
 	string strfileEnd = ".stl";
 #ifdef MODELPLY
@@ -2883,19 +2884,23 @@ bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, 
 			bPnP_Removal = false;
 			bPnP_DevNodeChange = false;
 
-			this->setDisabled(true);
-		
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB被拔出请重新连接!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
+			//this->setDisabled(true);
+			int curDeviceNum = ControlScanThread->l_usbStream.m_USBDevice->DeviceCount();
+			if (curDeviceNum == 0 && (curDeviceNum != ControlScanThread->l_usbStream.m_devicesNum))
+			{
+				QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB被拔出请重新连接!"));
+				box.setStandardButtons(QMessageBox::Yes);
+				box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+				box.exec();
 
-			/*ControlScanThread->l_usbStream.AbortXferLoop();
-			void *handle = (void *)winId();
-			ControlScanThread->l_usbStream.InitCyUSBParameter(handle);*/
-			ControlScanThread->l_usbStream.CloseUSB();
-			void *handle = (void *)winId();
-			ControlScanThread->l_usbStream.OpenUSB(handle);
+				/*ControlScanThread->l_usbStream.AbortXferLoop();
+				void *handle = (void *)winId();
+				ControlScanThread->l_usbStream.InitCyUSBParameter(handle);*/
+				ControlScanThread->l_usbStream.CloseUSB();
+				void *handle = (void *)winId();
+				ControlScanThread->l_usbStream.OpenUSB(handle);
+				ControlScanThread->l_usbStream.m_devicesNum = curDeviceNum;
+			}
 		}
 
 		// If DBT_DEVICEARRIVAL followed by DBT_DEVNODES_CHANGED
@@ -2905,20 +2910,26 @@ bool ScanMainGUI::nativeEventFilter(const QByteArray &eventType, void *message, 
 			bPnP_DevNodeChange = false;
 			//bPnP_Removal = false;
 			//	installNativeEventFilter();
-			QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB已连接!"));
-			box.setStandardButtons(QMessageBox::Yes);
-			box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
-			box.exec();
 
-			this->setEnabled(true);
-
-			void *handle = (void *)winId();
-			ControlScanThread->l_usbStream.OpenUSB(handle);
-			if (!m_usbDeviceState)
+			int curDeviceNum = ControlScanThread->l_usbStream.m_USBDevice->DeviceCount();
+			if (curDeviceNum == 1 && (curDeviceNum != ControlScanThread->l_usbStream.m_devicesNum))
 			{
-				ControlScanThread->l_usbStream.InitUSBBufferParameter();
-				m_usbDeviceState = true;
-				tabMainPage->m_usbDeviceState = m_usbDeviceState;
+				QMessageBox box(QMessageBox::Warning, QStringLiteral("提示"), QStringLiteral("设备USB已连接!"));
+				box.setStandardButtons(QMessageBox::Yes);
+				box.setButtonText(QMessageBox::Yes, QStringLiteral("确 定"));
+				box.exec();
+
+				//this->setEnabled(true);
+
+				void *handle = (void *)winId();
+				ControlScanThread->l_usbStream.OpenUSB(handle);
+				if (!m_usbDeviceState)
+				{
+					ControlScanThread->l_usbStream.InitUSBBufferParameter();
+					m_usbDeviceState = true;
+					tabMainPage->m_usbDeviceState = m_usbDeviceState;
+				}
+				ControlScanThread->l_usbStream.m_devicesNum = curDeviceNum;
 			}
 		}
 	}

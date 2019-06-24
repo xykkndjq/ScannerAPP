@@ -2194,7 +2194,7 @@ void TabMainGUI::readFileStorage(QString fPath)
 
 void TabMainGUI::openFileDialogSlot()
 {
-	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"), ".", tr("Text Files(*.OI)"));
+	QString path = QFileDialog::getOpenFileName(this, QStringLiteral("打开文件"), "./ScanData/", tr("Text Files(*.OI)"));
 	if (!path.isEmpty())
 	{
 		QFile file(path);

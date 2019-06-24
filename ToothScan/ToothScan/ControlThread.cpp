@@ -457,7 +457,7 @@ void ControlThread::allJawScan()
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
 		time2 = clock();
 
-		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		if (imgL_set.size() < SCAN_IMAGE_NUMBER || imgR_set.size() < SCAN_IMAGE_NUMBER)
 		{
 
 			cout << "USB has a problem, because of insufficient data..." << endl;
@@ -474,7 +474,7 @@ void ControlThread::allJawScan()
 		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 		int imageBias = 0;
 		time3 = clock();
-		for (int image_index = 0; image_index < 19; image_index++)
+		for (int image_index = 0; image_index < SCAN_IMAGE_NUMBER; image_index++)
 		{
 
 			ostringstream filename_L;
@@ -495,7 +495,7 @@ void ControlThread::allJawScan()
 				imageBias++;
 			}
 
-			if (image_index > 0 && image_index < 16)
+			if (image_index > 0 && image_index < UNWRAPING_IMAGE_NUMBER+1)
 			{
 				//images_l.push_back(imgL_set[image_index]);
 				//images_r.push_back(imgR_set[image_index]);
@@ -507,7 +507,7 @@ void ControlThread::allJawScan()
 				imageBias++;
 
 			}
-			else if (image_index >= 16)
+			else if (image_index >= UNWRAPING_IMAGE_NUMBER + 1)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;
@@ -588,7 +588,7 @@ void ControlThread::controlCalibrationScan()
 
 
 	
-		if (imgL_set.size() < 31 || imgR_set.size() < 31)
+		if (imgL_set.size() < CALI_IMAGE_NUMBER || imgR_set.size() < CALI_IMAGE_NUMBER)
 		{
 			cout << "USB has a problem, because of insufficient data..." << endl;
 			return;
@@ -603,7 +603,7 @@ void ControlThread::controlCalibrationScan()
 
 		cout << "开始存图片。。 " << endl;
 		vector<cv::Mat> group;
-		for (size_t j = 0; j < 31; j++)
+		for (size_t j = 0; j < CALI_IMAGE_NUMBER; j++)
 		{
 			//cv::flip(imgL_set[j], imgL_set[j], -1);
 			group.push_back(imgL_set[j]);
@@ -616,7 +616,7 @@ void ControlThread::controlCalibrationScan()
 			filename_L << "D:\\dentalimage\\dentalimage2\\CaliPic\\" << scan_index << "_" << j << "_" << "L" << ".png";
 			cv::imwrite(filename_L.str().c_str(), imgL_set[j]);
 		}
-		for (size_t j = 0; j < 31; j++)
+		for (size_t j = 0; j < CALI_IMAGE_NUMBER; j++)
 		{
 			//cv::flip(imgR_set[j], imgR_set[j], -1);
 			group.push_back(imgR_set[j]);
@@ -792,7 +792,7 @@ void ControlThread::compensationControlScan()
 	///**************************************扫描过程*****************************************/
 	l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
 
-	if (imgL_set.size() < 19 || imgR_set.size() < 19)
+	if (imgL_set.size() < SCAN_IMAGE_NUMBER || imgR_set.size() < SCAN_IMAGE_NUMBER)
 	{
 
 		cout << "USB has a problem, because of insufficient data..." << endl;
@@ -807,19 +807,19 @@ void ControlThread::compensationControlScan()
 	//im_l = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 	//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 	int imageBias = 0;
-	for (int image_index = 0; image_index < 19; image_index++)
+	for (int image_index = 0; image_index < SCAN_IMAGE_NUMBER; image_index++)
 	{
 		//cv::flip(imgL_set[image_index], imgL_set[image_index], -1);
 		ostringstream filename_L;
 		filename_L << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << curModelSize << "_" << image_index << "_" << "L" << ".png";
 
-		//cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
+		cv::imwrite(filename_L.str().c_str(), imgL_set[image_index]);
 
 		//cv::flip(imgR_set[image_index], imgR_set[image_index], -1);
 		ostringstream filename_R;
 		filename_R << "D:\\dentalimage\\dentalimage2\\ScanPic\\" << curModelSize << "_" << image_index << "_" << "R" << ".png";
 
-		//cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
+		cv::imwrite(filename_R.str().c_str(), imgR_set[image_index]);
 
 		if (image_index == 0)
 		{
@@ -827,7 +827,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 		}
 
-		if (image_index>0 && image_index<16)
+		if (image_index>0 && image_index<UNWRAPING_IMAGE_NUMBER+1)
 		{
 			//images_l.push_back(imgL_set[image_index]);
 			//images_r.push_back(imgR_set[image_index]);
@@ -839,7 +839,7 @@ void ControlThread::compensationControlScan()
 			imageBias++;
 
 		}
-		else if (image_index >= 16)
+		else if (image_index >= UNWRAPING_IMAGE_NUMBER + 1)
 		{
 			memcpy(totalNormalScanImageBuffer + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 			imageBias++;
@@ -908,14 +908,14 @@ void ControlThread::normalScan()
 		//2、电机旋转
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
-			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
+			//l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
 			curModelSize += (SCAN_ROTATE_POS_CNT2-1);
-			continue;
+			//continue;
 		}
 		time1 = clock();
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
 		time2 = clock();
-		if (imgL_set.size() < 19 || imgR_set.size() < 19)
+		if (imgL_set.size() < SCAN_IMAGE_NUMBER || imgR_set.size() < SCAN_IMAGE_NUMBER)
 		{
 			cout << "USB has a problem, because of insufficient data..." << endl;
 			return;
@@ -932,7 +932,7 @@ void ControlThread::normalScan()
 		//im_r = (unsigned char *)malloc(15 * 1280 * 1024 * sizeof(unsigned char));
 		int imageBias = 0;
 		time3 = clock();
-		for (int image_index = 0; image_index < 19; image_index++)
+		for (int image_index = 0; image_index < SCAN_IMAGE_NUMBER; image_index++)
 		{
 
 			ostringstream filename_L;
@@ -956,7 +956,7 @@ void ControlThread::normalScan()
 				imageBias++;
 			}
 
-			if (image_index > 0 && image_index < 16)
+			if (image_index > 0 && image_index < UNWRAPING_IMAGE_NUMBER+1)
 			{
 				//images_l.push_back(imgL_set[image_index]);
 				//images_r.push_back(imgR_set[image_index]);
@@ -968,7 +968,7 @@ void ControlThread::normalScan()
 				imageBias++;
 
 			}
-			else if (image_index >= 16)
+			else if (image_index >= UNWRAPING_IMAGE_NUMBER + 1)
 			{
 				memcpy(totalNormalScanImageBuffer + bufferBias * 34 * imageSize + imageBias * imageSize, (unsigned char*)imgR_set[image_index].data, imageSize * sizeof(unsigned char));
 				imageBias++;

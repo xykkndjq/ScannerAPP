@@ -577,14 +577,14 @@ namespace Communication
 			return 1;
 		}
 
-		int devices = m_USBDevice->DeviceCount();
+		m_devicesNum = m_USBDevice->DeviceCount();
 		//ÅÐ¶ÏUSBDeviceÊýÄ¿
-		if (devices < 1)
+		if (m_devicesNum < 1)
 		{
 			cout << "The USB is not plugged into computer..." << endl;
 			return 2;
 		}
-		if (devices > 1)
+		if (m_devicesNum > 1)
 		{
 			cout << "The num of USB Device exceeds one..." << endl;
 			return 3;
@@ -928,16 +928,16 @@ namespace Communication
 			m_EndPtIn->WaitForXfer(&m_inOvLap[j], TimeOut);
 			m_EndPtIn->FinishDataXfer(m_buffers[j], len, &m_inOvLap[j], m_contexts[j]);
 		}
-		if (m_img_L_set.size() > 31)
+		if (m_img_L_set.size() > CALI_IMAGE_NUMBER)
 		{
-			for (int i = m_img_L_set.size(); i > 31; i--)
+			for (int i = m_img_L_set.size(); i > CALI_IMAGE_NUMBER; i--)
 			{
 				m_img_L_set.pop_back();
 			}
 		}
-		if (m_img_R_set.size() > 31)
+		if (m_img_R_set.size() > CALI_IMAGE_NUMBER)
 		{
-			for (int i = m_img_R_set.size(); i > 31; i--)
+			for (int i = m_img_R_set.size(); i > CALI_IMAGE_NUMBER; i--)
 			{
 				m_img_R_set.pop_back();
 			}
@@ -1037,16 +1037,16 @@ namespace Communication
 			m_EndPtIn->WaitForXfer(&m_inOvLap[j], TimeOut);
 			m_EndPtIn->FinishDataXfer(m_buffers[j], len, &m_inOvLap[j], m_contexts[j]);
 		}
-		if (m_img_L_set.size() > 19)
+		if (m_img_L_set.size() > SCAN_IMAGE_NUMBER)
 		{
-			for (int i = m_img_L_set.size(); i > 19; i--)
+			for (int i = m_img_L_set.size(); i > SCAN_IMAGE_NUMBER; i--)
 			{
 				m_img_L_set.pop_back();
 			}
 		}
-		if (m_img_R_set.size() > 19)
+		if (m_img_R_set.size() > SCAN_IMAGE_NUMBER)
 		{
-			for (int i = m_img_R_set.size(); i > 19; i--)
+			for (int i = m_img_R_set.size(); i > SCAN_IMAGE_NUMBER; i--)
 			{
 				m_img_R_set.pop_back();
 			}

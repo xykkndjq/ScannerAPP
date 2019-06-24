@@ -12,6 +12,10 @@
 #include <opencv2\opencv.hpp>
 #include <string>
 
+#define UNWRAPING_IMAGE_NUMBER 15
+#define SCAN_IMAGE_NUMBER 1+UNWRAPING_IMAGE_NUMBER+3
+#define CALI_IMAGE_NUMBER 1+UNWRAPING_IMAGE_NUMBER*2
+
 namespace Communication
 {
 	#define MAX_QUEUE_SZ 64
@@ -51,6 +55,7 @@ namespace Communication
 			 ~CCyUSBStream();
 		
 			 CCyUSBDevice *m_USBDevice;
+			 int m_devicesNum = 0;//设备数目
 
 			 int InitCyUSBParameter(void *handle);//初始化USB//return 0:正常的初始化成功，1：代表USBDevice初始化失败,2:代表没有USBDevice,3:代表有多于一个USBDevice
 			 int OpenUSB(void *handle);//return 0:正常的初始化成功，1：代表USBDevice初始化失败,2:代表没有USBDevice,3:代表有多于一个USBDevice
