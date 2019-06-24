@@ -13,7 +13,7 @@ namespace scan
 	{
 	public:
 		//初始化配准参数
-		__declspec (dllexport) Registration( const float MaxCorrespondenceDistance_, const float RANSACOutlier_,const int MaxIteration_);
+		__declspec (dllexport) Registration(const float RANSACOutlier_,const int MaxIteration_);
 		__declspec (dllexport) Registration();
 		__declspec (dllexport) ~Registration();
 
@@ -58,11 +58,14 @@ namespace scan
 		void MeshRot(double *RT_src, orth::MeshModel *cloud_src, orth::MeshModel *cloud_dst);
 		void MeshRotGPU(double *RT, orth::MeshModel *cloudMeshRot);
 
+		bool NPSGPU(orth::MeshModel *mm_target, orth::MeshModel *mm_query, const int tree_depth, vector<int> &query_indexV, vector<double> &nearest_distanceV);//求最近点
+		void MeshModeltoVectorDouble(orth::MeshModel *mModel, vector<float> &FloatCloud);
+
 		std::vector<orth::MeshModel> *M_Models;
 		std::vector<cv::Mat> M_RotMatrix;
 
 		float mesh_regist_error = 0.4;
-		float MaxCorrespondenceDistance = 0.7;
+		//float MaxCorrespondenceDistance = 0.7;
 		float RANSACOutlier = 15.0;
 		int MaxIteration = 50;
 		int search_depth = 50;
