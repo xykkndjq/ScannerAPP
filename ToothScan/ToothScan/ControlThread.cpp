@@ -550,14 +550,19 @@ void ControlThread::controlCalibrationScan()
 	_sleep(4000);
 #endif
 
-	l_usbStream.SetDLPLight(1);
+	l_usbStream.SetDLPLight(2);
 	//l_usbStream.SetMidDLPLight();
 	vector<vector<cv::Mat>> image_groups;
 	for (int scan_index = 0; scan_index < CALI_ROTATE_POS_CNT2; scan_index++)
 	{
 		if (scan_index == 1)
 		{
-			l_usbStream.SetDLPLight(2);
+			l_usbStream.SetDLPLight(3);
+		}
+
+		if (scan_index == 7)
+		{
+			l_usbStream.SetDLPLight(1);
 		}
 
 		c_scan_x = SMX_CALI_ROTATE_DEGREE2[scan_index];

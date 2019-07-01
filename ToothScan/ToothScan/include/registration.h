@@ -62,20 +62,13 @@ namespace scan
 		void MeshModeltoVectorDouble(orth::MeshModel *mModel, vector<float> &FloatCloud);
 
 		std::vector<orth::MeshModel> *M_Models;
-		std::vector<cv::Mat> M_RotMatrix;
+		//std::vector<cv::Mat> M_RotMatrix;
 
 		float mesh_regist_error = 0.4;
 		//float MaxCorrespondenceDistance = 0.7;
 		float RANSACOutlier = 15.0;
 		int MaxIteration = 50;
 		int search_depth = 50;
-
-		/*void getRansacCorrespondences(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_xyz_source, vector<pair<int, int>> &curCorrespondences, vector<pair<int, int>> &newCorrespondences);
-		void getSamples(vector<int> &source_indices, int &iterations, std::vector<int> &samples);
-		void drawIndexSample(vector<int> &source_indices, std::vector<int> &sample);
-		bool isSampleGood(std::vector<int> &samples);
-		void computeSampleDistanceThreshold(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, std::vector<int> &indices, double &sample_dist_thresh);
-		void computeMeanAndCovarianceMatrix(const pcl::PointCloud<pcl::PointXYZ> &cloud, std::vector<int> &indices, float *covariance_matrix, float *centroid);*/
 	};
 
 
