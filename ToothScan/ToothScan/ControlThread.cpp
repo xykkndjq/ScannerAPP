@@ -913,9 +913,9 @@ void ControlThread::normalScan()
 		//2¡¢µç»úÐý×ª
 		if (scan_index == SCAN_ROTATE_POS_CNT2 - 1)
 		{
-			//l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
+			l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, false, imgL_set, imgR_set);
 			curModelSize += (SCAN_ROTATE_POS_CNT2-1);
-			//continue;
+			continue;
 		}
 		time1 = clock();
 		l_usbStream.SMRotOneDegFunction(d_scan_x, d_scan_y, l_bcali, true, imgL_set, imgR_set);
