@@ -14,6 +14,7 @@ namespace scan
 {
 
 
+
 	extern "C"
 		class Unwarp
 	{
@@ -28,6 +29,8 @@ namespace scan
 		//cudaError_t __declspec (dllexport) MeshCalculateCuda(double *k1_image, double *k2_image, double *t1_image, double *t2_image, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* c_p_system_r, double *matched_pixel_image, double* TSDF_info, float* TSDF_, double dis_threshold);
 
 		cudaError_t __declspec (dllexport) PointCloudCalculateCuda2(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, double *normal_image, double* depth_image, double dis_threshold);
+
+		cudaError_t __declspec (dllexport) PointCloudCalculateCuda16(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, double *normal_image, double* depth_image, double dis_threshold);
 
 		cudaError_t __declspec (dllexport) MeshRot(double *rot_Mat, orth::MeshModel *mm);
 
@@ -79,6 +82,9 @@ namespace scan
 		float start_x = -50.0;
 		float start_y = -15.0;
 		float start_z = -50.0;
+
+
+
 
 		/** \brief Edge table for marching cubes  */
 		// edge table maps 8-bit flag representing which cube vertices are inside

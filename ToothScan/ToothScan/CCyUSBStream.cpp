@@ -1,5 +1,7 @@
 #include "CCyUSBStream.h"
 
+#define CameraBufferSize 160
+
 namespace Communication
 {
 	CCyUSBStream::CCyUSBStream()
@@ -638,8 +640,8 @@ namespace Communication
 		m_right_image_raw = Mat::zeros(ImageRow, ImageCol, CV_8UC1);
 
 		m_totalRealTimeBuffers = new UCHAR[5 * m_endptInLength];
-		m_totalCalibImageBuffers = new UCHAR[81 * m_endptInLength];
-		m_totalScanImageBuffers = new UCHAR[81 * m_endptInLength];
+		m_totalCalibImageBuffers = new UCHAR[(CameraBufferSize + 1) * m_endptInLength];
+		m_totalScanImageBuffers = new UCHAR[(CameraBufferSize + 1) * m_endptInLength];
 		ZeroMemory(m_totalRealTimeBuffers, sizeof(m_totalRealTimeBuffers));
 		ZeroMemory(m_totalCalibImageBuffers, sizeof(m_totalCalibImageBuffers));
 		ZeroMemory(m_totalScanImageBuffers, sizeof(m_totalScanImageBuffers));
@@ -856,7 +858,7 @@ namespace Communication
 		int l_iQNum = 0;
 		int l_itotalBuffersBias = 0;
 		//int l_initSize = 0;
-		m_validTotalBuffersSize = 80;
+		m_validTotalBuffersSize = CameraBufferSize;
 
 		// Queue-up the first batch of transfer requests
 		for (int i = 0; i< QueueSize; i++)
@@ -950,7 +952,7 @@ namespace Communication
 		int l_itotalBuffersBias = 0;
 		int l_ierrorBuffersBias = 0;
 		//int l_initSize = 0;
-		m_validTotalBuffersSize = 80;
+		m_validTotalBuffersSize = CameraBufferSize;
 
 		// Queue-up the first batch of transfer requests
 		for (int i = 0; i< QueueSize; i++)

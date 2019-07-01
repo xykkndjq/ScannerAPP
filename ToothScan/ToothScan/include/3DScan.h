@@ -7,7 +7,6 @@
 #include <math.h>
 #include "basetype.h"
 #include <iostream>
-
 #include <windows.h>
 
 #define EXPOSURE_L -6
@@ -209,6 +208,8 @@ namespace scan
 
 		void __declspec(dllexport) PointCloudCalculateCuda2(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, double *normal_image, double* depth_image, double dis_threshold);
 
+		void __declspec(dllexport) PointCloudCalculateCuda16(unsigned char *left_images, unsigned char *right_images, int image_height, int image_width, double *F_matrix, double* rot_l, double* rot_r, double* trans_l, double* trans_r, double* cameraMatrix_l, double* cameraMatrix_r, double* distortion_l, double* distortion_r, double* c_p_system_r, double *matched_pixel_image, double *normal_image, double* depth_image, double dis_threshold);
+
 
 		void PatternsComp(vector<Mat> &pimg);
 
@@ -282,7 +283,8 @@ namespace scan
 		double start_x, start_y, start_z, end_x, end_y, end_z;
 
 		std::vector<std::vector<std::vector<MeshEdgeNode>>> meshedge;
-		std::vector<std::vector<std::vector<float> > > GaussTemplate;
+		//std::vector<std::vector<std::vector<float> > > GaussTemplate;
+		std::vector<std::vector<float> > GaussTemplate;
 
 		std::vector<std::vector<cv::Point3f>> objectPoints_l;
 		std::vector<std::vector<cv::Point3f>> objectPoints_r;
@@ -333,6 +335,8 @@ namespace scan
 
 		void RasterScan::bilateralKernel(const Mat &depth, Mat &depth_filterd, float sigma_space2_inv_half, float sigma_color2_inv_half);
 
+		void RasterScan::bilateralKernelScan(const Mat &depth, const Mat &period, Mat &depth_filterd, float sigma_space2_inv_half, float sigma_color2_inv_half);
+
 		void RasterScan::scaleDepth(const Mat &depth, Mat &scaled_depth);
 
 		int RasterScan::computeCubeIndex(int x, int y, int z, float f[8]) const;
@@ -355,7 +359,9 @@ namespace scan
 		//Eigen::Vector3i RasterScan::getVoxel(const Eigen::Vector3f point)const;
 		orth::Point3i RasterScan::getVoxel(const orth::Point3f point)const;
 
-		float RasterScan::TSDFGaussCore(int x, int y, int z);
+		//float RasterScan::TSDFGaussCore(int x, int y, int z);
+
+		double RasterScan::TSDFGaussCore(const cv::Mat &image_intput, const cv::Mat &image_intput2, const int x, const int y);
 
 		/*------------------------------- marching cubes ------------------------------*/
 

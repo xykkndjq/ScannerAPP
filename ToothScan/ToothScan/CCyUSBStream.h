@@ -12,7 +12,7 @@
 #include <opencv2\opencv.hpp>
 #include <string>
 
-#define UNWRAPING_IMAGE_NUMBER 15
+#define UNWRAPING_IMAGE_NUMBER 16
 #define SCAN_IMAGE_NUMBER 1+UNWRAPING_IMAGE_NUMBER+3
 #define CALI_IMAGE_NUMBER 1+UNWRAPING_IMAGE_NUMBER*2
 
